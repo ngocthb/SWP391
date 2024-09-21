@@ -7,19 +7,19 @@ export default function UserInfor() {
   return (
     <>
       <div className="main">
-        <div class="profile">
-          <div class="profile__left">
+        <div className="profile">
+          <div className="profile__left">
             <h1>Your Profile</h1>
             <img
               alt="User-Avata"
-              class="profile__left-pic"
+              className="profile__left-pic"
               height="100"
               src={loginUser.avatar}
               width="100"
             />
           </div>
-          <div class="profile__right">
-            <div class="description">
+          <div className="profile__right">
+            <div className="description">
               <div className="description__details">
                 <span>Name </span>
                 <p>{loginUser.name}</p>
@@ -39,7 +39,7 @@ export default function UserInfor() {
               </div>
             </div>
           </div>
-          <div class="profile__activity">
+          <div className="profile__activity">
             <div>
               <FaFire />
               <p>19</p>

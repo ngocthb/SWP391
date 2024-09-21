@@ -4,7 +4,7 @@ import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
 import { useState } from "react";
-import DropdownNav from "../../redux/dropdow.js";
+import DropdownNav from "../../redux/dropdown.js";
 import { Link } from "react-router-dom";
 <CiGrid41 />;
 
@@ -50,9 +50,7 @@ export default function Header() {
               <Link to={""}>About Us</Link>
             </li>
             <li className="navBar__lists-items">
-              <Link to={""}>
-                <DropdownNav title="Service" />
-              </Link>
+              <DropdownNav title="Service" />
             </li>
             <li className="navBar__lists-items">
               <Link to={""}>Upcoming Package</Link>
