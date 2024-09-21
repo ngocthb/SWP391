@@ -25,7 +25,7 @@ export default function HeaderSignup() {
        <section className="navBarSection">
       <div className={transparent}>
         <div className="navBarSection__header-logo">
-          <Link to={""}>
+        <Link to={"/"}>
             <h1 className="flex">
               <IoIosAperture />
               F-Salon

@@ -6,37 +6,38 @@ import UserInfor from "../Components/UserInfor/UserInfor";
 import CustomerLayout from "../Layouts/CustomerLayout";
 import SigninLayout from "../Layouts/SigninLayout";
 import HomePage from "../Pages/HomePage";
+import PrivateRoute from "../Components/PrivateRoute/index";
 
 export const Routes = [
   {
-    path: '/', // Root homepage
+    path: '/',
     element: <HomePage />,
   },
   {
-    path: '/signin', // SigninLayout will handle sub-routes
+    path: '/signin',
     element: <SigninLayout />,
     children: [
       {
-        path: '', // This is relative, so it refers to '/signin'
+        path: '',
         element: <Signin />,
       },
       {
-        path: 'signup', // This will resolve to '/signin/signup'
+        path: 'signup',
         element: <Signup />,
       },
       {
-        path: 'forgetPassword', // This will resolve to '/signin/forgetPassword'
+        path: 'forgetPassword',
         element: <ForgetPassword />,
       },
       {
-        path: 'confirmPassword', // This will resolve to '/signin/confirmPassword'
+        path: 'confirmPassword',
         element: <ConfirmPassword />,
       },
     ],
   },
   {
     path: 'customer',
-    element: <CustomerLayout/>,
+    element: <PrivateRoute><CustomerLayout/></PrivateRoute>,
     children: [
       {
         path: 'information',

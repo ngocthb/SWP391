@@ -11,7 +11,7 @@ import { Dropdown, Space } from "antd";
 import notis from "../../data/notification";
 import loginUser from "../../data/loginUser.js";
 
-export default function Header() {
+export default function HeaderCustomer() {
   const [active, setActive] = useState("HeaderCustomer");
 
   //Code to show(toggle) HeaderCustomer
@@ -39,7 +39,7 @@ export default function Header() {
     <section className="HeaderCustomerSection">
       <div className="HeaderCustomerSection__header">
         <div className="HeaderCustomerSection__header-logo">
-          <Link to={""}>
+          <Link to={"/"}>
             <h1 className="flex">
               <IoIosAperture />
               F-Salon
@@ -68,11 +68,11 @@ export default function Header() {
                       notis,
                     }}
                   >
-                    <a onClick={(e) => e.preventDefault()}>
+                    <Link onClick={(e) => e.preventDefault()}>
                       <Space>
                         <IoIosNotifications className="icon" />
                       </Space>
-                    </a>
+                    </Link>
                   </Dropdown>
                 </div>
 

@@ -36,12 +36,16 @@ export default function Header() {
     <section className="navBarSection">
       <div className={transparent}>
         <div className="navBarSection__header-logo">
-          <Link to={""}>
-            <h1 className="flex">
-              <IoIosAperture />
-              F-Salon
-            </h1>
-          </Link>
+        <Link to={"/"}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            >
+              <h1 className="flex">
+                <IoIosAperture />
+                F-Salon
+              </h1>
+            </Link>
         </div>
 
         <div className={active}>

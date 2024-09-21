@@ -8,6 +8,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import slides from "../../data/slides.js";
 import { Autoplay, Pagination } from "swiper/modules";
+import { Link } from "react-router-dom";
 
 const image = slides;
 export default function Slides() {
@@ -38,9 +39,9 @@ export default function Slides() {
                   <span>{item.subTitle}</span>
                 </h1>
                 <p>{item.description}</p>
-                <a className="slides__btn" href="#">
+                <Link to={""} className="slides__btn" >
                   Read More
-                </a>
+                </Link>
               </div>
             </section>
           </SwiperSlide>

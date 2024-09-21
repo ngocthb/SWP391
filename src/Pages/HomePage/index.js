@@ -4,11 +4,15 @@ import Slides from "../../Components/Slides/Slides";
 import Personnel from "../../Components/Personnel/Personnel";
 import PopularService from "../../Components/PopularService/PopularService";
 import AboutUs from "../../Components/AboutUs/AboutUs";
+import HeaderCustomer from "../../Components/HeaderCustomer/HeaderCustomer";
 
 function HomePage () {
+    const isLoggedIn = !!localStorage.getItem("token");
+    console.log(isLoggedIn);
+    
     return(
         <>
-            <Header/>
+            {isLoggedIn ? <HeaderCustomer />  : <Header/>}
             <Slides/>
             <Personnel/>
             <PopularService/>

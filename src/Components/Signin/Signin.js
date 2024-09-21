@@ -1,19 +1,55 @@
 import React, { useState } from 'react'
 import eyeOff from "../../Assets/eye-off.svg";
 import eye from "../../Assets/eye.svg";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as GoogleIcon } from '../../Assets/GoogleIcon.svg';
+import api from "../../config/axios";
 import './Signin.scss';
+import { message, Spin } from 'antd';
 
 const Signin = () => {
+    const [messageApi, contextHolder] = message.useMessage();
+    const [loading, setLoading] = useState(false);
+
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const navigate = useNavigate();
 
     const handlePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const userName = e.target[0].value;
+        const password = e.target[1].value;
+    
+        setLoading(true);
+        try {
+            const response = await api.post("login", {
+                username: userName,
+                password: password
+            });
+            const { token } = response.data;
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(response.data));
+            if(response) {
+                navigate("/");
+            }
+        } catch (err) {
+            console.log(err);
+            messageApi.open({
+                type: 'error',
+                content: 'Login failed. Please try again.',
+              });
+        }  finally {
+            setLoading(false)
+        }
+    };
+    
+
     return (
         <>
+        {contextHolder}
             <div className="signin__container">
                 <div className="signin__left-side">
                     <div className="signin__logo">
@@ -39,7 +75,7 @@ const Signin = () => {
                         <GoogleIcon />
                         Sign in with Google
                     </button>
-                    <form className="signin__form">
+                    <form className="signin__form" onSubmit={handleSubmit}>
                         <label htmlFor="userName">User name</label>
                         <input type="text" required id="userName" />
                         <label htmlFor="password">Password</label>
@@ -60,11 +96,16 @@ const Signin = () => {
                                 <input type="checkbox" id="remember-me" />
                                 <label htmlFor="remember-me">Remember me</label>
                             </div>
-                            <button type="submit" className="signin__log-in-button">
-                                LOG IN
+                            <button 
+                                type="submit" 
+                                className="signin__log-in-button" 
+                                disabled={loading}
+                            >
+                                {loading ? <Spin size="small" /> : "LOG IN"} 
                             </button>
                         </div>
-                        <p className="signin__sign-up">No Account yet? <Link to='/signup'>SIGN UP</Link></p>
+                        <p className="signin__sign-up">No Account yet? <Link to='/signin/signup'>SIGN UP</Link></p>
+                        <p className="signin__forgot-password"><Link to='/signin/forgetPassword'>Forgot password?</Link></p>
                     </form>
                 </div>
             </div>

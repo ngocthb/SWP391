@@ -110,6 +110,14 @@
       margin-bottom: 16px;
       max-width: 400px;
       box-sizing: border-box;
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus,
+      &:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px white inset !important;
+        -webkit-text-fill-color: #000 !important;
+      }
     }
   }
 
@@ -198,6 +206,23 @@
       }
     }
   }
+
+  &__forgot-password{
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+    text-align: center;
+    max-width: 400px;
+
+    & a{
+        color: #666;
+        text-decoration: none;
+
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+}
 
   &__button-google {
     max-width: 260px;

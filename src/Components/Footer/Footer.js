@@ -4,15 +4,23 @@ import { Bs0CircleFill } from "react-icons/bs";
 import { FaFacebookF } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { FaTwitter } from "react-icons/fa";
-import {Link} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./Footer.scss";
 export default function Footer() {
+  const location = useLocation();
+
+  const handleHomeClick = (e) => {
+    if (location.pathname === "/") {
+      e.preventDefault(); // Prevent navigation
+      window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to top smoothly
+    }
+  };
   return (
     <div className="footer ">
       <div className="footer__container container grid">
         <div>
           <div className="footer__Logo">
-            <Link to={""} className=" flex">
+          <Link to="/" onClick={handleHomeClick} className=" flex">
               <h1 className="flex">
                 <Bs0CircleFill className="footer__Logo-icon" />
                 F-Salon
@@ -29,7 +37,7 @@ export default function Footer() {
         <div className="footer__Links">
           <span className="footer__Links-linkTitle">Information</span>
           <li>
-            <Link to={""}>Home</Link>
+            <Link to="/" onClick={handleHomeClick}>Home</Link>
           </li>
           <li>
             <Link to={""}>Explore</Link>
