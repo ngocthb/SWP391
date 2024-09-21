@@ -3,7 +3,7 @@
   --WhiteColor: hsl(0, 0%, 100%);
   --textColor: hsl(240, 1%, 48%);
   --HoverColor: hsl(0, 0%, 60%);
-  --blackColor: hsl(0, 0%, 18%);
+  --blackColor: #1b5077;
   --whiteColorDeam: hsl(0, 0%, 93%);
   --greyBg: hsl(0, 0%, 96%);
   --greyText: rgb(190, 190, 190);
@@ -69,7 +69,7 @@
             }
           }
 
-          &-buttn {
+          &-button {
             flex-direction: column;
             .btn {
               margin-top: 1rem;
@@ -78,22 +78,6 @@
                 font-weight: 600;
 
                 &:hover {
-                  color: var(--WhiteColor);
-                }
-              }
-            }
-
-            &-login {
-              background: none;
-              border: 1px solid var(--PrimaryColor);
-
-              a {
-                color: var(--PrimaryColor);
-              }
-              &:hover {
-                background: var(--HoverColor);
-
-                a {
                   color: var(--WhiteColor);
                 }
               }

@@ -127,6 +127,7 @@
 
 @media (min-width: 480px) and (max-width: 767px) {
   .profile {
+    margin-top: 100px;
     padding: 10px;
   }
   .profile__left {
@@ -152,15 +153,20 @@
     }
   }
 }
+@media screen and (min-width: 480px) {
+  .profile {
+    margin-top: 100px;
+  }
+}
 
 /* Small Mobile Phones */
-@media (max-width: 479px) {
+@media screen and (max-width: 480px) {
   .profile {
-    padding: 5px;
+    padding: 15px;
   }
   .profile__left {
     h1 {
-      font-size: 1em;
+      font-size: 1rem;
     }
     &-pic {
       width: 100px;
@@ -169,7 +175,15 @@
   }
   .profile__right {
     .description {
-      padding: 5px;
+      padding: 10px;
+      .description__details {
+        span {
+          font-size: 13px;
+        }
+        p {
+          font-size: 10px;
+        }
+      }
     }
   }
   .profile__activity {

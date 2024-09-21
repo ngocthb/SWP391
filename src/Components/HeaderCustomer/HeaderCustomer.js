@@ -6,9 +6,12 @@ import { CiGrid41 } from "react-icons/ci";
 import { useState } from "react";
 import DropdownNav from "../../redux/dropdow.js";
 import { Link } from "react-router-dom";
-<CiGrid41 />;
+import { IoIosNotifications } from "react-icons/io";
+import { Dropdown, Space } from "antd";
+import notis from "../../data/notification";
+import loginUser from "../../data/loginUser.js";
 
-export default function HeaderCustomer() {
+export default function Header() {
   const [active, setActive] = useState("HeaderCustomer");
 
   //Code to show(toggle) HeaderCustomer
@@ -22,19 +25,19 @@ export default function HeaderCustomer() {
   };
 
   // Code to add background color to header
-  const [transparent, setTransparent] = useState("HeaderCustomerSection__header");
-  const addBg = () => {
-    if (window.scrollY >= 10) {
-      setTransparent("HeaderCustomerSection__header HeaderCustomerSection__header-active");
-    } else {
-      setTransparent("HeaderCustomerSection__header");
-    }
-  };
-  window.addEventListener("scroll", addBg);
+  // const [transparent, setTransparent] = useState("HeaderCustomerSection__header");
+  // const addBg = () => {
+  //   if (window.scrollY >= 10) {
+  //     setTransparent("HeaderCustomerSection__header HeaderCustomerSection__header-active");
+  //   } else {
+  //     setTransparent("HeaderCustomerSection__header");
+  //   }
+  // };
+  // window.addEventListener("scroll", addBg);
 
   return (
     <section className="HeaderCustomerSection">
-      <div className={transparent}>
+      <div className="HeaderCustomerSection__header">
         <div className="HeaderCustomerSection__header-logo">
           <Link to={""}>
             <h1 className="flex">
@@ -57,10 +60,32 @@ export default function HeaderCustomer() {
             <li className="HeaderCustomer__lists-items">
               <Link to={""}>Upcoming Package</Link>
             </li>
-            <div className="HeaderCustomer__lists-button flex">
-              <button className="HeaderCustomer__btn btn">
-                <Link to={""}>Login</Link>
-              </button>
+            <div className="HeaderCustomer__lists-infor flex">
+              <div className="content">
+                <div className="content__noti">
+                  <Dropdown
+                    menu={{
+                      notis,
+                    }}
+                  >
+                    <a onClick={(e) => e.preventDefault()}>
+                      <Space>
+                        <IoIosNotifications className="icon" />
+                      </Space>
+                    </a>
+                  </Dropdown>
+                </div>
+
+                <div className="content__infor">
+                  <div>
+                    <h3>{loginUser.name}</h3>
+                    <p>{loginUser.role}</p>
+                  </div>
+                  <div>
+                    <img src={loginUser.avatar} alt="User-Avatar" />
+                  </div>
+                </div>
+              </div>
             </div>
           </ul>
           <div onClick={removeNav} className="HeaderCustomer__close">
@@ -70,6 +95,7 @@ export default function HeaderCustomer() {
 
         <div onClick={showNav} className="HeaderCustomer__toggle">
           <CiGrid41 className="icon" />
+          <img src={loginUser.avatar} alt="User-Avatar" />
         </div>
       </div>
     </section>

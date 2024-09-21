@@ -1,12 +1,13 @@
-import './App.css';
-import AllRoutes from './Components/AllRoutes';
-// import SigninLayout from './Layouts/SigninLayout';
+import "./App.css";
+
+import AllRoutes from "./Components/AllRoutes";
+import CustomerDetails from "./Pages/CustomerDetails";
 
 function App() {
   return (
     <>
-     <AllRoutes/>
-     {/* <SigninLayout/> */}
+      <AllRoutes />
+      {/* <CustomerDetails /> */}
     </>
   );
 }
