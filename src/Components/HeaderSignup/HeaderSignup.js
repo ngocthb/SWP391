@@ -5,6 +5,7 @@ import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
 import DropdownNav from "../../redux/dropdow"; // Adjust path based on your structure
 import "./HeaderSignup.scss";
+import { Link } from "react-router-dom";
 
 export default function HeaderSignup() {
   const [active, setActive] = useState("navBar");
@@ -24,28 +25,28 @@ export default function HeaderSignup() {
        <section className="navBarSection">
       <div className={transparent}>
         <div className="navBarSection__header-logo">
-          <a href="#">
+          <Link to={""}>
             <h1 className="flex">
               <IoIosAperture />
               F-Salon
             </h1>
-          </a>
+          </Link>
         </div>
 
         <div className={active}>
           <ul className="navBar__lists flex">
             <li className="navBar__lists-items">
-              <a href="#">About Us</a>
+              <Link to={""}>About Us</Link>
             </li>
             <li className="navBar__lists-items">
               <DropdownNav title="Service" />
             </li>
             <li className="navBar__lists-items">
-              <a href="#">Upcoming Package</a>
+              <Link to={""}>Upcoming Package</Link>
             </li>
             <div className="navBar__lists-button flex">
               <button className="navBar__btn btn">
-                <a href="#">Login</a>
+                <Link to={""}>Login</Link>
               </button>
             </div>
           </ul>

@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { React } from "react";
-
 import { Bs0CircleFill } from "react-icons/bs";
 import { FaFacebookF } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { FaTwitter } from "react-icons/fa";
+import {Link} from "react-router-dom";
 import "./Footer.scss";
 export default function Footer() {
   return (
@@ -12,12 +12,12 @@ export default function Footer() {
       <div className="footer__container container grid">
         <div>
           <div className="footer__Logo">
-            <a href="#" className=" flex">
+            <Link to={""} className=" flex">
               <h1 className="flex">
                 <Bs0CircleFill className="footer__Logo-icon" />
                 F-Salon
               </h1>
-            </a>
+            </Link>
           </div>
           <div className="footer__socials flex">
             <FaFacebookF className="footer__socials-icon" />
@@ -29,31 +29,31 @@ export default function Footer() {
         <div className="footer__Links">
           <span className="footer__Links-linkTitle">Information</span>
           <li>
-            <a href="#">Home</a>
+            <Link to={""}>Home</Link>
           </li>
           <li>
-            <a href="#">Explore</a>
+            <Link to={""}>Explore</Link>
           </li>
           <li>
-            <a href="#">Service</a>
+            <Link to={""}>Service</Link>
           </li>
           <li>
-            <a href="#">Blogs</a>
+            <Link to={""}>Blogs</Link>
           </li>
         </div>
         <div className="footer__Links">
           <span className="footer__Links-linkTitle">Helpful Links</span>
           <li>
-            <a href="#">Destination</a>
+            <Link to={""}>Destination</Link>
           </li>
           <li>
-            <a href="#">Support</a>
+            <Link to={""}>Support</Link>
           </li>
           <li>
-            <a href="#">Service & Conditions</a>
+            <Link to={""}>Service & Conditions</Link>
           </li>
           <li>
-            <a href="#">Privacy</a>
+            <Link to={""}>Privacy</Link>
           </li>
         </div>
         <div className="footer__Links">

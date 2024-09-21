@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import "./Header.scss";
+import "./HeaderCustomer.scss";
 import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
@@ -8,34 +8,34 @@ import DropdownNav from "../../redux/dropdow.js";
 import { Link } from "react-router-dom";
 <CiGrid41 />;
 
-export default function Header() {
-  const [active, setActive] = useState("navBar");
+export default function HeaderCustomer() {
+  const [active, setActive] = useState("HeaderCustomer");
 
-  //Code to show(toggle) navbar
+  //Code to show(toggle) HeaderCustomer
   const showNav = () => {
-    setActive("navBar navBar-active");
+    setActive("HeaderCustomer HeaderCustomer-active");
   };
 
-  // Code to remove navbar
+  // Code to remove HeaderCustomer
   const removeNav = () => {
-    setActive("navBar");
+    setActive("HeaderCustomer");
   };
 
   // Code to add background color to header
-  const [transparent, setTransparent] = useState("navBarSection__header");
+  const [transparent, setTransparent] = useState("HeaderCustomerSection__header");
   const addBg = () => {
     if (window.scrollY >= 10) {
-      setTransparent("navBarSection__header navBarSection__header-active");
+      setTransparent("HeaderCustomerSection__header HeaderCustomerSection__header-active");
     } else {
-      setTransparent("navBarSection__header");
+      setTransparent("HeaderCustomerSection__header");
     }
   };
   window.addEventListener("scroll", addBg);
 
   return (
-    <section className="navBarSection">
+    <section className="HeaderCustomerSection">
       <div className={transparent}>
-        <div className="navBarSection__header-logo">
+        <div className="HeaderCustomerSection__header-logo">
           <Link to={""}>
             <h1 className="flex">
               <IoIosAperture />
@@ -45,30 +45,30 @@ export default function Header() {
         </div>
 
         <div className={active}>
-          <ul className="navBar__lists flex">
-            <li className="navBar__lists-items">
+          <ul className="HeaderCustomer__lists flex">
+            <li className="HeaderCustomer__lists-items">
               <Link to={""}>About Us</Link>
             </li>
-            <li className="navBar__lists-items">
+            <li className="HeaderCustomer__lists-items">
               <Link to={""}>
                 <DropdownNav title="Service" />
               </Link>
             </li>
-            <li className="navBar__lists-items">
+            <li className="HeaderCustomer__lists-items">
               <Link to={""}>Upcoming Package</Link>
             </li>
-            <div className="navBar__lists-button flex">
-              <button className="navBar__btn btn">
-                <Link to={"/signin"}>Login</Link>
+            <div className="HeaderCustomer__lists-button flex">
+              <button className="HeaderCustomer__btn btn">
+                <Link to={""}>Login</Link>
               </button>
             </div>
           </ul>
-          <div onClick={removeNav} className="navBar__close">
+          <div onClick={removeNav} className="HeaderCustomer__close">
             <IoCloseCircleSharp className="icon" />
           </div>
         </div>
 
-        <div onClick={showNav} className="navBar__toggle">
+        <div onClick={showNav} className="HeaderCustomer__toggle">
           <CiGrid41 className="icon" />
         </div>
       </div>
