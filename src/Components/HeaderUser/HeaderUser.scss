@@ -1,0 +1,129 @@
+:root {
+  --PrimaryColor: #1b5077;
+  --WhiteColor: hsl(0, 0%, 100%);
+  --textColor: hsl(240, 1%, 48%);
+  --HoverColor: #1b5077;
+  --blackColor: hsl(0, 0%, 18%);
+  --whiteColorDeam: hsl(0, 0%, 93%);
+  --greyBg: hsl(0, 0%, 96%);
+  --greyText: rgb(190, 190, 190);
+  --inputColor: hsl(330, 12%, 97%);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: var(--PrimaryColor);
+  border-bottom: 1px solid var(--greyBg);
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .icon {
+      font-size: 40px;
+      cursor: pointer;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 40px;
+      color: var(--WhiteColor);
+    }
+  }
+
+  .content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+
+    .content__noti {
+      .ant-dropdown-trigger {
+        .icon {
+          font-size: 34px;
+          background-color: var(--WhiteColor);
+          border-radius: 50%;
+          padding: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--greyText);
+          &:hover {
+            background-color: var(--whiteColorDeam);
+          }
+        }
+      }
+    }
+
+    .content__infor {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      div:first-child {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h3 {
+          margin: 0;
+          color: var(--WhiteColor);
+        }
+
+        p {
+          margin: 0;
+          color: var(--greyText);
+        }
+      }
+
+      div:last-child {
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: 2px solid var(--greyBg);
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 5px 10px; /* Adjust padding for smaller screens */
+
+    .header-left {
+      h1 {
+        font-size: 24px; /* Adjust the title size for smaller screens */
+      }
+
+      .icon {
+        font-size: 30px; /* Adjust icon size for smaller screens */
+      }
+    }
+
+    .content {
+      gap: 20px; /* Reduce gap between elements for smaller screens */
+
+      .content__infor {
+        div:first-child {
+          h3 {
+            font-size: 14px; /* Adjust text size for smaller screens */
+          }
+
+          p {
+            font-size: 12px; /* Adjust text size for smaller screens */
+          }
+        }
+
+        div:last-child img {
+          width: 30px;
+          height: 30px; /* Adjust image size for smaller screens */
+        }
+      }
+    }
+  }
+}

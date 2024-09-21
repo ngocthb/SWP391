@@ -1,0 +1,199 @@
+:root {
+  --PrimaryColor: #1b5077;
+  --WhiteColor: hsl(0, 0%, 100%);
+  --textColor: hsl(240, 1%, 48%);
+  --HoverColor: hsl(0, 0%, 60%);
+  --blackColor: hsl(0, 0%, 18%);
+  --whiteColorDeam: hsl(0, 0%, 93%);
+  --greyBg: hsl(0, 0%, 96%);
+  --greyText: rgb(190, 190, 190);
+  --inputColor: hsl(330, 12%, 97%);
+}
+
+.navBarSection {
+  &__header {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    width: 100%;
+    padding: 1rem;
+    z-index: 1000;
+
+    &-logo {
+      a {
+        color: var(--WhiteColor);
+        font-weight: 500;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        h1 {
+          font-size: 40px;
+        }
+        // .icon {
+        //   font-size: 34px;
+        // }
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .navBar {
+        background: var(--greyBg);
+        position: absolute;
+        height: max-content;
+        padding: 1rem;
+        width: 100%;
+        top: 0;
+        left: -500%;
+        box-shadow: 0 2px 4px rgb(209, 209, 209, 0.904);
+        transition: 0.5s ease;
+        z-index: 1000;
+
+        &__lists {
+          flex-direction: column;
+          justify-self: center;
+          width: 100%;
+          margin: auto;
+
+          &-items {
+            padding: 1rem 0;
+
+            a {
+              color: var(--text-color);
+              font-size: 0.9rem;
+              font-weight: 600;
+              &:hover {
+                color: var(--PrimaryColor);
+              }
+            }
+          }
+
+          &-buttn {
+            flex-direction: column;
+            .btn {
+              margin-top: 1rem;
+
+              a {
+                font-weight: 600;
+
+                &:hover {
+                  color: var(--WhiteColor);
+                }
+              }
+            }
+
+            &-login {
+              background: none;
+              border: 1px solid var(--PrimaryColor);
+
+              a {
+                color: var(--PrimaryColor);
+              }
+              &:hover {
+                background: var(--HoverColor);
+
+                a {
+                  color: var(--WhiteColor);
+                }
+              }
+            }
+          }
+        }
+
+        &__close {
+          position: absolute;
+          top: 1rem;
+          right: 1.5rem;
+          color: var(--PrimaryColor);
+          &:hover .icon {
+            color: var(--HoverColor);
+          }
+        }
+      }
+
+      .navBar-active {
+        left: 0;
+      }
+    }
+
+    &__toggle {
+      .icon {
+        font-size: 25px;
+        color: var(--WhiteColor);
+        &:hover {
+          color: var(--PrimaryColor);
+        }
+      }
+    }
+    &-active {
+      background: var(--PrimaryColor);
+      box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.334);
+    }
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .navBar__toggle,
+  .navBar__close {
+    display: none;
+  }
+
+  .navBarSection__header {
+    padding: 1.5rem 2rem;
+    .navBar {
+      &__lists {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+
+        &-items {
+          a {
+            color: var(--WhiteColor);
+            padding: 0.45rem;
+            font-size: 0.9rem;
+            font-weight: 400;
+            &:hover {
+              color: var(--PrimaryColor);
+            }
+          }
+        }
+        .navBar__btn {
+          margin-left: 1rem;
+          a {
+            color: var(--WhiteColor);
+            font-weight: 500;
+          }
+        }
+        &-button-login {
+          background: none;
+          border: 1px solid var(--PrimaryColor);
+          &:hover {
+            background: var(--PrimaryColor);
+            a {
+              color: var(--WhiteColor);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .navBarSection__header {
+    .navBar {
+      &__lists {
+        &-items {
+          padding: 0 0.7rem;
+        }
+      }
+    }
+  }
+}
+@media screen and (min-width: 1024px) {
+  .navBarSection__header {
+    padding: 1rem 8.5rem;
+  }
+}
