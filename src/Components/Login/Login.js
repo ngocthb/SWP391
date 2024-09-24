@@ -4,10 +4,10 @@ import eye from "../../Assets/eye.svg";
 import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as GoogleIcon } from '../../Assets/GoogleIcon.svg';
 import api from "../../config/axios";
-import './Signin.scss';
+import './Login.scss';
 import { message, Spin } from 'antd';
 
-const Signin = () => {
+const Login = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [loading, setLoading] = useState(false);
 
@@ -25,13 +25,15 @@ const Signin = () => {
     
         setLoading(true);
         try {
-            const response = await api.post("login", {
+            const response = await api.post("api/login", {
                 username: userName,
                 password: password
             });
             const { token } = response.data;
             localStorage.setItem("token", token);
             localStorage.setItem("user", JSON.stringify(response.data));
+            console.log(response);
+            
             if(response) {
                 navigate("/");
             }
@@ -104,8 +106,8 @@ const Signin = () => {
                                 {loading ? <Spin size="small" /> : "LOG IN"} 
                             </button>
                         </div>
-                        <p className="signin__sign-up">No Account yet? <Link to='/signin/signup'>SIGN UP</Link></p>
-                        <p className="signin__forgot-password"><Link to='/signin/forgetPassword'>Forgot password?</Link></p>
+                        <p className="signin__sign-up">No Account yet? <Link to='/login/register'>REGISTER</Link></p>
+                        <p className="signin__forgot-password"><Link to='/login/forgetPassword'>Forgot password?</Link></p>
                     </form>
                 </div>
             </div>
@@ -113,4 +115,4 @@ const Signin = () => {
     )
 }
 
-export default Signin;
+export default Login;

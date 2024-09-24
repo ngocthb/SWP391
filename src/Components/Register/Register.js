@@ -4,10 +4,10 @@ import eye from "../../Assets/eye.svg";
 import { ReactComponent as GoogleIcon } from "../../Assets/GoogleIcon.svg";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../config/axios";
-import "./Signup.scss";
+import "./Register.scss";
 import { message, Spin } from "antd";
 
-const Signup = () => {
+const Register = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -43,11 +43,12 @@ const Signup = () => {
 
     try {
       const response = await api.post("register", {
-        email,
-        username: userName,
-        fullName,
-        password,
-        phoneNumber
+        email: email,
+        userName: userName,
+        fullName: fullName,
+        password: password,
+        confirmPassword: confirmPassword,
+        phoneNumber: phoneNumber
       });
 
       if (response) {
@@ -143,7 +144,7 @@ const Signup = () => {
                 {loading ? <Spin size="small" /> : "Sign Up"}
               </button>
             </div>
-            <p className="signup__sign-up">Own an Account yet? <Link to='/signin'>SIGN IN</Link></p>
+            <p className="signup__sign-up">Own an Account yet? <Link to='/login'>LOGIN</Link></p>
           </form>
         </div>
       </div>
@@ -152,4 +153,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Register;

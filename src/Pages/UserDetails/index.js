@@ -1,11 +1,12 @@
 import Footer from "../../Components/Footer/Footer";
-import HeaderCustomer from "../../Components/HeaderCustomer/HeaderCustomer";
+import HeaderUser from "../../Components/HeaderUser/HeaderUser";
+
 import UserInfor from "../../Components/UserInfor/UserInfor";
 
-export default function CustomerDetails() {
+export default function UserDetails() {
   return (
     <>
-      <HeaderCustomer />
+      <HeaderUser/>
       <UserInfor />
       <Footer />
     </>

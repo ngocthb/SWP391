@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import "./HeaderCustomer.scss";
+import "./HeaderUser.scss";
 import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
@@ -8,38 +8,38 @@ import DropdownNav from "../../redux/dropdow.js";
 import { Link } from "react-router-dom";
 import { IoIosNotifications } from "react-icons/io";
 import { Dropdown, Space } from "antd";
-import notis from "../../data/notification";
+import notis from "../../data/notification.js";
 import loginUser from "../../data/loginUser.js";
 
-export default function HeaderCustomer() {
-  const [active, setActive] = useState("HeaderCustomer");
+export default function HeaderUser() {
+  const [active, setActive] = useState("HeaderUser");
 
-  //Code to show(toggle) HeaderCustomer
+  //Code to show(toggle) HeaderUser
   const showNav = () => {
-    setActive("HeaderCustomer HeaderCustomer-active");
+    setActive("HeaderUser HeaderUser-active");
   };
 
-  // Code to remove HeaderCustomer
+  // Code to remove HeaderUser
   const removeNav = () => {
-    setActive("HeaderCustomer");
+    setActive("HeaderUser");
   };
 
   // Code to add background color to header
-  // const [transparent, setTransparent] = useState("HeaderCustomerSection__header");
+  // const [transparent, setTransparent] = useState("HeaderUserSection__header");
   // const addBg = () => {
   //   if (window.scrollY >= 10) {
-  //     setTransparent("HeaderCustomerSection__header HeaderCustomerSection__header-active");
+  //     setTransparent("HeaderUserSection__header HeaderUserSection__header-active");
   //   } else {
-  //     setTransparent("HeaderCustomerSection__header");
+  //     setTransparent("HeaderUserSection__header");
   //   }
   // };
   // window.addEventListener("scroll", addBg);
 
   return (
-    <section className="HeaderCustomerSection">
-      <div className="HeaderCustomerSection__header">
-        <div className="HeaderCustomerSection__header-logo">
-          <Link to={"/"}>
+    <section className="HeaderUserSection">
+      <div className="HeaderUserSection__header">
+        <div className="HeaderUserSection__header-logo">
+          <Link to={""}>
             <h1 className="flex">
               <IoIosAperture />
               F-Salon
@@ -48,19 +48,17 @@ export default function HeaderCustomer() {
         </div>
 
         <div className={active}>
-          <ul className="HeaderCustomer__lists flex">
-            <li className="HeaderCustomer__lists-items">
+          <ul className="HeaderUser__lists flex">
+            <li className="HeaderUser__lists-items">
               <Link to={""}>About Us</Link>
             </li>
-            <li className="HeaderCustomer__lists-items">
-              <Link to={""}>
-                <DropdownNav title="Service" />
-              </Link>
+            <li className="HeaderUser__lists-items">
+              <DropdownNav title="Service" />
             </li>
-            <li className="HeaderCustomer__lists-items">
+            <li className="HeaderUser__lists-items">
               <Link to={""}>Upcoming Package</Link>
             </li>
-            <div className="HeaderCustomer__lists-infor flex">
+            <div className="HeaderUser__lists-infor flex">
               <div className="content">
                 <div className="content__noti">
                   <Dropdown
@@ -68,11 +66,11 @@ export default function HeaderCustomer() {
                       notis,
                     }}
                   >
-                    <Link onClick={(e) => e.preventDefault()}>
+                    <a onClick={(e) => e.preventDefault()}>
                       <Space>
                         <IoIosNotifications className="icon" />
                       </Space>
-                    </Link>
+                    </a>
                   </Dropdown>
                 </div>
 
@@ -88,12 +86,12 @@ export default function HeaderCustomer() {
               </div>
             </div>
           </ul>
-          <div onClick={removeNav} className="HeaderCustomer__close">
+          <div onClick={removeNav} className="HeaderUser__close">
             <IoCloseCircleSharp className="icon" />
           </div>
         </div>
 
-        <div onClick={showNav} className="HeaderCustomer__toggle">
+        <div onClick={showNav} className="HeaderUser__toggle">
           <CiGrid41 className="icon" />
           <img src={loginUser.avatar} alt="User-Avatar" />
         </div>

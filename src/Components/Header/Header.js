@@ -1,11 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import "./Header.scss";
-import { IoIosAperture } from "react-icons/io";
+import { IoIosAperture, IoIosNotifications } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
 import { useState } from "react";
 import DropdownNav from "../../redux/dropdow.js";
 import { Link } from "react-router-dom";
+import { Dropdown, Space } from "antd";
+import notis from "../../data/notification.js";
+import loginUser from "../../data/loginUser.js";
 <CiGrid41 />;
 
 export default function Header() {
@@ -32,20 +35,23 @@ export default function Header() {
   };
   window.addEventListener("scroll", addBg);
 
+  const isLoggedIn = !!localStorage.getItem("token");
+
   return (
     <section className="navBarSection">
       <div className={transparent}>
         <div className="navBarSection__header-logo">
-        <Link to={"/"}
-              onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            >
-              <h1 className="flex">
-                <IoIosAperture />
-                F-Salon
-              </h1>
-            </Link>
+          <Link
+            to={"/"}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <h1 className="flex">
+              <IoIosAperture />
+              F-Salon
+            </h1>
+          </Link>
         </div>
 
         <div className={active}>
@@ -54,18 +60,51 @@ export default function Header() {
               <Link to={""}>About Us</Link>
             </li>
             <li className="navBar__lists-items">
-              <Link to={""}>
-                <DropdownNav title="Service" />
-              </Link>
+              <DropdownNav title="Service" />
             </li>
             <li className="navBar__lists-items">
               <Link to={""}>Upcoming Package</Link>
             </li>
-            <div className="navBar__lists-button flex">
-              <button className="navBar__btn btn">
-                <Link to={"/signin"}>Login</Link>
-              </button>
-            </div>
+            {isLoggedIn ? (
+              <>
+                <div className="navBar__lists-infor flex">
+                  <div className="content">
+                    <div className="content__noti">
+                      <Dropdown
+                        menu={{
+                          notis,
+                        }}
+                      >
+                        <a onClick={(e) => e.preventDefault()}>
+                          <Space>
+                            <IoIosNotifications className="icon" />
+                          </Space>
+                        </a>
+                      </Dropdown>
+                    </div>
+
+                    <div className="content__infor">
+                      <div>
+                        <h3>{loginUser.name}</h3>
+                        <p>{loginUser.role}</p>
+                      </div>
+                      <div>
+                        <img src={loginUser.avatar} alt="User-Avatar" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {" "}
+                <div className="navBar__lists-button flex">
+                  <button className="navBar__btn btn">
+                    <Link to={"/login"}>Login</Link>
+                  </button>
+                </div>
+              </>
+            )}
           </ul>
           <div onClick={removeNav} className="navBar__close">
             <IoCloseCircleSharp className="icon" />

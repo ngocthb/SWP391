@@ -9,7 +9,7 @@
   --greyText: rgb(190, 190, 190);
   --inputColor: hsl(330, 12%, 97%);
 }
-.HeaderCustomer__toggle {
+.HeaderUser__toggle {
   .icon {
     justify-content: center;
     margin-right: 10px;
@@ -22,7 +22,7 @@
     border: 2px solid var(--greyBg);
   }
 }
-.HeaderCustomerSection {
+.HeaderUserSection {
   &__header {
     position: fixed;
     display: flex;
@@ -47,7 +47,7 @@
     }
 
     @media screen and (max-width: 900px) {
-      .HeaderCustomer {
+      .HeaderUser {
         background: var(--greyBg);
         position: absolute;
         height: max-content;
@@ -157,14 +157,14 @@
 }
 
 @media screen and (min-width: 901px) {
-  .HeaderCustomer__toggle,
-  .HeaderCustomer__close {
+  .HeaderUser__toggle,
+  .HeaderUser__close {
     display: none;
   }
 
-  .HeaderCustomerSection__header {
+  .HeaderUserSection__header {
     padding: 1.5rem 2rem;
-    .HeaderCustomer {
+    .HeaderUser {
       &__lists {
         display: flex;
         align-items: center;
@@ -178,7 +178,7 @@
             font-size: 0.9rem;
             font-weight: 400;
             &:hover {
-              color: var(--PrimaryColor);
+              color: var(--greyText);
             }
           }
         }

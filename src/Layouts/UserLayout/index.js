@@ -1,15 +1,15 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../../Components/Footer/Footer";
-import HeaderCustomer from "../../Components/HeaderCustomer/HeaderCustomer";
+import HeaderUser from "../../Components/HeaderUser/HeaderUser";
 
-function CustomerLayout () {
+function UserLayout () {
     return(
         <>
-            <HeaderCustomer/>
+            <HeaderUser/>
             <Outlet/>
             <Footer/>
         </>
     )
 }
 
-export default CustomerLayout;
+export default UserLayout;

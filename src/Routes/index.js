@@ -1,12 +1,13 @@
 import ConfirmPassword from "../Components/ConfirmPassword/ConfirmPassword";
 import ForgetPassword from "../Components/ForgetPassword/ForgetPassword";
-import Signin from "../Components/Signin/Signin";
-import Signup from "../Components/Signup/Signup";
+import Login from "../Components/Login/Login";
+import Register from "../Components/Register/Register";
 import UserInfor from "../Components/UserInfor/UserInfor";
-import CustomerLayout from "../Layouts/CustomerLayout";
+import CustomerLayout from "../Layouts/UserLayout";
 import SigninLayout from "../Layouts/SigninLayout";
 import HomePage from "../Pages/HomePage";
 import PrivateRoute from "../Components/PrivateRoute/index";
+import AuthenticatedRoute from "../Components/AuthenticatedRoute";
 
 export const Routes = [
   {
@@ -14,16 +15,20 @@ export const Routes = [
     element: <HomePage />,
   },
   {
-    path: '/signin',
-    element: <SigninLayout />,
+    path: '/login',
+    element: (
+      <AuthenticatedRoute>
+        <SigninLayout />
+      </AuthenticatedRoute>
+    ),
     children: [
       {
         path: '',
-        element: <Signin />,
+        element: <Login/>,
       },
       {
-        path: 'signup',
-        element: <Signup />,
+        path: 'register',
+        element: <Register />,
       },
       {
         path: 'forgetPassword',
@@ -36,12 +41,12 @@ export const Routes = [
     ],
   },
   {
-    path: 'customer',
-    element: <PrivateRoute><CustomerLayout/></PrivateRoute>,
+    path: 'user',
+    element: <PrivateRoute><CustomerLayout /></PrivateRoute>,
     children: [
       {
         path: 'information',
-        element: <UserInfor/>
+        element: <UserInfor />
       }
     ]
   },
