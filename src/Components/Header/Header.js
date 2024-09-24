@@ -4,7 +4,7 @@ import { IoIosAperture, IoIosNotifications } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
 import { useState } from "react";
-import DropdownNav from "../../redux/dropdow.js";
+import DropdownNav from "../../redux/dropdown.js";
 import { Link } from "react-router-dom";
 import { Dropdown, Space } from "antd";
 import notis from "../../data/notification.js";
