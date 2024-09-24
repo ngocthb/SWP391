@@ -46,7 +46,7 @@
       }
     }
 
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 902px) {
       .HeaderUser {
         background: var(--greyBg);
         position: absolute;
@@ -137,12 +137,18 @@
         }
 
         &__close {
+          display: block;
           position: absolute;
           top: 1rem;
           right: 1.5rem;
           color: var(--PrimaryColor);
-          &:hover .icon {
+          font-size: 1.5rem;
+          &:hover {
             color: var(--HoverColor);
+          }
+
+          .icon {
+            color: var(--PrimaryColor);
           }
         }
         &-active {
@@ -156,7 +162,7 @@
   }
 }
 
-@media screen and (min-width: 901px) {
+@media screen and (min-width: 902px) {
   .HeaderUser__toggle,
   .HeaderUser__close {
     display: none;

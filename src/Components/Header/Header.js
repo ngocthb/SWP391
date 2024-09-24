@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import { Dropdown, Space } from "antd";
 import notis from "../../data/notification.js";
 import loginUser from "../../data/loginUser.js";
-<CiGrid41 />;
 
 export default function Header() {
   const [active, setActive] = useState("navBar");
@@ -111,8 +110,9 @@ export default function Header() {
           </div>
         </div>
 
-        <div onClick={showNav} className="navBar__toggle">
+        <div onClick={showNav} className="Header__toggle">
           <CiGrid41 className="icon" />
+          <img src={loginUser.avatar} alt="User-Avatar" />
         </div>
       </div>
     </section>

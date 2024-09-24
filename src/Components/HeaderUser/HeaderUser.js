@@ -24,17 +24,6 @@ export default function HeaderUser() {
     setActive("HeaderUser");
   };
 
-  // Code to add background color to header
-  // const [transparent, setTransparent] = useState("HeaderUserSection__header");
-  // const addBg = () => {
-  //   if (window.scrollY >= 10) {
-  //     setTransparent("HeaderUserSection__header HeaderUserSection__header-active");
-  //   } else {
-  //     setTransparent("HeaderUserSection__header");
-  //   }
-  // };
-  // window.addEventListener("scroll", addBg);
-
   return (
     <section className="HeaderUserSection">
       <div className="HeaderUserSection__header">
