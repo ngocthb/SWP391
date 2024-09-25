@@ -12,11 +12,7 @@ const DropdownNav = ({ title }) => (
       items,
     }}
   >
-<<<<<<< HEAD:src/redux/dropdow.js
-    <Link onClick={(e) => e.preventDefault()}>
-=======
     <Link to onClick={(e) => e.preventDefault()}>
->>>>>>> 68f8f26741f30052d038f83fa1f5ccef835c314d:src/redux/dropdown.js
       <Space>
         {title}
         <DownOutlined />

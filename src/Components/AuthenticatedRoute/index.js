@@ -4,7 +4,7 @@ const AuthenticatedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
 
   if (token) {
-    return <Navigate to="/customer/information" />;
+    return <Navigate to="/customer" />;
   }
 
   return children;

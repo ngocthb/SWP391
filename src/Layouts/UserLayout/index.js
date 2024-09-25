@@ -1,24 +1,11 @@
 import { Outlet } from "react-router-dom";
-import Footer from "../../Components/Footer/Footer";
-import HeaderUser from "../../Components/HeaderUser/HeaderUser";
+import HeaderNormal from "../../Components/client/HeaderNormal/HeaderNormal";
+import Footer from "../../Components/client/Footer/Footer";
 
-<<<<<<< HEAD:src/Layouts/UserLayout/index.js
-function UserLayout () {
-    return(
-        <>
-            <HeaderUser/>
-            <Outlet/>
-            <Footer/>
-        </>
-    )
-}
-
-export default UserLayout;
-=======
 function CustomerLayout() {
   return (
     <>
-      <HeaderCustomer />
+      <HeaderNormal />
       <Outlet />
       <Footer />
     </>
@@ -26,4 +13,3 @@ function CustomerLayout() {
 }
 
 export default CustomerLayout;
->>>>>>> 68f8f26741f30052d038f83fa1f5ccef835c314d:src/Layouts/CustomerLayout/index.js
