@@ -37,23 +37,18 @@ const ConfirmPassword = () => {
     setLoading(true);
 
     try {
-      const response = await api.post(`api/changePassword/${email}`, { 
+      const response = await api.post(`changePassword/${email}`, { 
         password: password,
         confirmPassword: confirmPassword
       });
       if (response.data.code === 1000) {
         navigate("/login");
-      } else {
-        messageApi.open({
-          type: 'error',
-          content: response.data.message,
-        });
       }
     } catch (error) {
       console.error(error);
       messageApi.open({
         type: 'error',
-        content: "An error occurred. Please try again.",
+        content: error.response.data.message,
       });
     }finally{
       setLoading(false);

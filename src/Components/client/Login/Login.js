@@ -37,11 +37,11 @@ const Login = () => {
             if(response) {
                 navigate("/");
             }
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.log(error);
             messageApi.open({
                 type: 'error',
-                content: 'Login failed. Please try again.',
+                content: error.response.data.message,
               });
         }  finally {
             setLoading(false)

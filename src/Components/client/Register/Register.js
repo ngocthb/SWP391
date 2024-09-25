@@ -58,11 +58,11 @@ const Register = () => {
           });
         navigate("/signin");
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
       messageApi.open({
         type: 'error',
-        content: 'Registration failed. Please try again.',
+        content: error.response.data.message,
       });
     } finally {
       setLoading(false);

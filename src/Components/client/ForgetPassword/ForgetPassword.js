@@ -35,20 +35,15 @@ const ForgetPassword = () => {
       const response = await api.post(`api/verifyEmail/${emailValue}`, { 
         email: emailValue 
       });
-      setShowOtpModal(true);
+      
       if (response.data.code === 1000) {
-        
-      } else {
-        messageApi.open({
-          type: 'error',
-          content: response.data.message,
-        });
+        setShowOtpModal(true);
       }
     } catch (error) {
       console.error(error);
       messageApi.open({
         type: 'error',
-        content: "An error occurred. Please try again later.",
+        content: error.response.data.message,
       });
     }finally{
       setLoading(false);
@@ -86,17 +81,12 @@ const ForgetPassword = () => {
         navigate("/login/confirmPassword",{ 
           state: { verified: true, email: email} 
         });
-      } else {
-        messageApi.open({
-          type: 'error',
-          content: response.data.message,
-        });
       }
     } catch (error) {
       console.error(error);
       messageApi.open({
         type: 'error',
-        content: "An error occurred during OTP verification.",
+        content: error.response.data.message,
       });
     }finally{
       setLoadingVerify(false);
