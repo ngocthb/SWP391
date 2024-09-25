@@ -2,17 +2,19 @@ import React, { useEffect, useRef, useState } from "react";
 import { ReactComponent as GoogleIcon } from "../../../Assets/GoogleIcon.svg";
 import "./ForgetPassword.scss";
 import api from "../../../config/axios";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const ForgetPassword = () => {
   const [showOtpModal, setShowOtpModal] = useState(false);
-  const [otp, setOtp] = useState(Array(4).fill(""));
+  const [otp, setOtp] = useState(Array(6).fill(""));
   const inputRefs = useRef([]);
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [timer, setTimer] = useState(300); // 5 minutes
+  const [timer, setTimer] = useState(70);
+  const [loading, setLoading] = useState(false);
+  const [loadingVerify, setLoadingVerify] = useState(false);
 
   useEffect(() => {
     if (showOtpModal && timer > 0) {
@@ -27,13 +29,15 @@ const ForgetPassword = () => {
     e.preventDefault();
     const emailValue = e.target.email.value;
     setEmail(emailValue);
+    setLoading(true);
 
     try {
       const response = await api.post(`api/verifyEmail/${emailValue}`, { 
         email: emailValue 
       });
+      setShowOtpModal(true);
       if (response.data.code === 1000) {
-        setShowOtpModal(true);
+        
       } else {
         messageApi.open({
           type: 'error',
@@ -46,6 +50,8 @@ const ForgetPassword = () => {
         type: 'error',
         content: "An error occurred. Please try again later.",
       });
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -72,11 +78,11 @@ const ForgetPassword = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     const otpCode = otp.join("");
+    setLoadingVerify(true);
     
     try {
       const response = await api.post(`/api/verifyOtp/${email}/${otpCode}`);
       if (response.data.code === 1000) {
-        // Navigate with state indicating successful verification
         navigate("/login/confirmPassword",{ 
           state: { verified: true, email: email} 
         });
@@ -92,6 +98,8 @@ const ForgetPassword = () => {
         type: 'error',
         content: "An error occurred during OTP verification.",
       });
+    }finally{
+      setLoadingVerify(false);
     }
   };
 
@@ -134,8 +142,8 @@ const ForgetPassword = () => {
             <label htmlFor="email">Email</label>
             <input type="email" required id="email" />
             <div className="forget-password__flex-box">
-              <button type="submit" className="forget-password__log-in-button">
-                Continue
+              <button type="submit" className="forget-password__log-in-button" disabled={loading}>
+                {loading ? <Spin size="small" /> : "CONTINUE"} 
               </button>
             </div>
           </form>
@@ -153,7 +161,7 @@ const ForgetPassword = () => {
             <h2 className="otp-form__title">OTP</h2>
             <h3 className="otp-form__subtitle">Verification Code</h3>
             <p className="otp-form__message">
-              We have sent a verification code to your mobile number.
+              We have sent a verification code to your email.
             </p>
             <p className="otp-form__timer">
               Time remaining: {formatTime(timer)}
@@ -173,8 +181,8 @@ const ForgetPassword = () => {
                 />
               ))}
             </div>
-            <button className="otp-form__submit" type="submit" disabled={timer === 0}>
-              Verify me
+            <button className="otp-form__submit" type="submit" disabled={(timer === 0) || (loadingVerify)}>
+              {loadingVerify ? <Spin size="small" /> : "Verify me"} 
             </button>
           </form>
         </div>

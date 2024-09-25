@@ -3,7 +3,7 @@ import eyeOff from "../../../Assets/eye-off.svg";
 import eye from "../../../Assets/eye.svg";
 import './ConfirmPassword.scss';
 import api from '../../../config/axios';
-import { message } from 'antd';
+import { message, Spin } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const ConfirmPassword = () => {
@@ -13,6 +13,7 @@ const ConfirmPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { email } = location.state || {};
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Check if the user was verified
@@ -33,6 +34,7 @@ const ConfirmPassword = () => {
     e.preventDefault();
     const password = e.target.password.value;
     const confirmPassword = e.target.passwordConfirm.value;
+    setLoading(true);
 
     try {
       const response = await api.post(`api/changePassword/${email}`, { 
@@ -53,6 +55,8 @@ const ConfirmPassword = () => {
         type: 'error',
         content: "An error occurred. Please try again.",
       });
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -107,8 +111,8 @@ const ConfirmPassword = () => {
               />
             </div>
             <div className="confirm-password__flex-box">
-              <button type="submit" className="confirm-password__log-in-button">
-                Confirm
+              <button type="submit" className="confirm-password__log-in-button" disabled={loading}>
+                {loading ? <Spin size="small" /> : "CONFIRM"} 
               </button>
             </div>
           </form>

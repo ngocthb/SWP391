@@ -1,12 +1,12 @@
 import "./App.css";
 import AllRoutes from "./Components/AllRoutes";
-import Header from "./Components/Manager/Header/Header";
+// import ManagerLayout from "./Layouts/manager/ManagerLayout";
 
 function App() {
   return (
     <>
-      {/* <AllRoutes /> */}
-      <Header/>
+      <AllRoutes />
+      {/* <ManagerLayout/> */}
     </>
   );
 }
