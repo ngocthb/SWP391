@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react";
 import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
-import DropdownNav from "../../redux/dropdow"; // Adjust path based on your structure
+import DropdownNav from "../../../redux/dropdow.js"; // Adjust path based on your structure
 import "./HeaderNormal.scss";
 import { Link } from "react-router-dom";
-import loginUser from "../../data/loginUser.js";
+import loginUser from "../../../data/loginUser.js";
 
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");

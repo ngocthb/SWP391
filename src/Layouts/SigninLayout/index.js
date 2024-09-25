@@ -1,12 +1,12 @@
 import { Outlet } from "react-router-dom";
-import Footer from "../../Components/Footer/Footer";
-import HeaderNormal from "../../Components/HeaderNormal/HeaderNormal";
+import HeaderNormal from "../../Components/client/HeaderNormal/HeaderNormal";
+import Footer from "../../Components/client/Footer/Footer";
 function SigninLayout() {
   return (
     <>
       <HeaderNormal/>
       <Outlet />
-      <Footer />
+      <Footer/>
     </>
   );
 }

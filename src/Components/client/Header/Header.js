@@ -4,9 +4,9 @@ import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
 import { useState } from "react";
-import DropdownNav from "../../redux/dropdow.js";
+import DropdownNav from "../../../redux/dropdow.js";
 import { Link } from "react-router-dom";
-import loginUser from "../../data/loginUser.js";
+import loginUser from "../../../data/loginUser.js";
 
 export default function Header() {
   const [active, setActive] = useState("navBar");

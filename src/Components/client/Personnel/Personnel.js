@@ -8,7 +8,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import Personnels from "../../data/personnels";
+import Personnels from "../../../data/personnels";
 import { RxDividerHorizontal } from "react-icons/rx";
 const Data = Personnels;
 

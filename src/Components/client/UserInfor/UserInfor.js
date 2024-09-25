@@ -1,4 +1,4 @@
-import loginUser from "../../data/loginUser";
+import loginUser from "../../../data/loginUser";
 import "./UserInfor.scss";
 
 import { FaFire } from "react-icons/fa";

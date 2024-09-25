@@ -1,13 +1,13 @@
-import ConfirmPassword from "../Components/ConfirmPassword/ConfirmPassword";
-import ForgetPassword from "../Components/ForgetPassword/ForgetPassword";
-import Login from "../Components/Login/Login";
-import Register from "../Components/Register/Register";
-import UserInfor from "../Components/UserInfor/UserInfor";
 import CustomerLayout from "../Layouts/UserLayout";
 import SigninLayout from "../Layouts/SigninLayout";
 import HomePage from "../Pages/HomePage";
 import PrivateRoute from "../Components/PrivateRoute/index";
 import AuthenticatedRoute from "../Components/AuthenticatedRoute";
+import Login from "../Components/client/Login/Login";
+import Register from "../Components/client/Register/Register";
+import ForgetPassword from "../Components/client/ForgetPassword/ForgetPassword";
+import ConfirmPassword from "../Components/client/ConfirmPassword/ConfirmPassword";
+import UserInfor from "../Components/client/UserInfor/UserInfor";
 
 export const Routes = [
   {
@@ -24,19 +24,19 @@ export const Routes = [
     children: [
       {
         path: '',
-        element: <Login/>,
+        element: <Login/>
       },
       {
         path: 'register',
-        element: <Register />,
+        element: <Register/>
       },
       {
         path: 'forgetPassword',
-        element: <ForgetPassword />,
+        element: <ForgetPassword/>
       },
       {
         path: 'confirmPassword',
-        element: <ConfirmPassword />,
+        element: <ConfirmPassword/>
       },
     ],
   },
@@ -46,7 +46,7 @@ export const Routes = [
     children: [
       {
         path: 'information',
-        element: <UserInfor />
+        element: <UserInfor/>
       }
     ]
   },

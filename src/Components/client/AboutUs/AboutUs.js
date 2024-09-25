@@ -1,6 +1,6 @@
 import "./AboutUs.scss";
 
-import video from "../../Assets/video.mp4";
+import video from "../../../Assets/video.mp4";
 
 export default function AboutUs() {
   return (

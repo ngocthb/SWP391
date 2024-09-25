@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ReactComponent as GoogleIcon } from "../../Assets/GoogleIcon.svg";
+import { ReactComponent as GoogleIcon } from "../../../Assets/GoogleIcon.svg";
 import "./ForgetPassword.scss";
-import api from "../../config/axios";
+import api from "../../../config/axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 

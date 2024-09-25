@@ -6,7 +6,7 @@ import { PiHairDryerBold } from "react-icons/pi";
 import { GiComb } from "react-icons/gi";
 import { FaArrowRight } from "react-icons/fa6";
 import "./PopularService.scss";
-import services from "../../data/services";
+import services from "../../../data/services";
 const Data = services;
 export default function PopularService() {
   return (
