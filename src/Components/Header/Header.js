@@ -1,15 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import "./Header.scss";
-import { IoIosAperture, IoIosNotifications } from "react-icons/io";
+import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
 import { useState } from "react";
 import DropdownNav from "../../redux/dropdow.js";
 import { Link } from "react-router-dom";
-import { Dropdown, Space } from "antd";
-import notis from "../../data/notification.js";
 import loginUser from "../../data/loginUser.js";
-<CiGrid41 />;
 
 export default function Header() {
   const [active, setActive] = useState("navBar");
@@ -65,24 +62,10 @@ export default function Header() {
             <li className="navBar__lists-items">
               <Link to={""}>Upcoming Package</Link>
             </li>
-            {isLoggedIn ? (
-              <>
-                <div className="navBar__lists-infor flex">
+            <div className="navBar__lists-infor flex">
+              {isLoggedIn ? (
+                <>
                   <div className="content">
-                    <div className="content__noti">
-                      <Dropdown
-                        menu={{
-                          notis,
-                        }}
-                      >
-                        <a onClick={(e) => e.preventDefault()}>
-                          <Space>
-                            <IoIosNotifications className="icon" />
-                          </Space>
-                        </a>
-                      </Dropdown>
-                    </div>
-
                     <div className="content__infor">
                       <div>
                         <h3>{loginUser.name}</h3>
@@ -93,26 +76,25 @@ export default function Header() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </>
-            ) : (
-              <>
-                {" "}
-                <div className="navBar__lists-button flex">
+                </>
+              ) : (
+                <>
+                  {" "}
                   <button className="navBar__btn btn">
                     <Link to={"/login"}>Login</Link>
                   </button>
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </ul>
           <div onClick={removeNav} className="navBar__close">
             <IoCloseCircleSharp className="icon" />
           </div>
         </div>
 
-        <div onClick={showNav} className="navBar__toggle">
+        <div onClick={showNav} className="Header__toggle">
           <CiGrid41 className="icon" />
+          <img src={loginUser.avatar} alt="User-Avatar" />
         </div>
       </div>
     </section>

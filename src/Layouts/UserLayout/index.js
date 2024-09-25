@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../../Components/Footer/Footer";
-import HeaderUser from "../../Components/HeaderUser/HeaderUser";
+import Header from "../../Components/Header/Header";
 
 function UserLayout () {
     return(
         <>
-            <HeaderUser/>
+            <Header/>
             <Outlet/>
             <Footer/>
         </>

@@ -10,7 +10,7 @@
   --inputColor: hsl(330, 12%, 97%);
 }
 
-.navBarSection {
+.header-normalSection {
   &__header {
     position: fixed;
     top: 0;
@@ -44,7 +44,7 @@
     }
   }
 
-  .navBar {
+  .header-normal {
     &__lists {
       display: flex;
       align-items: center;
@@ -64,7 +64,7 @@
         }
       }
 
-      .navBar__btn {
+      .header-normal__btn {
         margin-left: 1rem;
         a {
           color: var(--WhiteColor);
@@ -111,7 +111,7 @@
   }
 
   @media screen and (max-width: 768px) {
-    .navBar {
+    .header-normal {
       background: var(--greyBg);
       position: absolute;
       height: max-content;
@@ -148,30 +148,30 @@
       }
     }
 
-    .navBar-active {
+    .header-normal-active {
       left: 0;
     }
   }
 
   @media screen and (min-width: 769px) {
-    .navBar__toggle,
-    .navBar__close {
+    .header-normal__toggle,
+    .header-normal__close {
       display: none;
     }
 
-    .navBarSection__header {
+    .header-normalSection__header {
       padding: 1.5rem 2rem;
     }
   }
 
   @media screen and (min-width: 960px) {
-    .navBarSection__header .navBar__lists-items {
+    .header-normalSection__header .header-normal__lists-items {
       padding: 0 0.7rem;
     }
   }
 
   @media screen and (min-width: 1024px) {
-    .navBarSection__header {
+    .header-normalSection__header {
       padding: 1rem 8.5rem;
     }
   }
