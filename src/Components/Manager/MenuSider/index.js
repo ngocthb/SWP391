@@ -69,6 +69,7 @@ function MenuSider() {
         defaultSelectedKeys={["/"]}
         defaultOpenKeys={["menu-1"]}
         items={items}
+        style={{ height: "100%", borderRight: 0 }}
       />
     </>
   );

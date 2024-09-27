@@ -32,9 +32,23 @@ const ManagerHeader = () => {
             }}
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            <div className="header-manager__name-page">Stylish</div>
           </div>
         </div>
-        <div className="header-manager__nav-right"></div>
+        <div className="header-manager__nav-right">
+          <div className="header-manager__user-info">
+            <div className="header-manager__text">
+              <div className="header-manager__name">Nabila A.</div>
+              <div className="header-manager__role">Admin</div>
+            </div>
+            <div className="header-manager__avatar">
+              <img
+                alt="User avatar"
+                src="https://enlink.themenate.net/assets/images/avatars/thumb-3.jpg"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </header>
   );

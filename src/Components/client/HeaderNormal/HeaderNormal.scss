@@ -64,7 +64,7 @@
         margin: auto;
 
         &-items {
-          padding: 1rem 0;
+          padding: 2rem 0;
 
           a {
             color: var(--text-color);
@@ -152,19 +152,6 @@
         border: 2px solid var(--greyBg);
       }
     }
-    // &-active {
-    //   background: var(--PrimaryColor);
-    //   box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.334);
-    //   .header-normal__lists {
-    //     .header-normal__lists-items {
-    //       a {
-    //         &:hover {
-    //           color: var(--greyText);
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
   }
 }
 
