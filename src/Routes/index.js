@@ -56,14 +56,14 @@ export const Routes = [
       },
     ],
   },
-  {
-    path: "manager",
-    element: <ManagerLayout />,
+  { 
+    path: 'manager',
+    element: <ManagerLayout/>,
     children: [
       {
-        path: "stylish",
-        element: <ManageEmployee buttonLabel="+ New Staff" />,
-      },
-    ],
+        path: 'stylish',
+        element: <ManageEmployee buttonLabel={"+ New Stylish"}/>
+      }
+    ]
   },
 ];

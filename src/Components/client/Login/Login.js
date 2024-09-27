@@ -31,7 +31,7 @@ const Login = () => {
             });
             const { token } = response.data;
             localStorage.setItem("token", token);
-            const userResponse = await api.get("users/2");
+            const userResponse = await api.get("customer/profile");
             localStorage.setItem("user", JSON.stringify(userResponse.data.data));
             console.log(userResponse.data.data);
             
