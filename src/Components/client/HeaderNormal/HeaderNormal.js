@@ -1,36 +1,57 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
-import DropdownNav from "../../../redux/dropdow.js"; // Adjust path based on your structure
+import DropdownNav from "../../../redux/dropdow.js";
 import "./HeaderNormal.scss";
 import { Link } from "react-router-dom";
 import loginUser from "../../../data/loginUser.js";
+import { PiSignOut } from "react-icons/pi";
+import { CgProfile } from "react-icons/cg";
 
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
-  const [transparent, setTransparent] = useState(
-    "header-normalSection__header header-normalSection__header-active"
-  );
-
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   // Toggle header-normal
   const showNav = () => setActive("header-normal header-normal-active");
   const removeNav = () => setActive("header-normal");
 
   // Background color change on page load (without scroll)
-  useEffect(() => {
-    setTransparent(
-      "header-normalSection__header header-normalSection__header-active"
-    );
-  }, []);
+  // useEffect(() => {
+  //   setTransparent(" header-normalSection__header-active");
+  // }, []);
 
   const isLoggedIn = !!localStorage.getItem("token");
+
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".content")) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    // Redirect to home or login page
+    window.location.href = "/";
+  };
+
 
   return (
     <>
       <section className="header-normalSection">
-        <div className={transparent}>
+        <div className="header-normalSection__header">
           <div className="header-normalSection__header-logo">
             <Link to={"/"}>
               <h1 className="flex">
@@ -39,7 +60,7 @@ export default function HeaderNormal() {
               </h1>
             </Link>
           </div>
-
+          {/* header-normal header-normal-active */}
           <div className={active}>
             <ul className="header-normal__lists flex">
               <li className="header-normal__lists-items">
@@ -52,25 +73,30 @@ export default function HeaderNormal() {
                 <Link to={""}>Upcoming Package</Link>
               </li>
 
-              <div className="header-normal__lists-button flex">
+              <div className="header-normal__lists-infor flex">
                 {isLoggedIn ? (
                   <>
-                    <div className="content">
-                    <div className="content__infor">
-                      <div>
-                        <h3>{loginUser.name}</h3>
-                        <p>{loginUser.role}</p>
-                      </div>
-                      <div>
-                        <img src={loginUser.avatar} alt="User-Avatar" />
+                    <div className="content" onClick={toggleDropdown}>
+                      <div className="content__infor">
+                        <div>
+                          <h3>{loginUser.name}</h3>
+                          <p>{loginUser.role}</p>
+                        </div>
+                        <div>
+                          <img src={loginUser.avatar} alt="User-Avatar" />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                    {dropdownOpen && (
+                    <div className="header__dropdown">
+                      <Link to="/user/profile" className="header__dropdown-item"><CgProfile /> Profile</Link>
+                      <Link to="#" onClick={handleLogout} className="header__dropdown-item"><PiSignOut /> Logout</Link>
+                    </div>
+                  )}
                   </>
                 ) : (
                   <>
-                    {" "}
-                    <button className="header-normal__btn btn">
+                    <button className=" btn">
                       <Link to={""}>Login</Link>
                     </button>
                   </>
@@ -84,6 +110,7 @@ export default function HeaderNormal() {
 
           <div onClick={showNav} className="header-normal__toggle">
             <CiGrid41 className="icon" />
+            <img src={loginUser.avatar} alt="User-Avatar" />
           </div>
         </div>
       </section>

@@ -25,7 +25,7 @@ const Login = () => {
     
         setLoading(true);
         try {
-            const response = await api.post("api/login", {
+            const response = await api.post("login", {
                 username: userName,
                 password: password
             });

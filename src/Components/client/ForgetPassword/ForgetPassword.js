@@ -16,12 +16,22 @@ const ForgetPassword = () => {
   const [loading, setLoading] = useState(false);
   const [loadingVerify, setLoadingVerify] = useState(false);
 
+  const resetOtpState = () => {
+    setOtp(Array(6).fill(""));
+    setTimer(70);
+  };
+
   useEffect(() => {
     if (showOtpModal && timer > 0) {
       const intervalId = setInterval(() => {
         setTimer((prev) => prev - 1);
       }, 1000);
       return () => clearInterval(intervalId);
+    }
+
+    if(timer===0) {
+      setShowOtpModal(false);
+      resetOtpState();
     }
   }, [showOtpModal, timer]);
 
@@ -32,12 +42,13 @@ const ForgetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await api.post(`api/verifyEmail/${emailValue}`, { 
+      const response = await api.post(`verifyEmail/${emailValue}`, { 
         email: emailValue 
       });
       
       if (response.data.code === 1000) {
         setShowOtpModal(true);
+        resetOtpState();
       }
     } catch (error) {
       console.error(error);
@@ -76,7 +87,7 @@ const ForgetPassword = () => {
     setLoadingVerify(true);
     
     try {
-      const response = await api.post(`/api/verifyOtp/${email}/${otpCode}`);
+      const response = await api.post(`verifyOtp/${email}/${otpCode}`);
       if (response.data.code === 1000) {
         navigate("/login/confirmPassword",{ 
           state: { verified: true, email: email} 

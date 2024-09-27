@@ -39,7 +39,7 @@ const ConfirmPassword = () => {
     try {
       const response = await api.post(`changePassword/${email}`, { 
         password: password,
-        confirmPassword: confirmPassword
+        repassword: confirmPassword
       });
       if (response.data.code === 1000) {
         navigate("/login");

@@ -2,7 +2,6 @@ import React from 'react';
 import logo from "../../../Assets/logo.png";
 import logoFold from "../../../Assets/logo-fold.png";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import Notify from "../Notify/Notify";
 import "./ManagerHeader.scss";
 import { useDispatch, useSelector } from 'react-redux';
 import { collapse } from '../../../actions/Collapse';
@@ -27,7 +26,7 @@ const ManagerHeader = () => {
                     </div>
                 </div>
                 <div className="header-manager__nav-right">
-                    <Notify />
+                    
                 </div>
             </div>
         </header>

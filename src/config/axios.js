@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "https://reqres.in/";
+const baseUrl = "https://reqres.in/api";
 // const baseUrl = "http://localhost:8080/api/";
 
 const config = {

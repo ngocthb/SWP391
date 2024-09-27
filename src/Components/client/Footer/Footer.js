@@ -11,10 +11,11 @@ export default function Footer() {
 
   const handleHomeClick = (e) => {
     if (location.pathname === "/") {
-      e.preventDefault(); // Prevent navigation
-      window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to top smoothly
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" }); 
     }
   };
+  
   return (
     <div className="footer ">
       <div className="footer__container container grid">

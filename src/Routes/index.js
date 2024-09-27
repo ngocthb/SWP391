@@ -1,4 +1,3 @@
-import CustomerLayout from "../Layouts/UserLayout";
 import SigninLayout from "../Layouts/SigninLayout";
 import HomePage from "../Pages/HomePage";
 import PrivateRoute from "../Components/PrivateRoute/index";
@@ -8,6 +7,9 @@ import Register from "../Components/client/Register/Register";
 import ForgetPassword from "../Components/client/ForgetPassword/ForgetPassword";
 import ConfirmPassword from "../Components/client/ConfirmPassword/ConfirmPassword";
 import UserInfor from "../Components/client/UserInfor/UserInfor";
+import ManagerLayout from "../Layouts/manager/ManagerLayout";
+import ManageEmployee from "../Components/manager/ManageEmployee/ManageEmployee";
+import UserLayout from "../Layouts/UserLayout";
 
 export const Routes = [
   {
@@ -42,11 +44,21 @@ export const Routes = [
   },
   {
     path: 'user',
-    element: <PrivateRoute><CustomerLayout /></PrivateRoute>,
+    element: <PrivateRoute><UserLayout/></PrivateRoute>,
     children: [
       {
-        path: 'information',
+        path: 'profile',
         element: <UserInfor/>
+      }
+    ]
+  },
+  {
+    path: 'manager',
+    element: <ManagerLayout/>,
+    children: [
+      {
+        path: 'stylish',
+        element: <ManageEmployee/>
       }
     ]
   },

@@ -30,25 +30,16 @@ const Register = () => {
     const password = e.target[3].value;
     const confirmPassword = e.target[4].value;
     const phoneNumber = e.target[5].value;
-
-    if (password !== confirmPassword) {
-      messageApi.open({
-        type: 'error',
-        content: 'Passwords do not match!',
-      });
-      return;
-    }
-
     setLoading(true);
 
     try {
       const response = await api.post("register", {
         email: email,
-        userName: userName,
-        fullName: fullName,
+        username: userName,
+        fullname: fullName,
         password: password,
-        confirmPassword: confirmPassword,
-        phoneNumber: phoneNumber
+        confirmpassword: confirmPassword,
+        phone: phoneNumber
       });
 
       if (response) {
