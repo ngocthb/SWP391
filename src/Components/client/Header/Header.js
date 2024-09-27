@@ -82,9 +82,8 @@ export default function Header() {
           </Link>
         </div>
         {/* navBar navBar-active */}
-        <div
-          className={`${active} ${isLoggedIn ? " logged-in" : " logged-out"}`}
-        >
+        {/* `${active} ${isLoggedIn ? " logged-in" : " logged-out"}` */}
+        <div className={active}>
           <ul className="navBar__lists flex">
             <li className="navBar__lists-items">
               <Link to={""}> About Us</Link>

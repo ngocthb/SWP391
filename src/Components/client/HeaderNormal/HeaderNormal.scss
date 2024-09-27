@@ -49,14 +49,14 @@
       box-shadow: 0 2px 4px rgb(209, 209, 209, 0.904);
       transition: 0.5s ease;
       z-index: 1000;
+      padding: 0 2rem;
+      // &.logged-in {
+      //   padding: 0 2rem;
+      // }
 
-      &.logged-in {
-        padding: 0 2rem;
-      }
-
-      &.logged-out {
-        padding: 1rem;
-      }
+      // &.logged-out {
+      //   padding: 1rem;
+      // }
       &__lists {
         flex-direction: column;
         justify-self: center;
