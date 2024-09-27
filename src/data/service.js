@@ -32,16 +32,16 @@ const services = [
     totalOrder: 980,
     interest: "40%",
   },
-  {
-    id: 4,
-    name: "Car Wash",
-    description:
-      "Comprehensive car cleaning and detailing services.Professional haircut service for all ages.",
-    image:
-      "https://i.pinimg.com/564x/0d/3b/65/0d3b658dbd66b389cc2251cf2e6273df.jpg",
-    rating: 4.8,
-    totalOrder: 980,
-    interest: "40%",
-  },
+  // {
+  //   id: 4,
+  //   name: "Car Wash",
+  //   description:
+  //     "Comprehensive car cleaning and detailing services.Professional haircut service for all ages.",
+  //   image:
+  //     "https://i.pinimg.com/564x/0d/3b/65/0d3b658dbd66b389cc2251cf2e6273df.jpg",
+  //   rating: 4.8,
+  //   totalOrder: 980,
+  //   interest: "40%",
+  // },
 ];
 export default services;

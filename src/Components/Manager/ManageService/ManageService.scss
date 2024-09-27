@@ -298,8 +298,8 @@
       padding: 0 5%;
     }
     .service {
-      justify-content: space-around;
-
+      justify-content: flex-start;
+      gap: 80px;
       &__card {
         width: 45%;
         img {
