@@ -74,6 +74,7 @@
             display: flex;
             align-items: center;
             gap: 40px;
+            cursor: pointer;
 
             &__infor {
               display: flex;
@@ -133,6 +134,18 @@
         &:hover {
           color: var(--HoverColor);
         }
+      }
+
+      &__close {
+        display: block;
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        color: var(--PrimaryColor);
+        font-size: 1.5rem;
+        &:hover {
+          color: var(--HoverColor);
+        }
 
         .icon {
           color: var(--PrimaryColor);
@@ -174,6 +187,39 @@
   }
 }
 
+.header__dropdown {
+  position: absolute;
+  top: 70%;
+  right: 5rem;
+  background: var(--WhiteColor);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 4px;
+  min-width: 200px;
+  padding: 0.5rem 0;
+
+  .header__dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--textColor);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+
+    svg {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+    }
+
+    &:hover {
+      background: var(--HoverColor);
+      color: var(--WhiteColor);
+    }
+  }
+}
+
 @media (min-width: 640px) {
   .navBarSection {
     &__header {
@@ -181,8 +227,7 @@
     }
   }
 }
-@media (min-width: 768px) {
-}
+
 @media (min-width: 1024px) {
   .navBarSection {
     &__header {
@@ -241,6 +286,11 @@
     .navBar__close {
       display: none;
     }
+  }
+
+  .header__dropdown {
+    top: 70%;
+    right: 5rem;
   }
 }
 @media (min-width: 1280px) {

@@ -22,7 +22,7 @@
         border: 1px solid #ccc;
         border-radius: 50px;
         margin-right: 10px;
-        font-size: 16px;
+        font-size: 12px;
         width: 100%;
         padding: 10px 10px 10px 40px;
       }
@@ -49,11 +49,11 @@
       select,
       button {
         white-space: nowrap;
-        padding: 8px 15px;
+        padding: 8px 10px;
         border: 1px solid #ccc;
         border-radius: 50px;
-        font-size: 14px;
-        font-weight: 600;
+        font-size: 10px;
+        font-weight: 400;
         background-color: var(--WhiteColor);
         margin-left: 10px;
       }
@@ -85,8 +85,8 @@
       img {
         border-radius: 10px;
         margin-bottom: 10px;
-        width: 200px;
-        height: 200px;
+        width: 100px;
+        height: 100px;
       }
       h3 {
         margin: 10px 0;
@@ -116,10 +116,10 @@
         justify-content: space-evenly;
         margin-top: 10px;
         button {
-          padding: 10px 20px;
+          padding: 8px 10px;
           border: none;
           border-radius: 50px;
-          font-size: 14px;
+          font-size: 12px;
           cursor: pointer;
           transition: background-color 0.3s ease, color 0.3s ease;
           :hover {
@@ -145,6 +145,7 @@
     p {
       margin: 0 10px;
       color: #888;
+      font-size: 10px;
     }
     &-pages {
       display: flex;
@@ -153,20 +154,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 30px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
         border: 1px solid #ccc;
         border-radius: 50%;
         margin: 0 5px;
         cursor: pointer;
-
+        font-size: 10px;
         .active {
           background-color: var(--PrimaryColor);
           color: var(--WhiteColor);
           border: none;
         }
         .pagination-icon {
-          font-size: 30px;
+          font-size: 20px;
           background: var(--PrimaryColor);
           border-radius: 50%;
           padding: 8px;
@@ -183,18 +184,83 @@
 @media (min-width: 640px) {
   .ManageEmployee {
     &__header {
-      padding: 0 40px;
+      &-searchBar {
+        input {
+          font-size: 12px;
+        }
+      }
+      &-filter {
+        select,
+        button {
+          font-size: 12px;
+        }
+      }
     }
     .container {
       justify-content: space-around;
       &__card {
+        padding: 15px;
         width: 45%;
+        img {
+          width: 150px;
+          height: 150px;
+        }
+        h3 {
+          font-size: 16px;
+        }
+        p {
+          font-size: 10px;
+        }
+        &-actions {
+          button {
+            font-size: 12px;
+          }
+        }
       }
     }
   }
 }
 
 @media (min-width: 768px) {
+  .ManageEmployee {
+    &__header {
+      &-searchBar {
+        input {
+          font-size: 12px;
+        }
+        .searchBar-icon {
+          font-size: 18px;
+        }
+      }
+      &-filter {
+        select,
+        button {
+          font-size: 10px;
+        }
+      }
+    }
+    .container {
+      &__card {
+        width: 45%;
+        img {
+          width: 150px;
+          height: 150px;
+        }
+        h3 {
+          font-size: 16px;
+        }
+        p {
+          font-size: 10px;
+        }
+
+        &-actions {
+          button {
+            padding: 6px 14px;
+          }
+        }
+      }
+    }
+  }
 }
 
 @media (min-width: 1024px) {
@@ -206,10 +272,16 @@
       justify-content: space-around;
       width: 100% !important;
       &__card {
-        width: 30%;
+        width: 23%;
         img {
-          width: 200px;
-          height: 200px;
+          width: 100px;
+          height: 100px;
+        }
+        h3 {
+          font-size: 12px;
+        }
+        p {
+          font-size: 8px;
         }
       }
     }
@@ -220,12 +292,51 @@
   .ManageEmployee {
     &__header {
       padding: 0 4%;
+      &-filter {
+        select,
+        button {
+          padding: 10px 16px;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      }
     }
     .container {
       &__card {
         img {
-          width: 250px;
-          height: 250px;
+          width: 150px;
+          height: 150px;
+        }
+        h3 {
+          font-size: 18px;
+        }
+        p {
+          font-size: 12px;
+        }
+
+        &-actions {
+          display: flex;
+          justify-content: space-evenly;
+          margin-top: 10px;
+          button {
+            padding: 10px 15px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+    &__pagination {
+      p {
+        font-size: 16px;
+      }
+      &-pages {
+        span {
+          width: 30px;
+          height: 30px;
+          font-size: 14px;
+          .pagination-icon {
+            font-size: 30px;
+          }
         }
       }
     }
@@ -247,8 +358,8 @@
     .container {
       &__card {
         img {
-          width: 300px;
-          height: 300px;
+          width: 200px;
+          height: 200px;
         }
       }
     }

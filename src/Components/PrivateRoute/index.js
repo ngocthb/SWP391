@@ -2,17 +2,18 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
-const PrivateRoute = () => {
+const PrivateRoute = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/signin");
+    const isLoggedIn = !!localStorage.getItem("token");
+    
+    if (!isLoggedIn) {
+      navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
-  return <Outlet />;
+  return children ? children : <Outlet />;
 };
 
 export default PrivateRoute;

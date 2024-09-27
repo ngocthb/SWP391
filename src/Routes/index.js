@@ -1,4 +1,3 @@
-import CustomerLayout from "../Layouts/UserLayout";
 import SigninLayout from "../Layouts/SigninLayout";
 import HomePage from "../Pages/HomePage";
 import PrivateRoute from "../Components/PrivateRoute/index";
@@ -8,14 +7,17 @@ import Register from "../Components/client/Register/Register";
 import ForgetPassword from "../Components/client/ForgetPassword/ForgetPassword";
 import ConfirmPassword from "../Components/client/ConfirmPassword/ConfirmPassword";
 import UserInfor from "../Components/client/UserInfor/UserInfor";
+import ManagerLayout from "../Layouts/manager/ManagerLayout";
+import ManageEmployee from "../Components/Manager/ManageEmployee/ManageEmployee";
+import UserLayout from "../Layouts/UserLayout";
 
 export const Routes = [
   {
-    path: '/',
+    path: "/",
     element: <HomePage />,
   },
   {
-    path: '/login',
+    path: "/login",
     element: (
       <AuthenticatedRoute>
         <SigninLayout />
@@ -23,31 +25,45 @@ export const Routes = [
     ),
     children: [
       {
-        path: '',
-        element: <Login/>
+        path: "",
+        element: <Login />,
       },
       {
-        path: 'register',
-        element: <Register/>
+        path: "register",
+        element: <Register />,
       },
       {
-        path: 'forgetPassword',
-        element: <ForgetPassword/>
+        path: "forgetPassword",
+        element: <ForgetPassword />,
       },
       {
-        path: 'confirmPassword',
-        element: <ConfirmPassword/>
+        path: "confirmPassword",
+        element: <ConfirmPassword />,
       },
     ],
   },
   {
-    path: 'user',
-    element: <PrivateRoute><CustomerLayout /></PrivateRoute>,
+    path: "user",
+    element: (
+      <PrivateRoute>
+        <UserLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
-        path: 'information',
-        element: <UserInfor/>
-      }
-    ]
+        path: "profile",
+        element: <UserInfor />,
+      },
+    ],
+  },
+  {
+    path: "manager",
+    element: <ManagerLayout />,
+    children: [
+      {
+        path: "stylish",
+        element: <ManageEmployee buttonLabel="+ New Staff" />,
+      },
+    ],
   },
 ];

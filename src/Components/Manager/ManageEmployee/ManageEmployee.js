@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import { React } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaLocationDot } from "react-icons/fa6";
@@ -14,14 +15,14 @@ export default function ManageEmployee({ buttonLabel }) {
   const employees = staffs;
   return (
     <>
-      <div class="ManageEmployee">
+      <div className="ManageEmployee">
         <div className="ManageEmployee__header">
-          <div class="ManageEmployee__header-searchBar">
+          <div className="ManageEmployee__header-searchBar">
             <BiSearchAlt className="searchBar-icon" />
             {/* <i class="fas fa-search"></i> */}
             <input placeholder="Search here..." type="text" />
           </div>
-          <div class="ManageEmployee__header-filter">
+          <div className="ManageEmployee__header-filter">
             <select>
               <option>Newest</option>
               <option>Oldest</option>
@@ -29,18 +30,18 @@ export default function ManageEmployee({ buttonLabel }) {
             <button> {buttonLabel}</button>
           </div>
         </div>
-        <div class="container">
+        <div className="container">
           {(employees || []).map((employee) => (
-            <div key={employee.id} class="container__card">
+            <div key={employee.id} className="container__card">
               <img
                 alt="Profile picture"
-                height="100"
+                height="50"
                 src={employee.imgSrc}
-                width="100"
+                width="50"
               />
               <h3>{employee.name}</h3>
               <p>Stylist at {employee.location}</p>
-              <div class="container__card-info">
+              <div className="container__card-info">
                 <p>
                   <FaLocationDot />
                   {/* <i class="fas fa-map-marker-alt"></i>*/}
@@ -54,25 +55,25 @@ export default function ManageEmployee({ buttonLabel }) {
                   {employee.email}
                 </p>
               </div>
-              <div class="container__card-actions">
-                <button class="delete btn">
+              <div className="container__card-actions">
+                <button className="delete btn">
                   <HiTrash />
                 </button>
-                <button class="update btn">
+                <button className="update btn">
                   <FaUserEdit />
                 </button>
               </div>
             </div>
           ))}
         </div>
-        <div class="ManageEmployee__pagination">
-          <p>Showing 1-6 from {employees.length} data</p>
-          <div class="ManageEmployee__pagination-pages">
+        <div className="ManageEmployee__pagination">
+          <p>Showing 1-8 from {employees.length} data</p>
+          <div className="ManageEmployee__pagination-pages">
             <span>
               {/* <i class="fas fa-chevron-left"></i> */}
               <FaAngleLeft className="pagination-icon" />
             </span>
-            <span class="active">1</span>
+            <span className="active">1</span>
             <span>2</span>
             <span>3</span>
             <span>

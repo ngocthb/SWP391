@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
@@ -7,13 +7,12 @@ import DropdownNav from "../../../redux/dropdown.js";
 import "./HeaderNormal.scss";
 import { Link } from "react-router-dom";
 import loginUser from "../../../data/loginUser.js";
+import { PiSignOut } from "react-icons/pi";
+import { CgProfile } from "react-icons/cg";
 
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
-  const [transparent, setTransparent] = useState(
-    "header-normalSection__header header-normalSection__header-active"
-  );
-
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   // Toggle header-normal
   const showNav = () => setActive("header-normal header-normal-active");
   const removeNav = () => setActive("header-normal");
@@ -24,6 +23,29 @@ export default function HeaderNormal() {
   // }, []);
 
   const isLoggedIn = !!localStorage.getItem("token");
+
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".content")) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    // Redirect to home or login page
+    window.location.href = "/";
+  };
 
   return (
     <>
@@ -53,7 +75,7 @@ export default function HeaderNormal() {
               <div className="header-normal__lists-infor flex">
                 {isLoggedIn ? (
                   <>
-                    <div className="content">
+                    <div className="content" onClick={toggleDropdown}>
                       <div className="content__infor">
                         <div>
                           <h3>{loginUser.name}</h3>
@@ -64,6 +86,23 @@ export default function HeaderNormal() {
                         </div>
                       </div>
                     </div>
+                    {dropdownOpen && (
+                      <div className="header__dropdown">
+                        <Link
+                          to="/user/profile"
+                          className="header__dropdown-item"
+                        >
+                          <CgProfile /> Profile
+                        </Link>
+                        <Link
+                          to="#"
+                          onClick={handleLogout}
+                          className="header__dropdown-item"
+                        >
+                          <PiSignOut /> Logout
+                        </Link>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>

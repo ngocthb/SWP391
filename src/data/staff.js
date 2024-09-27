@@ -59,6 +59,26 @@ const staffs = [
     imgSrc:
       "https://i.pinimg.com/736x/c8/25/0b/c8250beec1befc60fc07cecfe0277a73.jpg",
   },
+  {
+    id: 7,
+    name: "Olivia Patel",
+    position: "Massage Therapist at Serenity Spa",
+    location: "Mumbai, India",
+    phone: "+91 22 5555 6789",
+    email: "olivia.patel@mail.in",
+    imgSrc:
+      "https://i.pinimg.com/736x/c8/25/0b/c8250beec1befc60fc07cecfe0277a73.jpg",
+  },
+  {
+    id: 8,
+    name: "Olivia Patel",
+    position: "Massage Therapist at Serenity Spa",
+    location: "Mumbai, India",
+    phone: "+91 22 5555 6789",
+    email: "olivia.patel@mail.in",
+    imgSrc:
+      "https://i.pinimg.com/736x/c8/25/0b/c8250beec1befc60fc07cecfe0277a73.jpg",
+  },
 ];
 
 export default staffs;
