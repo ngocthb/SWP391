@@ -1,519 +1,367 @@
 .ManageEmployee {
-  .ManageEmployee {
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px 0;
-    &__header {
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px 0;
+  &__header {
+    display: flex;
+    padding: 0 20px;
+    // justify-content: center;
+    justify-content: space-between;
+    flex-direction: row;
+    &-searchBar {
+      width: 100%;
+      position: relative;
+      max-width: 400px;
+
       display: flex;
-      padding: 0 15px;
-      // justify-content: center;
-      justify-content: space-between;
-      flex-direction: row;
-      &-searchBar {
-        width: 100%;
-        position: relative;
-        max-width: 350px;
-  
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        input {
-          width: 100%;
-          padding: 10px;
-          border: 1px solid #ccc;
-          border-radius: 50px;
-          margin-right: 10px;
-          padding: 8px;
-          font-size: 14px; 
-          width: 100%;
-        }
-        i {
-          position: absolute;
-          margin-left: 15px;
-          color: #aaa;
-        }
-        .searchBar-icon {
-          position: absolute;
-          left: 10px;
-          align-items: center;
-          transform: translateY(-50%);
-          font-size: 20px;
-          color: #888;
-          margin-top: 20px;
-        }
-      }
-      &-filter {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        margin-bottom: 15px;
-        select,
-        button {
-          white-space: nowrap;
-          border: 1px solid #ccc;
-          border-radius: 50px;
-          padding: 6px 12px;
-          font-size: 12px;
-          font-weight: 600;
-          background-color: var(--WhiteColor);
-          margin-left: 10px;
-        }
-        button {
-          background-color: var(--PrimaryColor);
-          color: var(--WhiteColor);
-          border: none;
-          &:hover {
-            background: var(--greyBg);
-            color: var(--text-color);
-            border: 1px solid var(--PrimaryColor);
-          }
-        }
-      }
-    }
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      &__card {
-        background-color: var(--WhiteColor);
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        margin-bottom: 15px;
-        text-align: center;
-        position: relative;
-        width: calc(25% - 20px);
-        max-width: 250px; // Reduced max-width
-        min-width: 200px;
-        img {
-          border-radius: 10px;
-          margin-bottom: 10px;
-          width: 100px; // Smaller image size
-          height: 100px;
-          object-fit: cover; // Maintain aspect ratio
-          margin: 0 auto 10px;
-        }
-        h3 {
-          margin: 10px 0;
-          font-size: 14px;
-          font-weight: 500;
-        }
-        p {
-          margin: 5px 0;
-          color: #888;
-          font-size: 10px;
-        }
-        &-info {
-          margin: 10px 0;
-          p {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 5px 0;
-          }
-          i {
-            margin-right: 10px;
-            color: var(--PrimaryColor);
-          }
-        }
-        &-actions {
-          display: flex;
-          justify-content: space-evenly;
-          margin-top: 10px;
-          button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 50px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            :hover {
-              color: var(--greyText);
-            }
-          }
-          .delete {
-            background-color: #f44336;
-            color: #fff;
-          }
-          .update {
-            background-color: var(--PrimaryColor);
-            color: #fff;
-          }
-        }
-      }
-    }
-    &__pagination {
-      display: flex;
-      justify-content: end;
       align-items: center;
-      margin-top: 15px;
-      p {
-        margin: 0 8px;
-        color: #888;
+      margin-bottom: 20px;
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 50px;
+        margin-right: 10px;
+        font-size: 12px;
+        width: 100%;
+        padding: 10px 10px 10px 40px;
       }
-      &-pages {
-        display: flex;
+      i {
+        position: absolute;
+        margin-left: 15px;
+        color: #aaa;
+      }
+      .searchBar-icon {
+        position: absolute;
+        left: 10px;
         align-items: center;
-        span {
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: #888;
+        margin-top: 20px;
+      }
+    }
+    &-filter {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 20px;
+      select,
+      button {
+        white-space: nowrap;
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 50px;
+        font-size: 10px;
+        font-weight: 400;
+        background-color: var(--WhiteColor);
+        margin-left: 10px;
+      }
+      button {
+        background-color: var(--PrimaryColor);
+        color: var(--WhiteColor);
+        border: none;
+        &:hover {
+          background: var(--greyBg);
+          color: var(--text-color);
+          border: 1px solid var(--PrimaryColor);
+        }
+      }
+    }
+  }
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    &__card {
+      background-color: var(--WhiteColor);
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      position: relative;
+      width: 100%;
+      img {
+        border-radius: 10px;
+        margin-bottom: 10px;
+        width: 100px;
+        height: 100px;
+      }
+      h3 {
+        margin: 10px 0;
+        font-size: 18px;
+        font-weight: 500;
+      }
+      p {
+        margin: 5px 0;
+        color: #888;
+        font-size: 14px;
+      }
+      &-info {
+        margin: 10px 0;
+        p {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 25px; // Adjusted width for pagination
-        height: 25px; // Adjusted height
-        font-size: 14px; 
-          border: 1px solid #ccc;
-          border-radius: 50%;
-          margin: 0 5px;
-          cursor: pointer;
-  
-          .active {
-            background-color: var(--PrimaryColor);
-            color: var(--WhiteColor);
-            border: none;
-          }
-          .pagination-icon {
-            font-size: 30px;
-            background: var(--PrimaryColor);
-            border-radius: 50%;
-            padding: 8px;
-            color: var(--WhiteColor);
-  
-            &:hover {
-              background: var(--blackColor);
-            }
-          }
-        }
-      }
-    }
-  }
-  @media (min-width: 640px) {
-    .ManageEmployee {
-      &__header {
-        padding: 0 30px;
-      }
-      .container {
-        justify-content: space-around;
-        &__card {
-          width: 25%;
-        }
-      }
-    }
-  }
-  
-  @media (min-width: 768px) {
-  }
-  
-  @media (min-width: 1024px) {
-    .ManageEmployee {
-      &__header {
-        padding: 0 3%;
-      }
-      .container {
-        justify-content: space-around;
-        width: 100% !important;
-        &__card {
-          width: 20%;
-          img {
-            width: 200px;
-            height: 200px;
-          }
-        }
-      }
-    }
-  }
-  
-  @media (min-width: 1280px) {
-    .ManageEmployee {
-      &__header {
-        padding: 0 4%;
-      }
-      .container {
-        &__card {
-          img {
-            width: 200px; // Adjusted size
-          height: 200px;
-          }
-        }
-      }
-    }
-  }
-  
-  @media (min-width: 1536px) {
-    .ManageEmployee {
-      padding: 15px 0;
-      &__header {
-        padding: 0 15px;
-        &-filter {
-          select,
-          button {
-            padding: 8px 16px;
-          }
-        }
-      }
-      .container {
-        &__card {
-          img {
-           width: 150px; // Adjusted size
-          height: 150px;
-          }
-        }
-      }
-    }
-  }
-    margin: 0 auto;
-    padding: 20px 0;
-    &__header {
-      display: flex;
-      padding: 0 20px;
-      // justify-content: center;
-      justify-content: space-between;
-      flex-direction: row;
-      &-searchBar {
-        width: 100%;
-        position: relative;
-        max-width: 400px;
-  
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px;
-        input {
-          width: 100%;
-          padding: 10px;
-          border: 1px solid #ccc;
-          border-radius: 50px;
-          margin-right: 10px;
-          font-size: 16px;
-          width: 100%;
-          padding: 10px 10px 10px 40px;
+          margin: 5px 0;
         }
         i {
-          position: absolute;
-          margin-left: 15px;
-          color: #aaa;
-        }
-        .searchBar-icon {
-          position: absolute;
-          left: 10px;
-          align-items: center;
-          transform: translateY(-50%);
-          font-size: 20px;
-          color: #888;
-          margin-top: 20px;
+          margin-right: 10px;
+          color: var(--PrimaryColor);
         }
       }
-      &-filter {
+      &-actions {
         display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        margin-bottom: 20px;
-        select,
+        justify-content: space-evenly;
+        margin-top: 10px;
         button {
-          white-space: nowrap;
-          padding: 8px 15px;
-          border: 1px solid #ccc;
+          padding: 8px 10px;
+          border: none;
           border-radius: 50px;
-          font-size: 14px;
-          font-weight: 600;
-          background-color: var(--WhiteColor);
-          margin-left: 10px;
+          font-size: 12px;
+          cursor: pointer;
+          transition: background-color 0.3s ease, color 0.3s ease;
+          :hover {
+            color: var(--greyText);
+          }
         }
-        button {
+        .delete {
+          background-color: #f44336;
+          color: #fff;
+        }
+        .update {
+          background-color: var(--PrimaryColor);
+          color: #fff;
+        }
+      }
+    }
+  }
+  &__pagination {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-top: 20px;
+    p {
+      margin: 0 10px;
+      color: #888;
+      font-size: 10px;
+    }
+    &-pages {
+      display: flex;
+      align-items: center;
+      span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+        font-size: 10px;
+        .active {
           background-color: var(--PrimaryColor);
           color: var(--WhiteColor);
           border: none;
+        }
+        .pagination-icon {
+          font-size: 20px;
+          background: var(--PrimaryColor);
+          border-radius: 50%;
+          padding: 8px;
+          color: var(--WhiteColor);
+
           &:hover {
-            background: var(--greyBg);
-            color: var(--text-color);
-            border: 1px solid var(--PrimaryColor);
+            background: var(--blackColor);
           }
+        }
+      }
+    }
+  }
+}
+@media (min-width: 640px) {
+  .ManageEmployee {
+    &__header {
+      &-searchBar {
+        input {
+          font-size: 12px;
+        }
+      }
+      &-filter {
+        select,
+        button {
+          font-size: 12px;
         }
       }
     }
     .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
+      gap: 20px;
       &__card {
-        background-color: var(--WhiteColor);
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         padding: 15px;
-        margin-bottom: 20px;
-        text-align: center;
-        position: relative;
-        width: 80%;
-        max-width: 300px;
+        width: 45%;
         img {
-          border-radius: 10px;
-          margin-bottom: 10px;
           width: 150px;
           height: 150px;
         }
         h3 {
-          margin: 10px 0;
           font-size: 16px;
-          font-weight: 500;
         }
         p {
-          margin: 5px 0;
-          color: #888;
+          font-size: 10px;
+        }
+        &-actions {
+          button {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .ManageEmployee {
+    &__header {
+      &-searchBar {
+        input {
           font-size: 12px;
         }
-        &-info {
-          margin: 10px 0;
-          p {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 5px 0;
-          }
-          i {
-            margin-right: 10px;
-            color: var(--PrimaryColor);
+        .searchBar-icon {
+          font-size: 18px;
+        }
+      }
+      &-filter {
+        select,
+        button {
+          font-size: 10px;
+        }
+      }
+    }
+    .container {
+      &__card {
+        width: 45%;
+        img {
+          width: 150px;
+          height: 150px;
+        }
+        h3 {
+          font-size: 16px;
+        }
+        p {
+          font-size: 10px;
+        }
+
+        &-actions {
+          button {
+            padding: 6px 14px;
           }
         }
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .ManageEmployee {
+    &__header {
+      padding: 0 5%;
+    }
+    .container {
+      width: 100% !important;
+      &__card {
+        width: 23%;
+        img {
+          width: 100px;
+          height: 100px;
+        }
+        h3 {
+          font-size: 12px;
+        }
+        p {
+          font-size: 8px;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  .ManageEmployee {
+    &__header {
+      padding: 0 4%;
+      &-filter {
+        select,
+        button {
+          padding: 10px 16px;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      }
+    }
+    .container {
+      &__card {
+        img {
+          width: 150px;
+          height: 150px;
+        }
+        h3 {
+          font-size: 18px;
+        }
+        p {
+          font-size: 12px;
+        }
+
         &-actions {
           display: flex;
           justify-content: space-evenly;
           margin-top: 10px;
           button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 50px;
+            padding: 10px 15px;
             font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            :hover {
-              color: var(--greyText);
-            }
-          }
-          .delete {
-            background-color: #f44336;
-            color: #fff;
-          }
-          .update {
-            background-color: var(--PrimaryColor);
-            color: #fff;
           }
         }
       }
     }
     &__pagination {
-      display: flex;
-      justify-content: end;
-      align-items: center;
-      margin-top: 20px;
       p {
-        margin: 0 10px;
-        color: #888;
+        font-size: 16px;
       }
       &-pages {
-        display: flex;
-        align-items: center;
         span {
-          display: flex;
-          align-items: center;
-          justify-content: center;
           width: 30px;
           height: 30px;
-          border: 1px solid #ccc;
-          border-radius: 50%;
-          margin: 0 5px;
-          cursor: pointer;
-  
-          .active {
-            background-color: var(--PrimaryColor);
-            color: var(--WhiteColor);
-            border: none;
-          }
+          font-size: 14px;
           .pagination-icon {
             font-size: 30px;
-            background: var(--PrimaryColor);
-            border-radius: 50%;
-            padding: 8px;
-            color: var(--WhiteColor);
-  
-            &:hover {
-              background: var(--blackColor);
-            }
           }
         }
       }
     }
   }
-  @media (min-width: 640px) {
-    .ManageEmployee {
-      &__header {
-        padding: 0 40px;
+}
+
+@media (min-width: 1536px) {
+  .ManageEmployee {
+    padding: 20px 0;
+    &__header {
+      padding: 0 20px;
+      &-filter {
+        select,
+        button {
+          padding: 10px 20px;
+        }
       }
-      .container {
-        justify-content: space-around;
-        &__card {
-          width: 100%;
+    }
+    .container {
+      &__card {
+        img {
+          width: 200px;
+          height: 200px;
         }
       }
     }
   }
-  
-  @media (min-width: 768px) {
-  }
-  
-  @media (min-width: 1024px) {
-    .ManageEmployee {
-      &__header {
-        padding: 0 5%;
-      }
-      .container {
-        justify-content: space-around;
-        width: 100% !important;
-        &__card {
-          width: 20%;
-          img {
-            width: 100px;
-            height: 100px;
-          }
-        }
-      }
-    }
-  }
-  
-  @media (min-width: 1280px) {
-    .ManageEmployee {
-      &__header {
-        padding: 0 4%;
-      }
-      .container {
-        &__card {
-          
-          img {
-            width: 150px;
-            height: 150px;
-          }
-        }
-      }
-    }
-  }
-  
-  @media (min-width: 1536px) {
-    .ManageEmployee {
-      padding: 20px 0;
-      &__header {
-        padding: 0 20px;
-        &-filter {
-          select,
-          button {
-            padding: 10px 20px;
-          }
-        }
-      }
-      .container {
-        &__card {
-          img {
-            width: 150px;
-            height: 150px;
-          }
-        }
-      }
-    }
-  }
+}

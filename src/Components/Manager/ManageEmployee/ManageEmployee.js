@@ -67,7 +67,7 @@ export default function ManageEmployee({ buttonLabel }) {
           ))}
         </div>
         <div className="ManageEmployee__pagination">
-          <p>Showing 1-6 from {employees.length} data</p>
+          <p>Showing 1-8 from {employees.length} data</p>
           <div className="ManageEmployee__pagination-pages">
             <span>
               {/* <i class="fas fa-chevron-left"></i> */}

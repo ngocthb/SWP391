@@ -58,7 +58,6 @@ export default function Header() {
 
   const handleLogout = () => {
     localStorage.clear();
-    // Redirect to home or login page
     window.location.href = "/";
   };
 

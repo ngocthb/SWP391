@@ -60,11 +60,12 @@ function MenuSider() {
   return (
     <>
       <Menu
-        mode="inline"
-        defaultSelectedKeys={["/"]}
-        defaultOpenKeys={["menu-1"]}
-        items={items}
-      />
+            mode="inline"
+            defaultSelectedKeys={["/"]}
+            defaultOpenKeys={["menu-1"]}
+            items={items}
+            style={{ height: '100%', borderRight: 0 }}
+        />
     </>
   );
 }

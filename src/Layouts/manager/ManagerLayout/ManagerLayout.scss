@@ -1,3 +1,37 @@
-.content{
-    padding: 20px;
+.content {
+  padding: 20px;
+  overflow-y: auto; // Ensure content can scroll
+  height: calc(100vh - 64px - 60px); // Adjust based on header and footer heights
+}
+
+.ant-layout {
+  .sider {
+      position: fixed;
+      left: 0;
+      height: calc(100vh - 64px); // Adjust if your header height is different
+      overflow-y: auto;
+  }
+
+  .content-expanded {
+      .ant-layout-content {
+          margin-left: 200px; // Width of expanded sider
+          transition: margin-left 0.2s;
+          height: calc(100vh - 64px - 60px); // Adjust based on header and footer heights
+      }
+  }
+
+  .content-collapsed {
+      .ant-layout-content {
+          margin-left: 80px; // Width of collapsed sider
+          transition: margin-left 0.2s;
+          height: calc(100vh - 64px - 60px); // Adjust based on header and footer heights
+      }
+  }
+}
+
+// Add media query for responsiveness if needed
+@media (max-width: 768px) {
+  .ant-layout-content {
+      margin-left: 0 !important;
+  }
 }
