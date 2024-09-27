@@ -43,7 +43,6 @@
       background: var(--greyBg);
       position: absolute;
       height: max-content;
-      // padding: 1rem;
       width: 100%;
       top: 0;
       left: -500%;
@@ -52,14 +51,13 @@
       z-index: 1000;
 
       &.logged-in {
-        padding: 1rem;
+        padding: 0 2rem;
       }
 
       &.logged-out {
-        padding: 0 1rem;
+        padding: 1rem;
       }
       &__lists {
-        padding: 0.4rem 1.5rem;
         flex-direction: column;
         justify-self: center;
         width: 100%;
@@ -115,20 +113,6 @@
               }
             }
           }
-          // .navBar__btn {
-          //   flex-direction: column;
-          //   .btn {
-          //     margin-top: 1rem;
-
-          //     a {
-          //       font-weight: 600;
-          //       color: red;
-          //       &:hover {
-          //         color: var(--WhiteColor);
-          //       }
-          //     }
-          //   }
-          // }
         }
       }
 
@@ -167,12 +151,13 @@
       }
     }
     .Header__toggle {
+      align-items: center;
+      display: flex;
       .icon {
         justify-content: center;
         margin-right: 10px;
       }
       img {
-        align-items: center;
         width: 40px;
         height: 40px;
         border-radius: 50%;

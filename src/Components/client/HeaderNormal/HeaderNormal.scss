@@ -49,12 +49,13 @@
       box-shadow: 0 2px 4px rgb(209, 209, 209, 0.904);
       transition: 0.5s ease;
       z-index: 1000;
+
       &.logged-in {
-        padding: 1rem;
+        padding: 0 2rem;
       }
 
       &.logged-out {
-        padding: 0 1rem;
+        padding: 1rem;
       }
       &__lists {
         flex-direction: column;
@@ -137,6 +138,8 @@
       }
     }
     .header-normal__toggle {
+      align-items: center;
+      display: flex;
       .icon {
         justify-content: center;
         margin-right: 10px;
