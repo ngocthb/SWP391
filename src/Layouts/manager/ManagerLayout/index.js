@@ -12,13 +12,13 @@ function ManagerLayout() {
   const collapse = useSelector((state) => state.collapseReducer);
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout className="manager-layout" style={{ minHeight: "100vh" }}>
       <ManagerHeader />
-      <Layout>
+      <Layout className="manager-layout__inner">
         <Sider
           theme="light"
           collapsed={collapse}
-          className="sider"
+          className="manager-layout__sider"
           style={{
             overflow: "auto",
             height: "calc(100vh - 64px)",
@@ -28,9 +28,9 @@ function ManagerLayout() {
         >
           <MenuSider />
         </Sider>
-        <Layout className={collapse ? "content-collapsed" : "content-expanded"}>
+        <Layout className={`manager-layout__content ${collapse ? "manager-layout__content--collapsed" : "manager-layout__content--expanded"}`}>
           <Content
-            className="content"
+            className="manager-layout__content-inner"
             style={{ overflow: "auto", padding: "0px" }}
           >
             <Outlet />

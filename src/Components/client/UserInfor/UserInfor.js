@@ -3,46 +3,105 @@ import loginUser from "../../../data/loginUser";
 import "./UserInfor.scss";
 import api from "../../../config/axios";
 import { FaEdit } from "react-icons/fa";
+import { message, Spin } from "antd";
 
 export default function UserInfor() {
-  const [userInfo, setUserInfo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const [fileName, setFileName] = useState("No file chosen");
+  const [formData, setFormData] = useState({
+    accountid: "",
+    fullname: "",
+    email: "",
+    dob: "",
+    phone: "",
+    gender: 0,
+    fileName: loginUser.avatar,
+  });
+  const [loading, setLoading] = useState(false);
+  const [fileInput, setFileInput] = useState(null);
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await api.get("/user"); // Adjust this endpoint as needed
-        setUserInfo(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchUserData();
   }, []);
-  // console.log(userInfo);
-  const handleFileChange = (e) => {
-    if (e.target.files.length > 0) {
-      setFileName(e.target.files[0].name);
-    } else {
-      setFileName("No file chosen");
+
+  const fetchUserData = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get("customer/profile");
+      const data = response.result;
+
+      if (data) {
+        setFormData({
+          accountid: data.accountid,
+          fullname: data.fullname || "",
+          email: data.email || "",
+          dob: data.dob,
+          phone: data.phone || "",
+          gender: data.gender,
+          fileName: data.avatar || loginUser.avatar,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      messageApi.open({
+        type: 'success',
+        content: err.response.data.message,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSave = () => {
-    // Handle save logic here
-    console.log({ name, phone, email, birthday });
-    onclose(); // Close modal after saving
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      setFileInput(e.target.files[0]);
+      setFormData({ ...formData, fileName: e.target.files[0].name });
+    } else {
+      setFileInput(null);
+      setFormData({ ...formData, fileName: "No file chosen" });
+    }
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const updatedUserData = {
+        fullname: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        dob: formData.birthday,
+        avatar: fileInput ? fileInput.name : undefined,
+      };
+      console.log(updatedUserData);
+      
+
+      const response = await api.put(`customer/${formData.accountid}`, updatedUserData);
+
+      if (response.status === 200) {
+        fetchUserData();
+        toggleModal();
+        messageApi.open({
+          type: 'success',
+          content: response.data.message,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      messageApi.open({
+        type: 'error',
+        content: error.response.data.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   return (
     <>
+    {contextHolder}
       <div className="main">
         <div className="profile">
           <div className="profile__left">
@@ -51,7 +110,7 @@ export default function UserInfor() {
               alt="User-Avatar"
               className="profile__left-pic"
               height="100"
-              src={/*userInfo ? userInfo.avatar :*/ loginUser.avatar}
+              src={formData.fileName}
               width="100"
             />
           </div>
@@ -65,19 +124,19 @@ export default function UserInfor() {
             <div className="description">
               <div className="description__details">
                 <span>Name </span>
-                <p>{/*userInfo ? userInfo.name :*/ loginUser.name}</p>
+                <p>{formData.name}</p>
               </div>
               <div className="description__details">
                 <span>Phone </span>
-                <p>{/*userInfo ? userInfo.phone :*/ loginUser.phone}</p>
+                <p>{formData.phone}</p>
               </div>
               <div className="description__details">
                 <span>Email </span>
-                <p>{/*userInfo ? userInfo.email :*/ loginUser.email}</p>
+                <p>{formData.email}</p>
               </div>
               <div className="description__details">
                 <span>Birthday </span>
-                <p>{/*userInfo ? userInfo.dob :*/ loginUser.dob}</p>
+                <p>{formData.birthday}</p>
               </div>
             </div>
           </div>
@@ -91,14 +150,14 @@ export default function UserInfor() {
             <div className="profile-modal__header">
               <h2>User Details</h2>
             </div>
-            <div className="profile-modal__body">
+            <form onSubmit={handleSubmit} className="profile-modal__body">
               <div className="profile-modal__input-group">
                 <label htmlFor="name">Name</label>
                 <input
                   type="text"
                   id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  defaultValue={formData.name} // Use defaultValue
+                  required
                 />
               </div>
               <div className="profile-modal__input-group">
@@ -106,8 +165,8 @@ export default function UserInfor() {
                 <input
                   type="tel"
                   id="phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  defaultValue={formData.phone} // Use defaultValue
+                  required
                 />
               </div>
               <div className="profile-modal__input-group">
@@ -115,8 +174,8 @@ export default function UserInfor() {
                 <input
                   type="email"
                   id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  defaultValue={formData.email} // Use defaultValue
+                  required
                 />
               </div>
               <div className="profile-modal__input-group">
@@ -124,9 +183,20 @@ export default function UserInfor() {
                 <input
                   type="date"
                   id="birthday"
-                  value={birthday}
-                  onChange={(e) => setBirthday(e.target.value)}
+                  defaultValue={formData.birthday} // Use defaultValue
+                  required
                 />
+              </div>
+              <div className="profile-modal__input-group">
+                <label htmlFor="gender">Gender</label>
+                <select
+                  id="gender"
+                  value={formData.gender} // Use value for controlled input
+                  onChange={(e) => setFormData({ ...formData, gender: Number(e.target.value) })}
+                >
+                  <option value="0">Male</option>
+                  <option value="1">Female</option>
+                </select>
               </div>
               <div className="profile-modal__input-group">
                 <label htmlFor="image">Choose File</label>
@@ -144,17 +214,18 @@ export default function UserInfor() {
                 >
                   Choose File
                 </button>
-                <span className="profile-modal__file-path">{fileName}</span>
+                <span className="profile-modal__file-name">{formData.fileName}</span>
               </div>
-            </div>
-            <div className="profile-modal__footer">
-              <button
-                className="profile-modal__save-button"
-                onClick={handleSave}
-              >
-                Save
-              </button>
-            </div>
+              <div className="profile-modal__footer">
+                <button
+                  type="submit"
+                  className="profile-modal__save-button"
+                  disabled={loading}
+                >
+                  {loading ? <Spin size="small" /> : "Save"} 
+                </button>
+              </div>
+            </form>
           </div>
         </>
       )}

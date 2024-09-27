@@ -163,20 +163,32 @@
           display: block;
       }
 
-      input {
-          width: 100%;
-          padding: 10px 0;
-          font-size: 16px;
-          border: none;
-          border-bottom: 1px solid #ddd;
-          outline: none;
-          transition: border-color 0.3s;
-          background-color: transparent;
-
-          &:focus {
-              border-bottom-color: black;
-              font-weight: bold;
-          }
+      input,
+      select {  // Add styles for select here
+        width: 100%;
+        padding: 10px 0;
+        font-size: 16px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        outline: none;
+        transition: border-color 0.3s;
+        background-color: transparent;
+    
+        &:focus {
+          border-bottom-color: black;
+          font-weight: bold;
+        }
+      }
+    
+      select {
+        appearance: none;  // Remove default dropdown arrow
+        background: transparent;  // Maintain background style
+        padding: 10px 0;  // Add padding to match input
+    
+        &:focus {
+          border-bottom-color: black;
+          font-weight: bold;
+        }
       }
   }
 
@@ -197,8 +209,12 @@
       }
   }
 
-  &__file-path {
-      margin-top: 5px;
+  &__file-name {
+    display: inline-block;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    margin-top: 5px;
       font-size: 14px;
       color: #666;
   }

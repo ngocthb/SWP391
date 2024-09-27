@@ -31,8 +31,9 @@ const Login = () => {
             });
             const { token } = response.data;
             localStorage.setItem("token", token);
-            localStorage.setItem("user", JSON.stringify(response.data));
-            console.log(response);
+            const userResponse = await api.get("users/2");
+            localStorage.setItem("user", JSON.stringify(userResponse.data.data));
+            console.log(userResponse.data.data);
             
             if(response) {
                 navigate("/");
