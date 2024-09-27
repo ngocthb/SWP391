@@ -72,7 +72,7 @@
   .container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     &__card {
       background-color: var(--WhiteColor);
       border-radius: 10px;
@@ -197,7 +197,8 @@
       }
     }
     .container {
-      justify-content: space-around;
+      justify-content: flex-start;
+      gap: 20px;
       &__card {
         padding: 15px;
         width: 45%;
@@ -269,7 +270,6 @@
       padding: 0 5%;
     }
     .container {
-      justify-content: space-around;
       width: 100% !important;
       &__card {
         width: 23%;

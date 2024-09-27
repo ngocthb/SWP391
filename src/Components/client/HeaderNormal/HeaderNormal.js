@@ -60,7 +60,7 @@ export default function HeaderNormal() {
             </Link>
           </div>
           {/* header-normal header-normal-active */}
-          <div className={active}>
+          <div className={`active ${isLoggedIn ? "logged-in" : "logged-out"}`}>
             <ul className="header-normal__lists flex">
               <li className="header-normal__lists-items">
                 <Link to={""}>About Us</Link>
