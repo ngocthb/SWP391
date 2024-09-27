@@ -21,7 +21,7 @@ export default function PopularService() {
         </div>
 
         <div className="mainContent grid">
-          {Data.map((item) => (
+          {(Data || []).map((item) => (
             <div key={item.id} className="service__combo">
               <div className="service__combo-img">
                 <img src={item.imgSrc} alt={item.nameService} />
@@ -52,7 +52,9 @@ export default function PopularService() {
                   </div>
                 </div>
 
-                <small>{item.description}</small>
+                <small className="service__details-description">
+                  {item.description}
+                </small>
 
                 <button className="service__details-btn btn flex">
                   Booking Now

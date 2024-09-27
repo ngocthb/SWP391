@@ -23,7 +23,10 @@ export default function Personnel() {
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim,
               est at. Quam provident temporibus nesciunt illo numquam eum. In
               nostrum aliquam earum ea ipsa esse doloribus atque rerum libero
-              odio.{" "}
+              odio.Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+              Enim, est at. Quam provident temporibus nesciunt illo numquam eum.
+              In nostrum aliquam earum ea ipsa esse doloribus atque rerum libero
+              odio.
             </p>
           </div>
 
@@ -48,15 +51,15 @@ export default function Personnel() {
               slidesPerView: 1,
               spaceBetween: 10,
             },
-            "@0.75": {
+            "@1.25": {
               slidesPerView: 2,
-              spaceBetween: 20,
-            },
-            "@1.00": {
-              slidesPerView: 3,
               spaceBetween: 40,
             },
-            "@1.50": {
+            "@1.70": {
+              slidesPerView: 3,
+              spaceBetween: 50,
+            },
+            "@2.25": {
               slidesPerView: 4,
               spaceBetween: 50,
             },

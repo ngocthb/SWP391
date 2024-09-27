@@ -92,7 +92,7 @@ input {
   font-size: 100%;
 }
 
-@media screen and (min-width: 556px) {
+/* @media screen and (min-width: 556px) {
   .mainContent,
   .singlePost {
     grid-template-columns: repeat(2, 1fr);
@@ -110,7 +110,7 @@ input {
     width: 75% !important;
     margin: auto !important;
   }
-}
+} */
 
 /* page design */
 

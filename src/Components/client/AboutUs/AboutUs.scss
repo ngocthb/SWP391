@@ -12,16 +12,23 @@
 
 .about {
   &__container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px 0;
     &-title {
+      text-align: center;
+      font-size: 30px;
       color: var(--blackColor);
       line-height: 1.5rem;
       padding-bottom: 2rem;
-      text-align: center;
-      font-size: 1.5rem;
+      font-size: 30px;
     }
 
     .mainContent {
       gap: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
       .about__single {
         text-align: center;
 
@@ -57,9 +64,7 @@
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat;
-
       .about__videoCard {
-        display: flex;
         gap: 2rem;
         padding: 2rem 1rem;
 
@@ -95,41 +100,34 @@
     }
   }
 }
-
-@media screen and (min-width: 720px) {
+@media (min-width: 640px) {
+}
+@media (min-width: 768px) {
+}
+@media (min-width: 1024px) {
   .about {
-    .secContainer {
+    &__container {
+      .mainContent {
+        .about__single {
+          width: 30%;
+        }
+      }
+
       .about__video {
         .about__videoCard {
-          gap: 4rem;
-          padding: 4rem 3rem;
-
-          .cardText {
-            h2 {
-              font-size: 2rem;
-            }
-
-            p {
-              opacity: 0.7;
-              font-size: 15px;
-            }
+          gap: 2rem;
+          padding: 2rem 1rem;
+          display: flex;
+          .about__cardText {
+            width: 60%;
           }
-        }
-
-        .about__videoCard {
-          grid-template-columns: repeat(2, 1fr);
         }
       }
     }
   }
 }
 
-@media screen and (min-width: 1024px) {
-  .about {
-    .secContainer {
-      .mainContent {
-        padding: 2.5rem;
-      }
-    }
-  }
+@media (min-width: 1280px) {
+}
+@media (min-width: 1536px) {
 }
