@@ -45,9 +45,9 @@ export const Routes = [
   {
     path: "user",
     element: (
-      <PrivateRoute>
+      // <PrivateRoute>
         <UserLayout />
-      </PrivateRoute>
+      // </PrivateRoute>
     ),
     children: [
       {

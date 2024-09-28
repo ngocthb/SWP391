@@ -29,7 +29,7 @@ export default function UserInfor() {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+    return `${day}/${month}/${year}`;
   };
   
 
@@ -47,7 +47,7 @@ export default function UserInfor() {
           accountid: data.accountid,
           fullname: data.fullname || "",
           email: data.email || "",
-          dob: formatDateString(data.dob),
+          dob: data.dob,
           phone: data.phone || "",
           gender: data.gender,
           fileName: data.avatar || loginUser.avatar,
@@ -207,7 +207,7 @@ export default function UserInfor() {
                 <input
                   type="date"
                   id="birthday"
-                  defaultValue={formData.dob} // Use defaultValue
+                  defaultValue={formatDateString(formData.dob)} // Use defaultValue
                   required
                 />
               </div>
