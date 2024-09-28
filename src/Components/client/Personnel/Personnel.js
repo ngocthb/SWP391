@@ -2,7 +2,10 @@ import React from "react";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { BsArrowRightShort } from "react-icons/bs";
 import { FaStar } from "react-icons/fa6";
-import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  Swiper as PersonnelsSwiper,
+  SwiperSlide as PersonnelsSwiperSlide,
+} from "swiper/react";
 import "./Personnel.scss";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -36,7 +39,7 @@ export default function Personnel() {
           </div>
         </div>
 
-        <Swiper
+        <PersonnelsSwiper
           slidesPerView={1}
           spaceBetween={10}
           pagination={{
@@ -47,29 +50,32 @@ export default function Personnel() {
             nextEl: ".nxtBtn",
           }}
           breakpoints={{
-            "@0.00": {
+            0: {
               slidesPerView: 1,
               spaceBetween: 10,
             },
-            "@1.25": {
+            640: {
               slidesPerView: 2,
               spaceBetween: 40,
             },
-            "@1.70": {
+            1024: {
               slidesPerView: 3,
               spaceBetween: 50,
             },
-            "@2.25": {
+            1280: {
               slidesPerView: 4,
               spaceBetween: 50,
             },
           }}
           modules={[Navigation]}
-          className="mySwiper"
+          className="PersonnelSwiper"
         >
           <div className="grid personnel__main">
             {Data.map((item) => (
-              <SwiperSlide key={item.id}>
+              <PersonnelsSwiperSlide
+                key={item.id}
+                className="PersonnelSwiperSlide"
+              >
                 <div className="personnel__single">
                   <div className="personnel__single-img">
                     <img src={item.imgSrc} alt={item.perName} />
@@ -90,10 +96,10 @@ export default function Personnel() {
                     </div>
                   </div>
                 </div>
-              </SwiperSlide>
+              </PersonnelsSwiperSlide>
             ))}
           </div>
-        </Swiper>
+        </PersonnelsSwiper>
       </div>
     </section>
   );

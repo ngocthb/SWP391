@@ -72,10 +72,11 @@
   }
 }
 
-.swiper {
+.PersonnelSwiper {
   width: 100%;
   height: 100%;
-  .swiper-slide {
+  .PersonnelSwiperSlide {
+    width: 80%;
     text-align: center;
     font-size: 18px;
     background: #fff;
@@ -84,9 +85,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    img {
-      object-fit: cover;
-    }
+    padding: 0.5rem 0.5rem;
   }
 }
 
@@ -100,9 +99,10 @@
       padding: 10px 10px;
       display: block;
       object-fit: cover;
+      justify-content: center;
       width: 100%;
       height: 300px;
-      padding: 10px 10px;
+      padding: 2rem 2rem;
     }
     .personnel__single-info {
       position: absolute;
