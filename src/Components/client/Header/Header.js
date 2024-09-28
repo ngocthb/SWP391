@@ -7,7 +7,6 @@ import DropdownNav from "../../../redux/dropdown.js";
 import { Link, useLocation } from "react-router-dom";
 import { PiSignOut } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
-import user from "../../../data/loginUser.js";
 
 export default function Header() {
   const [active, setActive] = useState("navBar");
@@ -107,12 +106,12 @@ export default function Header() {
                     <div className="content" onClick={toggleDropdown}>
                       <div className="content__infor">
                         <div>
-                          <h3>{loginUser.name || ""}</h3>
+                          <h3>{loginUser.fullname || ""}</h3>
                           <p>{loginUser.role || ""}</p>
                         </div>
                         <div>
                           <img
-                            src={loginUser.avatar || user.avatar}
+                            src={loginUser.avatar}
                             alt="User-Avatar"
                           />
                         </div>
@@ -151,7 +150,7 @@ export default function Header() {
           <div onClick={showNav} className="Header__toggle">
             <CiGrid41 className="icon" />
             {loginUser && (
-              <img src={loginUser.avatar || user.avatar} alt="User-Avatar" />
+              <img src={loginUser.avatar} alt="User-Avatar" />
             )}
           </div>
         </div>

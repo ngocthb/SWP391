@@ -83,4 +83,64 @@
       object-fit: cover;
     }
   }
+
+  &__dropdown {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px; /* Giảm chiều rộng xuống 250px */
+    padding: 15px; /* Điều chỉnh padding nếu cần */
+    text-align: left;
+    position: absolute;
+    margin-right: 10px;
+    right: 0;
+    z-index: 1001;
+
+    &--header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px; /* Giảm khoảng cách dưới */
+      padding-bottom: 15px; /* Giảm khoảng cách dưới */
+      border-bottom: 1px solid #f0f0f0;
+
+      & h2{
+        font-size: 16px;
+      }
+
+      & img {
+        border-radius: 50%;
+        width: 50px; /* Giảm kích thước ảnh */
+        height: 50px; /* Giảm kích thước ảnh */
+        margin-right: 10px; /* Giảm khoảng cách bên phải */
+      }
+    }
+
+    & p {
+      font-size: 13px;
+      color: #888;
+      margin: 0;
+    }
+  }
+
+  & a {
+    display: flex;
+    align-items: center;
+    color: #333;
+    text-decoration: none;
+    font-size: 13px; /* Giảm kích thước chữ */
+    margin: 8px 0; /* Giảm khoảng cách trên/dưới */
+    padding: 8px; /* Điều chỉnh padding nếu cần */
+    transition: background-color 0.3s;
+
+    & i {
+      margin-right: 8px;
+      color: #888;
+    }
+
+    &:hover {
+      background-color: #f0f0f0; /* Màu nền khi hover */
+      color: #333; /* Giữ nguyên màu chữ */
+      border-radius: 8px; /* Thêm border-radius cho nền khi hover */
+    }
+  }
 }

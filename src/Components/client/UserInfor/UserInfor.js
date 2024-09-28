@@ -8,7 +8,7 @@ import { message, Spin } from "antd";
 export default function UserInfor() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    accountid: "",
+    accountid: 0,
     fullname: "",
     email: "",
     dob: "",
@@ -22,13 +22,13 @@ export default function UserInfor() {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, );
 
   const fetchUserData = async () => {
     setLoading(true);
     try {
       const response = await api.get("customer/profile");
-      const data = response.result;
+      const data = response.data.result;
 
       if (data) {
         setFormData({
@@ -64,21 +64,32 @@ export default function UserInfor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const fullname = e.target[0].value;
+    const phone = e.target[1].value;
+    const email = e.target[2].value;
+    const dob = e.target[3].value;
+
     setLoading(true);
     try {
       const updatedUserData = {
-        fullname: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        dob: formData.birthday,
-        avatar: fileInput ? fileInput.name : undefined,
+        fullname: fullname,
+        email: email,
+        phone: phone,
+        dob: dob,
+        // avatar: fileInput ? fileInput.name : undefined,
       };
       console.log(updatedUserData);
       
 
       const response = await api.put(`customer/${formData.accountid}`, updatedUserData);
 
-      if (response.status === 200) {
+      if (response) {
+        const userInfo = {
+          fullname: fullname,
+          role: "user",
+          avatar: loginUser.avatar,
+        }
+        localStorage.setItem("user", JSON.stringify(userInfo));
         fetchUserData();
         toggleModal();
         messageApi.open({
@@ -124,7 +135,7 @@ export default function UserInfor() {
             <div className="description">
               <div className="description__details">
                 <span>Name </span>
-                <p>{formData.name}</p>
+                <p>{formData.fullname}</p>
               </div>
               <div className="description__details">
                 <span>Phone </span>
@@ -136,7 +147,7 @@ export default function UserInfor() {
               </div>
               <div className="description__details">
                 <span>Birthday </span>
-                <p>{formData.birthday}</p>
+                <p>{formData.dob}</p>
               </div>
             </div>
           </div>
@@ -156,7 +167,7 @@ export default function UserInfor() {
                 <input
                   type="text"
                   id="name"
-                  defaultValue={formData.name} // Use defaultValue
+                  defaultValue={formData.fullname}
                   required
                 />
               </div>
@@ -165,7 +176,7 @@ export default function UserInfor() {
                 <input
                   type="tel"
                   id="phone"
-                  defaultValue={formData.phone} // Use defaultValue
+                  defaultValue={formData.phone}
                   required
                 />
               </div>
@@ -183,11 +194,11 @@ export default function UserInfor() {
                 <input
                   type="date"
                   id="birthday"
-                  defaultValue={formData.birthday} // Use defaultValue
+                  defaultValue={formData.dob} // Use defaultValue
                   required
                 />
               </div>
-              <div className="profile-modal__input-group">
+              {/* <div className="profile-modal__input-group">
                 <label htmlFor="gender">Gender</label>
                 <select
                   id="gender"
@@ -197,7 +208,7 @@ export default function UserInfor() {
                   <option value="0">Male</option>
                   <option value="1">Female</option>
                 </select>
-              </div>
+              </div> */}
               <div className="profile-modal__input-group">
                 <label htmlFor="image">Choose File</label>
                 <input

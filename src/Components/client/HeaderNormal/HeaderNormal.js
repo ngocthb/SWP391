@@ -7,7 +7,7 @@ import "./HeaderNormal.scss";
 import { Link } from "react-router-dom";
 import { PiSignOut } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
-import user from "../../../data/loginUser.js";
+
 
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
@@ -72,11 +72,11 @@ export default function HeaderNormal() {
                     <div className="content" onClick={toggleDropdown}>
                       <div className="content__infor">
                         <div>
-                          <h3>{loginUser.name || ""}</h3>
+                          <h3>{loginUser.fullname || ""}</h3>
                           <p>{loginUser.role || ""}</p>
                         </div>
                         <div>
-                          <img src={loginUser.avatar || user.avatar} alt="User-Avatar" />
+                          <img src={loginUser.avatar} alt="User-Avatar" />
                         </div>
                       </div>
                     </div>
@@ -105,7 +105,7 @@ export default function HeaderNormal() {
 
           <div onClick={showNav} className="header-normal__toggle">
             <CiGrid41 className="icon" />
-            {loginUser && <img src={loginUser.avatar || user.avatar} alt="User-Avatar" />}
+            {loginUser && <img src={loginUser.avatar} alt="User-Avatar" />}
           </div>
         </div>
       </section>

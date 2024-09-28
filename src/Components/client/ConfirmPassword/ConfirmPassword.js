@@ -18,7 +18,7 @@ const ConfirmPassword = () => {
   useEffect(() => {
     // Check if the user was verified
     if (!location.state?.verified) {
-      navigate('/login/forgetPassword'); // Redirect if not verified
+      navigate('/login/forgetPassword');
     }
   }, [location.state, navigate]);
 
