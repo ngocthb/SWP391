@@ -7,13 +7,31 @@ import "./HeaderNormal.scss";
 import { Link } from "react-router-dom";
 import { PiSignOut } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
+import { useSelector } from "react-redux";
 
 
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
-  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const [loginUser, setLoginUser] = useState();
+  const isUpdate = useSelector((state) => state.updateUserReducer);
+
+  useEffect(() => {
+    const updateLoginUser = () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      setLoginUser(user);
+    };
+
+    updateLoginUser();
+
+    window.addEventListener('storage', updateLoginUser);
+
+    return () => {
+      window.removeEventListener('storage', updateLoginUser);
+    };
+  }, [isUpdate]);
+
 
   // Toggle header-normal
   const showNav = () => setActive("header-normal header-normal-active");

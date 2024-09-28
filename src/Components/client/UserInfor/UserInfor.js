@@ -4,6 +4,8 @@ import "./UserInfor.scss";
 import api from "../../../config/axios";
 import { FaEdit } from "react-icons/fa";
 import { message, Spin } from "antd";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../../actions/UpdateUser";
 
 export default function UserInfor() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,13 +21,23 @@ export default function UserInfor() {
   const [loading, setLoading] = useState(false);
   const [fileInput, setFileInput] = useState(null);
   const [messageApi, contextHolder] = message.useMessage();
+  const dispatch = useDispatch();
+
+  const formatDateString = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+  
 
   useEffect(() => {
     fetchUserData();
   }, );
 
   const fetchUserData = async () => {
-    setLoading(true);
     try {
       const response = await api.get("customer/profile");
       const data = response.data.result;
@@ -35,7 +47,7 @@ export default function UserInfor() {
           accountid: data.accountid,
           fullname: data.fullname || "",
           email: data.email || "",
-          dob: data.dob,
+          dob: formatDateString(data.dob),
           phone: data.phone || "",
           gender: data.gender,
           fileName: data.avatar || loginUser.avatar,
@@ -92,6 +104,7 @@ export default function UserInfor() {
         localStorage.setItem("user", JSON.stringify(userInfo));
         fetchUserData();
         toggleModal();
+        dispatch(updateUser());
         messageApi.open({
           type: 'success',
           content: response.data.message,
