@@ -6,7 +6,7 @@ const loginUser = {
   phone: "035987134",
   email: "jessicaAna@gmail.com",
   password: "abcdef",
-  dob: "23/05/1999",
+  dob: "2026-05-23",
 };
 
 export default loginUser;

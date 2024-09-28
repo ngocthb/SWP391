@@ -13,7 +13,7 @@ export default function UserInfor() {
     accountid: 0,
     fullname: "",
     email: "",
-    dob: "",
+    dob: loginUser.dob,
     phone: "",
     gender: 0,
     fileName: loginUser.avatar,
@@ -31,7 +31,17 @@ export default function UserInfor() {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
+
+  console.log(formatDateString(loginUser.dob));
   
+
+  const formatDateForInput = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`; // Format as YYYY-MM-DD
+  };
 
   useEffect(() => {
     fetchUserData();
@@ -47,7 +57,7 @@ export default function UserInfor() {
           accountid: data.accountid,
           fullname: data.fullname || "",
           email: data.email || "",
-          dob: data.dob,
+          dob: data.dob ? formatDateForInput(data.dob) : "",
           phone: data.phone || "",
           gender: data.gender,
           fileName: data.avatar || loginUser.avatar,
@@ -160,7 +170,7 @@ export default function UserInfor() {
               </div>
               <div className="description__details">
                 <span>Birthday </span>
-                <p>{formData.dob}</p>
+                <p>{formatDateString(formData.dob)}</p>
               </div>
             </div>
           </div>
@@ -207,7 +217,7 @@ export default function UserInfor() {
                 <input
                   type="date"
                   id="birthday"
-                  defaultValue={formatDateString(formData.dob)} // Use defaultValue
+                  defaultValue={formData.dob} // Use defaultValue
                   required
                 />
               </div>
