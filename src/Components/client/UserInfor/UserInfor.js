@@ -13,7 +13,7 @@ export default function UserInfor() {
     accountid: 0,
     fullname: "",
     email: "",
-    dob: loginUser.dob,
+    dob: "w",
     phone: "",
     gender: 0,
     fileName: loginUser.avatar,
