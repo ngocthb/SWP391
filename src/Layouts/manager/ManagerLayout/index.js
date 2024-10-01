@@ -29,13 +29,12 @@ function ManagerLayout() {
           <MenuSider />
         </Sider>
         <Layout className={`manager-layout__content ${collapse ? "manager-layout__content--collapsed" : "manager-layout__content--expanded"}`}>
-          <Content
-            className="manager-layout__content-inner"
-            style={{ overflow: "auto", padding: "0px" }}
-          >
+          <Content className="manager-layout__content-inner">
             <Outlet />
-            <ManagerFooter />
           </Content>
+          <div className="manager-layout__footer">
+            <ManagerFooter />
+          </div>
         </Layout>
       </Layout>
     </Layout>

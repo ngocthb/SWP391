@@ -32,8 +32,8 @@ const Login = () => {
       });
       const { token } = response.data;
       localStorage.setItem("token", token);
-      const userResponse = await api.get("customer/profile");
-      const user = userResponse.data.result;
+      const userResponse = await api.get(/*"customer/profile"*/"users/2");
+      const user = userResponse.data.data;
       const role = user.role || "user";
       const userInfo = {
         fullname: user.fullname,

@@ -11,29 +11,19 @@ import { Link } from "react-router-dom";
 function MenuSider() {
   const items = [
     {
-      label: "Menu 1",
+      label: <Link to="/manager/dashboard">Dashboard</Link>,
       icon: <PlayCircleOutlined />,
-      key: "menu-1",
-      children: [
-        {
-          label: <Link to="/">Dashboard</Link>,
-          key: "/",
-        },
-        {
-          label: "Menu 1-2",
-          key: "menu 1-2",
-        },
-        {
-          label: "Menu 1-3",
-          key: "menu 1-3",
-        },
-      ],
+      key: "Dashboard",
     },
     {
-      label: "Menu 2",
+      label: "Employee",
       icon: <CheckOutlined />,
       key: "menu-2",
       children: [
+        {
+          label: <Link to="/manager/stylish">Stylish</Link>,
+          key: "stylish",
+        },
         {
           label: "Menu 2-1",
           key: "menu 2-1",
@@ -46,9 +36,9 @@ function MenuSider() {
       key: "menu-3",
     },
     {
-      label: <Link to="/book-room">Book room</Link>,
+      label: <Link to="/manager/booking">Booking</Link>,
       icon: <InsertRowAboveOutlined />,
-      key: "/book-room",
+      key: "booking",
     },
     {
       label: <Link to="/create-room">Create room</Link>,
@@ -66,7 +56,7 @@ function MenuSider() {
     <>
       <Menu
         mode="inline"
-        defaultSelectedKeys={["/"]}
+        defaultSelectedKeys={["Dashboard"]}
         defaultOpenKeys={["menu-1"]}
         items={items}
         style={{ height: "100%", borderRight: 0 }}

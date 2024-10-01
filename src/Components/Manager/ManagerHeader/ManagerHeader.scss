@@ -120,27 +120,29 @@
       color: #888;
       margin: 0;
     }
+
+    & a {
+      display: flex;
+      align-items: center;
+      color: #333;
+      text-decoration: none;
+      font-size: 13px; /* Giảm kích thước chữ */
+      margin: 8px 0; /* Giảm khoảng cách trên/dưới */
+      padding: 8px; /* Điều chỉnh padding nếu cần */
+      transition: background-color 0.3s;
+  
+      & i {
+        margin-right: 8px;
+        color: #888;
+      }
+  
+      &:hover {
+        background-color: #f0f0f0; /* Màu nền khi hover */
+        color: #333; /* Giữ nguyên màu chữ */
+        border-radius: 8px; /* Thêm border-radius cho nền khi hover */
+      }
+    }
   }
 
-  & a {
-    display: flex;
-    align-items: center;
-    color: #333;
-    text-decoration: none;
-    font-size: 13px; /* Giảm kích thước chữ */
-    margin: 8px 0; /* Giảm khoảng cách trên/dưới */
-    padding: 8px; /* Điều chỉnh padding nếu cần */
-    transition: background-color 0.3s;
-
-    & i {
-      margin-right: 8px;
-      color: #888;
-    }
-
-    &:hover {
-      background-color: #f0f0f0; /* Màu nền khi hover */
-      color: #333; /* Giữ nguyên màu chữ */
-      border-radius: 8px; /* Thêm border-radius cho nền khi hover */
-    }
-  }
+  
 }

@@ -10,9 +10,14 @@ import { HiTrash } from "react-icons/hi2";
 import { FaUserEdit } from "react-icons/fa";
 import staffs from "../../../data/staff";
 import "./ManageEmployee.scss";
+import { useNavigate } from "react-router-dom";
 
 export default function ManageEmployee({ buttonLabel }) {
   const employees = staffs;
+  const navigate = useNavigate();
+  const createStylish = () => {
+    navigate("/manager/stylish/create");
+  }
   return (
     <>
       <div className="ManageEmployee">
@@ -27,7 +32,7 @@ export default function ManageEmployee({ buttonLabel }) {
               <option>Newest</option>
               <option>Oldest</option>
             </select>
-            <button> {buttonLabel}</button>
+            <button onClick={createStylish}> {buttonLabel}</button>
           </div>
         </div>
         <div className="container">

@@ -99,14 +99,35 @@ export default function HeaderNormal() {
                       </div>
                     </div>
                     {dropdownOpen && (
-                      <div className="header__dropdown">
-                        <Link to="/user/profile" className="header__dropdown-item">
-                          <CgProfile /> Profile
-                        </Link>
-                        <Link to="#" onClick={handleLogout} className="header__dropdown-item">
-                          <PiSignOut /> Logout
-                        </Link>
-                      </div>
+                       <div className="header-normal__dropdown">
+                       <div className="header-normal__dropdown--header">
+                         <img
+                           height={60}
+                           alt="User avatar"
+                           src="https://enlink.themenate.net/assets/images/avatars/thumb-3.jpg"
+                         />
+                         <div>
+                           <h2>Marshall Nichols</h2>
+                           <p>UI/UX Designer</p>
+                         </div>
+                       </div>
+                       <Link to="/user/profile">
+                         <i className="fas fa-user"></i>
+                         Profile
+                       </Link>
+                       <Link to="#">
+                         <i className="fas fa-cog"></i>
+                         Account Setting
+                       </Link>
+                       <Link to="#">
+                         <i className="fas fa-folder"></i>
+                         Projects
+                       </Link>
+                       <Link to="#" onClick={handleLogout}>
+                         <i className="fas fa-sign-out-alt"></i>
+                         Logout
+                       </Link>
+                     </div>
                     )}
                   </>
                 ) : (

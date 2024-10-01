@@ -13,7 +13,7 @@ export default function UserInfor() {
     accountid: 0,
     fullname: "",
     email: "",
-    dob: "w",
+    dob: "",
     phone: "",
     gender: 0,
     fileName: loginUser.avatar,
@@ -38,9 +38,9 @@ export default function UserInfor() {
   const formatDateForInput = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`; // Format as YYYY-MM-DD
+    return `${year}-${month}-${day}`;
   };
 
   useEffect(() => {
@@ -49,8 +49,8 @@ export default function UserInfor() {
 
   const fetchUserData = async () => {
     try {
-      const response = await api.get("customer/profile");
-      const data = response.data.result;
+      const response = await api.get("users/2");
+      const data = response.data.data;
 
       if (data) {
         setFormData({

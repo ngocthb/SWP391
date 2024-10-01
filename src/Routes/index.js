@@ -10,6 +10,9 @@ import UserInfor from "../Components/client/UserInfor/UserInfor";
 import ManagerLayout from "../Layouts/manager/ManagerLayout";
 import ManageEmployee from "../Components/Manager/ManageEmployee/ManageEmployee";
 import UserLayout from "../Layouts/UserLayout";
+import ManagerDashboard from "../Components/Manager/ManagerDashboard/ManagerDashboard";
+import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
+import ManagerCreateStylish from "../Components/Manager/ManagerCreateStylish/ManagerCreateStylish";
 
 export const Routes = [
   {
@@ -63,6 +66,18 @@ export const Routes = [
       {
         path: 'stylish',
         element: <ManageEmployee buttonLabel={"+ New Stylish"}/>
+      },
+      {
+        path: 'stylish/create',
+        element: <ManagerCreateStylish/>
+      },
+      {
+        path: 'dashboard',
+        element: <ManagerDashboard/>
+      },
+      {
+        path: 'booking',
+        element: <ManagerBooking/>
       }
     ]
   },
