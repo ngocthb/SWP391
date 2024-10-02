@@ -4,51 +4,55 @@ import "./UserInfor.scss";
 import api from "../../../config/axios";
 import { FaEdit } from "react-icons/fa";
 import { message, Spin } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../../actions/UpdateUser";
 
 export default function UserInfor() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState({
     accountid: 0,
     fullname: "",
     email: "",
     dob: "",
     phone: "",
-    gender: 0,
-    fileName: loginUser.name,
     avatarFile: loginUser.avatar,
   });
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
+  const isUpdate = useSelector(state => state.updateUserReducer);
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
 
   const formatDateString = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  
 
   const formatDateForInput = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
   useEffect(() => {
     fetchUserData();
-  }, );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdate]);
 
   const fetchUserData = async () => {
     try {
-      const response = await api.get(`/customer/profile`);
-      const data = response.data.data;
+      const response = await api.get(`customer/profile`);
+      const data = response.data.result;
 
       if (data) {
         setFormData({
@@ -57,8 +61,6 @@ export default function UserInfor() {
           email: data.email || "",
           dob: data.dob ? formatDateForInput(data.dob) : "",
           phone: data.phone || "",
-          gender: data.gender,
-          fileName: loginUser.name,
           avatarFile: data.img || loginUser.avatar,
         });
       }
@@ -69,61 +71,44 @@ export default function UserInfor() {
     }
   };
 
-  const handleFileChange = (e) => { 
-    if (e.target.files.length > 0) {
-      const selectedFile = e.target.files[0];
-      setFormData({ ...formData, avatarFile: selectedFile, fileName: selectedFile.name });
-    } else {
-      setFormData({ ...formData, avatarFile: null, fileName: "No file chosen" });
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const fullname = e.target[0].value;
-    const phone = e.target[1].value;
-    const email = e.target[2].value;
-    const dob = e.target[3].value;
-
-    setLoading(true);
+  const updateUserData = async (e) => {
+    const updateValues = {
+      fullName: e.target[0].value,
+      email: e.target[1].value,
+      phone: e.target[2].value,
+      dob: e.target[3].value,
+    };
     try {
-      const updatedUserData = {
-        fullname: fullname,
-        email: email,
-        phone: phone,
-        dob: dob,
-        avatar: formData.fileName || loginUser.avatar,
-      };     
+      const response = await api.put(`customer/${formData.accountid}`, updateValues);
+      const data = response.data.result;
 
-      console.log(formData);
-      
-      const response = await api.put(`customer/${formData.accountid}`, updatedUserData);
-
-      if (response) {
-        fetchUserData();
-        toggleModal();
-        dispatch(updateUser());
-        messageApi.open({
-          type: 'success',
-          content: response.data.message,
+      if (data) {
+        setFormData({
+          accountid: data.accountid,
+          fullname: data.fullname || "",
+          email: data.email || "",
+          dob: data.dob ? formatDateForInput(data.dob) : "",
+          phone: data.phone || "",
+          avatarFile: selectedFile,
         });
+        dispatch(updateUser());
       }
-    } catch (error) {
-      console.error(error);
-      messageApi.open({
-        type: 'error',
-        content: error.response.data.message,
-      });
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    updateUserData(e);
   };
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   return (
     <>
-    {contextHolder}
+      {contextHolder}
       <div className="main">
         <div className="profile">
           <div className="profile__left">
@@ -167,87 +152,98 @@ export default function UserInfor() {
 
       {isModalOpen && (
         <>
-          <div className="profile-backdrop" onClick={toggleModal} />
-          <div className="profile-modal">
-            <div className="profile-modal__header">
-              <h2>User Details</h2>
+          <div className="profile-backdrop" onClick={toggleModal}>
+            <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
+              <form onSubmit={handleSubmit}>
+                <h2 className="profile-modal__header">Basic Information</h2>
+                <div className="profile-modal__avatar-section">
+                  <div className="profile-modal__avatar">
+                    <img src={formData.avatarFile} alt={formData.fullname} />
+                  </div>
+                  <div className="profile-modal__avatar-info">
+                    <h3 className="profile-modal__avatar-title">
+                      Change Avatar
+                    </h3>
+                    <p className="profile-modal__avatar-description">
+                      Recommended Dimensions: 120x120 Max file size: 5MB
+                    </p>
+                    <label className="profile-modal__upload-btn">
+                      Upload
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        style={{ display: "none" }}
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div className="profile-modal__form-section">
+                  <div className="profile-modal__form-grid">
+                    <div className="profile-modal__form-group profile-modal__form-group--full-width">
+                      <label
+                        htmlFor="fullname"
+                        className="profile-modal__label"
+                      >
+                        Full Name:
+                      </label>
+                      <input
+                        type="text"
+                        id="fullname"
+                        className="profile-modal__input"
+                        placeholder="Full Name"
+                        defaultValue={formData.fullname}
+                      />
+                    </div>
+                    <div className="profile-modal__form-group profile-modal__form-group--full-width">
+                      <label htmlFor="email" className="profile-modal__label">
+                        Email:
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        className="profile-modal__input"
+                        placeholder="Email"
+                        defaultValue={formData.email}
+                      />
+                    </div>
+                    <div className="profile-modal__form-group">
+                      <label htmlFor="phone" className="profile-modal__label">
+                        Phone:
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        className="profile-modal__input"
+                        placeholder="Phone"
+                        defaultValue={formData.phone}
+                      />
+                    </div>
+                    <div className="profile-modal__form-group">
+                      <label htmlFor="dob" className="profile-modal__label">
+                        Date of Birth:
+                      </label>
+                      <input
+                        type="date"
+                        id="dob"
+                        className="profile-modal__input"
+                        placeholder="Date of Birth"
+                        defaultValue={formData.dob}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="profile-modal__button-container">
+                  <button
+                    type="submit"
+                    className="profile-modal__button"
+                    disabled={loading}
+                  >
+                    {loading ? <Spin size="small" /> : "Save"}
+                  </button>
+                </div>
+              </form>
             </div>
-            <form onSubmit={handleSubmit} className="profile-modal__body">
-              <div className="profile-modal__input-group">
-                <label htmlFor="name">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  defaultValue={formData.fullname}
-                  required
-                />
-              </div>
-              <div className="profile-modal__input-group">
-                <label htmlFor="phone">Phone</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  defaultValue={formData.phone}
-                  required
-                />
-              </div>
-              <div className="profile-modal__input-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  defaultValue={formData.email} // Use defaultValue
-                  required
-                />
-              </div>
-              <div className="profile-modal__input-group">
-                <label htmlFor="birthday">Birthday</label>
-                <input
-                  type="date"
-                  id="birthday"
-                  defaultValue={formData.dob} // Use defaultValue
-                  required
-                />
-              </div>
-              {/* <div className="profile-modal__input-group">
-                <label htmlFor="gender">Gender</label>
-                <select
-                  id="gender"
-                  value={formData.gender} // Use value for controlled input
-                  onChange={(e) => setFormData({ ...formData, gender: Number(e.target.value) })}
-                >
-                  <option value="0">Male</option>
-                  <option value="1">Female</option>
-                </select>
-              </div> */}
-              <div className="profile-modal__input-group">
-                <label htmlFor="image">Choose File</label>
-                <input
-                  type="file"
-                  id="image"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                />
-                <button
-                  type="button"
-                  className="profile-modal__choose-file-button"
-                  onClick={() => document.getElementById("image").click()}
-                >
-                  Choose File
-                </button>
-                <span className="profile-modal__file-name">{formData.fileName}</span>
-              </div>
-              <div className="profile-modal__footer">
-                <button
-                  type="submit"
-                  className="profile-modal__save-button"
-                  disabled={loading}
-                >
-                  {loading ? <Spin size="small" /> : "Save"} 
-                </button>
-              </div>
-            </form>
           </div>
         </>
       )}

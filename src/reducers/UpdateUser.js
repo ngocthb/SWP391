@@ -1,6 +1,6 @@
 const updateUserReducer = (state = false, action) => {
     switch (action.type) {
-      case "SET_COLLAPSE":
+      case "UPDATE_USER":
         return !state;
       default:
         return state;

@@ -1,5 +1,5 @@
 export const updateUser = () => {
     return{
-        type: "UPDATE_ USER",
+        type: "UPDATE_USER",
     }
 }
