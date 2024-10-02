@@ -77,22 +77,22 @@ export default function Personnel() {
                 className="PersonnelSwiperSlide"
               >
                 <div className="personnel__single">
-                  <div className="personnel__single-img">
-                    <img src={item.imgSrc} alt={item.perName} />
-                    <div className="personnel__single-info">
-                      <h3>{item.perName}</h3>
-                      <p>{item.description}</p>
-                      <BsArrowRightShort className="info-icon" />
-                    </div>
+                  <img src={item.imgSrc} alt={item.perName} />
+
+                  <div className="personnel__single-info">
+                    <h3>{item.perName}</h3>
+                    <p>{item.description}</p>
+                    <BsArrowRightShort className="info-icon" />
                   </div>
 
                   <div className="personnel__single-footer">
                     <div className="footer-div">
-                      <FaStar className="footer-div-icon" />
-                      <RxDividerHorizontal className="footer-div-icon " />
+                      <FaStar className="footer-div-iconStart" />
+                      <RxDividerHorizontal className="footer-div-iconLine " />
                     </div>
                     <div className="footer-text flex">
                       <h6>{item.perName}</h6>
+                      <img src="logo_blue_noBackground.png" alt="logo" />
                     </div>
                   </div>
                 </div>

@@ -54,7 +54,7 @@ export default function HeaderNormal() {
           <div className="header-normalSection__header-logo">
             <Link to={"/"}>
               <h1 className="flex">
-                <IoIosAperture />
+                <img src="logo_white_noBackground.png" alt="logo" />
                 F-Salon
               </h1>
             </Link>

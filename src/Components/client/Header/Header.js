@@ -76,7 +76,7 @@ export default function Header() {
         <div className="navBarSection__header-logo">
           <Link to="/" onClick={handleHomeClick} className="logo-link">
             <h1 className="flex">
-              <IoIosAperture />
+              <img src="logo_white_noBackground.png" alt="logo" />
               F-Salon
             </h1>
           </Link>

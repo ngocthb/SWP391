@@ -11,6 +11,13 @@ import ManagerLayout from "../Layouts/manager/ManagerLayout";
 import ManageEmployee from "../Components/Manager/ManageEmployee/ManageEmployee";
 import UserLayout from "../Layouts/UserLayout";
 
+import BookingLayout from "../Layouts/BookingLayout";
+import Booking from "../Components/client/Booking/Booking";
+import ChooseSalon from "../Components/client/Booking/ChooseSalon/ChooseSalon";
+import ChooseService from "../Components/client/Booking/ChooseService/ChooseService";
+import ChooseDateTime from "../Components/client/Booking/ChooseDateTime/ChooseDateTime";
+import ChooseStylist from "../Components/client/Booking/ChooseStylist/ChooseStylist";
+
 export const Routes = [
   {
     path: "/",
@@ -63,6 +70,32 @@ export const Routes = [
       {
         path: "stylish",
         element: <ManageEmployee buttonLabel="+ New Staff" />,
+      },
+    ],
+  },
+  {
+    path: "booking",
+    element: <BookingLayout />,
+    children: [
+      {
+        path: "",
+        element: <Booking />,
+      },
+      {
+        path: "step1",
+        element: <ChooseSalon />,
+      },
+      {
+        path: "step2",
+        element: <ChooseService />,
+      },
+      {
+        path: "step3",
+        element: <ChooseDateTime />,
+      },
+      {
+        path: "step4",
+        element: <ChooseStylist />,
       },
     ],
   },

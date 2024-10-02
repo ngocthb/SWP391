@@ -7,6 +7,10 @@
   font-family: "Poppins", sans-serif;
   transition: -3s ease;
 }
+html,
+body {
+  background-color: #f5f5f5;
+}
 :root {
   --PrimaryColor: #1b5077;
   --WhiteColor: hsl(0, 0%, 100%);

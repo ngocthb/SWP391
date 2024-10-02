@@ -12,18 +12,18 @@ export default function Footer() {
   const handleHomeClick = (e) => {
     if (location.pathname === "/") {
       e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" }); 
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
-  
+
   return (
     <div className="footer ">
       <div className="footer__container container grid">
         <div>
           <div className="footer__Logo">
-          <Link to="/" onClick={handleHomeClick} className=" flex">
+            <Link to="/" onClick={handleHomeClick} className=" flex">
               <h1 className="flex">
-                <Bs0CircleFill className="footer__Logo-icon" />
+                <img src="logo_blue_noBackground.png" alt="logo" />
                 F-Salon
               </h1>
             </Link>
@@ -38,7 +38,9 @@ export default function Footer() {
         <div className="footer__Links">
           <span className="footer__Links-linkTitle">Information</span>
           <li>
-            <Link to="/" onClick={handleHomeClick}>Home</Link>
+            <Link to="/" onClick={handleHomeClick}>
+              Home
+            </Link>
           </li>
           <li>
             <Link to={""}>Explore</Link>
