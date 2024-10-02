@@ -49,14 +49,14 @@
       box-shadow: 0 2px 4px rgb(209, 209, 209, 0.904);
       transition: 0.5s ease;
       z-index: 1000;
+      padding: 0 2rem;
+      // &.logged-in {
+      //   padding: 0 2rem;
+      // }
 
-      &.logged-in {
-        padding: 0 2rem;
-      }
-
-      &.logged-out {
-        padding: 1rem;
-      }
+      // &.logged-out {
+      //   padding: 1rem;
+      // }
       &__lists {
         flex-direction: column;
         justify-self: center;
@@ -64,10 +64,7 @@
         margin: auto;
 
         &-items {
-          padding: 1rem 0;
-          &.logged-in {
-            padding: 2rem 0; 
-          }
+          padding: 2rem 0;
 
           a {
             color: var(--text-color);
@@ -163,20 +160,20 @@
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 250px; /* Giảm chiều rộng xuống 250px */
-    padding: 15px; /* Điều chỉnh padding nếu cần */
+    width: 250px;
+    padding: 15px;
     text-align: left;
     position: absolute;
     margin-right: 10px;
-    right: 30px;
+    right: 35px;
+    top: 70px;
     z-index: 1001;
-    top: 60px;
 
     &--header {
       display: flex;
       align-items: center;
-      margin-bottom: 15px; /* Giảm khoảng cách dưới */
-      padding-bottom: 15px; /* Giảm khoảng cách dưới */
+      margin-bottom: 15px;
+      padding-bottom: 15px;
       border-bottom: 1px solid #f0f0f0;
 
       & h2{
@@ -185,9 +182,9 @@
 
       & img {
         border-radius: 50%;
-        width: 50px; /* Giảm kích thước ảnh */
-        height: 50px; /* Giảm kích thước ảnh */
-        margin-right: 10px; /* Giảm khoảng cách bên phải */
+        width: 50px; 
+        height: 50px;
+        margin-right: 10px;
       }
     }
 
@@ -202,9 +199,9 @@
       align-items: center;
       color: #333;
       text-decoration: none;
-      font-size: 13px; /* Giảm kích thước chữ */
-      margin: 8px 0; /* Giảm khoảng cách trên/dưới */
-      padding: 8px; /* Điều chỉnh padding nếu cần */
+      font-size: 13px;
+      margin: 8px 0;
+      padding: 8px;
       transition: background-color 0.3s;
   
       & i {
@@ -213,9 +210,9 @@
       }
   
       &:hover {
-        background-color: #f0f0f0; /* Màu nền khi hover */
-        color: #333; /* Giữ nguyên màu chữ */
-        border-radius: 8px; /* Thêm border-radius cho nền khi hover */
+        background-color: #f0f0f0;
+        color: #333;
+        border-radius: 8px;
       }
     }
   }

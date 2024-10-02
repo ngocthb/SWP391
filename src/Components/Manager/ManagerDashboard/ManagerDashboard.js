@@ -1,11 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Col, Row, Statistic, Tabs } from "antd";
-import ReactECharts from 'echarts-for-react'; // Correct import
+import ReactECharts from 'echarts-for-react';
 import "./ManagerDashboard.scss";
 
 const { TabPane } = Tabs;
 
 const ManagerDashboard = () => {
+  const [profit, setProfit] = useState(0);
+  const [growth, setGrowth] = useState(0);
+  const [orders, setOrders] = useState(0);
+  const [customers, setCustomers] = useState(0);
+
+  const finalValues = {
+    profit: 23523,
+    growth: 17.21,
+    orders: 3685,
+    customers: 1832,
+  };
+
+  useEffect(() => {
+    const duration = 2000;
+    const intervalTime = 50;
+    const steps = duration / intervalTime;
+
+    const incrementProfit = (finalValues.profit / steps);
+    const incrementGrowth = (finalValues.growth / steps);
+    const incrementOrders = (finalValues.orders / steps);
+    const incrementCustomers = (finalValues.customers / steps);
+
+    let currentProfit = 0;
+    let currentGrowth = 0;
+    let currentOrders = 0;
+    let currentCustomers = 0;
+
+    const interval = setInterval(() => {
+      if (currentProfit < finalValues.profit) {
+        currentProfit += incrementProfit;
+        setProfit(Math.round(currentProfit));
+      }
+      if (currentGrowth < finalValues.growth) {
+        currentGrowth += incrementGrowth;
+        setGrowth(Math.round(currentGrowth * 100) / 100);
+      }
+      if (currentOrders < finalValues.orders) {
+        currentOrders += incrementOrders;
+        setOrders(Math.round(currentOrders));
+      }
+      if (currentCustomers < finalValues.customers) {
+        currentCustomers += incrementCustomers;
+        setCustomers(Math.round(currentCustomers));
+      }
+
+      if (
+        currentProfit >= finalValues.profit &&
+        currentGrowth >= finalValues.growth &&
+        currentOrders >= finalValues.orders &&
+        currentCustomers >= finalValues.customers
+      ) {
+        clearInterval(interval);
+      }
+    }, intervalTime);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const revenueData = [
     { date: "16th", revenue: 20 },
     { date: "17th", revenue: 60 },
@@ -67,7 +125,7 @@ const ManagerDashboard = () => {
           },
         },
         label: {
-          formatter: '{c}', // Display only the value
+          formatter: '{c}',
         },
       },
     ],
@@ -78,22 +136,22 @@ const ManagerDashboard = () => {
       <Row gutter={16} className="manager-dashboard__container">
         <Col span={6}>
           <Card>
-            <Statistic title="Profit" value={23523} prefix="$" />
+            <Statistic title="Profit" value={profit} prefix="$" />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="Growth" value={17.21} suffix="%" />
+            <Statistic title="Growth" value={growth} suffix="%" />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="Orders" value={3685} />
+            <Statistic title="Orders" value={orders} />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="Customers" value={1832} />
+            <Statistic title="Customers" value={customers} />
           </Card>
         </Col>
       </Row>

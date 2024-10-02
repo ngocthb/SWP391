@@ -6,7 +6,8 @@ import { ReactComponent as GoogleIcon } from "../../../Assets/GoogleIcon.svg";
 import api from "../../../config/axios";
 import "./Login.scss";
 import { message, Spin } from "antd";
-import loginUser from "../../../data/loginUser";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { googleProvider } from "../../../config/firebase";
 
 const Login = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -32,15 +33,17 @@ const Login = () => {
       });
       const { token } = response.data;
       localStorage.setItem("token", token);
-      const userResponse = await api.get(/*"customer/profile"*/"users/2");
-      const user = userResponse.data.data;
-      const role = user.role || "user";
-      const userInfo = {
-        fullname: user.fullname,
-        role: role,
-        avatar: user.avatar || loginUser.avatar,
-      };
-      localStorage.setItem("user", JSON.stringify(userInfo));
+      // const userResponse = await api.get(/*"customer/profile"*/ "users/2");
+      // const user = userResponse.data.data;
+      // const role = user.role || "user";
+      // const userInfo = {
+      //   fullname: user.fullname,
+      //   role: role,
+      //   avatar: user.avatar || loginUser.avatar,
+      // };
+      // localStorage.setItem("user", JSON.stringify(userInfo));
+      // console.log(userInfo);
+      
 
       if (response) {
         navigate("/");
@@ -54,6 +57,34 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLoginGoogle = () => {
+    const auth = getAuth();
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        console.log(token);
+        
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user);
+        
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
+        // // The email of the user's account used.
+        // const email = error.customData.email;
+        // // The AuthCredential type that was used.
+        // const credential = GoogleAuthProvider.credentialFromError(error);
+        // // ...
+      });
   };
 
   return (
@@ -81,7 +112,7 @@ const Login = () => {
         </div>
         <div className="signin__right-side">
           <h1>Welcome back</h1>
-          <button className="signin__button-google">
+          <button className="signin__button-google"  onClick={handleLoginGoogle}>
             <GoogleIcon />
             Sign in with Google
           </button>

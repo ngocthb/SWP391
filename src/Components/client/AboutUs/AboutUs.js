@@ -13,7 +13,7 @@ export default function AboutUs() {
               src="https://icon-library.com/images/shop-icon-png/shop-icon-png-6.jpg"
               alt="Icon Branch"
             />
-            <h3>50+ Branch</h3>
+            <h2>50+ Branch</h2>
             <p>
               Lorem ipsum dolor sit, amet consectetur adipisicing elit.
               Accusamus facilis illum aut, dolores distinctio amet blanditiis

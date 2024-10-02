@@ -1,10 +1,12 @@
 import { Menu } from "antd";
 import {
   PlayCircleOutlined,
-  CheckOutlined,
   HighlightOutlined,
   InsertRowAboveOutlined,
   PlusOutlined,
+  ScissorOutlined,
+  ContactsOutlined,
+  DashboardOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
@@ -12,17 +14,18 @@ function MenuSider() {
   const items = [
     {
       label: <Link to="/manager/dashboard">Dashboard</Link>,
-      icon: <PlayCircleOutlined />,
+      icon: <DashboardOutlined />,
       key: "Dashboard",
     },
     {
       label: "Employee",
-      icon: <CheckOutlined />,
-      key: "menu-2",
+      icon: <ContactsOutlined />,
+      key: "Employee",
       children: [
         {
           label: <Link to="/manager/stylish">Stylish</Link>,
-          key: "stylish",
+          icon: <ScissorOutlined />,
+          key: "Stylish",
         },
         {
           label: "Menu 2-1",
@@ -31,9 +34,9 @@ function MenuSider() {
       ],
     },
     {
-      label: "Menu 3",
+      label: <Link to="/manager/service">Service</Link>,
       icon: <HighlightOutlined />,
-      key: "menu-3",
+      key: "Service",
     },
     {
       label: <Link to="/manager/booking">Booking</Link>,

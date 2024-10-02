@@ -16,10 +16,10 @@ export default function UserInfor() {
     dob: "",
     phone: "",
     gender: 0,
-    fileName: loginUser.avatar,
+    fileName: loginUser.name,
+    avatarFile: loginUser.avatar,
   });
   const [loading, setLoading] = useState(false);
-  const [fileInput, setFileInput] = useState(null);
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
 
@@ -31,8 +31,6 @@ export default function UserInfor() {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-
-  console.log(formatDateString(loginUser.dob));
   
 
   const formatDateForInput = (dateString) => {
@@ -49,7 +47,7 @@ export default function UserInfor() {
 
   const fetchUserData = async () => {
     try {
-      const response = await api.get("users/2");
+      const response = await api.get(`/customer/profile`);
       const data = response.data.data;
 
       if (data) {
@@ -60,27 +58,23 @@ export default function UserInfor() {
           dob: data.dob ? formatDateForInput(data.dob) : "",
           phone: data.phone || "",
           gender: data.gender,
-          fileName: data.avatar || loginUser.avatar,
+          fileName: loginUser.name,
+          avatarFile: data.img || loginUser.avatar,
         });
       }
     } catch (err) {
       console.error(err);
-      messageApi.open({
-        type: 'success',
-        content: err.response.data.message,
-      });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e) => { 
     if (e.target.files.length > 0) {
-      setFileInput(e.target.files[0]);
-      setFormData({ ...formData, fileName: e.target.files[0].name });
+      const selectedFile = e.target.files[0];
+      setFormData({ ...formData, avatarFile: selectedFile, fileName: selectedFile.name });
     } else {
-      setFileInput(null);
-      setFormData({ ...formData, fileName: "No file chosen" });
+      setFormData({ ...formData, avatarFile: null, fileName: "No file chosen" });
     }
   };
 
@@ -98,20 +92,14 @@ export default function UserInfor() {
         email: email,
         phone: phone,
         dob: dob,
-        // avatar: fileInput ? fileInput.name : undefined,
-      };
-      console.log(updatedUserData);
-      
+        avatar: formData.fileName || loginUser.avatar,
+      };     
 
+      console.log(formData);
+      
       const response = await api.put(`customer/${formData.accountid}`, updatedUserData);
 
       if (response) {
-        const userInfo = {
-          fullname: fullname,
-          role: "user",
-          avatar: loginUser.avatar,
-        }
-        localStorage.setItem("user", JSON.stringify(userInfo));
         fetchUserData();
         toggleModal();
         dispatch(updateUser());
@@ -144,7 +132,7 @@ export default function UserInfor() {
               alt="User-Avatar"
               className="profile__left-pic"
               height="100"
-              src={formData.fileName}
+              src={formData.avatarFile}
               width="100"
             />
           </div>

@@ -13,11 +13,25 @@ import UserLayout from "../Layouts/UserLayout";
 import ManagerDashboard from "../Components/Manager/ManagerDashboard/ManagerDashboard";
 import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
 import ManagerCreateStylish from "../Components/Manager/ManagerCreateStylish/ManagerCreateStylish";
+import HomePageLayout from "../Layouts/client/HomePageLayout";
+import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
+import ManageService from "../Components/Manager/ManageService/ManageService";
+import ManagerCreateService from "../Components/Manager/ManagerCreateService/ManagerCreateService";
 
 export const Routes = [
   {
     path: "/",
-    element: <HomePage />,
+    element: <HomePageLayout/>,
+    children: [
+      {
+        path: "/",
+        element: <HomePage/>
+      },
+      {
+        path: "/aboutus",
+        element: <AboutUsPage/>
+      },
+    ]
   },
   {
     path: "/login",
@@ -78,6 +92,14 @@ export const Routes = [
       {
         path: 'booking',
         element: <ManagerBooking/>
+      },
+      {
+        path: 'service',
+        element:<ManageService/>
+      },
+      {
+        path: 'service/create',
+        element:<ManagerCreateService/>
       }
     ]
   },

@@ -81,7 +81,7 @@ const ManagerBooking = () => {
           <Link to="#" className="manager-booking__breadcrumb-link">Dashboard</Link> &gt;
           <Link to="#" className="manager-booking__breadcrumb-link">Apps</Link> &gt;
           <Link to="#" className="manager-booking__breadcrumb-link">E-commerce</Link> &gt;
-          <span className="manager-booking__breadcrumb-current">Orders List</span>
+          <span className="manager-booking__breadcrumb-current">Booking</span>
         </div>
         <div className="manager-booking__content">
           <table className="manager-booking__table">

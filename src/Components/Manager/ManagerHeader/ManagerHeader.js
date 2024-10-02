@@ -1,51 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import logo from "../../../Assets/Logo.png";
 import logoFold from "../../../Assets/logo-fold.png";
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import "./ManagerHeader.scss";
-import { useDispatch, useSelector } from "react-redux";
 import { collapse } from "../../../actions/Collapse";
-import { Link } from "react-router-dom";
+import "./ManagerHeader.scss";
+
+const pageNames = {
+  "/manager/dashboard": "Dashboard",
+  "/manager/stylish": "Stylish",
+  "/manager/booking": "Booking",
+};
 
 const ManagerHeader = () => {
   const collapsed = useSelector((state) => state.collapseReducer);
   const dispatch = useDispatch();
-  const [isDropdownActive, setDropdownActive] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const location = useLocation();
+  const [pageName, setPageName] = useState("");
 
-  const toggleDropdown = () => {
-    setDropdownActive((prev) => !prev);
-  };
+  const toggleDropdown = useCallback(() => {
+    setDropdownOpen((prev) => !prev);
+  }, []);
 
-  // Close dropdown when clicking outside
-  const handleClickOutside = (event) => {
-    const dropdown = document.querySelector(".header-manager__dropdown");
-    if (dropdown && !dropdown.contains(event.target)) {
-      setDropdownActive(false);
-    }
-  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".header-manager__user-info")) {
+        setDropdownOpen(false);
+      }
+    };
 
-  React.useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    setPageName(pageNames[location.pathname] || "");
+  }, [location.pathname]);
+
+  const handleCollapse = useCallback(() => {
+    dispatch(collapse());
+  }, [dispatch]);
 
   return (
     <header className="header-manager">
       <div className={`header-manager__logo ${collapsed ? "header-manager__logo--collapsed" : ""}`}>
-        {collapsed ? (
-          <img src={logoFold} alt="Logo Fold" />
-        ) : (
-          <img src={logo} alt="Logo" />
-        )}
+        <img src={collapsed ? logoFold : logo} alt={collapsed ? "Logo Fold" : "Logo"} />
       </div>
       <div className="header-manager__nav">
         <div className="header-manager__nav-left">
-          <div className="header-manager__collapse" onClick={() => dispatch(collapse())}>
+          <div className="header-manager__collapse" onClick={handleCollapse}>
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            <div className="header-manager__name-page">Stylish</div>
           </div>
+          <div className="header-manager__name-page">{pageName}</div>
         </div>
         <div className="header-manager__nav-right">
           <div className="header-manager__user-info" onClick={toggleDropdown}>
@@ -60,7 +70,7 @@ const ManagerHeader = () => {
               />
             </div>
           </div>
-          {isDropdownActive && (
+          {dropdownOpen && (
             <div className="header-manager__dropdown">
               <div className="header-manager__dropdown--header">
                 <img
@@ -73,22 +83,10 @@ const ManagerHeader = () => {
                   <p>UI/UX Designer</p>
                 </div>
               </div>
-              <Link to="#">
-                <i className="fas fa-user"></i>
-                Edit Profile
-              </Link>
-              <Link to="#">
-                <i className="fas fa-cog"></i>
-                Account Setting
-              </Link>
-              <Link to="#">
-                <i className="fas fa-folder"></i>
-                Projects
-              </Link>
-              <Link to="#">
-                <i className="fas fa-sign-out-alt"></i>
-                Logout
-              </Link>
+              <Link to="#"><i className="fas fa-user"></i> Edit Profile</Link>
+              <Link to="#"><i className="fas fa-cog"></i> Account Setting</Link>
+              <Link to="#"><i className="fas fa-folder"></i> Projects</Link>
+              <Link to="#"><i className="fas fa-sign-out-alt"></i> Logout</Link>
             </div>
           )}
         </div>

@@ -1,9 +1,4 @@
-body {
-    background-color: #f7fafc;
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
-  
-  .manager-create-stylish {
+ .manager-create-stylish {
     max-width: 800px;
     margin: 40px auto;
     background-color: #ffffff;
@@ -103,6 +98,14 @@ body {
   
       &::placeholder {
         color: #a0aec0;
+      }
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus,
+      &:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px white inset !important;
+        -webkit-text-fill-color: #000 !important;
       }
     }
   }

@@ -5,33 +5,37 @@ import { CiGrid41 } from "react-icons/ci";
 import DropdownNav from "../../../redux/dropdown.js";
 import "./HeaderNormal.scss";
 import { Link } from "react-router-dom";
-import { PiSignOut } from "react-icons/pi";
-import { CgProfile } from "react-icons/cg";
 import { useSelector } from "react-redux";
+import api from "../../../config/axios.js";
+import loginUser from "../../../data/loginUser.js";
 
 
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
-  const [loginUser, setLoginUser] = useState();
-  const isUpdate = useSelector((state) => state.updateUserReducer);
+  const [userInfo, setUserInfo] = useState({});
+  const isUpdate = useSelector(state => state.updateUserReducer);
 
   useEffect(() => {
-    const updateLoginUser = () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      setLoginUser(user);
-    };
-
-    updateLoginUser();
-
-    window.addEventListener('storage', updateLoginUser);
-
-    return () => {
-      window.removeEventListener('storage', updateLoginUser);
-    };
+    if (isLoggedIn) {
+      fetchUserData();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdate]);
 
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get("customer/profile");
+      const data = response.data.data;
+      if (data) {
+          setUserInfo(data);
+      }
+    } catch (err) {
+      console.log(err);
+      
+    }
+  };
 
   // Toggle header-normal
   const showNav = () => setActive("header-normal header-normal-active");
@@ -75,7 +79,7 @@ export default function HeaderNormal() {
           <div className={`${active} ${isLoggedIn ? "logged-in" : "logged-out"}`}>
             <ul className="header-normal__lists flex">
               <li className={`header-normal__lists-items ${isLoggedIn ? 'logged-in' : ''}`}>
-                <Link to={""}>About Us</Link>
+                <Link to={"/aboutus"}>About Us</Link>
               </li>
               <li className={`header-normal__lists-items ${isLoggedIn ? 'logged-in' : ''}`}>
                 <DropdownNav title="Service" />
@@ -90,11 +94,11 @@ export default function HeaderNormal() {
                     <div className="content" onClick={toggleDropdown}>
                       <div className="content__infor">
                         <div>
-                          <h3>{loginUser.fullname || ""}</h3>
-                          <p>{loginUser.role || ""}</p>
+                          <h3>{userInfo.fullname || ""}</h3>
+                          <p>{userInfo.role || "User"}</p>
                         </div>
                         <div>
-                          <img src={loginUser.avatar} alt="User-Avatar" />
+                          <img src={userInfo.avatar || loginUser.avatar} alt="User-Avatar" />
                         </div>
                       </div>
                     </div>
@@ -104,25 +108,25 @@ export default function HeaderNormal() {
                          <img
                            height={60}
                            alt="User avatar"
-                           src="https://enlink.themenate.net/assets/images/avatars/thumb-3.jpg"
+                           src={userInfo.avatar || loginUser.avatar}
                          />
                          <div>
-                           <h2>Marshall Nichols</h2>
-                           <p>UI/UX Designer</p>
+                           <h2>{userInfo.fullname || ""}</h2>
+                           <p>{userInfo.role || "User"}</p>
                          </div>
                        </div>
                        <Link to="/user/profile">
                          <i className="fas fa-user"></i>
                          Profile
                        </Link>
-                       <Link to="#">
+                       {/* <Link to="#">
                          <i className="fas fa-cog"></i>
                          Account Setting
                        </Link>
                        <Link to="#">
                          <i className="fas fa-folder"></i>
                          Projects
-                       </Link>
+                       </Link> */}
                        <Link to="#" onClick={handleLogout}>
                          <i className="fas fa-sign-out-alt"></i>
                          Logout
