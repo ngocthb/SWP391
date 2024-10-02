@@ -39,7 +39,7 @@ export default function Header() {
   const fetchUserData = async () => {
     try {
       const response = await api.get("customer/profile");
-      const data = response.data.data;
+      const data = response.data.result;
       if (data) {
           setUserInfo(data);
       }
