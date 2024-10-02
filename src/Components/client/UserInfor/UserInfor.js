@@ -3,46 +3,112 @@ import loginUser from "../../../data/loginUser";
 import "./UserInfor.scss";
 import api from "../../../config/axios";
 import { FaEdit } from "react-icons/fa";
+import { message, Spin } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../../actions/UpdateUser";
 
 export default function UserInfor() {
-  const [userInfo, setUserInfo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const [fileName, setFileName] = useState("No file chosen");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [formData, setFormData] = useState({
+    accountid: 0,
+    fullname: "",
+    email: "",
+    dob: "",
+    phone: "",
+    avatarFile: loginUser.avatar,
+  });
+  const [loading, setLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+  const dispatch = useDispatch();
+  const isUpdate = useSelector(state => state.updateUserReducer);
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const formatDateString = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const formatDateForInput = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await api.get("/user"); // Adjust this endpoint as needed
-        setUserInfo(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchUserData();
-  }, []);
-  // console.log(userInfo);
-  const handleFileChange = (e) => {
-    if (e.target.files.length > 0) {
-      setFileName(e.target.files[0].name);
-    } else {
-      setFileName("No file chosen");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdate]);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get(`customer/profile`);
+      const data = response.data.result;
+
+      if (data) {
+        setFormData({
+          accountid: data.accountid,
+          fullname: data.fullname || "",
+          email: data.email || "",
+          dob: data.dob ? formatDateForInput(data.dob) : "",
+          phone: data.phone || "",
+          avatarFile: data.img || loginUser.avatar,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSave = () => {
-    // Handle save logic here
-    console.log({ name, phone, email, birthday });
-    onclose(); // Close modal after saving
+  const updateUserData = async (e) => {
+    const updateValues = {
+      fullName: e.target[0].value,
+      email: e.target[1].value,
+      phone: e.target[2].value,
+      dob: e.target[3].value,
+    };
+    try {
+      const response = await api.put(`customer/${formData.accountid}`, updateValues);
+      const data = response.data.result;
+
+      if (data) {
+        setFormData({
+          accountid: data.accountid,
+          fullname: data.fullname || "",
+          email: data.email || "",
+          dob: data.dob ? formatDateForInput(data.dob) : "",
+          phone: data.phone || "",
+          avatarFile: selectedFile,
+        });
+        dispatch(updateUser());
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleSubmit = (e) => {
+    updateUserData(e);
+  };
+
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   return (
     <>
+      {contextHolder}
       <div className="main">
         <div className="profile">
           <div className="profile__left">
@@ -51,7 +117,7 @@ export default function UserInfor() {
               alt="User-Avatar"
               className="profile__left-pic"
               height="100"
-              src={/*userInfo ? userInfo.avatar :*/ loginUser.avatar}
+              src={formData.avatarFile}
               width="100"
             />
           </div>
@@ -65,19 +131,19 @@ export default function UserInfor() {
             <div className="description">
               <div className="description__details">
                 <span>Name </span>
-                <p>{/*userInfo ? userInfo.name :*/ loginUser.name}</p>
+                <p>{formData.fullname}</p>
               </div>
               <div className="description__details">
                 <span>Phone </span>
-                <p>{/*userInfo ? userInfo.phone :*/ loginUser.phone}</p>
+                <p>{formData.phone}</p>
               </div>
               <div className="description__details">
                 <span>Email </span>
-                <p>{/*userInfo ? userInfo.email :*/ loginUser.email}</p>
+                <p>{formData.email}</p>
               </div>
               <div className="description__details">
                 <span>Birthday </span>
-                <p>{/*userInfo ? userInfo.dob :*/ loginUser.dob}</p>
+                <p>{formatDateString(formData.dob)}</p>
               </div>
             </div>
           </div>
@@ -86,74 +152,97 @@ export default function UserInfor() {
 
       {isModalOpen && (
         <>
-          <div className="profile-backdrop" onClick={toggleModal} />
-          <div className="profile-modal">
-            <div className="profile-modal__header">
-              <h2>User Details</h2>
-            </div>
-            <div className="profile-modal__body">
-              <div className="profile-modal__input-group">
-                <label htmlFor="name">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div className="profile-modal__input-group">
-                <label htmlFor="phone">Phone</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </div>
-              <div className="profile-modal__input-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="profile-modal__input-group">
-                <label htmlFor="birthday">Birthday</label>
-                <input
-                  type="date"
-                  id="birthday"
-                  value={birthday}
-                  onChange={(e) => setBirthday(e.target.value)}
-                />
-              </div>
-              <div className="profile-modal__input-group">
-                <label htmlFor="image">Choose File</label>
-                <input
-                  type="file"
-                  id="image"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                />
-                <button
-                  type="button"
-                  className="profile-modal__choose-file-button"
-                  onClick={() => document.getElementById("image").click()}
-                >
-                  Choose File
-                </button>
-                <span className="profile-modal__file-path">{fileName}</span>
-              </div>
-            </div>
-            <div className="profile-modal__footer">
-              <button
-                className="profile-modal__save-button"
-                onClick={handleSave}
-              >
-                Save
-              </button>
+          <div className="profile-backdrop" onClick={toggleModal}>
+            <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
+              <form onSubmit={handleSubmit}>
+                <h2 className="profile-modal__header">Basic Information</h2>
+                <div className="profile-modal__avatar-section">
+                  <div className="profile-modal__avatar">
+                    <img src={formData.avatarFile} alt={formData.fullname} />
+                  </div>
+                  <div className="profile-modal__avatar-info">
+                    <h3 className="profile-modal__avatar-title">
+                      Change Avatar
+                    </h3>
+                    <p className="profile-modal__avatar-description">
+                      Recommended Dimensions: 120x120 Max file size: 5MB
+                    </p>
+                    <label className="profile-modal__upload-btn">
+                      Upload
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        style={{ display: "none" }}
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div className="profile-modal__form-section">
+                  <div className="profile-modal__form-grid">
+                    <div className="profile-modal__form-group profile-modal__form-group--full-width">
+                      <label
+                        htmlFor="fullname"
+                        className="profile-modal__label"
+                      >
+                        Full Name:
+                      </label>
+                      <input
+                        type="text"
+                        id="fullname"
+                        className="profile-modal__input"
+                        placeholder="Full Name"
+                        defaultValue={formData.fullname}
+                      />
+                    </div>
+                    <div className="profile-modal__form-group profile-modal__form-group--full-width">
+                      <label htmlFor="email" className="profile-modal__label">
+                        Email:
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        className="profile-modal__input"
+                        placeholder="Email"
+                        defaultValue={formData.email}
+                      />
+                    </div>
+                    <div className="profile-modal__form-group">
+                      <label htmlFor="phone" className="profile-modal__label">
+                        Phone:
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        className="profile-modal__input"
+                        placeholder="Phone"
+                        defaultValue={formData.phone}
+                      />
+                    </div>
+                    <div className="profile-modal__form-group">
+                      <label htmlFor="dob" className="profile-modal__label">
+                        Date of Birth:
+                      </label>
+                      <input
+                        type="date"
+                        id="dob"
+                        className="profile-modal__input"
+                        placeholder="Date of Birth"
+                        defaultValue={formData.dob}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="profile-modal__button-container">
+                  <button
+                    type="submit"
+                    className="profile-modal__button"
+                    disabled={loading}
+                  >
+                    {loading ? <Spin size="small" /> : "Save"}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </>

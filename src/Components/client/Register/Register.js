@@ -47,7 +47,7 @@ const Register = () => {
             type: 'success',
             content: 'Registration successful! Please sign in.',
           });
-        navigate("/signin");
+        navigate("/login");
       }
     } catch (error) {
       console.log(error);

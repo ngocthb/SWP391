@@ -1,0 +1,42 @@
+.manager-dashboard {
+    padding: 20px;
+s
+    &__container {
+        margin-bottom: 20px;
+    }
+
+    &__chart-container {
+        margin-top: 20px;
+
+        &__legend {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+
+            &-item {
+                display: flex;
+                align-items: center;
+
+                span {
+                    display: inline-block;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    margin-right: 5px;
+                }
+
+                &.new span {
+                    background-color: #20c997;
+                }
+
+                &.returning span {
+                    background-color: #6f42c1;
+                }
+
+                &.others span {
+                    background-color: #ffc107;
+                }
+            }
+        }
+    }
+}

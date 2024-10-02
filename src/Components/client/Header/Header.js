@@ -7,14 +7,16 @@ import { useEffect, useState } from "react";
 import DropdownNav from "../../../redux/dropdown.js";
 import { Link, useLocation } from "react-router-dom";
 import loginUser from "../../../data/loginUser.js";
-import { PiSignOut } from "react-icons/pi";
-import { CgProfile } from "react-icons/cg";
+import api from "../../../config/axios.js";
+import { useSelector } from "react-redux";
 
 export default function Header() {
   const [active, setActive] = useState("navBar");
   const [transparent, setTransparent] = useState("navBarSection__header");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
+  const [userInfo, setUserInfo] = useState({});
+  const isUpdate = useSelector((state) => state.updateUserReducer);
 
   //Code to show(toggle) navbar
   const showNav = () => {
@@ -24,6 +26,25 @@ export default function Header() {
   // Code to remove navbar
   const removeNav = () => {
     setActive("navBar");
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchUserData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdate]);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get("customer/profile");
+      const data = response.data.data;
+      if (data) {
+        setUserInfo(data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // Code to add background color to header
@@ -86,10 +107,10 @@ export default function Header() {
         <div className={active}>
           <ul className="navBar__lists flex">
             <li className="navBar__lists-items">
-              <Link to={""}> About Us</Link>
+              <Link to={"/aboutus"}> About Us</Link>
             </li>
             <li className="navBar__lists-items">
-              <DropdownNav title="Service" />
+              <Link to={""}> Service</Link>
             </li>
             <li className="navBar__lists-items">
               <Link to={""}>Upcoming Package</Link>
@@ -100,28 +121,45 @@ export default function Header() {
                   <div className="content" onClick={toggleDropdown}>
                     <div className="content__infor">
                       <div>
-                        <h3>{loginUser.name}</h3>
-                        <p>{loginUser.role}</p>
+                        <h3>{userInfo.fullname || ""}</h3>
+                        <p>{userInfo.role || "User"}</p>
                       </div>
                       <div>
-                        <img src={loginUser.avatar} alt="User-Avatar" />
+                        <img
+                          src={userInfo.avatar || loginUser.avatar}
+                          alt="User-Avatar"
+                        />
                       </div>
                     </div>
                   </div>
                   {dropdownOpen && (
-                    <div className="header__dropdown">
-                      <Link
-                        to="/user/profile"
-                        className="header__dropdown-item"
-                      >
-                        <CgProfile /> Profile
+                    <div className="navBar__dropdown">
+                      <div className="navBar__dropdown--header">
+                        <img
+                          height={60}
+                          alt="User avatar"
+                          src={userInfo.avatar || loginUser.avatar}
+                        />
+                        <div>
+                          <h2>{userInfo.fullname || ""}</h2>
+                          <p>{userInfo.role || "User"}</p>
+                        </div>
+                      </div>
+                      <Link to="/user/profile">
+                        <i className="fas fa-user"></i>
+                        Profile
                       </Link>
-                      <Link
-                        to="#"
-                        onClick={handleLogout}
-                        className="header__dropdown-item"
-                      >
-                        <PiSignOut /> Logout
+                      {/* <Link to="#">
+                      <i className="fas fa-cog"></i>
+                      Account Setting
+                    </Link>
+                    <Link to="#">
+                      <i className="fas fa-folder"></i>
+                      Projects
+                    </Link> */}
+                      <Link to="#" onClick={handleLogout}>
+                        <i className="fas fa-sign-out-alt"></i>
+                        Logout
                       </Link>
                     </div>
                   )}

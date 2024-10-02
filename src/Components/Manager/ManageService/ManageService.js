@@ -7,7 +7,13 @@ import { FaUserEdit } from "react-icons/fa";
 import { FaAngleLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 import services from "../../../data/service";
+import { useNavigate } from "react-router-dom";
 export default function ManageService() {
+  const navigate = useNavigate();
+  const createService = () => {
+    navigate("/manager/service/create");
+  }
+
   return (
     <div class="ManageService">
       <div className="ManageService__header">
@@ -21,7 +27,7 @@ export default function ManageService() {
             <option>Newest</option>
             <option>Oldest</option>
           </select>
-          <button> + New Service</button>
+          <button onClick={createService}> + New Service</button>
         </div>
       </div>
       <div className="service">
