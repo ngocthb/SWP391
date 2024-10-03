@@ -182,7 +182,7 @@ export default function UserInfor() {
           <div className="profile-backdrop" onClick={toggleModal}>
             <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
               <form onSubmit={handleSubmit}>
-                <h2 className="profile-modal__header">Basic Information</h2>
+                <h2 className="profile-modal__header">Update Profile</h2>
                 <div className="profile-modal__avatar-section">
                   <div className="profile-modal__avatar">
                     <img src={selectedFile || formData.avatarFile} alt={formData.fullname} />

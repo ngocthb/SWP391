@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
-import DropdownNav from "../../../redux/dropdown.js";
 import "./HeaderNormal.scss";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import api from "../../../config/axios.js";
 import loginUser from "../../../data/loginUser.js";
+import logoWhite from "../../../Assets/logo_white_noBackground.png";
+import { CgProfile } from "react-icons/cg";
+import { TbLogout } from "react-icons/tb";
 
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
@@ -68,7 +69,7 @@ export default function HeaderNormal() {
           <div className="header-normalSection__header-logo">
             <Link to={"/"}>
               <h1 className="flex">
-                <img src="logo_white_noBackground.png" alt="logo" />
+                <img src={logoWhite} alt="logo" />
                 F-Salon
               </h1>
             </Link>
@@ -130,7 +131,7 @@ export default function HeaderNormal() {
                           </div>
                         </div>
                         <Link to="/user/profile">
-                          <i className="fas fa-user"></i>
+                          <i><CgProfile /></i>
                           Profile
                         </Link>
                         {/* <Link to="#">
@@ -142,7 +143,7 @@ export default function HeaderNormal() {
                          Projects
                        </Link> */}
                         <Link to="#" onClick={handleLogout}>
-                          <i className="fas fa-sign-out-alt"></i>
+                         <i> <TbLogout /></i>
                           Logout
                         </Link>
                       </div>

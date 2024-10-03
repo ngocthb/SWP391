@@ -18,7 +18,7 @@ import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
 import ManageService from "../Components/Manager/ManageService/ManageService";
 import ManagerCreateService from "../Components/Manager/ManagerCreateService/ManagerCreateService";
 
-import BookingLayout from "../Layouts/BookingLayout";
+import BookingLayout from "../Layouts/client/BookingLayout";
 import Booking from "../Components/client/Booking/Booking";
 import ChooseSalon from "../Components/client/Booking/ChooseSalon/ChooseSalon";
 import ChooseService from "../Components/client/Booking/ChooseService/ChooseService";
