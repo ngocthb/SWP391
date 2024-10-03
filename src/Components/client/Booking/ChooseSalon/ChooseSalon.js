@@ -1,5 +1,5 @@
 import { IoSearchOutline } from "react-icons/io5";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { IoCloseCircle } from "react-icons/io5";
 import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
@@ -62,6 +62,10 @@ export default function ChooseSalon() {
     setSearchValue(e.target.value);
   };
 
+  const [selectedBranch, setSelectedBranch] = useState(null);
+  const handleSelected = (branch) => {
+    setSelectedBranch(branch);
+  };
   return (
     <>
       <div className="chooseSalon">
@@ -132,15 +136,33 @@ export default function ChooseSalon() {
           </div>
           <div className="chooseSalon__container-lists">
             {searchRst.map((branch) => (
-              <Link to="/booking/step2" key={branch.id}>
+              <div
+                onClick={() => handleSelected(branch)}
+                className={`chooseSalon__container-single ${
+                  selectedBranch && selectedBranch.id === branch.id
+                    ? "selected"
+                    : ""
+                }`}
+                key={branch.id}
+              >
                 {branch.first_name}
-              </Link>
+              </div>
             ))}
           </div>
-          {/* <button className="chooseSalon__container-btn btn flex">
-            Next Step
-            <FaArrowRight className="chooseSalon-icon" />
-          </button> */}
+          <Link
+            to="/booking/step2"
+            className={`chooseSalon__container-btn btn flex ${
+              !!selectedBranch ? "" : "btn-disable"
+            }`}
+            onClick={(e) => {
+              if (!selectedBranch) {
+                e.preventDefault();
+              }
+            }}
+          >
+            Booking Now
+            <FaArrowRight className="chooseService-icon" />
+          </Link>
         </div>
       </div>
     </>

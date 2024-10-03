@@ -171,7 +171,7 @@
       overflow-y: overlay;
       background-color: #f5f5f5;
 
-      a {
+      .chooseSalon__container-single {
         width: 98%;
         border: 2px solid var(--PrimaryColor);
         gap: 2rem;
@@ -179,6 +179,12 @@
         border-radius: 5px;
         padding: 10px 15px;
         cursor: pointer;
+      }
+      .selected {
+        background-color: var(--PrimaryColor);
+        font-weight: 500;
+        color: var(--WhiteColor);
+        font-weight: 600;
       }
     }
     &-btn {
@@ -190,7 +196,16 @@
       color: var(--WhiteColor);
       font-weight: 600;
       gap: 0.5rem;
-      .chooseSalon-icon {
+      .chooseService-icon {
+        color: var(--WhiteColor);
+      }
+    }
+    .btn-disable {
+      background-color: var(--greyText);
+      cursor: not-allowed;
+      &:hover {
+        border: none;
+        background-color: var(--greyText);
         color: var(--WhiteColor);
       }
     }
