@@ -1,0 +1,122 @@
+.chooseStylist {
+  margin: 0;
+  padding: 8rem 0 5rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+  &__container {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 500px;
+    &-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      .chooseStylist-icon {
+        font-size: 24px;
+        margin-right: 10px;
+        cursor: pointer;
+        color: var(--PrimaryColor);
+      }
+      h1 {
+        font-size: 24px;
+        color: var(--PrimaryColor);
+        margin: 0;
+      }
+    }
+    &-name {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      .stylist-icon {
+        font-size: 24px;
+        margin-right: 10px;
+        color: var(--greyText);
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0;
+      }
+    }
+    &-info {
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #f0f8ff;
+      p {
+        margin: 5px 0;
+      }
+      .infor__rating {
+        display: flex;
+        align-items: center;
+        &-icon {
+          color: gold;
+          margin-right: 5px;
+          margin-left: 10px;
+        }
+        span {
+          margin-right: 10px;
+        }
+      }
+    }
+    &-lists {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      .chooseStylist__container-single {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        padding: 0 20px 0;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+        text-align: center;
+        img {
+          border-radius: 10px;
+          transition: transform 0.3s;
+          height: 200px;
+          width: 150px;
+        }
+        p {
+          margin-top: 10px;
+          margin-bottom: 10px;
+        }
+      }
+      .selected {
+        background-color: var(--WhiteColor);
+        border-radius: 10px;
+        border: 2px solid var(--PrimaryColor);
+        p {
+          font-weight: 500;
+        }
+      }
+    }
+    &-btn {
+      margin-top: 1rem;
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+      padding: 0.6rem;
+      color: var(--WhiteColor);
+      font-weight: 600;
+      gap: 0.5rem;
+      .chooseService-icon {
+        color: var(--WhiteColor);
+      }
+    }
+    .btn-disable {
+      background-color: var(--greyText);
+      cursor: not-allowed;
+      &:hover {
+        border: none;
+        background-color: var(--greyText);
+        color: var(--WhiteColor);
+      }
+    }
+  }
+}

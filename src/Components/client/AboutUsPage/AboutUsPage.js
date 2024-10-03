@@ -30,7 +30,9 @@ export default function AboutUsPage() {
               Et labore horum non nobis ipsum eum molestias mollitia et corporis
               praesentium ut laudantium internos. Non quis esse quo eligendi
               corrupti et fugiat nulla qui soluta recusandae in maxime quasi aut
-              ducimus illum aut optio quibusdam!
+              ducimus illum aut optio quibusdam!Et labore horum non nobis ipsum
+              eum molestias mollitia et corporis praesentium ut laudantium
+              internos.
             </p>
 
             {/* </div> */}
@@ -45,18 +47,18 @@ export default function AboutUsPage() {
               <div className="iconLoaderProgress">
                 <svg
                   className="iconLoaderProgressFirst"
-                  width="240"
-                  height="240"
+                  width="300"
+                  height="300"
                 >
-                  <circle cx="120" cy="120" r="100"></circle>
+                  <circle cx="150" cy="150" r="125"></circle>
                 </svg>
 
                 <svg
                   className="iconLoaderProgressSecond"
-                  width="240"
-                  height="240"
+                  width="300"
+                  height="300"
                 >
-                  <circle cx="120" cy="120" r="100"></circle>
+                  <circle cx="150" cy="150" r="125"></circle>
                 </svg>
               </div>
             </div>
@@ -87,10 +89,8 @@ export default function AboutUsPage() {
       <AboutUsPageSwiper
         slidesPerView={1}
         spaceBetween={30}
-        loop={true}
-        // pagination={{
-        //   clickable: true,
-        // }}
+        // loop={true}
+        pagination={false}
         navigation={true}
         modules={[Pagination, Navigation]}
         className="AboutUsPageSwiper"

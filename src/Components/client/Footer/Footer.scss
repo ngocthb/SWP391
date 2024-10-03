@@ -11,7 +11,7 @@
 }
 
 .footer {
-  background: var(--greyBg);
+  background: #fff;
   padding: 2rem 2rem;
 
   &__container {
@@ -26,10 +26,8 @@
         align-items: center;
         justify-content: center;
 
-        .footer__Logo-icon {
-          font-size: 25px;
-          color: var(--PrimaryColor);
-          margin-right: 0.5rem;
+        img {
+          width: 50px;
         }
       }
     }

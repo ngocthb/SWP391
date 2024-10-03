@@ -18,6 +18,13 @@ import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
 import ManageService from "../Components/Manager/ManageService/ManageService";
 import ManagerCreateService from "../Components/Manager/ManagerCreateService/ManagerCreateService";
 
+import BookingLayout from "../Layouts/BookingLayout";
+import Booking from "../Components/client/Booking/Booking";
+import ChooseSalon from "../Components/client/Booking/ChooseSalon/ChooseSalon";
+import ChooseService from "../Components/client/Booking/ChooseService/ChooseService";
+import ChooseDateTime from "../Components/client/Booking/ChooseDateTime/ChooseDateTime";
+import ChooseStylist from "../Components/client/Booking/ChooseStylist/ChooseStylist";
+
 export const Routes = [
   {
     path: "/",
@@ -102,5 +109,31 @@ export const Routes = [
         element:<ManagerCreateService/>
       }
     ]
+  },
+  {
+    path: "booking",
+    element: <BookingLayout />,
+    children: [
+      {
+        path: "",
+        element: <Booking />,
+      },
+      {
+        path: "step1",
+        element: <ChooseSalon />,
+      },
+      {
+        path: "step2",
+        element: <ChooseService />,
+      },
+      {
+        path: "step3",
+        element: <ChooseDateTime />,
+      },
+      {
+        path: "step4",
+        element: <ChooseStylist />,
+      },
+    ],
   },
 ];

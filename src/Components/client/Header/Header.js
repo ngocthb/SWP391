@@ -16,8 +16,7 @@ export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
   const [userInfo, setUserInfo] = useState({});
-  const isUpdate = useSelector(state => state.updateUserReducer);
- 
+  const isUpdate = useSelector((state) => state.updateUserReducer);
 
   //Code to show(toggle) navbar
   const showNav = () => {
@@ -33,7 +32,7 @@ export default function Header() {
     if (isLoggedIn) {
       fetchUserData();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdate]);
 
   const fetchUserData = async () => {
@@ -41,11 +40,10 @@ export default function Header() {
       const response = await api.get("customer/profile");
       const data = response.data.result;
       if (data) {
-          setUserInfo(data);
+        setUserInfo(data);
       }
     } catch (err) {
       console.log(err);
-      
     }
   };
 
@@ -99,7 +97,7 @@ export default function Header() {
         <div className="navBarSection__header-logo">
           <Link to="/" onClick={handleHomeClick} className="logo-link">
             <h1 className="flex">
-              <IoIosAperture />
+              <img src="logo_white_noBackground.png" alt="logo" />
               F-Salon
             </h1>
           </Link>
@@ -112,7 +110,7 @@ export default function Header() {
               <Link to={"/aboutus"}> About Us</Link>
             </li>
             <li className="navBar__lists-items">
-              <DropdownNav title="Service" />
+              <Link to={""}> Service</Link>
             </li>
             <li className="navBar__lists-items">
               <Link to={""}>Upcoming Package</Link>
@@ -127,28 +125,31 @@ export default function Header() {
                         <p>{userInfo.role || "User"}</p>
                       </div>
                       <div>
-                        <img src={userInfo.avatar || loginUser.avatar} alt="User-Avatar" />
+                        <img
+                          src={userInfo.avatar || loginUser.avatar}
+                          alt="User-Avatar"
+                        />
                       </div>
                     </div>
                   </div>
                   {dropdownOpen && (
                     <div className="navBar__dropdown">
-                    <div className="navBar__dropdown--header">
-                      <img
-                        height={60}
-                        alt="User avatar"
-                        src={userInfo.avatar || loginUser.avatar}
-                      />
-                      <div>
-                        <h2>{userInfo.fullname || ""}</h2>
-                        <p>{userInfo.role || "User"}</p>
+                      <div className="navBar__dropdown--header">
+                        <img
+                          height={60}
+                          alt="User avatar"
+                          src={userInfo.avatar || loginUser.avatar}
+                        />
+                        <div>
+                          <h2>{userInfo.fullname || ""}</h2>
+                          <p>{userInfo.role || "User"}</p>
+                        </div>
                       </div>
-                    </div>
-                    <Link to="/user/profile">
-                      <i className="fas fa-user"></i>
-                      Profile
-                    </Link>
-                    {/* <Link to="#">
+                      <Link to="/user/profile">
+                        <i className="fas fa-user"></i>
+                        Profile
+                      </Link>
+                      {/* <Link to="#">
                       <i className="fas fa-cog"></i>
                       Account Setting
                     </Link>
@@ -156,11 +157,11 @@ export default function Header() {
                       <i className="fas fa-folder"></i>
                       Projects
                     </Link> */}
-                    <Link to="#" onClick={handleLogout}>
-                      <i className="fas fa-sign-out-alt"></i>
-                      Logout
-                    </Link>
-                  </div>
+                      <Link to="#" onClick={handleLogout}>
+                        <i className="fas fa-sign-out-alt"></i>
+                        Logout
+                      </Link>
+                    </div>
                   )}
                 </>
               ) : (

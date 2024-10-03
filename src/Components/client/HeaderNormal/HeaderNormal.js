@@ -9,19 +9,18 @@ import { useSelector } from "react-redux";
 import api from "../../../config/axios.js";
 import loginUser from "../../../data/loginUser.js";
 
-
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
   const [userInfo, setUserInfo] = useState({});
-  const isUpdate = useSelector(state => state.updateUserReducer);
+  const isUpdate = useSelector((state) => state.updateUserReducer);
 
   useEffect(() => {
     if (isLoggedIn) {
       fetchUserData();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdate]);
 
   const fetchUserData = async () => {
@@ -29,11 +28,10 @@ export default function HeaderNormal() {
       const response = await api.get("customer/profile");
       const data = response.data.data;
       if (data) {
-          setUserInfo(data);
+        setUserInfo(data);
       }
     } catch (err) {
       console.log(err);
-      
     }
   };
 
@@ -41,7 +39,6 @@ export default function HeaderNormal() {
   const showNav = () => setActive("header-normal header-normal-active");
   const removeNav = () => setActive("header-normal");
 
-  
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
@@ -71,20 +68,34 @@ export default function HeaderNormal() {
           <div className="header-normalSection__header-logo">
             <Link to={"/"}>
               <h1 className="flex">
-                <IoIosAperture />
+                <img src="logo_white_noBackground.png" alt="logo" />
                 F-Salon
               </h1>
             </Link>
           </div>
-          <div className={`${active} ${isLoggedIn ? "logged-in" : "logged-out"}`}>
+          <div
+            className={`${active} ${isLoggedIn ? "logged-in" : "logged-out"}`}
+          >
             <ul className="header-normal__lists flex">
-              <li className={`header-normal__lists-items ${isLoggedIn ? 'logged-in' : ''}`}>
+              <li
+                className={`header-normal__lists-items ${
+                  isLoggedIn ? "logged-in" : ""
+                }`}
+              >
                 <Link to={"/aboutus"}>About Us</Link>
               </li>
-              <li className={`header-normal__lists-items ${isLoggedIn ? 'logged-in' : ''}`}>
-                <DropdownNav title="Service" />
+              <li
+                className={`header-normal__lists-items ${
+                  isLoggedIn ? "logged-in" : ""
+                }`}
+              >
+                <Link to={""}> Service</Link>
               </li>
-              <li className={`header-normal__lists-items ${isLoggedIn ? 'logged-in' : ''}`}>
+              <li
+                className={`header-normal__lists-items ${
+                  isLoggedIn ? "logged-in" : ""
+                }`}
+              >
                 <Link to={""}>Upcoming Package</Link>
               </li>
 
@@ -98,28 +109,31 @@ export default function HeaderNormal() {
                           <p>{userInfo.role || "User"}</p>
                         </div>
                         <div>
-                          <img src={userInfo.avatar || loginUser.avatar} alt="User-Avatar" />
+                          <img
+                            src={userInfo.avatar || loginUser.avatar}
+                            alt="User-Avatar"
+                          />
                         </div>
                       </div>
                     </div>
                     {dropdownOpen && (
-                       <div className="header-normal__dropdown">
-                       <div className="header-normal__dropdown--header">
-                         <img
-                           height={60}
-                           alt="User avatar"
-                           src={userInfo.avatar || loginUser.avatar}
-                         />
-                         <div>
-                           <h2>{userInfo.fullname || ""}</h2>
-                           <p>{userInfo.role || "User"}</p>
-                         </div>
-                       </div>
-                       <Link to="/user/profile">
-                         <i className="fas fa-user"></i>
-                         Profile
-                       </Link>
-                       {/* <Link to="#">
+                      <div className="header-normal__dropdown">
+                        <div className="header-normal__dropdown--header">
+                          <img
+                            height={60}
+                            alt="User avatar"
+                            src={userInfo.avatar || loginUser.avatar}
+                          />
+                          <div>
+                            <h2>{userInfo.fullname || ""}</h2>
+                            <p>{userInfo.role || "User"}</p>
+                          </div>
+                        </div>
+                        <Link to="/user/profile">
+                          <i className="fas fa-user"></i>
+                          Profile
+                        </Link>
+                        {/* <Link to="#">
                          <i className="fas fa-cog"></i>
                          Account Setting
                        </Link>
@@ -127,11 +141,11 @@ export default function HeaderNormal() {
                          <i className="fas fa-folder"></i>
                          Projects
                        </Link> */}
-                       <Link to="#" onClick={handleLogout}>
-                         <i className="fas fa-sign-out-alt"></i>
-                         Logout
-                       </Link>
-                     </div>
+                        <Link to="#" onClick={handleLogout}>
+                          <i className="fas fa-sign-out-alt"></i>
+                          Logout
+                        </Link>
+                      </div>
                     )}
                   </>
                 ) : (
