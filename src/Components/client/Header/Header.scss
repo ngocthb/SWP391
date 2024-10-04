@@ -26,6 +26,8 @@
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
     &-logo {
+      position: relative;
+      z-index: 1001;
       a {
         white-space: nowrap;
         color: var(--WhiteColor);
@@ -35,9 +37,13 @@
         justify-content: center;
         h1 {
           font-size: 25px;
+          cursor: pointer;
         }
         img {
           width: 50px;
+        }
+        &:hover {
+          cursor: pointer;
         }
       }
     }
@@ -182,7 +188,7 @@
   }
 }
 
-.navBar{
+.navBar {
   &__dropdown {
     background-color: white;
     border-radius: 10px;
@@ -194,7 +200,7 @@
     margin-right: 10px;
     right: 35px;
     top: 70px;
-    z-index: 1001;
+    z-index: 1002;
 
     &--header {
       display: flex;
@@ -203,13 +209,13 @@
       padding-bottom: 15px;
       border-bottom: 1px solid #f0f0f0;
 
-      & h2{
+      & h2 {
         font-size: 16px;
       }
 
       & img {
         border-radius: 50%;
-        width: 50px; 
+        width: 50px;
         height: 50px;
         margin-right: 10px;
       }
@@ -230,12 +236,14 @@
       margin: 8px 0;
       padding: 8px;
       transition: background-color 0.3s;
-  
+
       & i {
         margin-right: 8px;
         color: #888;
+        display: flex;
+        justify-content: center;
       }
-  
+
       &:hover {
         background-color: #f0f0f0;
         color: #333;

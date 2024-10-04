@@ -2,6 +2,7 @@ import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
+import { FaArrowLeft } from "react-icons/fa6";
 
 import { Link, Outlet } from "react-router-dom";
 
@@ -13,8 +14,12 @@ export default function Booking() {
       <div className="booking">
         <div className="booking__container">
           <form className="booking__form">
-            <h2>Book a reservation</h2>
-
+            <div className="booking__form-header">
+              <Link to="/">
+                <FaArrowLeft className="booking-icon" />
+              </Link>
+              <h1>Book a reservation </h1>
+            </div>
             <div className="booking__form-item">
               <label>Choose a salon</label>
               <div className="form-input">

@@ -7,6 +7,10 @@ import { Navigation } from "swiper/modules";
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { CiHome } from "react-icons/ci";
+import { PiScissors } from "react-icons/pi";
+import { RiCalendarScheduleLine } from "react-icons/ri";
+import { SlPeople } from "react-icons/sl";
 
 import "./ChooseStylist.scss";
 
@@ -50,9 +54,49 @@ export default function ChooseStylist() {
   const handleSelected = (stylist) => {
     setSelectedStylist(stylist);
   };
+
+  
+  
   return (
     <>
       <div className="chooseStylist">
+
+      <div className="chooseStylist__tagNavigation">
+          <ul className="chooseStylist__tagNavigation--item">
+            <li className="chooseStylist__tagNavigation--item-content">
+              <Link to="/booking/step1">
+                <div className="filled"></div>
+                <CiHome />
+              </Link>
+              <div className="tooltip">Salon</div>
+            </li>
+            <li className="chooseStylist__tagNavigation--item-content">
+              <Link to="/booking/step2">
+                <div className="filled"></div>
+
+                <PiScissors />
+              </Link>
+              <div className="tooltip">Service</div>
+            </li>
+            <li className="chooseStylist__tagNavigation--item-content">
+              <Link to="/booking/step3">
+                <div className="filled"></div>
+
+                <RiCalendarScheduleLine />
+              </Link>
+              <div className="tooltip">Time</div>
+            </li>
+            <li className="chooseStylist__tagNavigation--item-content active">
+              <Link to="/booking/step4">
+                <div className="filled"></div>
+
+                <SlPeople />
+              </Link>
+              <div className="tooltip">Stylist</div>
+            </li>
+          </ul>
+        </div>
+
         <div className="chooseStylist__container">
           <div className="chooseStylist__container-header">
             <Link to="/booking/step3">
@@ -125,6 +169,8 @@ export default function ChooseStylist() {
             onClick={(e) => {
               if (!selectedStylist) {
                 e.preventDefault();
+              }else {
+                localStorage.setItem('selectedStylishId', selectedStylist.id);
               }
             }}
           >

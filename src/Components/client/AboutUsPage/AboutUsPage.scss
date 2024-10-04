@@ -1,20 +1,22 @@
 .AboutUsPage {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   &__header {
     background: linear-gradient(
         to top,
         rgba(0, 0, 0, 0.73),
         rgba(0, 0, 0, 0.699)
       ),
-      url("https://i.pinimg.com/736x/ca/92/63/ca92637eb9911281cc2add2aa22fb945.jpg");
-    height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+      url("https://i.pinimg.com/736x/ca/92/63/ca92637eb9911281cc2add2aa22fb945.jpg")
+        no-repeat center center/cover;
+    color: #fff;
     text-align: center;
+    padding: 100px 20px;
+
     h1 {
-      font-size: 4rem;
-      color: var(--WhiteColor);
-      margin: 0;
+      font-size: 48px;
+      margin-bottom: 20px;
     }
   }
 
@@ -213,13 +215,6 @@
       margin: 0;
       margin-bottom: 10px;
     }
-  }
-  &__map {
-    margin-top: 5rem;
-    margin-bottom: 3rem;
-    width: 100%;
-    height: 300px;
-    border: 2px;
   }
 }
 .AboutUsPageSwiper {

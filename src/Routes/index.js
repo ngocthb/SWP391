@@ -18,27 +18,32 @@ import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
 import ManageService from "../Components/Manager/ManageService/ManageService";
 import ManagerCreateService from "../Components/Manager/ManagerCreateService/ManagerCreateService";
 
-import BookingLayout from "../Layouts/BookingLayout";
+import BookingLayout from "../Layouts/client/BookingLayout";
 import Booking from "../Components/client/Booking/Booking";
 import ChooseSalon from "../Components/client/Booking/ChooseSalon/ChooseSalon";
 import ChooseService from "../Components/client/Booking/ChooseService/ChooseService";
 import ChooseDateTime from "../Components/client/Booking/ChooseDateTime/ChooseDateTime";
 import ChooseStylist from "../Components/client/Booking/ChooseStylist/ChooseStylist";
+import Contact from "../Components/client/Contact/Contact";
 
 export const Routes = [
   {
     path: "/",
-    element: <HomePageLayout/>,
+    element: <HomePageLayout />,
     children: [
       {
         path: "/",
-        element: <HomePage/>
+        element: <HomePage />,
       },
       {
         path: "/aboutus",
-        element: <AboutUsPage/>
+        element: <AboutUsPage />,
       },
-    ]
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+    ],
   },
   {
     path: "/login",
@@ -80,35 +85,35 @@ export const Routes = [
       },
     ],
   },
-  { 
-    path: 'manager',
-    element: <ManagerLayout/>,
+  {
+    path: "manager",
+    element: <ManagerLayout />,
     children: [
       {
-        path: 'stylish',
-        element: <ManageEmployee buttonLabel={"+ New Stylish"}/>
+        path: "stylish",
+        element: <ManageEmployee buttonLabel={"+ New Stylish"} />,
       },
       {
-        path: 'stylish/create',
-        element: <ManagerCreateStylish/>
+        path: "stylish/create",
+        element: <ManagerCreateStylish />,
       },
       {
-        path: 'dashboard',
-        element: <ManagerDashboard/>
+        path: "dashboard",
+        element: <ManagerDashboard />,
       },
       {
-        path: 'booking',
-        element: <ManagerBooking/>
+        path: "booking",
+        element: <ManagerBooking />,
       },
       {
-        path: 'service',
-        element:<ManageService/>
+        path: "service",
+        element: <ManageService />,
       },
       {
-        path: 'service/create',
-        element:<ManagerCreateService/>
-      }
-    ]
+        path: "service/create",
+        element: <ManagerCreateService />,
+      },
+    ],
   },
   {
     path: "booking",

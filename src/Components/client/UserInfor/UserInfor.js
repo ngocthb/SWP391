@@ -6,6 +6,7 @@ import { FaEdit } from "react-icons/fa";
 import { message, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../../actions/UpdateUser";
+import uploadFile from "../../../utils/upload";
 
 export default function UserInfor() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,7 +15,7 @@ export default function UserInfor() {
     accountid: 0,
     fullname: "",
     email: "",
-    dob: "",
+    dob: loginUser.dob,
     phone: "",
     avatarFile: loginUser.avatar,
   });
@@ -22,9 +23,17 @@ export default function UserInfor() {
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
   const isUpdate = useSelector(state => state.updateUserReducer);
+  const [selectedFileObject, setSelectedFileObject] = useState(null);
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    const file = e.target.files[0];
+    console.log(file);
+     
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedFile(imageUrl);
+      setSelectedFileObject(file);
+    }
   };
 
   const formatDateString = (dateString) => {
@@ -50,6 +59,7 @@ export default function UserInfor() {
   }, [isUpdate]);
 
   const fetchUserData = async () => {
+    setLoading(true);
     try {
       const response = await api.get(`customer/profile`);
       const data = response.data.result;
@@ -59,7 +69,7 @@ export default function UserInfor() {
           accountid: data.accountid,
           fullname: data.fullname || "",
           email: data.email || "",
-          dob: data.dob ? formatDateForInput(data.dob) : "",
+          dob: data.dob ? formatDateForInput(data.dob) : formatDateString(loginUser.dob),
           phone: data.phone || "",
           avatarFile: data.img || loginUser.avatar,
         });
@@ -72,26 +82,39 @@ export default function UserInfor() {
   };
 
   const updateUserData = async (e) => {
+    e.preventDefault();
     const updateValues = {
-      fullName: e.target[0].value,
-      email: e.target[1].value,
-      phone: e.target[2].value,
-      dob: e.target[3].value,
-    };
+      fullName: e.target[1].value,
+      email: e.target[2].value,
+      phone: e.target[3].value,
+      dob: e.target[4].value,
+      avatarFile: null,
+    }; 
+    if (selectedFileObject) {
+      const firebaseResponse = await uploadFile(selectedFileObject);
+      updateValues.avatarFile = firebaseResponse;
+    } else {
+      updateValues.avatarFile = formData.avatarFile;
+    }   
+      
+    setLoading(true);
     try {
+      
       const response = await api.put(`customer/${formData.accountid}`, updateValues);
       const data = response.data.result;
 
       if (data) {
-        setFormData({
-          accountid: data.accountid,
+        setFormData((prev) => ({
+          ...prev,
           fullname: data.fullname || "",
           email: data.email || "",
-          dob: data.dob ? formatDateForInput(data.dob) : "",
+          dob: data.dob ? formatDateForInput(data.dob) : formatDateForInput(loginUser.dob),
           phone: data.phone || "",
-          avatarFile: selectedFile,
-        });
+          avatarFile: selectedFile || prev.avatarFile,
+        }));
         dispatch(updateUser());
+        messageApi.success("User information updated successfully!");
+        toggleModal();
       }
     } catch (err) {
       console.error(err);
@@ -104,7 +127,11 @@ export default function UserInfor() {
     updateUserData(e);
   };
 
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const toggleModal = () =>{
+    setIsModalOpen(!isModalOpen);
+    setSelectedFile(null);
+  } ;
+  
 
   return (
     <>
@@ -155,10 +182,10 @@ export default function UserInfor() {
           <div className="profile-backdrop" onClick={toggleModal}>
             <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
               <form onSubmit={handleSubmit}>
-                <h2 className="profile-modal__header">Basic Information</h2>
+                <h2 className="profile-modal__header">Update Profile</h2>
                 <div className="profile-modal__avatar-section">
                   <div className="profile-modal__avatar">
-                    <img src={formData.avatarFile} alt={formData.fullname} />
+                    <img src={selectedFile || formData.avatarFile} alt={formData.fullname} />
                   </div>
                   <div className="profile-modal__avatar-info">
                     <h3 className="profile-modal__avatar-title">

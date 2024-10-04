@@ -1,7 +1,6 @@
 import "./ManageService.scss";
 import { React } from "react";
 import { BiSearchAlt } from "react-icons/bi";
-import { FaStar } from "react-icons/fa";
 import { HiTrash } from "react-icons/hi2";
 import { FaUserEdit } from "react-icons/fa";
 import { FaAngleLeft } from "react-icons/fa6";
@@ -12,7 +11,7 @@ export default function ManageService() {
   const navigate = useNavigate();
   const createService = () => {
     navigate("/manager/service/create");
-  }
+  };
 
   return (
     <div class="ManageService">

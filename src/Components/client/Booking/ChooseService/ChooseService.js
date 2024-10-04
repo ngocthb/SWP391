@@ -8,6 +8,10 @@ import { FaAngleDoubleUp } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { CiHome } from "react-icons/ci";
+import { PiScissors } from "react-icons/pi";
+import { RiCalendarScheduleLine } from "react-icons/ri";
+import { SlPeople } from "react-icons/sl";
 
 import "./ChooseService.scss";
 
@@ -17,7 +21,7 @@ const services = [
     avatar:
       "https://i.pinimg.com/564x/71/00/cd/7100cdf88f9f52393c2c42f1305002f0.jpg",
     bio: "ShineCombo cắt gội 10 bước aytoyoloy0uwefqdqwdqdd",
-    followers_count: "45 phút",
+    time: "45 phút",
     description: "Combo Cắt kỹ và Combo Gội Massage",
     followers_count: 120,
   },
@@ -26,7 +30,7 @@ const services = [
     avatar:
       "https://i.pinimg.com/564x/1f/6a/3e/1f6a3e27dbebd53d87d321572622e5d1.jpg",
     bio: "Dịch vụ nhuộm tóc",
-    followers_count: "60 phút",
+    time: "60 phút",
     description: "Dịch vụ nhuộm tóc thời trang",
     followers_count: 500,
   },
@@ -35,7 +39,7 @@ const services = [
     avatar:
       "https://i.pinimg.com/564x/21/bf/df/21bfdfeefbfbdf5ba151d468d2683bc5.jpg",
     bio: "Cắt tóc nam",
-    followers_count: "30 phút",
+    time: "30 phút",
     description: "Cắt tóc tạo kiểu cho nam giới",
     followers_count: 80,
   },
@@ -48,6 +52,15 @@ export default function ChooseService() {
   const [areServicesHidden, setAreServicesVisible] = useState(false);
 
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    const storedServices = localStorage.getItem("selectedServicesId");
+    if (storedServices) {
+      const serviceIds = JSON.parse(storedServices);
+      const selected = services.filter(service => serviceIds.includes(service.id));
+      setSelectedService(selected);
+    }
+  }, []);
 
   useEffect(() => {
     if (!searchValue.trim()) {
@@ -90,11 +103,66 @@ export default function ChooseService() {
     setAreServicesVisible((prev) => !prev);
   };
 
+  const isSelectedServices = !!localStorage.getItem("selectedServicesId");
+  const isSelectedTime = !!localStorage.getItem("selectedTimeId");
+
   return (
     <div className="chooseService">
+      <div className="chooseService__tagNavigation">
+        <ul class="chooseService__tagNavigation--item">
+          <li class="chooseService__tagNavigation--item-content">
+            <Link to="/booking/step1">
+              <div class="filled"></div>
+              <CiHome />
+            </Link>
+            <div class="tooltip">Salon</div>
+          </li>
+          <li class="chooseService__tagNavigation--item-content active">
+            <Link to="/booking/step2">
+              <div class="filled"></div>
+
+              <PiScissors />
+            </Link>
+            <div class="tooltip">Service</div>
+          </li>
+          {isSelectedServices ? (<li class="chooseService__tagNavigation--item-content">
+            <Link to="/booking/step3">
+              <div class="filled"></div>
+
+              <RiCalendarScheduleLine />
+            </Link>
+            <div class="tooltip">Time</div>
+          </li>):
+          (<li class="chooseService__tagNavigation--item-content disable">
+            <Link to="/booking/step2">
+              <div class="filled"></div>
+
+              <RiCalendarScheduleLine />
+            </Link>
+            <div class="tooltip">Time</div>
+          </li>)}
+         {isSelectedTime ? ( <li class="chooseService__tagNavigation--item-content">
+            <Link to="/booking/step4">
+              <div class="filled"></div>
+
+              <SlPeople />
+            </Link>
+            <div class="tooltip">Stylist</div>
+          </li>):
+          ( <li class="chooseService__tagNavigation--item-content disable">
+            <Link to="/booking/step2">
+              <div class="filled"></div>
+
+              <SlPeople />
+            </Link>
+            <div class="tooltip">Stylist</div>
+          </li>)}
+        </ul>
+      </div>
+
       <div className="chooseService__container">
         <div className="chooseService__container-header">
-          <Link to="/booking">
+          <Link to="/booking/step1">
             <FaArrowLeft className="chooseService-icon" />
           </Link>
           <h1>Choose service</h1>
@@ -123,7 +191,7 @@ export default function ChooseService() {
                 <h2>{service.bio}</h2>
                 <div className="card__content-time">
                   <LuClock className="card-icon" />
-                  <span>{service.followers_count}</span>
+                  <span>{service.time}</span>
                 </div>
                 <p>{service.bio}</p>
                 <div className="card__content-action">
@@ -223,6 +291,9 @@ export default function ChooseService() {
           onClick={(e) => {
             if (selectedService.length === 0) {
               e.preventDefault();
+            }else {
+              const selectedServiceIds = selectedService.map(service => service.id);
+              localStorage.setItem("selectedServicesId", JSON.stringify(selectedServiceIds));
             }
           }}
         >

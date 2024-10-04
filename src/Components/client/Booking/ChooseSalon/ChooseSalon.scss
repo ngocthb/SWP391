@@ -5,11 +5,12 @@
   justify-content: center;
   align-items: center;
   height: 70%;
-  .tagNavigation {
+  
+  &__tagNavigation {
     ul {
       list-style: none;
     }
-    &__item {
+    &--item {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -114,6 +115,7 @@
       }
     }
   }
+
 
   &__container {
     background-color: white;

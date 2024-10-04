@@ -8,10 +8,14 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import slides from "../../../data/slides.js";
 import { Autoplay, Pagination } from "swiper/modules";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const image = slides;
 export default function Slides() {
+  const navigate = useNavigate();
+  const handleBooking = () =>{
+    navigate("/booking/step1");
+  }
   return (
     <>
       <Swiper
@@ -54,7 +58,7 @@ export default function Slides() {
             placeholder="Enter a phone number to make an appointment"
           ></input>
         </div>
-        <button className="slides__btn btn">Booking Now</button>
+        <button className="slides__btn btn" onClick={handleBooking}>Booking Now</button>
       </div>
     </>
   );

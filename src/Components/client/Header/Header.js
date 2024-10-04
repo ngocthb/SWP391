@@ -1,14 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import "./Header.scss";
-import { IoIosAperture } from "react-icons/io";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
 import { useEffect, useState } from "react";
-import DropdownNav from "../../../redux/dropdown.js";
 import { Link, useLocation } from "react-router-dom";
 import loginUser from "../../../data/loginUser.js";
 import api from "../../../config/axios.js";
 import { useSelector } from "react-redux";
+import logoWhite from "../../../Assets/logo_white_noBackground.png";
+import { TbLogout } from "react-icons/tb";
+import { CgProfile } from "react-icons/cg";
 
 export default function Header() {
   const [active, setActive] = useState("navBar");
@@ -38,7 +39,7 @@ export default function Header() {
   const fetchUserData = async () => {
     try {
       const response = await api.get("customer/profile");
-      const data = response.data.data;
+      const data = response.data.result;
       if (data) {
         setUserInfo(data);
       }
@@ -84,10 +85,10 @@ export default function Header() {
   };
 
   const handleHomeClick = (e) => {
-    if (location.pathname === "/") {
-      e.preventDefault(); // Prevent navigation
-      window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to top smoothly
-    }
+    // if (location.pathname === "/") {
+    // e.preventDefault(); // Prevent navigation
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to top smoothly
+    // }
   };
 
   return (
@@ -95,9 +96,9 @@ export default function Header() {
       {/* navBarSection__header navBarSection__header-active */}
       <div className={transparent}>
         <div className="navBarSection__header-logo">
-          <Link to="/" onClick={handleHomeClick} className="logo-link">
+          <Link to="/" onClick={handleHomeClick}>
             <h1 className="flex">
-              <img src="logo_white_noBackground.png" alt="logo" />
+              <img src={logoWhite} alt="logo" />
               F-Salon
             </h1>
           </Link>
@@ -107,13 +108,27 @@ export default function Header() {
         <div className={active}>
           <ul className="navBar__lists flex">
             <li className="navBar__lists-items">
-              <Link to={"/aboutus"}> About Us</Link>
+              <Link to="/" onClick={handleHomeClick}>
+                {" "}
+                Home Page
+              </Link>
             </li>
             <li className="navBar__lists-items">
-              <Link to={""}> Service</Link>
+              <Link to={"/aboutus"} onClick={handleHomeClick}>
+                {" "}
+                About Us
+              </Link>
             </li>
             <li className="navBar__lists-items">
-              <Link to={""}>Upcoming Package</Link>
+              <Link to={""} onClick={handleHomeClick}>
+                {" "}
+                Service
+              </Link>
+            </li>
+            <li className="navBar__lists-items">
+              <Link to={"/contact"} onClick={handleHomeClick}>
+                Contact
+              </Link>
             </li>
             <div className="navBar__lists-infor flex">
               {isLoggedIn ? (
@@ -146,7 +161,9 @@ export default function Header() {
                         </div>
                       </div>
                       <Link to="/user/profile">
-                        <i className="fas fa-user"></i>
+                        <i>
+                          <CgProfile />
+                        </i>
                         Profile
                       </Link>
                       {/* <Link to="#">
@@ -158,7 +175,9 @@ export default function Header() {
                       Projects
                     </Link> */}
                       <Link to="#" onClick={handleLogout}>
-                        <i className="fas fa-sign-out-alt"></i>
+                        <i>
+                          <TbLogout />
+                        </i>
                         Logout
                       </Link>
                     </div>
