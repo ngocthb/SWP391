@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { CiHome } from "react-icons/ci";
@@ -7,13 +8,14 @@ import { SlPeople } from "react-icons/sl";
 
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 import "./ChooseSalon.scss";
-import { salonLocations } from "../../../../data/booking";
+// import { salonLocations } from "../../../../data/booking";
+import api from "../../../../config/axios";
 
 export default function ChooseSalon() {
   const [searchValue, setSearchValue] = useState("");
+  const [salonLocations, setSalonLocations] = useState([]);
   const [searchResults, setSearchResults] = useState(salonLocations);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const inputRef = useRef();
@@ -32,9 +34,9 @@ export default function ChooseSalon() {
   useEffect(() => {
     const fetchSalonLocations = async () => {
        try {
-        const response = await axios.get("salon");
+        const response = await api.get("salon");
         if (response.data && response.data.result) {
-          setSearchResults(response.data.result);
+          setSalonLocations(response.data.result);
         }
        } catch (error) {
         
@@ -52,14 +54,14 @@ export default function ChooseSalon() {
 
     const fetchSalons = async () => {
       try {
-        const response = await axios.get(`users/search`, {
+        const response = await api.get(`users/search`, {
           params: {
             q: searchValue,
             type: "less",
           },
         });
-        if (response.data && response.data.data) {
-          setSearchResults(response.data.data);
+        if (response.data && response.data.result) {
+          setSearchResults(response.data.result);
         }
       } catch (error) {
         console.error("Error fetching salons:", error);

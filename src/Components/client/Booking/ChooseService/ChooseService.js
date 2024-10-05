@@ -13,12 +13,13 @@ import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 
 import "./ChooseService.scss";
-import { services } from "../../../../data/booking";
+// import { services } from "../../../../data/booking";
 import api from "../../../../config/axios";
 
 export default function ChooseService() {
   const [searchValue, setSearchValue] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
+  const [services, setServices] = useState([]);
   const [searchResults, setSearchResults] = useState(services);
   const [areServicesHidden, setAreServicesHidden] = useState(false);
   const inputRef = useRef(null);
@@ -46,7 +47,7 @@ export default function ChooseService() {
        try {
         const response = await api.get("service");
         if (response.data && response.data.result) {
-          setSearchResults(response.data.result);
+          setServices(response.data.result);
         }
        } catch (error) {
         

@@ -8,8 +8,8 @@ import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 import "./ChooseDateTime.scss";
-import { timeSlots } from "../../../../data/booking";
-import axios from "axios";
+// import { timeSlots } from "../../../../data/booking";
+import api from "../../../../config/axios";
 
 export default function ChooseDateTime() {
   const today = new Date();
@@ -18,6 +18,7 @@ export default function ChooseDateTime() {
 
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedDate, setSelectedDate] = useState(today);
+  const [timeSlots, setTimeSlots] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -98,9 +99,9 @@ export default function ChooseDateTime() {
       }
 
        try {
-        const response = await axios.get("booking/slots", bookingValue);
+        const response = await api.get("booking/slots", bookingValue);
         if (response.data && response.data.result) {
-          selectedTime(response.data.result);
+          setTimeSlots(response.data.result);
         }
        } catch (error) {
         

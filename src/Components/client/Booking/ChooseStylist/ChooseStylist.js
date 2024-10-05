@@ -14,8 +14,8 @@ import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 
 import "./ChooseStylist.scss";
-import {stylists} from "../../../../data/booking";
-// import api from "../../../../config/axios";
+// import {stylists} from "../../../../data/booking";
+import api from "../../../../config/axios";
 
 
 export default function ChooseStylist() {
@@ -26,33 +26,33 @@ export default function ChooseStylist() {
   const navigate = useNavigate();
 
 
-  // const [stylists, setStylists] = useState(null);
+  const [stylists, setStylists] = useState([]);
   
-  //  useEffect(() => {
-  //   const storedBranchId = localStorage.getItem("selectedBranchId");
-  //   const branchId = parseInt(storedBranchId, 10);
+   useEffect(() => {
+    const storedBranchId = localStorage.getItem("selectedBranchId");
+    const branchId = parseInt(storedBranchId, 10);
 
-  //   const storedServices = localStorage.getItem("selectedServicesId");
-  //   const serviceIds = JSON.parse(storedServices);
+    const storedServices = localStorage.getItem("selectedServicesId");
+    const serviceIds = JSON.parse(storedServices);
 
-  //   const fetchStylishs = async () => {
+    const fetchStylishs = async () => {
 
-  //     const bookingValue = {
-  //       salonId: branchId,
-  //       serviceId: serviceIds
-  //     }
+      const bookingValue = {
+        salonId: branchId,
+        serviceId: serviceIds
+      }
 
-  //      try {
-  //       const response = await api.get("booking/stylists", bookingValue);
-  //       if (response.data && response.data.result) {
-  //         setStylists(response.data.result);
-  //       }
-  //      } catch (error) {
+       try {
+        const response = await api.get("booking/stylists", bookingValue);
+        if (response.data && response.data.result) {
+          setStylists(response.data.result);
+        }
+       } catch (error) {
         
-  //      }
-  //   };
-  //   fetchStylishs();
-  // }, []);
+       }
+    };
+    fetchStylishs();
+  }, []);
 
   useEffect(() => {
     const isSelectedServices = localStorage.getItem("selectedServicesId");

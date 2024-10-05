@@ -7,7 +7,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import "./Booking.scss";
 import { useEffect, useState } from "react";
-import { salonLocations, services, timeSlots, stylists } from "../../../data/booking";
+// import { salonLocations, services, timeSlots, stylists } from "../../../data/booking";
 import { RiTimeLine } from "react-icons/ri";
 import api from "../../../config/axios";
 
@@ -42,89 +42,89 @@ export default function Booking() {
    
   }, []);
 
-  // const [salonLocations, setSalonLocations] = useState([]);
-  // const [services, setServices] = useState([]);
-  // const [stylists, setStylists] = useState([]);
-  // const [timeSlots, setTimeSlots] = useState([]);
+  const [salonLocations, setSalonLocations] = useState([]);
+  const [services, setServices] = useState([]);
+  const [stylists, setStylists] = useState([]);
+  const [timeSlots, setTimeSlots] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchSalonLocations = async () => {
-  //      try {
-  //       const response = await api.get("salon");
-  //       if (response.data && response.data.result) {
-  //         setSalonLocations(response.data.result);
-  //       }
-  //      } catch (error) {
+  useEffect(() => {
+    const fetchSalonLocations = async () => {
+       try {
+        const response = await api.get("salon");
+        if (response.data && response.data.result) {
+          setSalonLocations(response.data.result);
+        }
+       } catch (error) {
         
-  //      }
-  //   };
-  //   fetchSalonLocations();
+       }
+    };
+    fetchSalonLocations();
 
 
-  //   const fetchService = async () => {
-  //     try {
-  //      const response = await api.get("service");
-  //      if (response.data && response.data.result) {
-  //        setServices(response.data.result);
-  //      }
-  //     } catch (error) {
+    const fetchService = async () => {
+      try {
+       const response = await api.get("service");
+       if (response.data && response.data.result) {
+         setServices(response.data.result);
+       }
+      } catch (error) {
        
-  //     }
-  //  };
-  //  fetchService();
+      }
+   };
+   fetchService();
 
 
-  //  const storedBranchId = localStorage.getItem("selectedBranchId");
-  //  const branchId = parseInt(storedBranchId, 10);
+   const storedBranchId = localStorage.getItem("selectedBranchId");
+   const branchId = parseInt(storedBranchId, 10);
 
-  //  const storedServices = localStorage.getItem("selectedServicesId");
-  //  const serviceIds = JSON.parse(storedServices);
+   const storedServices = localStorage.getItem("selectedServicesId");
+   const serviceIds = JSON.parse(storedServices);
 
-  //  const fetchStylishs = async () => {
+   const fetchStylishs = async () => {
 
-  //    const bookingValue = {
-  //      salonId: branchId,
-  //      serviceId: serviceIds
-  //    }
+     const bookingValue = {
+       salonId: branchId,
+       serviceId: serviceIds
+     }
 
-  //     try {
-  //      const response = await api.get("booking/stylists", bookingValue);
-  //      if (response.data && response.data.result) {
-  //        setStylists(response.data.result);
-  //      }
-  //     } catch (error) {
+      try {
+       const response = await api.get("booking/stylists", bookingValue);
+       if (response.data && response.data.result) {
+         setStylists(response.data.result);
+       }
+      } catch (error) {
        
-  //     }
-  //  };
-  //  fetchStylishs();
+      }
+   };
+   fetchStylishs();
    
 
-  //   const storedStylish = localStorage.getItem("selectedStylishId");
-  //   const stylishId = JSON.parse(storedStylish);
+    const storedStylish = localStorage.getItem("selectedStylishId");
+    const stylishId = JSON.parse(storedStylish);
 
-  //   const storedDate = localStorage.getItem("selectedDate");
-  //   const date = new Date(storedDate);
+    const storedDate = localStorage.getItem("selectedDate");
+    const date = new Date(storedDate);
 
-  //   const fetchTimeSlots = async () => {
+    const fetchTimeSlots = async () => {
 
-  //     const bookingValue = {
-  //       salonId: branchId,
-  //       serviceId: serviceIds,
-  //       accountId: stylishId,
-  //       date: formatDateForInput(date),
-  //     }
+      const bookingValue = {
+        salonId: branchId,
+        serviceId: serviceIds,
+        accountId: stylishId,
+        date: formatDateForInput(date),
+      }
 
-  //      try {
-  //       const response = await api.get("booking/slots", bookingValue);
-  //       if (response.data && response.data.result) {
-  //         setTimeSlots(response.data.result);
-  //       }
-  //      } catch (error) {
+       try {
+        const response = await api.get("booking/slots", bookingValue);
+        if (response.data && response.data.result) {
+          setTimeSlots(response.data.result);
+        }
+       } catch (error) {
         
-  //      }
-  //   };
-  //   fetchTimeSlots();
-  // }, []);
+       }
+    };
+    fetchTimeSlots();
+  }, []);
 
 
 
