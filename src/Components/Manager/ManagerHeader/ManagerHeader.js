@@ -2,8 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import logo from "../../../Assets/Logo.png";
-import logoFold from "../../../Assets/logo-fold.png";
+import logo from "../../../Assets/logo.png";
+import logoFold from "../../../Assets/logo_blue_noBackground.png";
 import { collapse } from "../../../actions/Collapse";
 import "./ManagerHeader.scss";
 
@@ -47,8 +47,15 @@ const ManagerHeader = () => {
 
   return (
     <header className="header-manager">
-      <div className={`header-manager__logo ${collapsed ? "header-manager__logo--collapsed" : ""}`}>
-        <img src={collapsed ? logoFold : logo} alt={collapsed ? "Logo Fold" : "Logo"} />
+      <div
+        className={`header-manager__logo ${
+          collapsed ? "header-manager__logo--collapsed" : ""
+        }`}
+      >
+        <img
+          src={collapsed ? logoFold : logo}
+          alt={collapsed ? "Logo Fold" : "Logo"}
+        />
       </div>
       <div className="header-manager__nav">
         <div className="header-manager__nav-left">
@@ -83,10 +90,18 @@ const ManagerHeader = () => {
                   <p>UI/UX Designer</p>
                 </div>
               </div>
-              <Link to="#"><i className="fas fa-user"></i> Edit Profile</Link>
-              <Link to="#"><i className="fas fa-cog"></i> Account Setting</Link>
-              <Link to="#"><i className="fas fa-folder"></i> Projects</Link>
-              <Link to="#"><i className="fas fa-sign-out-alt"></i> Logout</Link>
+              <Link to="#">
+                <i className="fas fa-user"></i> Edit Profile
+              </Link>
+              <Link to="#">
+                <i className="fas fa-cog"></i> Account Setting
+              </Link>
+              <Link to="#">
+                <i className="fas fa-folder"></i> Projects
+              </Link>
+              <Link to="#">
+                <i className="fas fa-sign-out-alt"></i> Logout
+              </Link>
             </div>
           )}
         </div>
