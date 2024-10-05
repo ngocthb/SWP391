@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
@@ -5,8 +6,7 @@ import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 import { LuClock } from "react-icons/lu";
 
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
@@ -14,6 +14,7 @@ import { SlPeople } from "react-icons/sl";
 
 import "./ChooseService.scss";
 import { services } from "../../../../data/booking";
+import api from "../../../../config/axios";
 
 export default function ChooseService() {
   const [searchValue, setSearchValue] = useState("");
@@ -21,6 +22,15 @@ export default function ChooseService() {
   const [searchResults, setSearchResults] = useState(services);
   const [areServicesHidden, setAreServicesHidden] = useState(false);
   const inputRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const selectedBranchId = localStorage.getItem("selectedBranchId");
+    if (!selectedBranchId) {
+      navigate("/booking/step1");
+    }
+  }, []);
 
   useEffect(() => {
     const storedServices = localStorage.getItem("selectedServicesId");
@@ -32,6 +42,20 @@ export default function ChooseService() {
   }, []);
 
   useEffect(() => {
+    const fetchService = async () => {
+       try {
+        const response = await api.get("service");
+        if (response.data && response.data.result) {
+          setSearchResults(response.data.result);
+        }
+       } catch (error) {
+        
+       }
+    };
+    fetchService();
+  }, []);
+
+  useEffect(() => {
     if (!searchValue.trim()) {
       setSearchResults(services);
       return;
@@ -39,11 +63,11 @@ export default function ChooseService() {
 
     const fetchServices = async () => {
       try {
-        const response = await axios.get(`users/search`, {
-          params: { q: searchValue, type: "less" },
+        const response = await api.get(`service/searchByName`, {
+          params: { name: searchValue },
         });
-        if (response.data && response.data.data) {
-          setSearchResults(response.data.data);
+        if (response.data && response.data.result) {
+          setSearchResults(response.data.result);
         }
       } catch (error) {
         console.error("Error fetching services:", error);
@@ -77,7 +101,7 @@ export default function ChooseService() {
   };
 
   const isSelectedServices = !!localStorage.getItem("selectedServicesId");
-  const isSelectedTime = !!localStorage.getItem("selectedTimeId");
+  const isSelectedStylish = !!localStorage.getItem("selectedStylishId");
 
   return (
     <div className="chooseService">
@@ -98,19 +122,20 @@ export default function ChooseService() {
             <div className="tooltip">Service</div>
           </li>
           <li className={`chooseService__tagNavigation--item-content ${isSelectedServices ? '' : 'disable'}`}>
-            <Link to={isSelectedServices ? "/booking/step3" : "/booking/step2"} aria-label="Select Time">
-              <div className="filled"></div>
-              <RiCalendarScheduleLine />
-            </Link>
-            <div className="tooltip">Time</div>
-          </li>
-          <li className={`chooseService__tagNavigation--item-content ${isSelectedTime ? '' : 'disable'}`}>
-            <Link to={isSelectedTime ? "/booking/step4" : "/booking/step2"} aria-label="Select Stylist">
+            <Link to={isSelectedServices ? "/booking/step3" : "/booking/step2"} aria-label="Select Stylist">
               <div className="filled"></div>
               <SlPeople />
             </Link>
             <div className="tooltip">Stylist</div>
           </li>
+          <li className={`chooseService__tagNavigation--item-content ${isSelectedStylish ? '' : 'disable'}`}>
+            <Link to={isSelectedStylish ? "/booking/step4" : "/booking/step2"} aria-label="Select Time">
+              <div className="filled"></div>
+              <RiCalendarScheduleLine />
+            </Link>
+            <div className="tooltip">Time</div>
+          </li>
+          
         </ul>
       </div>
 
@@ -141,17 +166,17 @@ export default function ChooseService() {
         <div className="chooseService__container-lists">
           {searchResults.map((service) => (
             <div key={service.id} className="chooseService__card">
-              <img alt="service banner" src={service.avatar} />
+              <img alt="service banner" src={service.image} />
               <div className="card__content">
-                <h2>{service.bio}</h2>
+                <h2>{service.serviceName}</h2>
                 <div className="card__content-time">
                   <LuClock className="card-icon" />
-                  <span>{service.time}</span>
+                  <span>{service.duration}</span>
                 </div>
-                <p>{service.bio}</p>
+                <p>{service.description}</p>
                 <div className="card__content-action">
                   <div className="card__content-price">
-                    Price: ${service.followers_count}
+                    Price: ${service.price}
                   </div>
                   <button
                     className={`card__content-add ${isServiceSelected(service.id) ? "disabled" : ""}`}
@@ -188,13 +213,13 @@ export default function ChooseService() {
 
           {selectedServices.map((service) => (
             <div key={service.id} className={`footer__service ${areServicesHidden ? "hidden" : ""}`}>
-              <span className="footer__service-name">{service.bio}</span>
+              <span className="footer__service-name">{service.serviceName}</span>
               <div>
-                <span className="footer__service-price">${service.followers_count}</span>
+                <span className="footer__service-price">${service.price}</span>
                 <IoIosCloseCircle
                   className="footer__service-icon"
                   onClick={() => handleRemoveService(service)}
-                  aria-label={`Remove ${service.bio}`}
+                  aria-label={`Remove ${service.serviceName}`}
                 />
               </div>
             </div>
@@ -212,7 +237,7 @@ export default function ChooseService() {
               <span className="footer__pay-price">
                 Total Pay: $
                 {selectedServices.reduce(
-                  (total, service) => total + service.followers_count,
+                  (total, service) => total + service.price,
                   0
                 )}
               </span>

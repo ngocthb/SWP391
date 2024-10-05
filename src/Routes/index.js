@@ -133,11 +133,11 @@ export const Routes = [
       },
       {
         path: "step3",
-        element: <ChooseDateTime />,
+        element: <ChooseStylist />,
       },
       {
         path: "step4",
-        element: <ChooseStylist />,
+        element: <ChooseDateTime />,
       },
     ],
   },

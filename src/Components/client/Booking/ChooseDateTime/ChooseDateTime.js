@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { LuCalendarSearch } from "react-icons/lu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
@@ -8,6 +9,7 @@ import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 import "./ChooseDateTime.scss";
 import { timeSlots } from "../../../../data/booking";
+import axios from "axios";
 
 export default function ChooseDateTime() {
   const today = new Date();
@@ -16,6 +18,23 @@ export default function ChooseDateTime() {
 
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedDate, setSelectedDate] = useState(today);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isSelectedStylish = localStorage.getItem("selectedStylishId");
+    if (!isSelectedStylish) {
+      navigate("/booking/step3");
+      const isSelectedServices = localStorage.getItem("selectedServicesId");
+      if (!isSelectedServices) {
+        navigate("/booking/step2");
+        const selectedBranchId = localStorage.getItem("selectedBranchId");
+        if (!selectedBranchId) {
+          navigate("/booking/step1");
+        }
+      }
+    }
+   
+  }, []);
 
   useEffect(() => {
     const storedTimeId = localStorage.getItem("selectedTimeId");
@@ -35,17 +54,60 @@ export default function ChooseDateTime() {
 
   const handleDateChange = (e) => {
     const date = e.target.value === "today" ? today : tomorrow;
-    setSelectedDate(date);
+    formatDateForInput(date);
   };
 
   const formatDate = (date) => {
     const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" });
     const day = date.getDate();
-    const month = date.getMonth() + 1; // Months are zero-indexed
+    const month = date.getMonth() + 1;
     return `${dayOfWeek} (${day}/${month})`;
   };
 
   const isSelectedTime = selectedTime !== null;
+
+  const formatDateForInput = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+   useEffect(() => {
+
+    const storedBranchId = localStorage.getItem("selectedBranchId");
+    const branchId = parseInt(storedBranchId, 10);
+
+    const storedServices = localStorage.getItem("selectedServicesId");
+    const serviceIds = JSON.parse(storedServices);
+
+    const storedStylish = localStorage.getItem("selectedStylishId");
+    const stylishId = JSON.parse(storedStylish);
+
+    const storedDate = localStorage.getItem("selectedDate");
+    const date = new Date(storedDate);
+
+    const fetchTimeSlots = async () => {
+
+      const bookingValue = {
+        salonId: branchId,
+        serviceId: serviceIds,
+        accountId: stylishId,
+        date: formatDateForInput(date),
+      }
+
+       try {
+        const response = await axios.get("booking/slots", bookingValue);
+        if (response.data && response.data.result) {
+          selectedTime(response.data.result);
+        }
+       } catch (error) {
+        
+       }
+    };
+    fetchTimeSlots();
+  }, []);
 
   return (
     <div className="chooseDateTime">
@@ -65,19 +127,20 @@ export default function ChooseDateTime() {
             </Link>
             <div className="tooltip">Service</div>
           </li>
-          <li className="chooseDateTime__tagNavigation--item-content active">
-            <Link to="/booking/step3" aria-label="Time">
-              <div className="filled"></div>
-              <RiCalendarScheduleLine />
-            </Link>
-            <div className="tooltip">Time</div>
-          </li>
-          <li className={`chooseDateTime__tagNavigation--item-content ${isSelectedTime ? '' : 'disable'}`}>
-            <Link to={isSelectedTime ? "/booking/step4" : "/booking/step3"} aria-label="Stylist">
+          
+          <li className={`chooseDateTime__tagNavigation--item-content`}>
+            <Link to={"/booking/step3"} aria-label="Stylist">
               <div className="filled"></div>
               <SlPeople />
             </Link>
             <div className="tooltip">Stylist</div>
+          </li>
+          <li className="chooseDateTime__tagNavigation--item-content active">
+            <Link to= "/booking/step4" aria-label="Time">
+              <div className="filled"></div>
+              <RiCalendarScheduleLine />
+            </Link>
+            <div className="tooltip">Time</div>
           </li>
         </ul>
       </nav>
@@ -99,20 +162,20 @@ export default function ChooseDateTime() {
         <div className="chooseDateTime__container-time">
           {timeSlots.map((slot) => (
             <div
-              key={slot.id}
-              className={`time-slot ${selectedTime === slot.id ? "selected" : ""}`}
-              onClick={() => handleTimeSlotClick(slot.id)}
+              key={slot.slotid}
+              className={`time-slot ${selectedTime === slot.slotid ? "selected" : ""}`}
+              onClick={() => handleTimeSlotClick(slot.slotid)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && handleTimeSlotClick(slot.id)}
-              aria-label={`Select time slot ${slot.time}`}
+              onKeyDown={(e) => e.key === 'Enter' && handleTimeSlotClick(slot.slotid)}
+              aria-label={`Select time slot ${slot.slottime}`}
             >
-              {slot.time}
+              {slot.slottime}
             </div>
           ))}
         </div>
         <Link
-          to="/booking/step4"
+          to="/booking"
           className={`chooseDateTime__container-btn btn flex ${isSelectedTime ? "" : "btn-disable"}`}
           onClick={(e) => {
             if (!isSelectedTime) {

@@ -118,7 +118,7 @@ export default function HeaderNormal() {
                         </div>
                         <div>
                           <img
-                            src={userInfo.avatar || loginUser.avatar}
+                            src={userInfo.image || loginUser.avatar}
                             alt="User-Avatar"
                           />
                         </div>
@@ -130,7 +130,7 @@ export default function HeaderNormal() {
                           <img
                             height={60}
                             alt="User avatar"
-                            src={userInfo.avatar || loginUser.avatar}
+                            src={userInfo.image || loginUser.avatar}
                           />
                           <div>
                             <h2>{userInfo.fullname || ""}</h2>

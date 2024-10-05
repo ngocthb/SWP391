@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaStar } from "react-icons/fa6";
@@ -5,7 +6,7 @@ import { FaStar } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
@@ -14,21 +15,37 @@ import { SlPeople } from "react-icons/sl";
 
 import "./ChooseStylist.scss";
 import {stylists} from "../../../../data/booking";
+// import api from "../../../../config/axios";
+
 
 export default function ChooseStylist() {
   const [selectedStylist, setSelectedStylist] = useState(null);
   const handleSelected = (stylist) => {
     setSelectedStylist(stylist);
   };
+  const navigate = useNavigate();
 
-  // const [stylists, setStylishs] = useState(null);
 
-   // useEffect(() => {
+  // const [stylists, setStylists] = useState(null);
+  
+  //  useEffect(() => {
+  //   const storedBranchId = localStorage.getItem("selectedBranchId");
+  //   const branchId = parseInt(storedBranchId, 10);
+
+  //   const storedServices = localStorage.getItem("selectedServicesId");
+  //   const serviceIds = JSON.parse(storedServices);
+
   //   const fetchStylishs = async () => {
+
+  //     const bookingValue = {
+  //       salonId: branchId,
+  //       serviceId: serviceIds
+  //     }
+
   //      try {
-  //       const response = await axios.get("stylishs");
-  //       if (response.data && response.data.data) {
-  //         setStylishs(response.data.data);
+  //       const response = await api.get("booking/stylists", bookingValue);
+  //       if (response.data && response.data.result) {
+  //         setStylists(response.data.result);
   //       }
   //      } catch (error) {
         
@@ -36,6 +53,18 @@ export default function ChooseStylist() {
   //   };
   //   fetchStylishs();
   // }, []);
+
+  useEffect(() => {
+    const isSelectedServices = localStorage.getItem("selectedServicesId");
+    if (!isSelectedServices) {
+      navigate("/booking/step2");
+      const selectedBranchId = localStorage.getItem("selectedBranchId");
+      if (!selectedBranchId) {
+        navigate("/booking/step1");
+      }
+    }
+  }, []);
+  
 
   useEffect(() => {
     const storedStylishId = localStorage.getItem("selectedStylishId");
@@ -47,6 +76,8 @@ export default function ChooseStylist() {
       }
     }
   }, []);
+
+  const isSelectedStylish = !!localStorage.getItem("selectedStylishId");
   
   return (
     <>
@@ -69,21 +100,21 @@ export default function ChooseStylist() {
               </Link>
               <div className="tooltip">Service</div>
             </li>
-            <li className="chooseStylist__tagNavigation--item-content">
-              <Link to="/booking/step3">
-                <div className="filled"></div>
-
-                <RiCalendarScheduleLine />
-              </Link>
-              <div className="tooltip">Time</div>
-            </li>
             <li className="chooseStylist__tagNavigation--item-content active">
-              <Link to="/booking/step4">
+              <Link to="/booking/step3">
                 <div className="filled"></div>
 
                 <SlPeople />
               </Link>
               <div className="tooltip">Stylist</div>
+            </li>
+            <li className={`chooseStylist__tagNavigation--item-content ${isSelectedStylish ? '' : 'disable'}`}>
+              <Link to={isSelectedStylish ? "/booking/step4" : "/booking/step3"}>
+                <div className="filled"></div>
+
+                <RiCalendarScheduleLine />
+              </Link>
+              <div className="tooltip">Time</div>
             </li>
           </ul>
         </div>
@@ -99,10 +130,10 @@ export default function ChooseStylist() {
             <>
               <div className="chooseStylist__container-name">
                 <IoPersonOutline className="stylist-icon" />
-                <h1>{selectedStylist.name}</h1>
+                <h1>{selectedStylist.fullname}</h1>
               </div>
               <div className="chooseStylist__container-info">
-                <p>Stylist: {selectedStylist.name}</p>
+                <p>Stylist: {selectedStylist.fullname}</p>
                 <p className="infor__rating">
                   <span>
                     Cut {selectedStylist.rating.cut}
@@ -146,14 +177,14 @@ export default function ChooseStylist() {
                       : ""
                   }`}
                 >
-                  <img alt={stylist.name} src={stylist.imgSrc} />
-                  <p>{stylist.name}</p>
+                  <img alt={stylist.fullname} src={stylist.image} />
+                  <p>{stylist.fullname}</p>
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
           <Link
-            to="/booking"
+            to="/booking/step4"
             className={`chooseStylist__container-btn btn flex ${
               !!selectedStylist ? "" : "btn-disable"
             }`}
