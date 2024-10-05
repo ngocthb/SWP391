@@ -57,7 +57,9 @@ export default function ChooseService() {
     const storedServices = localStorage.getItem("selectedServicesId");
     if (storedServices) {
       const serviceIds = JSON.parse(storedServices);
-      const selected = services.filter(service => serviceIds.includes(service.id));
+      const selected = services.filter((service) =>
+        serviceIds.includes(service.id)
+      );
       setSelectedService(selected);
     }
   }, []);
@@ -125,38 +127,44 @@ export default function ChooseService() {
             </Link>
             <div class="tooltip">Service</div>
           </li>
-          {isSelectedServices ? (<li class="chooseService__tagNavigation--item-content">
-            <Link to="/booking/step3">
-              <div class="filled"></div>
+          {isSelectedServices ? (
+            <li class="chooseService__tagNavigation--item-content">
+              <Link to="/booking/step3">
+                <div class="filled"></div>
 
-              <RiCalendarScheduleLine />
-            </Link>
-            <div class="tooltip">Time</div>
-          </li>):
-          (<li class="chooseService__tagNavigation--item-content disable">
-            <Link to="/booking/step2">
-              <div class="filled"></div>
+                <RiCalendarScheduleLine />
+              </Link>
+              <div class="tooltip">Time</div>
+            </li>
+          ) : (
+            <li class="chooseService__tagNavigation--item-content disable">
+              <Link to="/booking/step2">
+                <div class="filled"></div>
 
-              <RiCalendarScheduleLine />
-            </Link>
-            <div class="tooltip">Time</div>
-          </li>)}
-         {isSelectedTime ? ( <li class="chooseService__tagNavigation--item-content">
-            <Link to="/booking/step4">
-              <div class="filled"></div>
+                <RiCalendarScheduleLine />
+              </Link>
+              <div class="tooltip">Time</div>
+            </li>
+          )}
+          {isSelectedTime ? (
+            <li class="chooseService__tagNavigation--item-content">
+              <Link to="/booking/step4">
+                <div class="filled"></div>
 
-              <SlPeople />
-            </Link>
-            <div class="tooltip">Stylist</div>
-          </li>):
-          ( <li class="chooseService__tagNavigation--item-content disable">
-            <Link to="/booking/step2">
-              <div class="filled"></div>
+                <SlPeople />
+              </Link>
+              <div class="tooltip">Stylist</div>
+            </li>
+          ) : (
+            <li class="chooseService__tagNavigation--item-content disable">
+              <Link to="/booking/step2">
+                <div class="filled"></div>
 
-              <SlPeople />
-            </Link>
-            <div class="tooltip">Stylist</div>
-          </li>)}
+                <SlPeople />
+              </Link>
+              <div class="tooltip">Stylist</div>
+            </li>
+          )}
         </ul>
       </div>
 
@@ -193,7 +201,7 @@ export default function ChooseService() {
                   <LuClock className="card-icon" />
                   <span>{service.time}</span>
                 </div>
-                <p>{service.bio}</p>
+                <p>{service.description}</p>
                 <div className="card__content-action">
                   <div className="card__content-price">
                     Price: ${service.followers_count}
@@ -291,9 +299,14 @@ export default function ChooseService() {
           onClick={(e) => {
             if (selectedService.length === 0) {
               e.preventDefault();
-            }else {
-              const selectedServiceIds = selectedService.map(service => service.id);
-              localStorage.setItem("selectedServicesId", JSON.stringify(selectedServiceIds));
+            } else {
+              const selectedServiceIds = selectedService.map(
+                (service) => service.id
+              );
+              localStorage.setItem(
+                "selectedServicesId",
+                JSON.stringify(selectedServiceIds)
+              );
             }
           }}
         >
