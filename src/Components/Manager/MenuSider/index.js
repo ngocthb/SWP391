@@ -1,6 +1,5 @@
 import { Menu } from "antd";
 import {
-  PlayCircleOutlined,
   HighlightOutlined,
   InsertRowAboveOutlined,
   PlusOutlined,

@@ -6,48 +6,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 
 import "./ChooseStylist.scss";
-
-const stylists = [
-  {
-    id: 1,
-    name: "Luận Triệu",
-    rating: { cut: 4.8, perm: 4.9, dye: 4.8 },
-    customers: { cut: 7800, perm: 197, dye: 313 },
-    imgSrc:
-      "https://i.pinimg.com/564x/eb/b9/e3/ebb9e37fdb471de44a56c087768ff6d0.jpg",
-  },
-  {
-    id: 2,
-    name: "Bắc Lý",
-    rating: { cut: 4.7, perm: 4.8, dye: 4.7 },
-    customers: { cut: 6500, perm: 190, dye: 280 },
-    imgSrc:
-      "https://i.pinimg.com/564x/8a/3a/9e/8a3a9ee75482b6c27b0f03bae4439522.jpg",
-  },
-  {
-    id: 3,
-    name: "Trung Hồ",
-    rating: { cut: 4.9, perm: 5.0, dye: 4.9 },
-    customers: { cut: 8200, perm: 230, dye: 400 },
-    imgSrc:
-      "https://i.pinimg.com/564x/26/cf/ba/26cfba0581fe35dea4ea1a1cef1275b2.jpg",
-  },
-  {
-    id: 4,
-    name: "Sơn Nguyễn",
-    rating: { cut: 4.6, perm: 4.7, dye: 4.8 },
-    customers: { cut: 5000, perm: 180, dye: 350 },
-    imgSrc:
-      "https://i.pinimg.com/564x/66/5f/c0/665fc084f50fb7b2959d80c30f68e2d7.jpg",
-  },
-];
+import {stylists} from "../../../../data/booking";
 
 export default function ChooseStylist() {
   const [selectedStylist, setSelectedStylist] = useState(null);
@@ -55,7 +21,32 @@ export default function ChooseStylist() {
     setSelectedStylist(stylist);
   };
 
-  
+  // const [stylists, setStylishs] = useState(null);
+
+   // useEffect(() => {
+  //   const fetchStylishs = async () => {
+  //      try {
+  //       const response = await axios.get("stylishs");
+  //       if (response.data && response.data.data) {
+  //         setStylishs(response.data.data);
+  //       }
+  //      } catch (error) {
+        
+  //      }
+  //   };
+  //   fetchStylishs();
+  // }, []);
+
+  useEffect(() => {
+    const storedStylishId = localStorage.getItem("selectedStylishId");
+    const stylishId = parseInt(storedStylishId, 10);
+    if (stylishId) {
+      const stylish = stylists.find((s) => s.id === stylishId);
+      if (stylish) {
+        setSelectedStylist(stylish);
+      }
+    }
+  }, []);
   
   return (
     <>

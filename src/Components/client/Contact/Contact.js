@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/iframe-has-title */
 import { LuPhone, LuMail } from "react-icons/lu";
 import { IoLocationOutline } from "react-icons/io5";
 

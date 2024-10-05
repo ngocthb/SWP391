@@ -3,7 +3,7 @@ import "./Header.scss";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import loginUser from "../../../data/loginUser.js";
 import api from "../../../config/axios.js";
 import { useSelector } from "react-redux";
@@ -15,7 +15,6 @@ export default function Header() {
   const [active, setActive] = useState("navBar");
   const [transparent, setTransparent] = useState("navBarSection__header");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const location = useLocation();
   const [userInfo, setUserInfo] = useState({});
   const isUpdate = useSelector((state) => state.updateUserReducer);
 

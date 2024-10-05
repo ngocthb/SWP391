@@ -15,9 +15,16 @@
     border-right: 1px solid #ddd;
     transition: all 0.2s, background 0s;
 
+    img {
+      height: 50px;
+    }
     &--collapsed {
       width: 80px;
       transition: all 0.2s, background 0s;
+      img {
+        width: 40px;
+        height: 40px;
+      }
     }
   }
 
@@ -103,7 +110,7 @@
       padding-bottom: 15px; /* Giảm khoảng cách dưới */
       border-bottom: 1px solid #f0f0f0;
 
-      & h2{
+      & h2 {
         font-size: 16px;
       }
 
@@ -130,12 +137,12 @@
       margin: 8px 0; /* Giảm khoảng cách trên/dưới */
       padding: 8px; /* Điều chỉnh padding nếu cần */
       transition: background-color 0.3s;
-  
+
       & i {
         margin-right: 8px;
         color: #888;
       }
-  
+
       &:hover {
         background-color: #f0f0f0; /* Màu nền khi hover */
         color: #333; /* Giữ nguyên màu chữ */
@@ -143,6 +150,4 @@
       }
     }
   }
-
-  
 }
