@@ -16,9 +16,23 @@ import api from "../../../../config/axios";
 export default function ChooseSalon() {
   const [searchValue, setSearchValue] = useState("");
   const [salonLocations, setSalonLocations] = useState([]);
-  const [searchResults, setSearchResults] = useState(salonLocations);
+  // const [searchResults, setSearchResults] = useState(salonLocations);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const inputRef = useRef();
+
+  useEffect(() => {
+    const fetchSalonLocations = async () => {
+       try {
+        const response = await api.get("salon");
+        if (response.data /*&& response.data.result*/) {
+          setSalonLocations(response.data/*.result*/);
+        }
+       } catch (error) {
+        
+       }
+    };
+    fetchSalonLocations();
+  }, []);
 
   useEffect(() => {
     const storedBranchId = localStorage.getItem("selectedBranchId");
@@ -29,47 +43,34 @@ export default function ChooseSalon() {
         setSelectedBranch(branch);
       }
     }
-  }, []);
+  }, [salonLocations]);
 
-  useEffect(() => {
-    const fetchSalonLocations = async () => {
-       try {
-        const response = await api.get("salon");
-        if (response.data && response.data.result) {
-          setSalonLocations(response.data.result);
-        }
-       } catch (error) {
-        
-       }
-    };
-    fetchSalonLocations();
-  }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (!searchValue.trim()) {
-      setSearchResults(salonLocations);
-      return;
-    }
+  //   if (!searchValue.trim()) {
+  //     setSearchResults(salonLocations);
+  //     return;
+  //   }
 
-    const fetchSalons = async () => {
-      try {
-        const response = await api.get(`users/search`, {
-          params: {
-            q: searchValue,
-            type: "less",
-          },
-        });
-        if (response.data && response.data.result) {
-          setSearchResults(response.data.result);
-        }
-      } catch (error) {
-        console.error("Error fetching salons:", error);
-      }
-    };
+  //   const fetchSalons = async () => {
+  //     try {
+  //       const response = await api.get(`users/search`, {
+  //         params: {
+  //           q: searchValue,
+  //           type: "less",
+  //         },
+  //       });
+  //       if (response.data && response.data.result) {
+  //         setSearchResults(response.data.result);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching salons:", error);
+  //     }
+  //   };
 
-    fetchSalons();
-  }, [searchValue]);
+  //   fetchSalons();
+  // }, [searchValue]);
 
   const handleClearSearch = () => {
     setSearchValue("");
@@ -150,7 +151,7 @@ export default function ChooseSalon() {
           F-salon is available in the following:
         </div>
         <div className="chooseSalon__container-lists">
-          {searchResults.map((branch) => (
+          {salonLocations.map((branch) => (
             <div
               onClick={() => handleBranchSelect(branch)}
               className={`chooseSalon__container-single ${selectedBranch && selectedBranch.id === branch.id ? "selected" : ""}`}

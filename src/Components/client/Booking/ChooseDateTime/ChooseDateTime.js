@@ -8,7 +8,7 @@ import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 import "./ChooseDateTime.scss";
-// import { timeSlots } from "../../../../data/booking";
+import { slots } from "../../../../data/booking";
 import api from "../../../../config/axios";
 
 export default function ChooseDateTime() {
@@ -18,7 +18,8 @@ export default function ChooseDateTime() {
 
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedDate, setSelectedDate] = useState(today);
-  const [timeSlots, setTimeSlots] = useState([]);
+  const [timeSlots, setTimeSlots] = useState(slots);
+  const [availableSlots, setAvailableSlots] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,15 +48,18 @@ export default function ChooseDateTime() {
     if (storedDate) {
       setSelectedDate(new Date(storedDate));
     }
-  }, []);
+  }, [timeSlots]);
 
   const handleTimeSlotClick = (slotId) => {
-    setSelectedTime(slotId);
+    if ( availableSlots.some(slot => slot.slotid === slotId)) {
+      setSelectedTime(slotId);
+    }
   };
 
   const handleDateChange = (e) => {
     const date = e.target.value === "today" ? today : tomorrow;
     formatDateForInput(date);
+    setSelectedDate(date);
   };
 
   const formatDate = (date) => {
@@ -86,29 +90,26 @@ export default function ChooseDateTime() {
     const storedStylish = localStorage.getItem("selectedStylishId");
     const stylishId = JSON.parse(storedStylish);
 
-    const storedDate = localStorage.getItem("selectedDate");
-    const date = new Date(storedDate);
-
     const fetchTimeSlots = async () => {
 
       const bookingValue = {
         salonId: branchId,
         serviceId: serviceIds,
         accountId: stylishId,
-        date: formatDateForInput(date),
+        date: formatDateForInput(selectedDate),
       }
 
        try {
-        const response = await api.get("booking/slots", bookingValue);
-        if (response.data && response.data.result) {
-          setTimeSlots(response.data.result);
+        const response = await api.get(/*"booking/slots"*/ "slots", bookingValue);
+        if (response.data /*&& response.data.result*/) {
+          setAvailableSlots(response.data/*.result*/);
         }
        } catch (error) {
         
        }
     };
     fetchTimeSlots();
-  }, []);
+  }, [selectedDate, handleTimeSlotClick]);
 
   return (
     <div className="chooseDateTime">
@@ -148,14 +149,15 @@ export default function ChooseDateTime() {
 
       <div className="chooseDateTime__container">
         <div className="chooseDateTime__container-header">
-          <Link to="/booking/step2" aria-label="Back to Service">
+          <Link to="/booking/step2">
             <FaArrowLeft className="chooseDateTime-icon" />
           </Link>
           <h1>Choose Date & Time</h1>
         </div>
         <div className="chooseDateTime__container-date">
           <LuCalendarSearch className="select-icon" />
-          <select onChange={handleDateChange} value={selectedDate.toDateString() === today.toDateString() ? "today" : "tomorrow"}>
+          <select  value={selectedDate.toDateString() === today.toDateString() ? "today" : "tomorrow"} 
+        onChange={handleDateChange}>
             <option value="today">Today, {formatDate(today)}</option>
             <option value="tomorrow">Tomorrow, {formatDate(tomorrow)}</option>
           </select>
@@ -164,12 +166,8 @@ export default function ChooseDateTime() {
           {timeSlots.map((slot) => (
             <div
               key={slot.slotid}
-              className={`time-slot ${selectedTime === slot.slotid ? "selected" : ""}`}
+              className={`time-slot ${availableSlots.some(availableSlot => availableSlot.slotid === slot.slotid) ? "" : "disabled"} ${selectedTime === slot.slotid ? "selected" : ""}`}
               onClick={() => handleTimeSlotClick(slot.slotid)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && handleTimeSlotClick(slot.slotid)}
-              aria-label={`Select time slot ${slot.slottime}`}
             >
               {slot.slottime}
             </div>

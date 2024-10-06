@@ -43,9 +43,9 @@ export default function ChooseStylist() {
       }
 
        try {
-        const response = await api.get("booking/stylists", bookingValue);
-        if (response.data && response.data.result) {
-          setStylists(response.data.result);
+        const response = await api.get(/*`booking/stylists`*/"stylists", bookingValue);
+        if (response.data /*&& response.data.result*/) {
+          setStylists(response.data/*.result*/);
         }
        } catch (error) {
         
@@ -75,7 +75,7 @@ export default function ChooseStylist() {
         setSelectedStylist(stylish);
       }
     }
-  }, []);
+  }, [stylists]);
 
   const isSelectedStylish = !!localStorage.getItem("selectedStylishId");
   

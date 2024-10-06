@@ -18,11 +18,12 @@ import api from "../../../../config/axios";
 
 export default function ChooseService() {
   const [searchValue, setSearchValue] = useState("");
-  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedService, setSelectedService] = useState([]);
   const [services, setServices] = useState([]);
   const [searchResults, setSearchResults] = useState(services);
   const [areServicesHidden, setAreServicesHidden] = useState(false);
   const inputRef = useRef(null);
+  
 
   const navigate = useNavigate();
 
@@ -38,16 +39,17 @@ export default function ChooseService() {
     if (storedServices) {
       const serviceIds = JSON.parse(storedServices);
       const selected = services.filter(service => serviceIds.includes(service.id));
-      setSelectedServices(selected);
+      setSelectedService(selected);
     }
-  }, []);
+  }, [services]);
 
   useEffect(() => {
     const fetchService = async () => {
        try {
         const response = await api.get("service");
-        if (response.data && response.data.result) {
-          setServices(response.data.result);
+        if (response.data /*&& response.data.result*/) {
+          setServices(response.data/*.result*/);
+          setSearchResults(response.data);
         }
        } catch (error) {
         
@@ -55,6 +57,7 @@ export default function ChooseService() {
     };
     fetchService();
   }, []);
+
 
   useEffect(() => {
     if (!searchValue.trim()) {
@@ -82,23 +85,23 @@ export default function ChooseService() {
     setSearchValue(e.target.value);
   };
 
-  const handleClearSearch = () => {
-    setSearchValue("");
-    inputRef.current.focus();
+  const handleHidden = () => {
+    setAreServicesHidden((prev) => !prev);
   };
 
   const handleRemoveService = (serviceToRemove) => {
-    setSelectedServices((prev) =>
+    setSelectedService((prev) =>
       prev.filter((service) => service.id !== serviceToRemove.id)
     );
   };
 
-  const isServiceSelected = (serviceId) => {
-    return selectedServices.some((service) => service.id === serviceId);
+  const handleClick = () => {
+    setSearchValue("");
+    inputRef.current.focus();
   };
 
-  const toggleServicesHidden = () => {
-    setAreServicesHidden((prev) => !prev);
+  const isServiceSelected = (serviceId) => {
+    return selectedService.some((service) => service.id === serviceId);
   };
 
   const isSelectedServices = !!localStorage.getItem("selectedServicesId");
@@ -142,10 +145,10 @@ export default function ChooseService() {
 
       <div className="chooseService__container">
         <div className="chooseService__container-header">
-          <Link to="/booking/step1" aria-label="Back to Salon Selection">
+          <Link to="/booking/step1">
             <FaArrowLeft className="chooseService-icon" />
           </Link>
-          <h1>Choose Service</h1>
+          <h1>Choose service</h1>
         </div>
         <div className="chooseService__container-search">
           <IoSearchOutline className="chooseService-icon" />
@@ -157,12 +160,11 @@ export default function ChooseService() {
           />
           <IoCloseCircle
             className="chooseService-closeIcon"
-            onClick={handleClearSearch}
-            aria-label="Clear search"
+            onClick={handleClick}
           />
         </div>
         <div className="chooseService__container-locations">
-          F-Salon has the following services:
+          F-Salon has the following services :
         </div>
         <div className="chooseService__container-lists">
           {searchResults.map((service) => (
@@ -174,19 +176,21 @@ export default function ChooseService() {
                   <LuClock className="card-icon" />
                   <span>{service.duration}</span>
                 </div>
-                <p>{service.description}</p>
+                <p>{service.serviceName}</p>
                 <div className="card__content-action">
                   <div className="card__content-price">
                     Price: ${service.price}
                   </div>
                   <button
-                    className={`card__content-add ${isServiceSelected(service.id) ? "disabled" : ""}`}
+                    className={`card__content-add ${
+                      isServiceSelected(service.id) ? "disabled" : ""
+                    }`}
                     onClick={() => {
                       if (!isServiceSelected(service.id)) {
-                        setSelectedServices((prev) => [...prev, service]);
+                        setSelectedService((prev) => [...prev, service]);
                       }
                     }}
-                    disabled={isServiceSelected(service.id)}
+                    disabled={isServiceSelected(service.id)} // Disable button if service is already selected
                   >
                     {isServiceSelected(service.id) ? "Added" : "Add service"}
                   </button>
@@ -196,7 +200,7 @@ export default function ChooseService() {
           ))}
         </div>
         <div className="chooseService__container-footer">
-          <div className="footer__hidden" onClick={toggleServicesHidden}>
+          <div className="footer__hidden" onClick={handleHidden}>
             {areServicesHidden ? (
               <>
                 <FaAngleDoubleUp />
@@ -212,32 +216,49 @@ export default function ChooseService() {
             )}
           </div>
 
-          {selectedServices.map((service) => (
-            <div key={service.id} className={`footer__service ${areServicesHidden ? "hidden" : ""}`}>
+          {selectedService.map((service, index) => (
+            <div
+              key={index}
+              className={`footer__service ${areServicesHidden ? "hidden" : ""}`}
+            >
               <span className="footer__service-name">{service.serviceName}</span>
               <div>
-                <span className="footer__service-price">${service.price}</span>
+                <span className="footer__service-price">
+                  ${service.price}
+                </span>
                 <IoIosCloseCircle
                   className="footer__service-icon"
                   onClick={() => handleRemoveService(service)}
-                  aria-label={`Remove ${service.serviceName}`}
                 />
               </div>
             </div>
           ))}
 
+          {/* <div className="checkbox-item">
+            <input type="checkbox" id="unknown-service" />
+            <div>
+              <label htmlFor="unknown-service" className="checkbox-label">
+                Anh không biết chọn dịch vụ gì!
+              </label>
+              <div className="checkbox-description">
+                Nhân viên sẽ giúp anh chọn dịch vụ tại cửa hàng
+              </div>
+            </div>
+          </div> */}
+
           <div className="footer__promo">
-            <span className="footer__promo-action">Select Offer</span>
+            {/* <span className="footer__promo-label"></span> */}
+            <span className="footer__promo-action">Chọn ưu đãi</span>
           </div>
 
           <div className="footer__pay">
             <span className="footer__pay-services">
-              Selected services: {selectedServices.length}
+              Selected services : {selectedService.length}
             </span>
             <div>
               <span className="footer__pay-price">
-                Total Pay: $
-                {selectedServices.reduce(
+                Total Pay : $
+                {(selectedService || []).reduce(
                   (total, service) => total + service.price,
                   0
                 )}
@@ -247,12 +268,14 @@ export default function ChooseService() {
         </div>
         <Link
           to="/booking/step3"
-          className={`chooseService__container-btn btn flex ${selectedServices.length === 0 ? "btn-disable" : ""}`}
+          className={`chooseService__container-btn btn flex ${
+            selectedService.length === 0 ? "btn-disable" : ""
+          }`}
           onClick={(e) => {
-            if (selectedServices.length === 0) {
+            if (selectedService.length === 0) {
               e.preventDefault();
-            } else {
-              const selectedServiceIds = selectedServices.map(service => service.id);
+            }else {
+              const selectedServiceIds = selectedService.map(service => service.id);
               localStorage.setItem("selectedServicesId", JSON.stringify(selectedServiceIds));
             }
           }}

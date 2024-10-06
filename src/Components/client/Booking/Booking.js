@@ -7,19 +7,17 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import "./Booking.scss";
 import { useEffect, useState } from "react";
-// import { salonLocations, services, timeSlots, stylists } from "../../../data/booking";
 import { RiTimeLine } from "react-icons/ri";
 import api from "../../../config/axios";
 
 export default function Booking() {
-  const [selectedBranch, setSelectedBranch] = useState('');
+  const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTime, setSelectedTime] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedStylist, setSelectedStylist] = useState('');
+  const [selectedStylist, setSelectedStylist] = useState("");
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({});
-
 
   useEffect(() => {
     const isSelectedDate = localStorage.getItem("selectedDate");
@@ -39,7 +37,6 @@ export default function Booking() {
         }
       }
     }
-   
   }, []);
 
   const [salonLocations, setSalonLocations] = useState([]);
@@ -49,55 +46,48 @@ export default function Booking() {
 
   useEffect(() => {
     const fetchSalonLocations = async () => {
-       try {
+      try {
         const response = await api.get("salon");
-        if (response.data && response.data.result) {
-          setSalonLocations(response.data.result);
+        if (response.data /*&& response.data.result*/) {
+          setSalonLocations(response.data /*.result*/);
         }
-       } catch (error) {
-        
-       }
+      } catch (error) {}
     };
     fetchSalonLocations();
 
-
     const fetchService = async () => {
       try {
-       const response = await api.get("service");
-       if (response.data && response.data.result) {
-         setServices(response.data.result);
-       }
-      } catch (error) {
-       
-      }
-   };
-   fetchService();
+        const response = await api.get("service");
+        if (response.data /*&& response.data.result*/) {
+          setServices(response.data /*.result*/);
+        }
+      } catch (error) {}
+    };
+    fetchService();
 
+    const storedBranchId = localStorage.getItem("selectedBranchId");
+    const branchId = parseInt(storedBranchId, 10);
 
-   const storedBranchId = localStorage.getItem("selectedBranchId");
-   const branchId = parseInt(storedBranchId, 10);
+    const storedServices = localStorage.getItem("selectedServicesId");
+    const serviceIds = JSON.parse(storedServices);
 
-   const storedServices = localStorage.getItem("selectedServicesId");
-   const serviceIds = JSON.parse(storedServices);
-
-   const fetchStylishs = async () => {
-
-     const bookingValue = {
-       salonId: branchId,
-       serviceId: serviceIds
-     }
+    const fetchStylishs = async () => {
+      const bookingValue = {
+        salonId: branchId,
+        serviceId: serviceIds,
+      };
 
       try {
-       const response = await api.get("booking/stylists", bookingValue);
-       if (response.data && response.data.result) {
-         setStylists(response.data.result);
-       }
-      } catch (error) {
-       
-      }
-   };
-   fetchStylishs();
-   
+        const response = await api.get(
+          /*"booking/stylists"*/ "stylists",
+          bookingValue
+        );
+        if (response.data /*&& response.data.result*/) {
+          setStylists(response.data /*.result*/);
+        }
+      } catch (error) {}
+    };
+    fetchStylishs();
 
     const storedStylish = localStorage.getItem("selectedStylishId");
     const stylishId = JSON.parse(storedStylish);
@@ -106,27 +96,25 @@ export default function Booking() {
     const date = new Date(storedDate);
 
     const fetchTimeSlots = async () => {
-
       const bookingValue = {
         salonId: branchId,
         serviceId: serviceIds,
         accountId: stylishId,
         date: formatDateForInput(date),
-      }
+      };
 
-       try {
-        const response = await api.get("booking/slots", bookingValue);
-        if (response.data && response.data.result) {
-          setTimeSlots(response.data.result);
+      try {
+        const response = await api.get(
+          /*"booking/slots"*/ "slots",
+          bookingValue
+        );
+        if (response.data /*&& response.data.result*/) {
+          setTimeSlots(response.data /*.result*/);
         }
-       } catch (error) {
-        
-       }
+      } catch (error) {}
     };
     fetchTimeSlots();
   }, []);
-
-
 
   useEffect(() => {
     const storedBranchId = localStorage.getItem("selectedBranchId");
@@ -141,8 +129,10 @@ export default function Booking() {
     const storedServices = localStorage.getItem("selectedServicesId");
     if (storedServices) {
       const serviceIds = JSON.parse(storedServices);
-      const selected = services.filter(service => serviceIds.includes(service.id));
-      setSelectedServices(selected.map(item => item.serviceName));
+      const selected = services.filter((service) =>
+        serviceIds.includes(service.id)
+      );
+      setSelectedServices(selected.map((item) => item.serviceName));
     }
 
     const storedTimeId = localStorage.getItem("selectedTimeId");
@@ -168,7 +158,7 @@ export default function Booking() {
         setSelectedStylist(stylish.fullname);
       }
     }
-  }, []);
+  }, [salonLocations, services, stylists, timeSlots]);
 
   const formatDateForInput = (dateString) => {
     const date = new Date(dateString);
@@ -191,8 +181,11 @@ export default function Booking() {
   };
 
   useEffect(() => {
-
     fetchUserData();
+  }, []);
+
+  const handleBookNow = async () => {
+
     const customerId = userInfo.accountid;
 
     const storedBranchId = localStorage.getItem("selectedBranchId");
@@ -210,30 +203,33 @@ export default function Booking() {
     const storeSlotId = localStorage.getItem("selectedTimeId");
     const slotId = parseInt(storeSlotId, 10);
 
-    const booking = async () => {
-
-      const bookingValue = {
+    const bookingValue = {
         salonId: branchId,
         serviceId: serviceIds,
         stylistId: stylishId,
         customerId: customerId,
         slotId: slotId,
         bookingDate: formatDateForInput(date),
-        voucherId: null
-      }
+        voucherId: null,
+    };
 
-       try {
+    try {
         const response = await api.post("booking", bookingValue);
         if (response.data && response.data.result) {
-          navigate("/");
+            navigate("/");
         }
-       } catch (error) {
-        
-       }
-    };
-    booking();
-  }, []);
-  
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Xóa các mục đã lưu trong localStorage
+    localStorage.removeItem("selectedBranchId");
+    localStorage.removeItem("selectedServicesId");
+    localStorage.removeItem("selectedTimeId");
+    localStorage.removeItem("selectedDate");
+    localStorage.removeItem("selectedStylishId");
+};
+
   const formatDate = (date) => {
     const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" });
     const day = date.getDate();
@@ -242,15 +238,8 @@ export default function Booking() {
     return `${dayOfWeek} (${day}/${month}/${year})`;
   };
 
-  const formattedDate = selectedDate ? formatDate(selectedDate) : '';
+  const formattedDate = selectedDate ? formatDate(selectedDate) : "";
 
-  const handleBookNow = () => {
-    localStorage.removeItem("selectedBranchId");
-    localStorage.removeItem("selectedServicesId");
-    localStorage.removeItem("selectedTimeId");
-    localStorage.removeItem("selectedDate");
-    localStorage.removeItem("selectedStylishId");
-  }
 
   return (
     <div className="booking">
@@ -267,11 +256,11 @@ export default function Booking() {
             <label>Salon</label>
             <div className="form-input">
               <CiHome className="form-icon" />
-              <input 
-                type="text" 
-                placeholder="View All Salons" 
-                defaultValue={selectedBranch} 
-                readOnly 
+              <input
+                type="text"
+                placeholder="View All Salons"
+                defaultValue={selectedBranch}
+                readOnly
               />
             </div>
             <Outlet />
@@ -283,7 +272,9 @@ export default function Booking() {
               <PiScissors className="form-icon" />
               <textarea
                 placeholder="View all attractive services"
-                defaultValue={selectedServices.map(service => `● ${service}`).join('\n')}
+                defaultValue={selectedServices
+                  .map((service) => `● ${service}`)
+                  .join("\n")}
                 readOnly
               />
             </div>
@@ -305,7 +296,7 @@ export default function Booking() {
           <div className="booking__form-item">
             <label>Time</label>
             <div className="form-input">
-              <RiTimeLine className="form-icon"/>
+              <RiTimeLine className="form-icon" />
               <input
                 type="text"
                 placeholder="View Selected Time"
