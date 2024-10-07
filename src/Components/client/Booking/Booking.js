@@ -20,17 +20,17 @@ export default function Booking() {
   const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
-    const isSelectedDate = localStorage.getItem("selectedDate");
-    const isSelectedTimeId = localStorage.getItem("selectedTimeId");
+    const isSelectedDate = sessionStorage.getItem("selectedDate");
+    const isSelectedTimeId = sessionStorage.getItem("selectedTimeId");
     if (!isSelectedDate || !isSelectedTimeId) {
       navigate("/booking/step4");
-      const isSelectedStylish = localStorage.getItem("selectedStylishId");
-      if (!isSelectedStylish) {
+      const isSelectedStylist = sessionStorage.getItem("selectedStylistId");
+      if (!isSelectedStylist) {
         navigate("/booking/step3");
-        const isSelectedServices = localStorage.getItem("selectedServicesId");
+        const isSelectedServices = sessionStorage.getItem("selectedServicesId");
         if (!isSelectedServices) {
           navigate("/booking/step2");
-          const selectedBranchId = localStorage.getItem("selectedBranchId");
+          const selectedBranchId = sessionStorage.getItem("selectedBranchId");
           if (!selectedBranchId) {
             navigate("/booking/step1");
           }
@@ -65,13 +65,13 @@ export default function Booking() {
     };
     fetchService();
 
-    const storedBranchId = localStorage.getItem("selectedBranchId");
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
     const branchId = parseInt(storedBranchId, 10);
 
-    const storedServices = localStorage.getItem("selectedServicesId");
+    const storedServices = sessionStorage.getItem("selectedServicesId");
     const serviceIds = JSON.parse(storedServices);
 
-    const fetchStylishs = async () => {
+    const fetchstylists = async () => {
       const bookingValue = {
         salonId: branchId,
         serviceId: serviceIds,
@@ -79,7 +79,7 @@ export default function Booking() {
 
       try {
         const response = await api.get(
-          /*"booking/stylists"*/ "stylists",
+          "booking-stylists",
           bookingValue
         );
         if (response.data /*&& response.data.result*/) {
@@ -87,25 +87,25 @@ export default function Booking() {
         }
       } catch (error) {}
     };
-    fetchStylishs();
+    fetchstylists();
 
-    const storedStylish = localStorage.getItem("selectedStylishId");
-    const stylishId = JSON.parse(storedStylish);
+    const storedStylist = sessionStorage.getItem("selectedStylistId");
+    const stylistId = JSON.parse(storedStylist);
 
-    const storedDate = localStorage.getItem("selectedDate");
+    const storedDate = sessionStorage.getItem("selectedDate");
     const date = new Date(storedDate);
 
     const fetchTimeSlots = async () => {
       const bookingValue = {
         salonId: branchId,
         serviceId: serviceIds,
-        accountId: stylishId,
+        accountId: stylistId,
         date: formatDateForInput(date),
       };
 
       try {
         const response = await api.get(
-          /*"booking/slots"*/ "slots",
+          "booking-slots",
           bookingValue
         );
         if (response.data /*&& response.data.result*/) {
@@ -117,7 +117,7 @@ export default function Booking() {
   }, []);
 
   useEffect(() => {
-    const storedBranchId = localStorage.getItem("selectedBranchId");
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
     if (storedBranchId) {
       const branchId = parseInt(storedBranchId, 10);
       const branch = salonLocations.find((b) => b.id === branchId);
@@ -126,7 +126,7 @@ export default function Booking() {
       }
     }
 
-    const storedServices = localStorage.getItem("selectedServicesId");
+    const storedServices = sessionStorage.getItem("selectedServicesId");
     if (storedServices) {
       const serviceIds = JSON.parse(storedServices);
       const selected = services.filter((service) =>
@@ -135,8 +135,8 @@ export default function Booking() {
       setSelectedServices(selected.map((item) => item.serviceName));
     }
 
-    const storedTimeId = localStorage.getItem("selectedTimeId");
-    const storedDate = localStorage.getItem("selectedDate");
+    const storedTimeId = sessionStorage.getItem("selectedTimeId");
+    const storedDate = sessionStorage.getItem("selectedDate");
     if (storedTimeId) {
       const timeId = parseInt(storedTimeId, 10);
       if (timeId) {
@@ -150,12 +150,12 @@ export default function Booking() {
       setSelectedDate(new Date(storedDate));
     }
 
-    const storedStylishId = localStorage.getItem("selectedStylishId");
-    const stylishId = parseInt(storedStylishId, 10);
-    if (stylishId) {
-      const stylish = stylists.find((s) => s.id === stylishId);
-      if (stylish) {
-        setSelectedStylist(stylish.fullname);
+    const storedStylistId = sessionStorage.getItem("selectedStylistId");
+    const stylistId = parseInt(storedStylistId, 10);
+    if (stylistId) {
+      const stylist = stylists.find((s) => s.id === stylistId);
+      if (stylist) {
+        setSelectedStylist(stylist.fullname);
       }
     }
   }, [salonLocations, services, stylists, timeSlots]);
@@ -170,7 +170,7 @@ export default function Booking() {
 
   const fetchUserData = async () => {
     try {
-      const response = await api.get("customer/profile");
+      const response = await api.get("customer-profile");
       const data = response.data.result;
       if (data) {
         setUserInfo(data);
@@ -188,25 +188,25 @@ export default function Booking() {
 
     const customerId = userInfo.accountid;
 
-    const storedBranchId = localStorage.getItem("selectedBranchId");
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
     const branchId = parseInt(storedBranchId, 10);
 
-    const storedServices = localStorage.getItem("selectedServicesId");
+    const storedServices = sessionStorage.getItem("selectedServicesId");
     const serviceIds = JSON.parse(storedServices);
 
-    const storedStylish = localStorage.getItem("selectedStylishId");
-    const stylishId = JSON.parse(storedStylish);
+    const storedStylist = sessionStorage.getItem("selectedStylistId");
+    const stylistId = JSON.parse(storedStylist);
 
-    const storedDate = localStorage.getItem("selectedDate");
+    const storedDate = sessionStorage.getItem("selectedDate");
     const date = new Date(storedDate);
 
-    const storeSlotId = localStorage.getItem("selectedTimeId");
+    const storeSlotId = sessionStorage.getItem("selectedTimeId");
     const slotId = parseInt(storeSlotId, 10);
 
     const bookingValue = {
         salonId: branchId,
         serviceId: serviceIds,
-        stylistId: stylishId,
+        stylistId: stylistId,
         customerId: customerId,
         slotId: slotId,
         bookingDate: formatDateForInput(date),
@@ -222,12 +222,11 @@ export default function Booking() {
         console.log(error);
     }
 
-    // Xóa các mục đã lưu trong localStorage
-    localStorage.removeItem("selectedBranchId");
-    localStorage.removeItem("selectedServicesId");
-    localStorage.removeItem("selectedTimeId");
-    localStorage.removeItem("selectedDate");
-    localStorage.removeItem("selectedStylishId");
+    sessionStorage.removeItem("selectedBranchId");
+    sessionStorage.removeItem("selectedServicesId");
+    sessionStorage.removeItem("selectedTimeId");
+    sessionStorage.removeItem("selectedDate");
+    sessionStorage.removeItem("selectedStylistId");
 };
 
   const formatDate = (date) => {
@@ -237,6 +236,14 @@ export default function Booking() {
     const year = date.getFullYear();
     return `${dayOfWeek} (${day}/${month}/${year})`;
   };
+
+  const handleCancle = () => {
+    sessionStorage.removeItem("selectedBranchId");
+    sessionStorage.removeItem("selectedServicesId");
+    sessionStorage.removeItem("selectedTimeId");
+    sessionStorage.removeItem("selectedDate");
+    sessionStorage.removeItem("selectedStylistId");
+  }
 
   const formattedDate = selectedDate ? formatDate(selectedDate) : "";
 
@@ -318,7 +325,14 @@ export default function Booking() {
               />
             </div>
           </div>
-
+          <div className="booking__button-group">
+          <Link
+            to="/"
+            className="booking__container-btn btn flex"
+            onClick={handleCancle}
+          >
+            Cancel
+          </Link>
           <Link
             to="/"
             className="booking__container-btn btn flex"
@@ -326,6 +340,7 @@ export default function Booking() {
           >
             Book Now
           </Link>
+        </div>
         </form>
       </div>
     </div>

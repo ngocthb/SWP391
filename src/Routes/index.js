@@ -8,11 +8,10 @@ import ForgetPassword from "../Components/client/ForgetPassword/ForgetPassword";
 import ConfirmPassword from "../Components/client/ConfirmPassword/ConfirmPassword";
 import UserInfor from "../Components/client/UserInfor/UserInfor";
 import ManagerLayout from "../Layouts/manager/ManagerLayout";
-import ManageEmployee from "../Components/Manager/ManageEmployee/ManageEmployee";
 import UserLayout from "../Layouts/UserLayout";
 import ManagerDashboard from "../Components/Manager/ManagerDashboard/ManagerDashboard";
 import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
-import ManagerCreateStylish from "../Components/Manager/ManagerCreateStylish/ManagerCreateStylish";
+
 import HomePageLayout from "../Layouts/client/HomePageLayout";
 import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
 import ManageService from "../Components/Manager/ManageService/ManageService";
@@ -23,8 +22,10 @@ import Booking from "../Components/client/Booking/Booking";
 import ChooseSalon from "../Components/client/Booking/ChooseSalon/ChooseSalon";
 import ChooseService from "../Components/client/Booking/ChooseService/ChooseService";
 import ChooseDateTime from "../Components/client/Booking/ChooseDateTime/ChooseDateTime";
-import ChooseStylist from "../Components/client/Booking/ChooseStylist/ChooseStylist";
 import Contact from "../Components/client/Contact/Contact";
+import ManageStylist from "../Components/Manager/ManageStylist/ManageStylist";
+import ManagerCreateStylist from "../Components/Manager/ManagerCreateStylist/ManagerCreateStylist";
+import ChooseStylist from "../Components/client/Booking/ChooseStylist/ChooseStylist";
 
 export const Routes = [
   {
@@ -90,12 +91,12 @@ export const Routes = [
     element: <ManagerLayout />,
     children: [
       {
-        path: "stylish",
-        element: <ManageEmployee buttonLabel={"+ New Stylish"} />,
+        path: "stylist",
+        element: <ManageStylist buttonLabel={"+ New stylist"} />,
       },
       {
-        path: "stylish/create",
-        element: <ManagerCreateStylish />,
+        path: "stylist/create",
+        element: <ManagerCreateStylist/>
       },
       {
         path: "dashboard",
@@ -133,7 +134,7 @@ export const Routes = [
       },
       {
         path: "step3",
-        element: <ChooseStylist />,
+        element: <ChooseStylist/>
       },
       {
         path: "step4",

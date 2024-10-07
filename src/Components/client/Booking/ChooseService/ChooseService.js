@@ -28,14 +28,14 @@ export default function ChooseService() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const selectedBranchId = localStorage.getItem("selectedBranchId");
+    const selectedBranchId = sessionStorage.getItem("selectedBranchId");
     if (!selectedBranchId) {
       navigate("/booking/step1");
     }
   }, []);
 
   useEffect(() => {
-    const storedServices = localStorage.getItem("selectedServicesId");
+    const storedServices = sessionStorage.getItem("selectedServicesId");
     if (storedServices) {
       const serviceIds = JSON.parse(storedServices);
       const selected = services.filter(service => serviceIds.includes(service.id));
@@ -67,7 +67,7 @@ export default function ChooseService() {
 
     const fetchServices = async () => {
       try {
-        const response = await api.get(`service/searchByName`, {
+        const response = await api.get(`service-searchByName`, {
           params: { name: searchValue },
         });
         if (response.data && response.data.result) {
@@ -104,8 +104,8 @@ export default function ChooseService() {
     return selectedService.some((service) => service.id === serviceId);
   };
 
-  const isSelectedServices = !!localStorage.getItem("selectedServicesId");
-  const isSelectedStylish = !!localStorage.getItem("selectedStylishId");
+  const isSelectedServices = !!sessionStorage.getItem("selectedServicesId");
+  const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
 
   return (
     <div className="chooseService">
@@ -132,8 +132,8 @@ export default function ChooseService() {
             </Link>
             <div className="tooltip">Stylist</div>
           </li>
-          <li className={`chooseService__tagNavigation--item-content ${isSelectedStylish ? '' : 'disable'}`}>
-            <Link to={isSelectedStylish ? "/booking/step4" : "/booking/step2"} aria-label="Select Time">
+          <li className={`chooseService__tagNavigation--item-content ${isSelectedStylist ? '' : 'disable'}`}>
+            <Link to={isSelectedStylist ? "/booking/step4" : "/booking/step2"} aria-label="Select Time">
               <div className="filled"></div>
               <RiCalendarScheduleLine />
             </Link>
@@ -257,12 +257,19 @@ export default function ChooseService() {
             </span>
             <div>
               <span className="footer__pay-price">
-                Total Pay : $
+                Total Pay :
                 {(selectedService || []).reduce(
                   (total, service) => total + service.price,
                   0
-                )}
+                )} VND
               </span>
+              <div className="footer__pay-price">
+                Total Duration : 
+                {(selectedService || []).reduce(
+                  (total, service) => total + service.duration,
+                  0
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -276,7 +283,7 @@ export default function ChooseService() {
               e.preventDefault();
             }else {
               const selectedServiceIds = selectedService.map(service => service.id);
-              localStorage.setItem("selectedServicesId", JSON.stringify(selectedServiceIds));
+              sessionStorage.setItem("selectedServicesId", JSON.stringify(selectedServiceIds));
             }
           }}
         >

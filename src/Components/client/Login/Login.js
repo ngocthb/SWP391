@@ -32,7 +32,7 @@ const Login = () => {
         password: password,
       });
       const { token } = response.data;
-      localStorage.setItem("token", token);
+      sessionStorage.setItem("token", token);
 
       if (response) {
         navigate("/");

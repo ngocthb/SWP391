@@ -5,7 +5,7 @@ import api from "../../../config/axios";
 import { FaEdit } from "react-icons/fa";
 import { message, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "../../../actions/UpdateUser";
+import { updateUser } from "../../../actions/Update";
 import uploadFile from "../../../utils/upload";
 
 export default function UserInfor() {

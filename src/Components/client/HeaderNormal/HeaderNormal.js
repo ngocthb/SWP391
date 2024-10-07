@@ -85,6 +85,13 @@ export default function HeaderNormal() {
             className={`${active} ${isLoggedIn ? "logged-in" : "logged-out"}`}
           >
             <ul className="header-normal__lists flex">
+            <li
+                className={`header-normal__lists-items ${
+                  isLoggedIn ? "logged-in" : ""
+                }`}
+              >
+                <Link to={"/"} onClick={handleHomeClick}>Home Page</Link>
+              </li>
               <li
                 className={`header-normal__lists-items ${
                   isLoggedIn ? "logged-in" : ""

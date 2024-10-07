@@ -1,4 +1,4 @@
-export const stylists = [
+export const stylishs = [
     {
       id: 1,
       fullname: "Luận Triệu",

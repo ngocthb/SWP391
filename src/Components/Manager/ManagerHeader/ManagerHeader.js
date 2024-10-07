@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import logo from "../../../Assets/logo.png";
 import logoFold from "../../../Assets/logo_blue_noBackground.png";
@@ -20,6 +20,7 @@ const ManagerHeader = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
   const [pageName, setPageName] = useState("");
+  const navigate = useNavigate();
 
   const toggleDropdown = useCallback(() => {
     setDropdownOpen((prev) => !prev);
@@ -46,6 +47,10 @@ const ManagerHeader = () => {
     dispatch(collapse());
   }, [dispatch]);
 
+  const handleGoback = () => {
+    navigate("/manager/dashboard");
+  }
+
   return (
     <header className="header-manager">
       <div
@@ -53,7 +58,7 @@ const ManagerHeader = () => {
           collapsed ? "header-manager__logo--collapsed" : ""
         }`}
       >
-        <img
+        <img onClick={handleGoback}
           src={collapsed ? logoFold : logo}
           alt={collapsed ? "Logo Fold" : "Logo"}
         />

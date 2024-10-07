@@ -98,3 +98,14 @@
     }
   }
 }
+
+.booking__button-group {
+  display: flex;
+  justify-content: space-between; // Giữ hai nút cách nhau
+  margin-top: 1rem; // Khoảng cách giữa nhóm nút và phần trên
+}
+
+.booking__container-btn {
+  margin-right: 1rem; // Khoảng cách bên phải cho nút "Cancel"
+}
+

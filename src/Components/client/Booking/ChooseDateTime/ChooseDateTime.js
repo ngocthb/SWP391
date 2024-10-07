@@ -23,13 +23,13 @@ export default function ChooseDateTime() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isSelectedStylish = localStorage.getItem("selectedStylishId");
-    if (!isSelectedStylish) {
+    const isSelectedStylist = sessionStorage.getItem("selectedStylistId");
+    if (!isSelectedStylist) {
       navigate("/booking/step3");
-      const isSelectedServices = localStorage.getItem("selectedServicesId");
+      const isSelectedServices = sessionStorage.getItem("selectedServicesId");
       if (!isSelectedServices) {
         navigate("/booking/step2");
-        const selectedBranchId = localStorage.getItem("selectedBranchId");
+        const selectedBranchId = sessionStorage.getItem("selectedBranchId");
         if (!selectedBranchId) {
           navigate("/booking/step1");
         }
@@ -39,8 +39,8 @@ export default function ChooseDateTime() {
   }, []);
 
   useEffect(() => {
-    const storedTimeId = localStorage.getItem("selectedTimeId");
-    const storedDate = localStorage.getItem("selectedDate");
+    const storedTimeId = sessionStorage.getItem("selectedTimeId");
+    const storedDate = sessionStorage.getItem("selectedDate");
 
     if (storedTimeId) {
       setSelectedTime(Number(storedTimeId));
@@ -81,26 +81,26 @@ export default function ChooseDateTime() {
 
    useEffect(() => {
 
-    const storedBranchId = localStorage.getItem("selectedBranchId");
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
     const branchId = parseInt(storedBranchId, 10);
 
-    const storedServices = localStorage.getItem("selectedServicesId");
+    const storedServices = sessionStorage.getItem("selectedServicesId");
     const serviceIds = JSON.parse(storedServices);
 
-    const storedStylish = localStorage.getItem("selectedStylishId");
-    const stylishId = JSON.parse(storedStylish);
+    const storedStylist = sessionStorage.getItem("selectedStylistId");
+    const stylistId = JSON.parse(storedStylist);
 
     const fetchTimeSlots = async () => {
 
       const bookingValue = {
         salonId: branchId,
         serviceId: serviceIds,
-        accountId: stylishId,
+        accountId: stylistId,
         date: formatDateForInput(selectedDate),
       }
 
        try {
-        const response = await api.get(/*"booking/slots"*/ "slots", bookingValue);
+        const response = await api.get("booking-slots", bookingValue);
         if (response.data /*&& response.data.result*/) {
           setAvailableSlots(response.data/*.result*/);
         }
@@ -180,8 +180,8 @@ export default function ChooseDateTime() {
             if (!isSelectedTime) {
               e.preventDefault();
             } else {
-              localStorage.setItem('selectedTimeId', selectedTime);
-              localStorage.setItem('selectedDate', selectedDate.toISOString());
+              sessionStorage.setItem('selectedTimeId', selectedTime);
+              sessionStorage.setItem('selectedDate', selectedDate.toISOString());
             }
           }}
         >

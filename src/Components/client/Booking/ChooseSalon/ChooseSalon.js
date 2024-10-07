@@ -35,7 +35,7 @@ export default function ChooseSalon() {
   }, []);
 
   useEffect(() => {
-    const storedBranchId = localStorage.getItem("selectedBranchId");
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
     if (storedBranchId) {
       const branchId = parseInt(storedBranchId, 10);
       const branch = salonLocations.find((b) => b.id === branchId);
@@ -85,9 +85,9 @@ export default function ChooseSalon() {
     setSelectedBranch(branch);
   };
 
-  const isSelectedBranch = !!localStorage.getItem("selectedBranchId");
-  const isSelectedStylish = !!localStorage.getItem("selectedStylishId");
-  const isSelectedServices = !!localStorage.getItem("selectedServicesId");
+  const isSelectedBranch = !!sessionStorage.getItem("selectedBranchId");
+  const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
+  const isSelectedServices = !!sessionStorage.getItem("selectedServicesId");
 
   return (
     <div className="chooseSalon">
@@ -114,8 +114,8 @@ export default function ChooseSalon() {
             </Link>
             <div className="tooltip">Stylist</div>
           </li>
-          <li className={`chooseSalon__tagNavigation--item-content ${isSelectedStylish ? '' : 'disable'}`}>
-            <Link to={isSelectedStylish ? "/booking/step4" : "/booking/step1"} aria-label="Select Time">
+          <li className={`chooseSalon__tagNavigation--item-content ${isSelectedStylist ? '' : 'disable'}`}>
+            <Link to={isSelectedStylist ? "/booking/step4" : "/booking/step1"} aria-label="Select Time">
               <div className="filled"></div>
               <RiCalendarScheduleLine />
             </Link>
@@ -169,7 +169,7 @@ export default function ChooseSalon() {
             if (!selectedBranch) {
               e.preventDefault();
             } else {
-              localStorage.setItem("selectedBranchId", selectedBranch.id);
+              sessionStorage.setItem("selectedBranchId", selectedBranch.id);
             }
           }}
         >

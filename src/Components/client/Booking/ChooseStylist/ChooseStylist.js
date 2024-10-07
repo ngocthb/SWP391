@@ -29,13 +29,13 @@ export default function ChooseStylist() {
   const [stylists, setStylists] = useState([]);
   
    useEffect(() => {
-    const storedBranchId = localStorage.getItem("selectedBranchId");
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
     const branchId = parseInt(storedBranchId, 10);
 
-    const storedServices = localStorage.getItem("selectedServicesId");
+    const storedServices = sessionStorage.getItem("selectedServicesId");
     const serviceIds = JSON.parse(storedServices);
 
-    const fetchStylishs = async () => {
+    const fetchStylists = async () => {
 
       const bookingValue = {
         salonId: branchId,
@@ -43,7 +43,7 @@ export default function ChooseStylist() {
       }
 
        try {
-        const response = await api.get(/*`booking/stylists`*/"stylists", bookingValue);
+        const response = await api.get(`booking-stylists`, bookingValue);
         if (response.data /*&& response.data.result*/) {
           setStylists(response.data/*.result*/);
         }
@@ -51,14 +51,14 @@ export default function ChooseStylist() {
         
        }
     };
-    fetchStylishs();
+    fetchStylists();
   }, []);
 
   useEffect(() => {
-    const isSelectedServices = localStorage.getItem("selectedServicesId");
+    const isSelectedServices = sessionStorage.getItem("selectedServicesId");
     if (!isSelectedServices) {
       navigate("/booking/step2");
-      const selectedBranchId = localStorage.getItem("selectedBranchId");
+      const selectedBranchId = sessionStorage.getItem("selectedBranchId");
       if (!selectedBranchId) {
         navigate("/booking/step1");
       }
@@ -67,17 +67,17 @@ export default function ChooseStylist() {
   
 
   useEffect(() => {
-    const storedStylishId = localStorage.getItem("selectedStylishId");
-    const stylishId = parseInt(storedStylishId, 10);
-    if (stylishId) {
-      const stylish = stylists.find((s) => s.id === stylishId);
-      if (stylish) {
-        setSelectedStylist(stylish);
+    const storedStylistId = sessionStorage.getItem("selectedStylistId");
+    const stylistId = parseInt(storedStylistId, 10);
+    if (stylistId) {
+      const stylist = stylists.find((s) => s.id === stylistId);
+      if (stylist) {
+        setSelectedStylist(stylist);
       }
     }
   }, [stylists]);
 
-  const isSelectedStylish = !!localStorage.getItem("selectedStylishId");
+  const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
   
   return (
     <>
@@ -108,8 +108,8 @@ export default function ChooseStylist() {
               </Link>
               <div className="tooltip">Stylist</div>
             </li>
-            <li className={`chooseStylist__tagNavigation--item-content ${isSelectedStylish ? '' : 'disable'}`}>
-              <Link to={isSelectedStylish ? "/booking/step4" : "/booking/step3"}>
+            <li className={`chooseStylist__tagNavigation--item-content ${isSelectedStylist ? '' : 'disable'}`}>
+              <Link to={isSelectedStylist ? "/booking/step4" : "/booking/step3"}>
                 <div className="filled"></div>
 
                 <RiCalendarScheduleLine />
@@ -192,11 +192,11 @@ export default function ChooseStylist() {
               if (!selectedStylist) {
                 e.preventDefault();
               }else {
-                localStorage.setItem('selectedStylishId', selectedStylist.id);
+                sessionStorage.setItem('selectedStylistId', selectedStylist.id);
               }
             }}
           >
-            Booking Now
+              Next Step
             <FaArrowRight className="chooseService-icon" />
           </Link>
         </div>
