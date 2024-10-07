@@ -1,4 +1,87 @@
-.chooseService {
+.myBooking__salon {
+  &-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    .chooseSalon-icon {
+      font-size: 24px;
+      margin-right: 10px;
+      cursor: pointer;
+      color: var(--PrimaryColor);
+    }
+    h1 {
+      font-size: 24px;
+      color: var(--PrimaryColor);
+      margin: 0;
+    }
+  }
+  &-search {
+    display: flex;
+    align-items: center;
+    background-color: #f1f3f4;
+    padding: 10px;
+    border-radius: 25px;
+    margin-bottom: 20px;
+    input {
+      border: none;
+      background: none;
+      outline: none;
+      flex: 1;
+      padding: 0 10px;
+    }
+    .myBooking__salon-closeIcon {
+      color: var(--PrimaryColor);
+      cursor: pointer;
+      &:hover {
+        color: var(--greyText);
+      }
+    }
+  }
+  &-locations {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  &-lists {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 350px;
+    overflow-y: overlay;
+    background-color: #f5f5f5;
+
+    .myBooking__salon-single {
+      width: 98%;
+      border: 2px solid var(--PrimaryColor);
+      gap: 2rem;
+      color: var(--blackColor);
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+    .selected {
+      background-color: var(--PrimaryColor);
+      font-weight: 500;
+      color: var(--WhiteColor);
+      font-weight: 600;
+    }
+  }
+  &-btn {
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    padding: 0.6rem;
+    color: var(--WhiteColor);
+    font-weight: 600;
+    gap: 0.5rem;
+    .myBooking__salon-icon {
+      color: var(--WhiteColor);
+      margin-left: 10px;
+    }
+  }
+}
+
+.myBooking__service {
   margin: 0;
   padding: 8rem 0 5rem 0;
   display: flex;
@@ -116,16 +199,16 @@
   }
 
   &__container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 500px;
+    // background-color: white;
+    // padding: 20px;
+    // border-radius: 10px;
+    // box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    // width: 500px;
     &-header {
       display: flex;
       align-items: center;
       margin-bottom: 20px;
-      .chooseService-icon {
+      .myBooking__service-icon {
         font-size: 24px;
         margin-right: 10px;
         cursor: pointer;
@@ -151,7 +234,7 @@
         flex: 1;
         padding: 0 10px;
       }
-      .chooseService-closeIcon {
+      .myBooking__service-closeIcon {
         color: var(--PrimaryColor);
         cursor: pointer;
         &:hover {
@@ -181,7 +264,7 @@
       //     cursor: pointer;
       //   }
 
-      .chooseService__card {
+      .myBooking__service__card {
         border: 1px solid var(--PrimaryColor);
         width: 98%;
         border-radius: 5px;
@@ -358,7 +441,7 @@
       color: var(--WhiteColor);
       font-weight: 600;
       gap: 0.5rem;
-      .chooseService-icon {
+      .myBooking__service-icon {
         color: var(--WhiteColor);
       }
     }
@@ -373,21 +456,3 @@
     }
   }
 }
-
-// .checkbox-item {
-//   display: flex;
-//   align-items: center;
-//   padding: 10px 0;
-//   border-bottom: 1px solid #ddd;
-// }
-// .checkbox-item input {
-//   margin-right: 10px;
-// }
-// .checkbox-item .checkbox-label {
-//   font-size: 14px;
-//   color: #333;
-// }
-// .checkbox-item .checkbox-description {
-//   font-size: 12px;
-//   color: #888;
-// }

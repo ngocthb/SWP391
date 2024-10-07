@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { Card, Col, Row, Statistic, Tabs } from "antd";
 import ReactECharts from 'echarts-for-react';

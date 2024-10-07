@@ -17,7 +17,6 @@ import HomePageLayout from "../Layouts/client/HomePageLayout";
 import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
 import ManageService from "../Components/Manager/ManageService/ManageService";
 import ManagerCreateService from "../Components/Manager/ManagerCreateService/ManagerCreateService";
-
 import BookingLayout from "../Layouts/client/BookingLayout";
 import Booking from "../Components/client/Booking/Booking";
 import ChooseSalon from "../Components/client/Booking/ChooseSalon/ChooseSalon";
@@ -25,6 +24,8 @@ import ChooseService from "../Components/client/Booking/ChooseService/ChooseServ
 import ChooseDateTime from "../Components/client/Booking/ChooseDateTime/ChooseDateTime";
 import ChooseStylist from "../Components/client/Booking/ChooseStylist/ChooseStylist";
 import Contact from "../Components/client/Contact/Contact";
+import Services from "../Components/client/Services/Services";
+import MyBooking from "../Components/client/MyBooking/MyBooking";
 
 export const Routes = [
   {
@@ -38,6 +39,10 @@ export const Routes = [
       {
         path: "/aboutus",
         element: <AboutUsPage />,
+      },
+      {
+        path: "/services",
+        element: <Services />,
       },
       {
         path: "/contact",
@@ -82,6 +87,10 @@ export const Routes = [
       {
         path: "profile",
         element: <UserInfor />,
+      },
+      {
+        path: "mybooking",
+        element: <MyBooking />,
       },
     ],
   },

@@ -27,7 +27,7 @@ export default function HeaderNormal() {
   const fetchUserData = async () => {
     try {
       const response = await api.get("customer/profile");
-      const data = response.data.data;
+      const data = response.data.result;
       if (data) {
         setUserInfo(data);
       }
@@ -90,7 +90,18 @@ export default function HeaderNormal() {
                   isLoggedIn ? "logged-in" : ""
                 }`}
               >
-                <Link to={"/aboutus"}>About Us</Link>
+                <Link to={"/"} onClick={handleHomeClick}>
+                  Home
+                </Link>
+              </li>
+              <li
+                className={`header-normal__lists-items ${
+                  isLoggedIn ? "logged-in" : ""
+                }`}
+              >
+                <Link to={"/aboutus"} onClick={handleHomeClick}>
+                  About Us
+                </Link>
               </li>
               <li
                 className={`header-normal__lists-items ${
@@ -104,7 +115,9 @@ export default function HeaderNormal() {
                   isLoggedIn ? "logged-in" : ""
                 }`}
               >
-                <Link to={""}>Contact</Link>
+                <Link to={"/contact"} onClick={handleHomeClick}>
+                  Contact
+                </Link>
               </li>
 
               <div className="header-normal__lists-infor flex">
@@ -163,7 +176,7 @@ export default function HeaderNormal() {
                   </>
                 ) : (
                   <button className="btn">
-                    <Link to={""}>Login</Link>
+                    <Link to={"/login"}>Login</Link>
                   </button>
                 )}
               </div>

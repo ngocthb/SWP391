@@ -11,6 +11,7 @@ const pageNames = {
   "/manager/dashboard": "Dashboard",
   "/manager/stylish": "Stylish",
   "/manager/booking": "Booking",
+  "/manager/service": "Service",
 };
 
 const ManagerHeader = () => {

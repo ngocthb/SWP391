@@ -4,18 +4,113 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 import { LuClock } from "react-icons/lu";
 
-import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 
-import "./ChooseService.scss";
+import React, { useState, useEffect, useRef } from "react";
+
+import axios from "axios";
+
+import "./UpdateMyBooking.scss";
+
+import { salonLocations } from "../../../../data/booking";
 import { services } from "../../../../data/booking";
 
-export default function ChooseService() {
+export function ChooseSalon({ onNext }) {
+  const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState(salonLocations);
+  const [selectedBranch, setSelectedBranch] = useState(null);
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setSearchResults(salonLocations);
+      return;
+    }
+
+    const fetchSalons = async () => {
+      try {
+        const response = await axios.get(`users/search`, {
+          params: {
+            q: searchValue,
+            type: "less",
+          },
+        });
+        if (response.data && response.data.data) {
+          setSearchResults(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching salons:", error);
+      }
+    };
+
+    fetchSalons();
+  }, [searchValue]);
+
+  const handleClearSearch = () => {
+    setSearchValue("");
+    inputRef.current.focus();
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleBranchSelect = (branch) => {
+    setSelectedBranch(branch);
+  };
+  return (
+    <>
+      <div className="myBooking__salon">
+        <div className="myBooking__salon-header">
+          <h1>Choose Salon</h1>
+        </div>
+        <div className="myBooking__salon-search">
+          <IoSearchOutline className="myBooking__salon-icon" />
+          <input
+            placeholder="Search for salons by address..."
+            ref={inputRef}
+            value={searchValue}
+            onChange={handleSearchChange}
+          />
+          <IoCloseCircle
+            className="myBooking__salon-closeIcon"
+            aria-label="Clear search"
+            onClick={handleClearSearch}
+          />
+        </div>
+
+        <div className="myBooking__salon-locations">
+          F-salon is available in the following:
+        </div>
+        <div className="myBooking__salon-lists">
+          {salonLocations.map((branch) => (
+            <div
+              onClick={() => handleBranchSelect(branch)}
+              className={`myBooking__salon-single ${
+                selectedBranch && selectedBranch.id === branch.id
+                  ? "selected"
+                  : ""
+              }`}
+              key={branch.id}
+            >
+              {branch.first_name}
+            </div>
+          ))}
+        </div>
+        <button className="myBooking__salon-btn btn" onClick={onNext}>
+          Next Step
+          <FaArrowRight className="myBooking__salon-icon" />
+        </button>
+      </div>
+    </>
+  );
+}
+
+export function ChooseService() {
   const [searchValue, setSearchValue] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
   const [searchResults, setSearchResults] = useState(services);
@@ -82,17 +177,17 @@ export default function ChooseService() {
   const isSelectedTime = !!localStorage.getItem("selectedTimeId");
 
   return (
-    <div className="chooseService">
-      <div className="chooseService__tagNavigation">
-        <ul className="chooseService__tagNavigation--item">
-          <li className="chooseService__tagNavigation--item-content">
+    <div className="myBooking__service">
+      {/* <div className="myBooking__service__tagNavigation">
+        <ul className="myBooking__service__tagNavigation--item">
+          <li className="myBooking__service__tagNavigation--item-content">
             <Link to="/booking/step1" aria-label="Select Salon">
               <div className="filled"></div>
               <CiHome />
             </Link>
             <div className="tooltip">Salon</div>
           </li>
-          <li className="chooseService__tagNavigation--item-content active">
+          <li className="myBooking__service__tagNavigation--item-content active">
             <Link to="/booking/step2" aria-label="Select Service">
               <div className="filled"></div>
               <PiScissors />
@@ -100,7 +195,7 @@ export default function ChooseService() {
             <div className="tooltip">Service</div>
           </li>
           <li
-            className={`chooseService__tagNavigation--item-content ${
+            className={`myBooking__service__tagNavigation--item-content ${
               isSelectedServices ? "" : "disable"
             }`}
           >
@@ -114,7 +209,7 @@ export default function ChooseService() {
             <div className="tooltip">Time</div>
           </li>
           <li
-            className={`chooseService__tagNavigation--item-content ${
+            className={`myBooking__service__tagNavigation--item-content ${
               isSelectedTime ? "" : "disable"
             }`}
           >
@@ -128,17 +223,17 @@ export default function ChooseService() {
             <div className="tooltip">Stylist</div>
           </li>
         </ul>
-      </div>
+      </div> */}
 
-      <div className="chooseService__container">
-        <div className="chooseService__container-header">
-          <Link to="/booking/step1" aria-label="Back to Salon Selection">
-            <FaArrowLeft className="chooseService-icon" />
-          </Link>
+      <div className="myBooking__service__container">
+        <div className="myBooking__service__container-header">
+          {/* <Link to="/booking/step1" aria-label="Back to Salon Selection">
+            <FaArrowLeft className="myBooking__service-icon" />
+          </Link> */}
           <h1>Choose Service</h1>
         </div>
-        <div className="chooseService__container-search">
-          <IoSearchOutline className="chooseService-icon" />
+        <div className="myBooking__service__container-search">
+          <IoSearchOutline className="myBooking__service-icon" />
           <input
             ref={inputRef}
             placeholder="Search for services..."
@@ -146,17 +241,17 @@ export default function ChooseService() {
             onChange={handleChange}
           />
           <IoCloseCircle
-            className="chooseService-closeIcon"
+            className="myBooking__service-closeIcon"
             onClick={handleClearSearch}
             aria-label="Clear search"
           />
         </div>
-        <div className="chooseService__container-locations">
+        <div className="myBooking__service__container-locations">
           F-Salon has the following services:
         </div>
-        <div className="chooseService__container-lists">
+        <div className="myBooking__service__container-lists">
           {searchResults.map((service) => (
-            <div key={service.id} className="chooseService__card">
+            <div key={service.id} className="myBooking__service__card">
               <img alt="service banner" src={service.avatar} />
               <div className="card__content">
                 <h2>{service.bio}</h2>
@@ -187,7 +282,7 @@ export default function ChooseService() {
             </div>
           ))}
         </div>
-        <div className="chooseService__container-footer">
+        <div className="myBooking__service__container-footer">
           <div className="footer__hidden" onClick={toggleServicesHidden}>
             {areServicesHidden ? (
               <>
@@ -242,9 +337,9 @@ export default function ChooseService() {
             </div>
           </div>
         </div>
-        <Link
-          to="/booking/step3"
-          className={`chooseService__container-btn btn flex ${
+        <button
+          //   to="/booking/step3"
+          className={`myBooking__service__container-btn btn flex ${
             selectedServices.length === 0 ? "btn-disable" : ""
           }`}
           onClick={(e) => {
@@ -262,8 +357,8 @@ export default function ChooseService() {
           }}
         >
           Next Step
-          <FaArrowRight className="chooseService-icon" />
-        </Link>
+          <FaArrowRight className="myBooking__service-icon" />
+        </button>
       </div>
     </div>
   );

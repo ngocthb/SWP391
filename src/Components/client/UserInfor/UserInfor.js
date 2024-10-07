@@ -15,7 +15,7 @@ export default function UserInfor() {
     accountid: 0,
     fullname: "",
     email: "",
-    dob: loginUser.dob,
+    dob: "",
     phone: "",
     avatarFile: loginUser.avatar,
   });
@@ -69,7 +69,7 @@ export default function UserInfor() {
           accountid: data.accountid,
           fullname: data.fullname || "",
           email: data.email || "",
-          dob: data.dob ? formatDateForInput(data.dob) : formatDateString(loginUser.dob),
+          dob: data.dob ? formatDateForInput(data.dob) : "",
           phone: data.phone || "",
           avatarFile: data.img || loginUser.avatar,
         });
@@ -101,14 +101,14 @@ export default function UserInfor() {
     try {
       
       const response = await api.put(`customer/${formData.accountid}`, updateValues);
-      const data = response.data.result;
-
+      const data = response.data;
+      
       if (data) {
         setFormData((prev) => ({
           ...prev,
           fullname: data.fullname || "",
           email: data.email || "",
-          dob: data.dob ? formatDateForInput(data.dob) : formatDateForInput(loginUser.dob),
+          dob: data.dob ? formatDateForInput(data.dob) : "",
           phone: data.phone || "",
           avatarFile: selectedFile || prev.avatarFile,
         }));
