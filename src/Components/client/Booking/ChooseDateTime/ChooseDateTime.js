@@ -100,7 +100,7 @@ export default function ChooseDateTime() {
       }
 
        try {
-        const response = await api.get("booking/slots", bookingValue);
+        const response = await api.post("booking/slots", bookingValue);
         if (response.data && response.data.result) {
           setAvailableSlots(response.data/*.result*/);
         }

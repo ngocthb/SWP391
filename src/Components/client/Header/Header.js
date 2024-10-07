@@ -58,7 +58,7 @@ export default function Header() {
   };
   window.addEventListener("scroll", addBg);
 
-  const isLoggedIn = !!localStorage.getItem("token");
+  const isLoggedIn = !!sessionStorage.getItem("token");
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -78,7 +78,7 @@ export default function Header() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     // Redirect to home or login page
     window.location.href = "/";
   };

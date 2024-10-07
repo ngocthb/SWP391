@@ -66,10 +66,11 @@ export default function ChooseService() {
     }
 
     const fetchServices = async () => {
+      const value = {
+        name: searchValue,
+      }
       try {
-        const response = await api.get(`service/searchByName`, {
-          params: { name: searchValue },
-        });
+        const response = await api.post(`service/searchByName`, value);
         if (response.data && response.data.result) {
           setSearchResults(response.data.result);
         }
@@ -167,7 +168,7 @@ export default function ChooseService() {
           F-Salon has the following services :
         </div>
         <div className="chooseService__container-lists">
-          {searchResults.map((service) => (
+          {searchResults && searchResults.map((service) => (
             <div key={service.id} className="chooseService__card">
               <img alt="service banner" src={service.image} />
               <div className="card__content">

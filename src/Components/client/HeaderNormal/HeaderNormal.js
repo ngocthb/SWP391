@@ -13,7 +13,7 @@ import { TbLogout } from "react-icons/tb";
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const isLoggedIn = !!localStorage.getItem("token");
+  const isLoggedIn = !!sessionStorage.getItem("token");
   const [userInfo, setUserInfo] = useState({});
   const isUpdate = useSelector((state) => state.updateUserReducer);
 
@@ -58,7 +58,7 @@ export default function HeaderNormal() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = "/";
   };
 

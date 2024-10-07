@@ -78,8 +78,8 @@ export default function Booking() {
       };
 
       try {
-        const response = await api.get(
-          "booking-stylists",
+        const response = await api.post(
+          "booking/stylists",
           bookingValue
         );
         if (response.data && response.data.result) {
@@ -98,14 +98,14 @@ export default function Booking() {
     const fetchTimeSlots = async () => {
       const bookingValue = {
         salonId: branchId,
-        serviceId: serviceIds,
+        serviceId: serviceIds,  
         accountId: stylistId,
         date: formatDateForInput(date),
       };
 
       try {
         const response = await api.get(
-          "booking-slots",
+          "booking/slots",
           bookingValue
         );
         if (response.data && response.data.result) {
