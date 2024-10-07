@@ -5,7 +5,7 @@ import api from "../../../config/axios";
 import { FaEdit } from "react-icons/fa";
 import { message, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "../../../actions/UpdateUser";
+import { updateUser } from "../../../actions/Update";
 import uploadFile from "../../../utils/upload";
 
 export default function UserInfor() {
@@ -71,7 +71,7 @@ export default function UserInfor() {
           email: data.email || "",
           dob: data.dob ? formatDateForInput(data.dob) : "",
           phone: data.phone || "",
-          avatarFile: data.img || loginUser.avatar,
+          avatarFile: data.image || loginUser.avatar,
         });
       }
     } catch (err) {
@@ -88,13 +88,13 @@ export default function UserInfor() {
       email: e.target[2].value,
       phone: e.target[3].value,
       dob: e.target[4].value,
-      avatarFile: null,
+      image: null,
     }; 
     if (selectedFileObject) {
       const firebaseResponse = await uploadFile(selectedFileObject);
-      updateValues.avatarFile = firebaseResponse;
+      updateValues.image = firebaseResponse;
     } else {
-      updateValues.avatarFile = formData.avatarFile;
+      updateValues.image = formData.avatarFile;
     }   
       
     setLoading(true);

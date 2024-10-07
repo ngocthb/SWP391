@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaStar } from "react-icons/fa6";
@@ -5,7 +6,7 @@ import { FaStar } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
@@ -13,40 +14,70 @@ import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 
 import "./ChooseStylist.scss";
-import {stylists} from "../../../../data/booking";
+// import {stylists} from "../../../../data/booking";
+import api from "../../../../config/axios";
+
 
 export default function ChooseStylist() {
   const [selectedStylist, setSelectedStylist] = useState(null);
   const handleSelected = (stylist) => {
     setSelectedStylist(stylist);
   };
+  const navigate = useNavigate();
 
-  // const [stylists, setStylishs] = useState(null);
 
-   // useEffect(() => {
-  //   const fetchStylishs = async () => {
-  //      try {
-  //       const response = await axios.get("stylishs");
-  //       if (response.data && response.data.data) {
-  //         setStylishs(response.data.data);
-  //       }
-  //      } catch (error) {
+  const [stylists, setStylists] = useState([]);
+  
+   useEffect(() => {
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
+    const branchId = parseInt(storedBranchId, 10);
+
+    const storedServices = sessionStorage.getItem("selectedServicesId");
+    const serviceIds = JSON.parse(storedServices);
+
+    const fetchStylists = async () => {
+
+      const bookingValue = {
+        salonId: branchId,
+        serviceId: serviceIds
+      }
+
+       try {
+        const response = await api.post(`booking/stylists`, bookingValue);
+        if (response.data /*&& response.data.result*/) {
+          setStylists(response.data/*.result*/);
+        }
+       } catch (error) {
         
-  //      }
-  //   };
-  //   fetchStylishs();
-  // }, []);
+       }
+    };
+    fetchStylists();
+  }, []);
 
   useEffect(() => {
-    const storedStylishId = localStorage.getItem("selectedStylishId");
-    const stylishId = parseInt(storedStylishId, 10);
-    if (stylishId) {
-      const stylish = stylists.find((s) => s.id === stylishId);
-      if (stylish) {
-        setSelectedStylist(stylish);
+    const isSelectedServices = sessionStorage.getItem("selectedServicesId");
+    if (!isSelectedServices) {
+      navigate("/booking/step2");
+      const selectedBranchId = sessionStorage.getItem("selectedBranchId");
+      if (!selectedBranchId) {
+        navigate("/booking/step1");
       }
     }
   }, []);
+  
+
+  useEffect(() => {
+    const storedStylistId = sessionStorage.getItem("selectedStylistId");
+    const stylistId = parseInt(storedStylistId, 10);
+    if (stylistId) {
+      const stylist = stylists.find((s) => s.id === stylistId);
+      if (stylist) {
+        setSelectedStylist(stylist);
+      }
+    }
+  }, [stylists]);
+
+  const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
   
   return (
     <>
@@ -69,21 +100,21 @@ export default function ChooseStylist() {
               </Link>
               <div className="tooltip">Service</div>
             </li>
-            <li className="chooseStylist__tagNavigation--item-content">
-              <Link to="/booking/step3">
-                <div className="filled"></div>
-
-                <RiCalendarScheduleLine />
-              </Link>
-              <div className="tooltip">Time</div>
-            </li>
             <li className="chooseStylist__tagNavigation--item-content active">
-              <Link to="/booking/step4">
+              <Link to="/booking/step3">
                 <div className="filled"></div>
 
                 <SlPeople />
               </Link>
               <div className="tooltip">Stylist</div>
+            </li>
+            <li className={`chooseStylist__tagNavigation--item-content ${isSelectedStylist ? '' : 'disable'}`}>
+              <Link to={isSelectedStylist ? "/booking/step4" : "/booking/step3"}>
+                <div className="filled"></div>
+
+                <RiCalendarScheduleLine />
+              </Link>
+              <div className="tooltip">Time</div>
             </li>
           </ul>
         </div>
@@ -99,10 +130,10 @@ export default function ChooseStylist() {
             <>
               <div className="chooseStylist__container-name">
                 <IoPersonOutline className="stylist-icon" />
-                <h1>{selectedStylist.name}</h1>
+                <h1>{selectedStylist.fullname}</h1>
               </div>
               <div className="chooseStylist__container-info">
-                <p>Stylist: {selectedStylist.name}</p>
+                <p>Stylist: {selectedStylist.fullname}</p>
                 <p className="infor__rating">
                   <span>
                     Cut {selectedStylist.rating.cut}
@@ -146,14 +177,14 @@ export default function ChooseStylist() {
                       : ""
                   }`}
                 >
-                  <img alt={stylist.name} src={stylist.imgSrc} />
-                  <p>{stylist.name}</p>
+                  <img alt={stylist.fullname} src={stylist.image} />
+                  <p>{stylist.fullname}</p>
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
           <Link
-            to="/booking"
+            to="/booking/step4"
             className={`chooseStylist__container-btn btn flex ${
               !!selectedStylist ? "" : "btn-disable"
             }`}
@@ -161,11 +192,11 @@ export default function ChooseStylist() {
               if (!selectedStylist) {
                 e.preventDefault();
               }else {
-                localStorage.setItem('selectedStylishId', selectedStylist.id);
+                sessionStorage.setItem('selectedStylistId', selectedStylist.id);
               }
             }}
           >
-            Booking Now
+              Next Step
             <FaArrowRight className="chooseService-icon" />
           </Link>
         </div>

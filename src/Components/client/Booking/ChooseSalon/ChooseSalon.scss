@@ -5,8 +5,9 @@
   justify-content: center;
   align-items: center;
   height: 70%;
-  
+
   &__tagNavigation {
+    display: none;
     ul {
       list-style: none;
     }
@@ -116,7 +117,6 @@
     }
   }
 
-
   &__container {
     background-color: white;
     padding: 20px;
@@ -217,6 +217,11 @@
 @media (min-width: 640px) {
 }
 @media (min-width: 768px) {
+  .chooseSalon {
+    &__tagNavigation {
+      display: block;
+    }
+  }
 }
 @media (min-width: 1024px) {
 }

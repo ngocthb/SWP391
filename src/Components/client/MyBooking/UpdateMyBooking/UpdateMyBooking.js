@@ -4,12 +4,6 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 import { LuClock } from "react-icons/lu";
 
-import { Link } from "react-router-dom";
-import { CiHome } from "react-icons/ci";
-import { PiScissors } from "react-icons/pi";
-import { RiCalendarScheduleLine } from "react-icons/ri";
-import { SlPeople } from "react-icons/sl";
-
 import React, { useState, useEffect, useRef } from "react";
 
 import axios from "axios";
@@ -97,11 +91,11 @@ export function ChooseSalon({ onNext }) {
               }`}
               key={branch.id}
             >
-              {branch.first_name}
+              {branch.address}
             </div>
           ))}
         </div>
-        <button className="myBooking__salon-btn btn" onClick={onNext}>
+        <button className="myBooking__salon-btn flex btn" onClick={onNext}>
           Next Step
           <FaArrowRight className="myBooking__salon-icon" />
         </button>
@@ -110,7 +104,7 @@ export function ChooseSalon({ onNext }) {
   );
 }
 
-export function ChooseService() {
+export function ChooseService({ onNext }) {
   const [searchValue, setSearchValue] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
   const [searchResults, setSearchResults] = useState(services);
@@ -173,193 +167,119 @@ export function ChooseService() {
     setAreServicesHidden((prev) => !prev);
   };
 
-  const isSelectedServices = !!localStorage.getItem("selectedServicesId");
-  const isSelectedTime = !!localStorage.getItem("selectedTimeId");
-
   return (
     <div className="myBooking__service">
-      {/* <div className="myBooking__service__tagNavigation">
-        <ul className="myBooking__service__tagNavigation--item">
-          <li className="myBooking__service__tagNavigation--item-content">
-            <Link to="/booking/step1" aria-label="Select Salon">
-              <div className="filled"></div>
-              <CiHome />
-            </Link>
-            <div className="tooltip">Salon</div>
-          </li>
-          <li className="myBooking__service__tagNavigation--item-content active">
-            <Link to="/booking/step2" aria-label="Select Service">
-              <div className="filled"></div>
-              <PiScissors />
-            </Link>
-            <div className="tooltip">Service</div>
-          </li>
-          <li
-            className={`myBooking__service__tagNavigation--item-content ${
-              isSelectedServices ? "" : "disable"
-            }`}
-          >
-            <Link
-              to={isSelectedServices ? "/booking/step3" : "/booking/step2"}
-              aria-label="Select Time"
-            >
-              <div className="filled"></div>
-              <RiCalendarScheduleLine />
-            </Link>
-            <div className="tooltip">Time</div>
-          </li>
-          <li
-            className={`myBooking__service__tagNavigation--item-content ${
-              isSelectedTime ? "" : "disable"
-            }`}
-          >
-            <Link
-              to={isSelectedTime ? "/booking/step4" : "/booking/step2"}
-              aria-label="Select Stylist"
-            >
-              <div className="filled"></div>
-              <SlPeople />
-            </Link>
-            <div className="tooltip">Stylist</div>
-          </li>
-        </ul>
-      </div> */}
-
-      <div className="myBooking__service__container">
-        <div className="myBooking__service__container-header">
-          {/* <Link to="/booking/step1" aria-label="Back to Salon Selection">
-            <FaArrowLeft className="myBooking__service-icon" />
-          </Link> */}
-          <h1>Choose Service</h1>
-        </div>
-        <div className="myBooking__service__container-search">
-          <IoSearchOutline className="myBooking__service-icon" />
-          <input
-            ref={inputRef}
-            placeholder="Search for services..."
-            value={searchValue}
-            onChange={handleChange}
-          />
-          <IoCloseCircle
-            className="myBooking__service-closeIcon"
-            onClick={handleClearSearch}
-            aria-label="Clear search"
-          />
-        </div>
-        <div className="myBooking__service__container-locations">
-          F-Salon has the following services:
-        </div>
-        <div className="myBooking__service__container-lists">
-          {searchResults.map((service) => (
-            <div key={service.id} className="myBooking__service__card">
-              <img alt="service banner" src={service.avatar} />
-              <div className="card__content">
-                <h2>{service.bio}</h2>
-                <div className="card__content-time">
-                  <LuClock className="card-icon" />
-                  <span>{service.time}</span>
-                </div>
-                <p>{service.description}</p>
-                <div className="card__content-action">
-                  <div className="card__content-price">
-                    Price: ${service.followers_count}
-                  </div>
-                  <button
-                    className={`card__content-add ${
-                      isServiceSelected(service.id) ? "disabled" : ""
-                    }`}
-                    onClick={() => {
-                      if (!isServiceSelected(service.id)) {
-                        setSelectedServices((prev) => [...prev, service]);
-                      }
-                    }}
-                    disabled={isServiceSelected(service.id)}
-                  >
-                    {isServiceSelected(service.id) ? "Added" : "Add service"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="myBooking__service__container-footer">
-          <div className="footer__hidden" onClick={toggleServicesHidden}>
-            {areServicesHidden ? (
-              <>
-                <FaAngleDoubleUp />
-                <span>Show selected services</span>
-                <FaAngleDoubleUp />
-              </>
-            ) : (
-              <>
-                <FaAngleDoubleDown />
-                <span>Hide selected services</span>
-                <FaAngleDoubleDown />
-              </>
-            )}
-          </div>
-
-          {selectedServices.map((service) => (
-            <div
-              key={service.id}
-              className={`footer__service ${areServicesHidden ? "hidden" : ""}`}
-            >
-              <span className="footer__service-name">{service.bio}</span>
-              <div>
-                <span className="footer__service-price">
-                  ${service.followers_count}
-                </span>
-                <IoIosCloseCircle
-                  className="footer__service-icon"
-                  onClick={() => handleRemoveService(service)}
-                  aria-label={`Remove ${service.bio}`}
-                />
-              </div>
-            </div>
-          ))}
-
-          <div className="footer__promo">
-            <span className="footer__promo-action">Select Offer</span>
-          </div>
-
-          <div className="footer__pay">
-            <span className="footer__pay-services">
-              Selected services: {selectedServices.length}
-            </span>
-            <div>
-              <span className="footer__pay-price">
-                Total Pay: $
-                {selectedServices.reduce(
-                  (total, service) => total + service.followers_count,
-                  0
-                )}
-              </span>
-            </div>
-          </div>
-        </div>
-        <button
-          //   to="/booking/step3"
-          className={`myBooking__service__container-btn btn flex ${
-            selectedServices.length === 0 ? "btn-disable" : ""
-          }`}
-          onClick={(e) => {
-            if (selectedServices.length === 0) {
-              e.preventDefault();
-            } else {
-              const selectedServiceIds = selectedServices.map(
-                (service) => service.id
-              );
-              localStorage.setItem(
-                "selectedServicesId",
-                JSON.stringify(selectedServiceIds)
-              );
-            }
-          }}
-        >
-          Next Step
-          <FaArrowRight className="myBooking__service-icon" />
-        </button>
+      <div className="myBooking__service-header">
+        <h1>Choose Service</h1>
       </div>
+      <div className="myBooking__service-search">
+        <IoSearchOutline className="myBooking__service-icon" />
+        <input
+          ref={inputRef}
+          placeholder="Search for services..."
+          value={searchValue}
+          onChange={handleChange}
+        />
+        <IoCloseCircle
+          className="myBooking__service-closeIcon"
+          onClick={handleClearSearch}
+          aria-label="Clear search"
+        />
+      </div>
+      <div className="myBooking__service-locations">
+        F-Salon has the following services:
+      </div>
+      <div className="myBooking__service-lists">
+        {searchResults.map((service) => (
+          <div key={service.id} className="myBooking__service__card">
+            <img alt="service banner" src={service.image} />
+            <div className="card__content">
+              <h2>{service.serviceName}</h2>
+              <div className="card__content-time">
+                <LuClock className="card-icon" />
+                <span>{service.duration}</span>
+              </div>
+              <p>{service.description}</p>
+              <div className="card__content-action">
+                <div className="card__content-price">
+                  Price: ${service.price}
+                </div>
+                <button
+                  className={`card__content-add ${
+                    isServiceSelected(service.id) ? "disabled" : ""
+                  }`}
+                  onClick={() => {
+                    if (!isServiceSelected(service.id)) {
+                      setSelectedServices((prev) => [...prev, service]);
+                    }
+                  }}
+                  disabled={isServiceSelected(service.id)}
+                >
+                  {isServiceSelected(service.id) ? "Added" : "Add service"}
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="myBooking__service-footer">
+        <div className="footer__hidden" onClick={toggleServicesHidden}>
+          {areServicesHidden ? (
+            <>
+              <FaAngleDoubleUp />
+              <span>Show selected services</span>
+              <FaAngleDoubleUp />
+            </>
+          ) : (
+            <>
+              <FaAngleDoubleDown />
+              <span>Hide selected services</span>
+              <FaAngleDoubleDown />
+            </>
+          )}
+        </div>
+
+        {selectedServices.map((service) => (
+          <div
+            key={service.id}
+            className={`footer__service ${areServicesHidden ? "hidden" : ""}`}
+          >
+            <span className="footer__service-name">{service.serviceName}</span>
+            <div>
+              <span className="footer__service-price">{service.price} VND</span>
+              <IoIosCloseCircle
+                className="footer__service-icon"
+                onClick={() => handleRemoveService(service)}
+                aria-label={`Remove ${service.description}`}
+              />
+            </div>
+          </div>
+        ))}
+
+        <div className="footer__promo">
+          <span className="footer__promo-action">Select Offer</span>
+        </div>
+
+        <div className="footer__pay">
+          <span className="footer__pay-services">
+            Selected services: {selectedServices.length}
+          </span>
+          <div>
+            <span className="footer__pay-price">
+              Total Pay:
+              {selectedServices.reduce(
+                (total, service) => total + service.price,
+                0
+              )}{" "}
+              VND
+            </span>
+          </div>
+        </div>
+      </div>
+      <button className="myBooking__service-btn btn flex" onClick={onNext}>
+        Next Step
+        <FaArrowRight className="myBooking__salon-icon" />
+      </button>
     </div>
   );
 }

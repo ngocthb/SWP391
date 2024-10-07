@@ -1,37 +1,66 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
-import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
-import { LuClock } from "react-icons/lu";
-
-import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
 import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
+import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
+import { LuClock } from "react-icons/lu";
 
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Modal } from "antd";
 import "./ChooseService.scss";
 import { services } from "../../../../data/booking";
+import { voucher } from "../../../../data/booking";
+
+import api from "../../../../config/axios";
 
 export default function ChooseService() {
+  const [selectVoucher, setSelectVoucher] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedService, setSelectedService] = useState([]);
+  // const [services, setServices] = useState([]);
   const [searchResults, setSearchResults] = useState(services);
   const [areServicesHidden, setAreServicesHidden] = useState(false);
   const inputRef = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const storedServices = localStorage.getItem("selectedServicesId");
+    const selectedBranchId = sessionStorage.getItem("selectedBranchId");
+    if (!selectedBranchId) {
+      navigate("/booking/step1");
+    }
+  }, []);
+
+  useEffect(() => {
+    const storedServices = sessionStorage.getItem("selectedServicesId");
     if (storedServices) {
       const serviceIds = JSON.parse(storedServices);
       const selected = services.filter((service) =>
         serviceIds.includes(service.id)
       );
-      setSelectedServices(selected);
+      setSelectedService(selected);
     }
-  }, []);
+  }, [services]);
+
+  // useEffect(() => {
+  //   const fetchService = async () => {
+  //      try {
+  //       const response = await api.get("service");
+  //       if (response.data && response.data.result) {
+  //         setServices(response.data.result);
+  //         setSearchResults(response.data);
+  //       }
+  //      } catch (error) {
+
+  //      }
+  //   };
+  //   fetchService();
+  // }, []);
 
   useEffect(() => {
     if (!searchValue.trim()) {
@@ -40,12 +69,13 @@ export default function ChooseService() {
     }
 
     const fetchServices = async () => {
+      const value = {
+        name: searchValue,
+      };
       try {
-        const response = await axios.get(`users/search`, {
-          params: { q: searchValue, type: "less" },
-        });
-        if (response.data && response.data.data) {
-          setSearchResults(response.data.data);
+        const response = await api.post(`service/searchByName`, value);
+        if (response.data && response.data.result) {
+          setSearchResults(response.data.result);
         }
       } catch (error) {
         console.error("Error fetching services:", error);
@@ -59,28 +89,43 @@ export default function ChooseService() {
     setSearchValue(e.target.value);
   };
 
-  const handleClearSearch = () => {
-    setSearchValue("");
-    inputRef.current.focus();
+  const handleHidden = () => {
+    setAreServicesHidden((prev) => !prev);
   };
 
   const handleRemoveService = (serviceToRemove) => {
-    setSelectedServices((prev) =>
+    setSelectedService((prev) =>
       prev.filter((service) => service.id !== serviceToRemove.id)
     );
   };
 
+  const handleClick = () => {
+    setSearchValue("");
+    inputRef.current.focus();
+  };
+
   const isServiceSelected = (serviceId) => {
-    return selectedServices.some((service) => service.id === serviceId);
+    return selectedService.some((service) => service.id === serviceId);
   };
 
-  const toggleServicesHidden = () => {
-    setAreServicesHidden((prev) => !prev);
+  const isSelectedServices = !!sessionStorage.getItem("selectedServicesId");
+  const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
+
+  const [modalContent, setModalContent] = useState(null); // State to control what content to display
+
+  const { confirm } = Modal;
+  const [activeTab, setActiveTab] = useState("finish");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = (content) => {
+    setModalContent(content);
+    setIsModalOpen(true);
   };
 
-  const isSelectedServices = !!localStorage.getItem("selectedServicesId");
-  const isSelectedTime = !!localStorage.getItem("selectedTimeId");
-
+  const handleVoucher = (voucher) => {
+    setSelectVoucher(voucher.name);
+    setIsModalOpen(false);
+  };
   return (
     <div className="chooseService">
       <div className="chooseService__tagNavigation">
@@ -106,20 +151,6 @@ export default function ChooseService() {
           >
             <Link
               to={isSelectedServices ? "/booking/step3" : "/booking/step2"}
-              aria-label="Select Time"
-            >
-              <div className="filled"></div>
-              <RiCalendarScheduleLine />
-            </Link>
-            <div className="tooltip">Time</div>
-          </li>
-          <li
-            className={`chooseService__tagNavigation--item-content ${
-              isSelectedTime ? "" : "disable"
-            }`}
-          >
-            <Link
-              to={isSelectedTime ? "/booking/step4" : "/booking/step2"}
               aria-label="Select Stylist"
             >
               <div className="filled"></div>
@@ -127,15 +158,29 @@ export default function ChooseService() {
             </Link>
             <div className="tooltip">Stylist</div>
           </li>
+          <li
+            className={`chooseService__tagNavigation--item-content ${
+              isSelectedStylist ? "" : "disable"
+            }`}
+          >
+            <Link
+              to={isSelectedStylist ? "/booking/step4" : "/booking/step2"}
+              aria-label="Select Time"
+            >
+              <div className="filled"></div>
+              <RiCalendarScheduleLine />
+            </Link>
+            <div className="tooltip">Time</div>
+          </li>
         </ul>
       </div>
 
       <div className="chooseService__container">
         <div className="chooseService__container-header">
-          <Link to="/booking/step1" aria-label="Back to Salon Selection">
+          <Link to="/booking/step1">
             <FaArrowLeft className="chooseService-icon" />
           </Link>
-          <h1>Choose Service</h1>
+          <h1>Choose service</h1>
         </div>
         <div className="chooseService__container-search">
           <IoSearchOutline className="chooseService-icon" />
@@ -147,48 +192,48 @@ export default function ChooseService() {
           />
           <IoCloseCircle
             className="chooseService-closeIcon"
-            onClick={handleClearSearch}
-            aria-label="Clear search"
+            onClick={handleClick}
           />
         </div>
         <div className="chooseService__container-locations">
-          F-Salon has the following services:
+          F-Salon has the following services :
         </div>
         <div className="chooseService__container-lists">
-          {searchResults.map((service) => (
-            <div key={service.id} className="chooseService__card">
-              <img alt="service banner" src={service.avatar} />
-              <div className="card__content">
-                <h2>{service.bio}</h2>
-                <div className="card__content-time">
-                  <LuClock className="card-icon" />
-                  <span>{service.time}</span>
-                </div>
-                <p>{service.description}</p>
-                <div className="card__content-action">
-                  <div className="card__content-price">
-                    Price: ${service.followers_count}
+          {searchResults &&
+            searchResults.map((service) => (
+              <div key={service.id} className="chooseService__card">
+                <img alt="service banner" src={service.image} />
+                <div className="card__content">
+                  <h2>{service.serviceName}</h2>
+                  <div className="card__content-time">
+                    <LuClock className="card-icon" />
+                    <span>{service.duration}</span>
                   </div>
-                  <button
-                    className={`card__content-add ${
-                      isServiceSelected(service.id) ? "disabled" : ""
-                    }`}
-                    onClick={() => {
-                      if (!isServiceSelected(service.id)) {
-                        setSelectedServices((prev) => [...prev, service]);
-                      }
-                    }}
-                    disabled={isServiceSelected(service.id)}
-                  >
-                    {isServiceSelected(service.id) ? "Added" : "Add service"}
-                  </button>
+                  <p>{service.serviceName}</p>
+                  <div className="card__content-action">
+                    <div className="card__content-price">
+                      Price: {service.price} VND
+                    </div>
+                    <button
+                      className={`card__content-add ${
+                        isServiceSelected(service.id) ? "disabled" : ""
+                      }`}
+                      onClick={() => {
+                        if (!isServiceSelected(service.id)) {
+                          setSelectedService((prev) => [...prev, service]);
+                        }
+                      }}
+                      disabled={isServiceSelected(service.id)} // Disable button if service is already selected
+                    >
+                      {isServiceSelected(service.id) ? "Added" : "Add service"}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
         <div className="chooseService__container-footer">
-          <div className="footer__hidden" onClick={toggleServicesHidden}>
+          <div className="footer__hidden" onClick={handleHidden}>
             {areServicesHidden ? (
               <>
                 <FaAngleDoubleUp />
@@ -204,57 +249,82 @@ export default function ChooseService() {
             )}
           </div>
 
-          {selectedServices.map((service) => (
+          {selectedService.map((service, index) => (
             <div
-              key={service.id}
+              key={index}
               className={`footer__service ${areServicesHidden ? "hidden" : ""}`}
             >
-              <span className="footer__service-name">{service.bio}</span>
+              <span className="footer__service-name">
+                {service.serviceName}
+              </span>
               <div>
                 <span className="footer__service-price">
-                  ${service.followers_count}
+                  {service.price} VND
                 </span>
                 <IoIosCloseCircle
                   className="footer__service-icon"
                   onClick={() => handleRemoveService(service)}
-                  aria-label={`Remove ${service.bio}`}
                 />
               </div>
             </div>
           ))}
 
+          {/* <div className="checkbox-item">
+            <input type="checkbox" id="unknown-service" />
+            <div>
+              <label htmlFor="unknown-service" className="checkbox-label">
+                Anh không biết chọn dịch vụ gì!
+              </label>
+              <div className="checkbox-description">
+                Nhân viên sẽ giúp anh chọn dịch vụ tại cửa hàng
+              </div>
+            </div>
+          </div> */}
+
           <div className="footer__promo">
-            <span className="footer__promo-action">Select Offer</span>
+            {/* <span className="footer__promo-label"></span> */}
+            <span onClick={showModal} className="footer__promo-action">
+              Voucher
+            </span>
+            <span>{selectVoucher}</span>
           </div>
 
           <div className="footer__pay">
             <span className="footer__pay-services">
-              Selected services: {selectedServices.length}
+              Selected services : {selectedService.length}
             </span>
             <div>
               <span className="footer__pay-price">
-                Total Pay: $
-                {selectedServices.reduce(
-                  (total, service) => total + service.followers_count,
+                Total Pay :
+                {(selectedService || []).reduce(
+                  (total, service) => total + service.price,
+                  0
+                )}{" "}
+                VND
+              </span>
+              <div className="footer__pay-price">
+                Total Duration :
+                {(selectedService || []).reduce(
+                  (total, service) => total + service.duration,
                   0
                 )}
-              </span>
+              </div>
             </div>
           </div>
         </div>
         <Link
           to="/booking/step3"
           className={`chooseService__container-btn btn flex ${
-            selectedServices.length === 0 ? "btn-disable" : ""
+            selectedService.length === 0 ? "btn-disable" : ""
           }`}
           onClick={(e) => {
-            if (selectedServices.length === 0) {
+            if (selectedService.length === 0) {
               e.preventDefault();
             } else {
-              const selectedServiceIds = selectedServices.map(
+              const selectedServiceIds = selectedService.map(
                 (service) => service.id
               );
-              localStorage.setItem(
+              sessionStorage.setItem(
                 "selectedServicesId",
                 JSON.stringify(selectedServiceIds)
               );
@@ -265,6 +335,28 @@ export default function ChooseService() {
           <FaArrowRight className="chooseService-icon" />
         </Link>
       </div>
+
+      <Modal
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+      >
+        <div className="voucher__modal">
+          <h1>Choose service</h1>
+          <div className="voucher__modal-lists">
+            {voucher.map((item) => (
+              <div
+                key={item.id}
+                className="voucher-item"
+                onClick={() => handleVoucher(item)}
+              >
+                <h3>{item.name}</h3>
+                <p>{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

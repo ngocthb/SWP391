@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { CiHome } from "react-icons/ci";
@@ -7,65 +8,66 @@ import { SlPeople } from "react-icons/sl";
 
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 import "./ChooseSalon.scss";
 import { salonLocations } from "../../../../data/booking";
+import api from "../../../../config/axios";
 
 export default function ChooseSalon() {
   const [searchValue, setSearchValue] = useState("");
+  // const [salonLocations, setSalonLocations] = useState([]);
   const [searchResults, setSearchResults] = useState(salonLocations);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const inputRef = useRef();
 
-  useEffect(() => {
-    const storedBranchId = localStorage.getItem("selectedBranchId");
-    if (storedBranchId) {
-      const branch = salonLocations.find((b) => b.id === storedBranchId);
-      if (branch) {
-        setSelectedBranch(branch);
-      }
-    }
-  }, []);
-
   // useEffect(() => {
   //   const fetchSalonLocations = async () => {
-  //      try {
-  //       const response = await axios.get("salons");
-  //       if (response.data && response.data.data) {
-  //         setSearchResults(response.data.data);
+  //     try {
+  //       const response = await api.get("salon");
+  //       if (response.data && response.data.result) {
+  //         setSalonLocations(response.data.result);
   //       }
-  //      } catch (error) {
-
-  //      }
+  //     } catch (error) {}
   //   };
   //   fetchSalonLocations();
   // }, []);
 
   useEffect(() => {
-    if (!searchValue.trim()) {
-      setSearchResults(salonLocations);
-      return;
-    }
-
-    const fetchSalons = async () => {
-      try {
-        const response = await axios.get(`users/search`, {
-          params: {
-            q: searchValue,
-            type: "less",
-          },
-        });
-        if (response.data && response.data.data) {
-          setSearchResults(response.data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching salons:", error);
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
+    if (storedBranchId) {
+      const branchId = parseInt(storedBranchId, 10);
+      const branch = salonLocations.find((b) => b.id === branchId);
+      if (branch) {
+        setSelectedBranch(branch);
       }
-    };
+    }
+  }, [salonLocations]);
 
-    fetchSalons();
-  }, [searchValue]);
+  // useEffect(() => {
+
+  //   if (!searchValue.trim()) {
+  //     setSearchResults(salonLocations);
+  //     return;
+  //   }
+
+  //   const fetchSalons = async () => {
+  //     try {
+  //       const response = await api.get(`users/search`, {
+  //         params: {
+  //           q: searchValue,
+  //           type: "less",
+  //         },
+  //       });
+  //       if (response.data && response.data.result) {
+  //         setSearchResults(response.data.result);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching salons:", error);
+  //     }
+  //   };
+
+  //   fetchSalons();
+  // }, [searchValue]);
 
   const handleClearSearch = () => {
     setSearchValue("");
@@ -80,9 +82,9 @@ export default function ChooseSalon() {
     setSelectedBranch(branch);
   };
 
-  const isSelectedBranch = !!localStorage.getItem("selectedBranchId");
-  const isSelectedTime = !!localStorage.getItem("selectedTimeId");
-  const isSelectedServices = !!localStorage.getItem("selectedServicesId");
+  const isSelectedBranch = !!sessionStorage.getItem("selectedBranchId");
+  const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
+  const isSelectedServices = !!sessionStorage.getItem("selectedServicesId");
 
   return (
     <div className="chooseSalon">
@@ -116,26 +118,26 @@ export default function ChooseSalon() {
           >
             <Link
               to={isSelectedServices ? "/booking/step3" : "/booking/step1"}
-              aria-label="Select Time"
-            >
-              <div className="filled"></div>
-              <RiCalendarScheduleLine />
-            </Link>
-            <div className="tooltip">Time</div>
-          </li>
-          <li
-            className={`chooseSalon__tagNavigation--item-content ${
-              isSelectedTime ? "" : "disable"
-            }`}
-          >
-            <Link
-              to={isSelectedTime ? "/booking/step4" : "/booking/step1"}
               aria-label="Select Stylist"
             >
               <div className="filled"></div>
               <SlPeople />
             </Link>
             <div className="tooltip">Stylist</div>
+          </li>
+          <li
+            className={`chooseSalon__tagNavigation--item-content ${
+              isSelectedStylist ? "" : "disable"
+            }`}
+          >
+            <Link
+              to={isSelectedStylist ? "/booking/step4" : "/booking/step1"}
+              aria-label="Select Time"
+            >
+              <div className="filled"></div>
+              <RiCalendarScheduleLine />
+            </Link>
+            <div className="tooltip">Time</div>
           </li>
         </ul>
       </div>
@@ -166,7 +168,7 @@ export default function ChooseSalon() {
           F-salon is available in the following:
         </div>
         <div className="chooseSalon__container-lists">
-          {searchResults.map((branch) => (
+          {salonLocations.map((branch) => (
             <div
               onClick={() => handleBranchSelect(branch)}
               className={`chooseSalon__container-single ${
@@ -175,9 +177,9 @@ export default function ChooseSalon() {
                   : ""
               }`}
               key={branch.id}
-              aria-label={`Select ${branch.first_name}`}
+              aria-label={`Select ${branch.address}`}
             >
-              {branch.first_name}
+              {branch.address}
             </div>
           ))}
         </div>
@@ -190,7 +192,7 @@ export default function ChooseSalon() {
             if (!selectedBranch) {
               e.preventDefault();
             } else {
-              localStorage.setItem("selectedBranchId", selectedBranch.id);
+              sessionStorage.setItem("selectedBranchId", selectedBranch.id);
             }
           }}
         >

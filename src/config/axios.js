@@ -1,6 +1,6 @@
 import axios from "axios";
-const baseUrl = "https://reqres.in/api/";
-// const baseUrl = "http://localhost:8080/api/";
+// const baseUrl = "https://reqres.in/api/";
+const baseUrl = "http://localhost:8080/";
 // const baseUrl = "https://tiktok.fullstack.edu.vn/api/";
 
 const config = {
@@ -12,7 +12,7 @@ const api = axios.create(config);
 api.defaults.baseURL = baseUrl;
 
 const handleBefore = (config) => {
-  const token = localStorage.getItem("token")?.replaceAll('"', "");
+  const token = sessionStorage.getItem("token")?.replaceAll('"', "");
   config.headers["Authorization"] = `Bearer ${token}`;
   return config;
 };

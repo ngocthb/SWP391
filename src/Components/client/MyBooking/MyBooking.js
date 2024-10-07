@@ -49,9 +49,9 @@ export default function MyBooking() {
 
   const handleNextStep = () => {
     if (currentStep === "salon") {
-      setCurrentStep("service"); // Move to service selection
-    } else {
-      // Handle final booking confirmation if needed
+      setCurrentStep("service");
+    } else if (currentStep === "service") {
+      setCurrentStep("stylist");
     }
   };
   return (
@@ -278,9 +278,9 @@ export default function MyBooking() {
                 >
                   {currentStep === "salon" ? (
                     <UpdateMyBooking.ChooseSalon onNext={handleNextStep} />
-                  ) : (
-                    <UpdateMyBooking.ChooseService />
-                  )}
+                  ) : currentStep === "service" ? (
+                    <UpdateMyBooking.ChooseService onNext={handleNextStep} />
+                  ) : null}
                   {/* Custom footer to handle Next Step */}
                   {/* <div className="modal-footer">
                     {currentStep === "salon" && (

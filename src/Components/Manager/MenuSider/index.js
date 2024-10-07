@@ -1,3 +1,4 @@
+import React from "react";
 import { Menu } from "antd";
 import {
   HighlightOutlined,
@@ -7,14 +8,17 @@ import {
   ContactsOutlined,
   DashboardOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function MenuSider() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const items = [
     {
       label: <Link to="/manager/dashboard">Dashboard</Link>,
       icon: <DashboardOutlined />,
-      key: "Dashboard",
+      key: "/manager/dashboard",
     },
     {
       label: "Employee",
@@ -22,48 +26,46 @@ function MenuSider() {
       key: "Employee",
       children: [
         {
-          label: <Link to="/manager/stylish">Stylish</Link>,
+          label: <Link to="/manager/stylist">Stylist</Link>,
           icon: <ScissorOutlined />,
-          key: "Stylish",
+          key: "/manager/stylist",
         },
         {
           label: "Menu 2-1",
-          key: "menu 2-1",
+          key: "menu-2-1",
         },
       ],
     },
     {
       label: <Link to="/manager/service">Service</Link>,
       icon: <HighlightOutlined />,
-      key: "Service",
+      key: "/manager/service",
     },
     {
       label: <Link to="/manager/booking">Booking</Link>,
       icon: <InsertRowAboveOutlined />,
-      key: "booking",
+      key: "/manager/booking",
     },
     {
-      label: <Link to="/create-room">Create room</Link>,
+      label: <Link to="/create-room">Create Room</Link>,
       icon: <PlusOutlined />,
       key: "/create-room",
     },
     {
-      label: <Link to="/list-room">List room</Link>,
+      label: <Link to="/list-room">List Room</Link>,
       icon: <PlusOutlined />,
       key: "/list-room",
     },
   ];
 
   return (
-    <>
-      <Menu
-        mode="inline"
-        defaultSelectedKeys={["Dashboard"]}
-        defaultOpenKeys={["menu-1"]}
-        items={items}
-        style={{ height: "100%", borderRight: 0 }}
-      />
-    </>
+    <Menu
+      mode="inline"
+      defaultOpenKeys={["Employee"]}
+      selectedKeys={[currentPath]}
+      items={items}
+      style={{ height: "100%", borderRight: 0 }}
+    />
   );
 }
 

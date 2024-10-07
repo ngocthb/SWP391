@@ -13,7 +13,7 @@ import { TbLogout } from "react-icons/tb";
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const isLoggedIn = !!localStorage.getItem("token");
+  const isLoggedIn = !!sessionStorage.getItem("token");
   const [userInfo, setUserInfo] = useState({});
   const isUpdate = useSelector((state) => state.updateUserReducer);
 
@@ -58,7 +58,7 @@ export default function HeaderNormal() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = "/";
   };
 
@@ -85,6 +85,13 @@ export default function HeaderNormal() {
             className={`${active} ${isLoggedIn ? "logged-in" : "logged-out"}`}
           >
             <ul className="header-normal__lists flex">
+            <li
+                className={`header-normal__lists-items ${
+                  isLoggedIn ? "logged-in" : ""
+                }`}
+              >
+                <Link to={"/"} onClick={handleHomeClick}>Home Page</Link>
+              </li>
               <li
                 className={`header-normal__lists-items ${
                   isLoggedIn ? "logged-in" : ""
@@ -131,7 +138,7 @@ export default function HeaderNormal() {
                         </div>
                         <div>
                           <img
-                            src={userInfo.avatar || loginUser.avatar}
+                            src={userInfo.image || loginUser.avatar}
                             alt="User-Avatar"
                           />
                         </div>
@@ -143,7 +150,7 @@ export default function HeaderNormal() {
                           <img
                             height={60}
                             alt="User avatar"
-                            src={userInfo.avatar || loginUser.avatar}
+                            src={userInfo.image || loginUser.avatar}
                           />
                           <div>
                             <h2>{userInfo.fullname || ""}</h2>
