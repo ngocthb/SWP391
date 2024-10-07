@@ -48,8 +48,8 @@ export default function Booking() {
     const fetchSalonLocations = async () => {
       try {
         const response = await api.get("salon");
-        if (response.data /*&& response.data.result*/) {
-          setSalonLocations(response.data /*.result*/);
+        if (response.data && response.data.result) {
+          setSalonLocations(response.data.result);
         }
       } catch (error) {}
     };
@@ -58,8 +58,8 @@ export default function Booking() {
     const fetchService = async () => {
       try {
         const response = await api.get("service");
-        if (response.data /*&& response.data.result*/) {
-          setServices(response.data /*.result*/);
+        if (response.data && response.data.result) {
+          setServices(response.data.result);
         }
       } catch (error) {}
     };
@@ -82,8 +82,8 @@ export default function Booking() {
           "booking-stylists",
           bookingValue
         );
-        if (response.data /*&& response.data.result*/) {
-          setStylists(response.data /*.result*/);
+        if (response.data && response.data.result) {
+          setStylists(response.data.result);
         }
       } catch (error) {}
     };
@@ -108,8 +108,8 @@ export default function Booking() {
           "booking-slots",
           bookingValue
         );
-        if (response.data /*&& response.data.result*/) {
-          setTimeSlots(response.data /*.result*/);
+        if (response.data && response.data.result) {
+          setTimeSlots(response.data.result);
         }
       } catch (error) {}
     };
@@ -170,7 +170,7 @@ export default function Booking() {
 
   const fetchUserData = async () => {
     try {
-      const response = await api.get("customer-profile");
+      const response = await api.get("customer/profile");
       const data = response.data.result;
       if (data) {
         setUserInfo(data);

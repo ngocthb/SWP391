@@ -47,8 +47,8 @@ export default function ChooseService() {
     const fetchService = async () => {
        try {
         const response = await api.get("service");
-        if (response.data /*&& response.data.result*/) {
-          setServices(response.data/*.result*/);
+        if (response.data && response.data.result) {
+          setServices(response.data.result);
           setSearchResults(response.data);
         }
        } catch (error) {
@@ -67,7 +67,7 @@ export default function ChooseService() {
 
     const fetchServices = async () => {
       try {
-        const response = await api.get(`service-searchByName`, {
+        const response = await api.get(`service/searchByName`, {
           params: { name: searchValue },
         });
         if (response.data && response.data.result) {

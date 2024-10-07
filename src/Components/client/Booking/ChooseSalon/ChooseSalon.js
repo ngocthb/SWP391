@@ -24,8 +24,8 @@ export default function ChooseSalon() {
     const fetchSalonLocations = async () => {
        try {
         const response = await api.get("salon");
-        if (response.data /*&& response.data.result*/) {
-          setSalonLocations(response.data/*.result*/);
+        if (response.data && response.data.result) {
+          setSalonLocations(response.data.result);
         }
        } catch (error) {
         

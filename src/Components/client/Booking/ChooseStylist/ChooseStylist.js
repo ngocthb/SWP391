@@ -43,7 +43,7 @@ export default function ChooseStylist() {
       }
 
        try {
-        const response = await api.get(`booking-stylists`, bookingValue);
+        const response = await api.get(`booking/stylists`, bookingValue);
         if (response.data /*&& response.data.result*/) {
           setStylists(response.data/*.result*/);
         }
