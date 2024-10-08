@@ -5,6 +5,7 @@ import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 import { RiTimeLine } from "react-icons/ri";
+import { LiaUserEditSolid } from "react-icons/lia";
 
 import React, { useState } from "react";
 
@@ -16,14 +17,11 @@ import "./MyBooking.scss";
 import services from "../../../data/services";
 
 export default function MyBooking() {
-  const [modalContent, setModalContent] = useState(null); // State to control what content to display
-
   const { confirm } = Modal;
   const [activeTab, setActiveTab] = useState("finish");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = (content) => {
-    setModalContent(content);
+  const showModal = () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -52,6 +50,10 @@ export default function MyBooking() {
       setCurrentStep("service");
     } else if (currentStep === "service") {
       setCurrentStep("stylist");
+    } else if (currentStep === "stylist") {
+      setCurrentStep("dateTime");
+    } else if (currentStep === "dateTime") {
+      setCurrentStep("dateTime");
     }
   };
   return (
@@ -106,7 +108,7 @@ export default function MyBooking() {
                 >
                   <div className="model__rating">
                     <input id="rating-5" type="radio" name="rating" value="5" />
-                    <label for="rating-5" title="5 stars">
+                    <label htmlFor="rating-5" title="5 stars">
                       <svg
                         viewBox="0 0 576 512"
                         height="1em"
@@ -117,7 +119,7 @@ export default function MyBooking() {
                     </label>
 
                     <input id="rating-4" type="radio" name="rating" value="4" />
-                    <label for="rating-4" title="4 stars">
+                    <label htmlFor="rating-4" title="4 stars">
                       <svg
                         viewBox="0 0 576 512"
                         height="1em"
@@ -128,7 +130,7 @@ export default function MyBooking() {
                     </label>
 
                     <input id="rating-3" type="radio" name="rating" value="3" />
-                    <label for="rating-3" title="3 stars">
+                    <label htmlFor="rating-3" title="3 stars">
                       <svg
                         viewBox="0 0 576 512"
                         height="1em"
@@ -139,7 +141,7 @@ export default function MyBooking() {
                     </label>
 
                     <input id="rating-2" type="radio" name="rating" value="2" />
-                    <label for="rating-2" title="2 stars">
+                    <label htmlFor="rating-2" title="2 stars">
                       <svg
                         viewBox="0 0 576 512"
                         height="1em"
@@ -150,7 +152,7 @@ export default function MyBooking() {
                     </label>
 
                     <input id="rating-1" type="radio" name="rating" value="1" />
-                    <label for="rating-1" title="1 star">
+                    <label htmlFor="rating-1" title="1 star">
                       <svg
                         viewBox="0 0 576 512"
                         height="1em"
@@ -162,7 +164,7 @@ export default function MyBooking() {
                   </div>
 
                   <div className="model__feedback">
-                    <label for="input" className="text">
+                    <label htmlFor="input" className="text">
                       Write feedback here:
                     </label>
                     <textarea
@@ -244,13 +246,13 @@ export default function MyBooking() {
                           </div>
                         </div>
                         <div className="panel-actions">
-                          <button className="panel-btn btn">
-                            <FiTrash2
-                              className="myBooking-icon"
-                              onClick={() =>
-                                showModal(<UpdateMyBooking.ChooseSalon />)
-                              }
-                            />
+                          <button
+                            className="panel-btn btn"
+                            onClick={() =>
+                              showModal(<UpdateMyBooking.ChooseSalon />)
+                            }
+                          >
+                            <LiaUserEditSolid className="myBooking-icon" />
                           </button>
                           <button
                             className="panel-btn btn"
@@ -263,14 +265,7 @@ export default function MyBooking() {
                     </div>
                   ))}
                 </div>
-                {/* <Modal
-                  // title="Choose Option"
-                  open={isModalOpen}
-                  onCancel={handleCancel}
-                  footer={null}
-                >
-                  {modalContent}
-                </Modal> */}
+
                 <Modal
                   open={isModalOpen}
                   onCancel={() => setIsModalOpen(false)}
@@ -280,18 +275,11 @@ export default function MyBooking() {
                     <UpdateMyBooking.ChooseSalon onNext={handleNextStep} />
                   ) : currentStep === "service" ? (
                     <UpdateMyBooking.ChooseService onNext={handleNextStep} />
+                  ) : currentStep === "stylist" ? (
+                    <UpdateMyBooking.ChooseStylist onNext={handleNextStep} />
+                  ) : currentStep === "dateTime" ? (
+                    <UpdateMyBooking.ChooseDateTime />
                   ) : null}
-                  {/* Custom footer to handle Next Step */}
-                  {/* <div className="modal-footer">
-                    {currentStep === "salon" && (
-                      <button
-                        className="next-step-btn"
-                        onClick={handleNextStep}
-                      >
-                        Next Step <FaArrowRight />
-                      </button>
-                    )}
-                  </div> */}
                 </Modal>
               </section>
             )}

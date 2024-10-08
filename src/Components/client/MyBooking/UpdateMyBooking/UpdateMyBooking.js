@@ -1,17 +1,24 @@
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import { FaArrowRight } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 import { LuClock } from "react-icons/lu";
+import { LuCalendarSearch } from "react-icons/lu";
+import { IoPersonOutline } from "react-icons/io5";
+import { FaStar } from "react-icons/fa6";
 
 import React, { useState, useEffect, useRef } from "react";
-
 import axios from "axios";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 
+import api from "../../../../config/axios";
 import "./UpdateMyBooking.scss";
 
 import { salonLocations } from "../../../../data/booking";
 import { services } from "../../../../data/booking";
+import { stylists } from "../../../../data/booking";
+import { slots } from "../../../../data/booking";
 
 export function ChooseSalon({ onNext }) {
   const [searchValue, setSearchValue] = useState("");
@@ -279,6 +286,245 @@ export function ChooseService({ onNext }) {
       <button className="myBooking__service-btn btn flex" onClick={onNext}>
         Next Step
         <FaArrowRight className="myBooking__salon-icon" />
+      </button>
+    </div>
+  );
+}
+
+export function ChooseStylist({ onNext }) {
+  const [selectedStylist, setSelectedStylist] = useState(null);
+  const handleSelected = (stylist) => {
+    setSelectedStylist(stylist);
+  };
+
+  // const [stylists, setStylists] = useState();
+
+  // useEffect(() => {
+  //   const storedBranchId = sessionStorage.getItem("selectedBranchId");
+  //   const branchId = parseInt(storedBranchId, 10);
+
+  //   const storedServices = sessionStorage.getItem("selectedServicesId");
+  //   const serviceIds = JSON.parse(storedServices);
+
+  //   const fetchStylists = async () => {
+  //     const bookingValue = {
+  //       salonId: branchId,
+  //       serviceId: serviceIds,
+  //     };
+
+  //     try {
+  //       const response = await api.post(`booking/stylists`, bookingValue);
+  //       if (response.data /*&& response.data.result*/) {
+  //         setStylists(response.data /*.result*/);
+  //       }
+  //     } catch (error) {}
+  //   };
+  //   fetchStylists();
+  // }, []);
+
+  useEffect(() => {
+    const storedStylistId = sessionStorage.getItem("selectedStylistId");
+    const stylistId = parseInt(storedStylistId, 10);
+    if (stylistId) {
+      const stylist = stylists.find((s) => s.id === stylistId);
+      if (stylist) {
+        setSelectedStylist(stylist);
+      }
+    }
+  }, [stylists]);
+
+  const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
+
+  return (
+    <>
+      <div className="myBooking__stylist">
+        <div className="myBooking__stylist-header">
+          <h1>Choose Stylist</h1>
+        </div>
+        {selectedStylist && (
+          <>
+            <div className="myBooking__stylist-name">
+              <IoPersonOutline className="stylist-icon" />
+              <h1>{selectedStylist.fullname}</h1>
+            </div>
+            <div className="myBooking__stylist-info">
+              <p>Stylist: {selectedStylist.fullname}</p>
+              <p className="infor__rating">
+                <span>
+                  Cut {selectedStylist.rating.cut}
+                  <FaStar className="infor__rating-icon" />(
+                  {selectedStylist.customers.cut})
+                </span>
+              </p>
+              <p className="infor__rating">
+                <span>
+                  Perm {selectedStylist.rating.perm}
+                  <FaStar className="infor__rating-icon" />(
+                  {selectedStylist.customers.perm})
+                </span>
+              </p>
+              <p className="infor__rating">
+                <span>
+                  Dye {selectedStylist.rating.dye}
+                  <FaStar className="infor__rating-icon" />(
+                  {selectedStylist.customers.dye})
+                </span>
+              </p>
+            </div>
+          </>
+        )}
+
+        <Swiper
+          className="myBooking__stylist-lists"
+          slidesPerView={3}
+          navigation={true}
+          modules={[Navigation]}
+        >
+          {stylists.map((stylist) => (
+            <SwiperSlide key={stylist.id}>
+              <div
+                onClick={() => {
+                  handleSelected(stylist);
+                }}
+                className={`myBooking__stylist-single ${
+                  selectedStylist && selectedStylist.id === stylist.id
+                    ? "selected"
+                    : ""
+                }`}
+              >
+                <img alt={stylist.fullname} src={stylist.image} />
+                <p>{stylist.fullname}</p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <button className="myBooking__stylist-btn btn flex " onClick={onNext}>
+          Next Step
+          <FaArrowRight className="myBooking__stylist-icon" />
+        </button>
+      </div>
+    </>
+  );
+}
+
+export function ChooseDateTime() {
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [timeSlots, setTimeSlots] = useState(slots);
+  const [availableSlots, setAvailableSlots] = useState([]);
+
+  useEffect(() => {
+    const storedTimeId = sessionStorage.getItem("selectedTimeId");
+    const storedDate = sessionStorage.getItem("selectedDate");
+
+    if (storedTimeId) {
+      setSelectedTime(Number(storedTimeId));
+    }
+    if (storedDate) {
+      setSelectedDate(new Date(storedDate));
+    }
+  }, [timeSlots]);
+
+  const handleTimeSlotClick = (slotId) => {
+    if (availableSlots.some((slot) => slot.slotid === slotId)) {
+      setSelectedTime(slotId);
+    }
+  };
+
+  const handleDateChange = (e) => {
+    const date = e.target.value === "today" ? today : tomorrow;
+    formatDateForInput(date);
+    setSelectedDate(date);
+  };
+
+  const formatDate = (date) => {
+    const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" });
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    return `${dayOfWeek} (${day}/${month})`;
+  };
+
+  const isSelectedTime = selectedTime !== null;
+
+  const formatDateForInput = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => {
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
+    const branchId = parseInt(storedBranchId, 10);
+
+    const storedServices = sessionStorage.getItem("selectedServicesId");
+    const serviceIds = JSON.parse(storedServices);
+
+    const storedStylist = sessionStorage.getItem("selectedStylistId");
+    const stylistId = JSON.parse(storedStylist);
+
+    const fetchTimeSlots = async () => {
+      const bookingValue = {
+        salonId: branchId,
+        serviceId: serviceIds,
+        accountId: stylistId,
+        date: formatDateForInput(selectedDate),
+      };
+
+      try {
+        const response = await api.post("booking/slots", bookingValue);
+        if (response.data && response.data.result) {
+          setAvailableSlots(response.data /*.result*/);
+        }
+      } catch (error) {}
+    };
+    fetchTimeSlots();
+  }, [selectedDate, handleTimeSlotClick]);
+
+  return (
+    <div className="myBooking__dateTime">
+      <div className="myBooking__dateTime-header">
+        <h1>Choose Date & Time</h1>
+      </div>
+      <div className="myBooking__dateTime-date">
+        <LuCalendarSearch className="select-icon" />
+        <select
+          value={
+            selectedDate.toDateString() === today.toDateString()
+              ? "today"
+              : "tomorrow"
+          }
+          onChange={handleDateChange}
+        >
+          <option value="today">Today, {formatDate(today)}</option>
+          <option value="tomorrow">Tomorrow, {formatDate(tomorrow)}</option>
+        </select>
+      </div>
+      <div className="myBooking__dateTime-time">
+        {timeSlots.map((slot) => (
+          <div
+            key={slot.slotid}
+            className={`time-slot ${
+              availableSlots.some(
+                (availableSlot) => availableSlot.slotid === slot.slotid
+              )
+                ? ""
+                : "disabled"
+            } ${selectedTime === slot.slotid ? "selected" : ""}`}
+            onClick={() => handleTimeSlotClick(slot.slotid)}
+          >
+            {slot.slottime}
+          </div>
+        ))}
+      </div>
+      <button className="myBooking__dateTime-btn btn flex">
+        Next Step
+        <FaArrowRight className="chooseDateTime-icon" />
       </button>
     </div>
   );
