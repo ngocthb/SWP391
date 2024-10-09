@@ -18,7 +18,6 @@ export default function ManagerService() {
       <div className="ManagerService__header">
         <div class="ManagerService__header-searchBar">
           <BiSearchAlt className="searchBar-icon" />
-          {/* <i class="fas fa-search"></i> */}
           <input placeholder="Search here..." type="text" />
         </div>
         <div class="ManagerService__header-filter">

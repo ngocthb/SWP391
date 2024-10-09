@@ -192,6 +192,33 @@
 }
 
 @media (min-width: 768px) {
+}
+
+@media (min-width: 1024px) {
+  .ManagerService {
+    &__header {
+      padding: 0 5%;
+    }
+    .service {
+      justify-content: flex-start;
+      gap: 80px;
+      &__card {
+        width: 43%;
+
+        &-content {
+          display: flex;
+          flex-direction: column;
+          img {
+            border-radius: 15px;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1280px) {
   .ManagerService {
     width: 90%;
     margin: 0 auto;
@@ -206,7 +233,6 @@
         width: 100%;
         position: relative;
         max-width: 400px;
-
         display: flex;
         align-items: center;
         margin-bottom: 20px;
@@ -216,15 +242,11 @@
           border: 1px solid #ccc;
           border-radius: 50px;
           margin-right: 10px;
-          font-size: 16px;
+          font-size: 12px;
           width: 100%;
           padding: 10px 10px 10px 40px;
         }
-        i {
-          position: absolute;
-          margin-left: 15px;
-          color: #aaa;
-        }
+
         .searchBar-icon {
           position: absolute;
           left: 10px;
@@ -265,51 +287,13 @@
     }
     .service {
       &__card {
-        img {
-          width: 280px;
-          height: 200px;
-        }
-      }
-    }
-  }
-}
-
-@media (min-width: 1024px) {
-  .ManagerService {
-    &__header {
-      padding: 0 5%;
-    }
-    .service {
-      justify-content: flex-start;
-      gap: 80px;
-      &__card {
-        width: 43%;
-
+        flex-direction: column;
         &-content {
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
           img {
-            border-radius: 15px;
-            width: 100%;
+            width: 40%;
           }
-        }
-      }
-    }
-  }
-}
-
-@media (min-width: 1280px) {
-  .ManageService {
-  .ManagerService {
-    &__header {
-      padding: 0 4%;
-    }
-    .service {
-      &__card {
-        width: 45%;
-        img {
-          width: 250px;
-          height: 150px;
         }
       }
     }
@@ -326,5 +310,4 @@
       }
     }
   }
-}
 }

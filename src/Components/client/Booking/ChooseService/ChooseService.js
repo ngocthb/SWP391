@@ -39,12 +39,12 @@ export default function ChooseService() {
     return `${day}/${month}/${year}`;
   };
 
-  useEffect(() => {
-    const selectedBranchId = sessionStorage.getItem("selectedBranchId");
-    if (!selectedBranchId) {
-      navigate("/booking/step1");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const selectedBranchId = sessionStorage.getItem("selectedBranchId");
+  //   if (!selectedBranchId) {
+  //     navigate("/booking/step1");
+  //   }
+  // }, []);
 
   useEffect(() => {
     const storedServices = sessionStorage.getItem("selectedServicesId");
@@ -346,15 +346,15 @@ export default function ChooseService() {
           </div>
 
           <div className="footer__pay">
-          <div className="footer__pay-content">
-          <span className="footer__pay-services">
-              Selected services : {selectedService.length}
-            </span>
+            <div className="footer__pay-content">
+              <span className="footer__pay-services">
+                Selected services : {selectedService.length}
+              </span>
+              <span className="footer__pay-services">
+                Total Duration : {calculateTotalDuration() || "0"}
+              </span>
+            </div>
             <span className="footer__pay-services">
-              Total Duration : {calculateTotalDuration() || "0"}
-            </span>
-          </div>
-          <span className="footer__pay-services">
               Pay :{" "}
               {formatCurrency(
                 (selectedService || []).reduce(
@@ -364,7 +364,8 @@ export default function ChooseService() {
               )}
             </span>
             <span className="footer__pay-services">
-              Discount :{" "} {selectVoucher.discountAmount}{"%"}
+              Discount : {selectVoucher.discountAmount}
+              {"%"}
             </span>
             <span className="footer__pay-services">
               Total Pay :{" "}

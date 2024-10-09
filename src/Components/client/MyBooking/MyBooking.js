@@ -1,10 +1,5 @@
 import { FiTrash2 } from "react-icons/fi";
 import { VscFeedback } from "react-icons/vsc";
-import { CiHome } from "react-icons/ci";
-import { PiScissors } from "react-icons/pi";
-import { RiCalendarScheduleLine } from "react-icons/ri";
-import { SlPeople } from "react-icons/sl";
-import { RiTimeLine } from "react-icons/ri";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
 
@@ -15,7 +10,6 @@ import { Modal } from "antd";
 import * as UpdateMyBooking from "./UpdateMyBooking/UpdateMyBooking";
 
 import "./MyBooking.scss";
-// import bookingHistory from "../../../data/services";
 
 const bookingHistory = [
   {
@@ -74,8 +68,9 @@ const bookingHistory = [
 export default function MyBooking() {
   const { confirm } = Modal;
   const [activeTab, setActiveTab] = useState("completed");
-  // const [bookingHistory, setBookingHistory] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [bookingHistory, setBookingHistory] = useState([]);
+
   // const [accountId, setAcountId] = useState(0);
   // const fetchAccountId = async () => {
   //   try {
@@ -95,8 +90,8 @@ export default function MyBooking() {
   //     try {
   //       const response = await api.get(`customer/${accountId}/${activeTab}`);
   //       // console.log(response);
-  //       if (response.data && response.data.data) {
-  //         setBookingHistory(response.data.data);
+  //       if (response.data && response.data.result) {
+  //         setBookingHistory(response.data.result);
   //       }
   //     } catch (error) {
   //       console.log(error);
