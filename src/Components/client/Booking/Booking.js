@@ -58,8 +58,8 @@ export default function Booking() {
     const fetchService = async () => {
       try {
         const response = await api.get("service");
-        if (response.data && response.data.result) {
-          setServices(response.data.result);
+        if (response.data /*&& response.data.result*/) {
+          setServices(response.data/*.result*/);
         }
       } catch (error) {}
     };
@@ -78,12 +78,12 @@ export default function Booking() {
       };
 
       try {
-        const response = await api.post(
-          "booking/stylists",
+        const response = await api./*post*/get(
+          "booking-stylists",
           bookingValue
         );
-        if (response.data && response.data.result) {
-          setStylists(response.data.result);
+        if (response.data /*&& response.data.result*/) {
+          setStylists(response.data/*.result*/);
         }
       } catch (error) {}
     };
@@ -105,11 +105,11 @@ export default function Booking() {
 
       try {
         const response = await api.get(
-          "booking/slots",
+          "booking-slots",
           bookingValue
         );
-        if (response.data && response.data.result) {
-          setTimeSlots(response.data.result);
+        if (response.data /*&& response.data.result*/) {
+          setTimeSlots(response.data/*.result*/);
         }
       } catch (error) {}
     };

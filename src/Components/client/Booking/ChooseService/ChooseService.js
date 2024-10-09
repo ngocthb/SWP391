@@ -2,30 +2,42 @@
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
+import { CiHome } from "react-icons/ci";
+import { PiScissors } from "react-icons/pi";
+import { RiCalendarScheduleLine } from "react-icons/ri";
+import { SlPeople } from "react-icons/sl";
 import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 import { LuClock } from "react-icons/lu";
 
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CiHome } from "react-icons/ci";
-import { PiScissors } from "react-icons/pi";
-import { RiCalendarScheduleLine } from "react-icons/ri";
-import { SlPeople } from "react-icons/sl";
-
+import { Modal } from "antd";
 import "./ChooseService.scss";
 // import { services } from "../../../../data/booking";
+// import { voucher } from "../../../../data/booking";
+
 import api from "../../../../config/axios";
 
 export default function ChooseService() {
+  const [selectVoucher, setSelectVoucher] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [selectedService, setSelectedService] = useState([]);
   const [services, setServices] = useState([]);
   const [searchResults, setSearchResults] = useState(services);
   const [areServicesHidden, setAreServicesHidden] = useState(false);
+  const [voucher, setVoucher] = useState([]);
   const inputRef = useRef(null);
-  
 
   const navigate = useNavigate();
+
+  const formatDateString = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
   useEffect(() => {
     const selectedBranchId = sessionStorage.getItem("selectedBranchId");
@@ -38,26 +50,37 @@ export default function ChooseService() {
     const storedServices = sessionStorage.getItem("selectedServicesId");
     if (storedServices) {
       const serviceIds = JSON.parse(storedServices);
-      const selected = services.filter(service => serviceIds.includes(service.id));
+      const selected = services.filter((service) =>
+        serviceIds.includes(service.id)
+      );
       setSelectedService(selected);
     }
   }, [services]);
 
   useEffect(() => {
     const fetchService = async () => {
-       try {
+      try {
         const response = await api.get("service");
-        if (response.data && response.data.result) {
-          setServices(response.data.result);
+        if (response.data /*&& response.data.result*/) {
+          setServices(response.data /*.result*/);
           setSearchResults(response.data);
         }
-       } catch (error) {
-        
-       }
+      } catch (error) {}
     };
     fetchService();
   }, []);
 
+  useEffect(() => {
+    const fetchVoucher = async () => {
+      try {
+        const response = await api.get("voucher");
+        if (response.data /*&& response.data.result*/) {
+          setVoucher(response.data /*.result*/);
+        }
+      } catch (error) {}
+    };
+    fetchVoucher();
+  }, []);
 
   useEffect(() => {
     if (!searchValue.trim()) {
@@ -68,7 +91,7 @@ export default function ChooseService() {
     const fetchServices = async () => {
       const value = {
         name: searchValue,
-      }
+      };
       try {
         const response = await api.post(`service/searchByName`, value);
         if (response.data && response.data.result) {
@@ -108,6 +131,54 @@ export default function ChooseService() {
   const isSelectedServices = !!sessionStorage.getItem("selectedServicesId");
   const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
 
+  const [modalContent, setModalContent] = useState(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = (content) => {
+    setModalContent(content);
+    setIsModalOpen(true);
+  };
+
+  const formatCurrency = (value) => {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
+  };
+
+  const calculateTotalDuration = () => {
+    if (selectedService.length === 0) return "";
+
+    const totalMinutes = selectedService.reduce((total, service) => {
+      const [hours, minutes] = service.duration.split(":").map(Number);
+      return total + hours * 60 + minutes;
+    }, 0);
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (hours > 0 && minutes > 0) {
+      return `${hours}h${minutes}`;
+    } else if (hours > 0) {
+      return `${hours} hour`;
+    } else {
+      return `${minutes} minutes`;
+    }
+  };
+
+  const formatDuration = (duration) => {
+    const [hours, minutes] = duration.split(":").map(Number);
+
+    if (hours > 0 && minutes > 0) {
+      return `${hours}h${minutes}`;
+    } else if (hours > 0) {
+      return `${hours} hour`;
+    } else {
+      return `${minutes} minutes`;
+    }
+  };
+
+  const handleVoucher = (voucher) => {
+    setSelectVoucher(voucher);
+    setIsModalOpen(false);
+  };
   return (
     <div className="chooseService">
       <div className="chooseService__tagNavigation">
@@ -126,21 +197,34 @@ export default function ChooseService() {
             </Link>
             <div className="tooltip">Service</div>
           </li>
-          <li className={`chooseService__tagNavigation--item-content ${isSelectedServices ? '' : 'disable'}`}>
-            <Link to={isSelectedServices ? "/booking/step3" : "/booking/step2"} aria-label="Select Stylist">
+          <li
+            className={`chooseService__tagNavigation--item-content ${
+              isSelectedServices ? "" : "disable"
+            }`}
+          >
+            <Link
+              to={isSelectedServices ? "/booking/step3" : "/booking/step2"}
+              aria-label="Select Stylist"
+            >
               <div className="filled"></div>
               <SlPeople />
             </Link>
             <div className="tooltip">Stylist</div>
           </li>
-          <li className={`chooseService__tagNavigation--item-content ${isSelectedStylist ? '' : 'disable'}`}>
-            <Link to={isSelectedStylist ? "/booking/step4" : "/booking/step2"} aria-label="Select Time">
+          <li
+            className={`chooseService__tagNavigation--item-content ${
+              isSelectedStylist ? "" : "disable"
+            }`}
+          >
+            <Link
+              to={isSelectedStylist ? "/booking/step4" : "/booking/step2"}
+              aria-label="Select Time"
+            >
               <div className="filled"></div>
               <RiCalendarScheduleLine />
             </Link>
             <div className="tooltip">Time</div>
           </li>
-          
         </ul>
       </div>
 
@@ -168,37 +252,38 @@ export default function ChooseService() {
           F-Salon has the following services :
         </div>
         <div className="chooseService__container-lists">
-          {searchResults && searchResults.map((service) => (
-            <div key={service.id} className="chooseService__card">
-              <img alt="service banner" src={service.image} />
-              <div className="card__content">
-                <h2>{service.serviceName}</h2>
-                <div className="card__content-time">
-                  <LuClock className="card-icon" />
-                  <span>{service.duration}</span>
-                </div>
-                <p>{service.serviceName}</p>
-                <div className="card__content-action">
-                  <div className="card__content-price">
-                    Price: ${service.price}
+          {searchResults &&
+            searchResults.map((service) => (
+              <div key={service.id} className="chooseService__card">
+                <img alt="service banner" src={service.image} />
+                <div className="card__content">
+                  <h2>{service.serviceName}</h2>
+                  <div className="card__content-time">
+                    <LuClock className="card-icon" />
+                    <span>{formatDuration(service.duration)}</span>
                   </div>
-                  <button
-                    className={`card__content-add ${
-                      isServiceSelected(service.id) ? "disabled" : ""
-                    }`}
-                    onClick={() => {
-                      if (!isServiceSelected(service.id)) {
-                        setSelectedService((prev) => [...prev, service]);
-                      }
-                    }}
-                    disabled={isServiceSelected(service.id)} // Disable button if service is already selected
-                  >
-                    {isServiceSelected(service.id) ? "Added" : "Add service"}
-                  </button>
+                  <p>{service.serviceName}</p>
+                  <div className="card__content-action">
+                    <div className="card__content-price">
+                      Price: {formatCurrency(service.price)}
+                    </div>
+                    <button
+                      className={`card__content-add ${
+                        isServiceSelected(service.id) ? "disabled" : ""
+                      }`}
+                      onClick={() => {
+                        if (!isServiceSelected(service.id)) {
+                          setSelectedService((prev) => [...prev, service]);
+                        }
+                      }}
+                      disabled={isServiceSelected(service.id)} // Disable button if service is already selected
+                    >
+                      {isServiceSelected(service.id) ? "Added" : "Add service"}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
         <div className="chooseService__container-footer">
           <div className="footer__hidden" onClick={handleHidden}>
@@ -222,10 +307,12 @@ export default function ChooseService() {
               key={index}
               className={`footer__service ${areServicesHidden ? "hidden" : ""}`}
             >
-              <span className="footer__service-name">{service.serviceName}</span>
+              <span className="footer__service-name">
+                {service.serviceName}
+              </span>
               <div>
                 <span className="footer__service-price">
-                  ${service.price}
+                  {formatCurrency(service.price)}
                 </span>
                 <IoIosCloseCircle
                   className="footer__service-icon"
@@ -249,29 +336,42 @@ export default function ChooseService() {
 
           <div className="footer__promo">
             {/* <span className="footer__promo-label"></span> */}
-            <span className="footer__promo-action">Chọn ưu đãi</span>
+            <span onClick={showModal} className="footer__promo-action">
+              Voucher
+            </span>
+            <span>{selectVoucher.code}</span>
           </div>
 
           <div className="footer__pay">
-            <span className="footer__pay-services">
+          <div className="footer__pay-content">
+          <span className="footer__pay-services">
               Selected services : {selectedService.length}
             </span>
-            <div>
-              <span className="footer__pay-price">
-                Total Pay :
-                {(selectedService || []).reduce(
+            <span className="footer__pay-services">
+              Total Duration : {calculateTotalDuration() || "0"}
+            </span>
+          </div>
+          <span className="footer__pay-services">
+              Pay :{" "}
+              {formatCurrency(
+                (selectedService || []).reduce(
                   (total, service) => total + service.price,
                   0
-                )} VND
-              </span>
-              <div className="footer__pay-price">
-                Total Duration : 
-                {(selectedService || []).reduce(
-                  (total, service) => total + service.duration,
+                )
+              )}
+            </span>
+            <span className="footer__pay-services">
+              Discount :{" "} {selectVoucher.discountAmount}{"%"}
+            </span>
+            <span className="footer__pay-services">
+              Total Pay :{" "}
+              {formatCurrency(
+                (selectedService || []).reduce(
+                  (total, service) => total + service.price,
                   0
-                )}
-              </div>
-            </div>
+                )
+              )}
+            </span>
           </div>
         </div>
         <Link
@@ -282,9 +382,14 @@ export default function ChooseService() {
           onClick={(e) => {
             if (selectedService.length === 0) {
               e.preventDefault();
-            }else {
-              const selectedServiceIds = selectedService.map(service => service.id);
-              sessionStorage.setItem("selectedServicesId", JSON.stringify(selectedServiceIds));
+            } else {
+              const selectedServiceIds = selectedService.map(
+                (service) => service.id
+              );
+              sessionStorage.setItem(
+                "selectedServicesId",
+                JSON.stringify(selectedServiceIds)
+              );
             }
           }}
         >
@@ -292,6 +397,31 @@ export default function ChooseService() {
           <FaArrowRight className="chooseService-icon" />
         </Link>
       </div>
+
+      <Modal
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+      >
+        <div className="voucher__modal">
+          <h1>Choose service</h1>
+          <div className="voucher__modal-lists">
+            {voucher.map((item) => (
+              <div
+                key={item.id}
+                className="voucher-item"
+                onClick={() => handleVoucher(item)}
+              >
+                <h3>{item.code}</h3>
+                <p>Name: {item.name}</p>
+                <p>Discount amount: {item.discountAmount}%</p>
+                <p>Quantity: {item.quantity}</p>
+                <p>Expiry date: {formatDateString(item.expiryDate)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

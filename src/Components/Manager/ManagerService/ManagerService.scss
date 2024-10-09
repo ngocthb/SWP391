@@ -1,4 +1,4 @@
-.ManageService {
+.ManagerService {
   width: 90%;
   margin: 0 auto;
   padding: 20px 0;
@@ -194,7 +194,7 @@
 }
 
 @media (min-width: 640px) {
-  .ManageService {
+  .ManagerService {
     &__header {
       padding: 0 40px;
     }
@@ -210,7 +210,7 @@
 }
 
 @media (min-width: 768px) {
-  .ManageService {
+  .ManagerService {
     width: 90%;
     margin: 0 auto;
     padding: 20px 0;
@@ -293,7 +293,7 @@
 }
 
 @media (min-width: 1024px) {
-  .ManageService {
+  .ManagerService {
     &__header {
       padding: 0 5%;
     }
@@ -312,7 +312,7 @@
 }
 
 @media (min-width: 1280px) {
-  .ManageService {
+  .ManagerService {
     &__header {
       padding: 0 4%;
     }

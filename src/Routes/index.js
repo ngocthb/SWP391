@@ -14,7 +14,6 @@ import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking"
 
 import HomePageLayout from "../Layouts/client/HomePageLayout";
 import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
-import ManageService from "../Components/Manager/ManageService/ManageService";
 import ManagerCreateService from "../Components/Manager/ManagerCreateService/ManagerCreateService";
 
 import BookingLayout from "../Layouts/client/BookingLayout";
@@ -23,9 +22,13 @@ import ChooseSalon from "../Components/client/Booking/ChooseSalon/ChooseSalon";
 import ChooseService from "../Components/client/Booking/ChooseService/ChooseService";
 import ChooseDateTime from "../Components/client/Booking/ChooseDateTime/ChooseDateTime";
 import Contact from "../Components/client/Contact/Contact";
-import ManageStylist from "../Components/Manager/ManageStylist/ManageStylist";
 import ManagerCreateStylist from "../Components/Manager/ManagerCreateStylist/ManagerCreateStylist";
 import ChooseStylist from "../Components/client/Booking/ChooseStylist/ChooseStylist";
+import ManagerStaff from "../Components/Manager/ManagerStaff/ManagerStaff";
+import ManagerStylist from "../Components/Manager/ManagerStylist/ManagerStylist";
+import ManagerService from "../Components/Manager/ManagerService/ManagerService";
+import ManagerCustomer from "../Components/Manager/ManagerCustomer/ManagerCustomer";
+import ManagerCreateStaff from "../Components/Manager/ManagerCreateStaff/ManagerCreateStaff";
 
 export const Routes = [
   {
@@ -92,11 +95,15 @@ export const Routes = [
     children: [
       {
         path: "stylist",
-        element: <ManageStylist buttonLabel={"+ New stylist"} />,
+        element: <ManagerStylist buttonLabel={"+ New stylist"} />,
       },
       {
         path: "stylist/create",
         element: <ManagerCreateStylist/>
+      },
+      {
+        path: "staff",
+        element: <ManagerStaff buttonLabel={"+ New staff"} />,
       },
       {
         path: "dashboard",
@@ -108,11 +115,19 @@ export const Routes = [
       },
       {
         path: "service",
-        element: <ManageService />,
+        element: <ManagerService/>,
       },
       {
         path: "service/create",
         element: <ManagerCreateService />,
+      },
+      {
+        path: "customer",
+        element: <ManagerCustomer/>
+      },
+      {
+        path: "staff/create",
+        element: <ManagerCreateStaff/>
       },
     ],
   },

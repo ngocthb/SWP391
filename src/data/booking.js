@@ -93,3 +93,32 @@ export const slots = [
   { slotid: 14, slottime: "21h00" },
   { slotid: 15, slottime: "22h00" }
 ]
+
+export const voucher = [
+  { id: 1, name: "FHAFEFNVUO123", description: "Lorem ipsum dolor sit amet." },
+  {
+    id: 2,
+    name: "KLAJSFODF123",
+    description: "Sed ut perspiciatis unde omnis.",
+  },
+  { id: 3, name: "QWOEIURP123", description: "Nemo enim ipsam voluptatem." },
+  { id: 4, name: "ZXCVBASD123", description: "At vero eos et accusamus." },
+  {
+    id: 5,
+    name: "POIUYTRE123",
+    description: "Duis aute irure dolor in reprehenderit.",
+  },
+  {
+    id: 6,
+    name: "MNBCXVZQ123",
+    description: "Quis autem vel eum iure reprehenderit.",
+  },
+  { id: 7, name: "LKJHGFDW123", description: "Et harum quidem rerum facilis." },
+  { id: 8, name: "ASDFGHJKL123", description: "Ut enim ad minima veniam." },
+  {
+    id: 9,
+    name: "QWERTYUIO123",
+    description: "Excepteur sint occaecat cupidatat.",
+  },
+  { id: 10, name: "ZXCASDQWE123", description: "Neque porro quisquam est." },
+];

@@ -1,4 +1,4 @@
-import "./ManageService.scss";
+import "./ManagerService.scss";
 import { React } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { HiTrash } from "react-icons/hi2";
@@ -7,21 +7,21 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 import services from "../../../data/service";
 import { useNavigate } from "react-router-dom";
-export default function ManageService() {
+export default function ManagerService() {
   const navigate = useNavigate();
   const createService = () => {
     navigate("/manager/service/create");
   };
 
   return (
-    <div class="ManageService">
-      <div className="ManageService__header">
-        <div class="ManageService__header-searchBar">
+    <div class="ManagerService">
+      <div className="ManagerService__header">
+        <div class="ManagerService__header-searchBar">
           <BiSearchAlt className="searchBar-icon" />
           {/* <i class="fas fa-search"></i> */}
           <input placeholder="Search here..." type="text" />
         </div>
-        <div class="ManageService__header-filter">
+        <div class="ManagerService__header-filter">
           <select>
             <option>Newest</option>
             <option>Oldest</option>
@@ -69,9 +69,9 @@ export default function ManageService() {
         ))}
       </div>
 
-      <div class="ManageService__pagination">
+      <div class="ManagerService__pagination">
         <p>Showing 1-6 from {services.length} data</p>
-        <div class="ManageService__pagination-pages">
+        <div class="ManagerService__pagination-pages">
           <span>
             <FaAngleLeft className="pagination-icon" />
           </span>

@@ -1,37 +1,37 @@
 import React, { useState } from 'react';
-import './ManagerBooking.scss';
+import './ManagerCustomer.scss';
 import { Link } from 'react-router-dom';
 
-const ManagerBooking = () => {
-  const initialBookings = [
+const ManagerCustomer = () => {
+  const initialOrders = [
     {
-      salonId: '#5331',
+      id: '#5331',
       img: 'https://enlink.themenate.net/assets/images/avatars/thumb-2.jpg',
       customer: 'Erin Gonzales',
-      bookingDate: '8/5/2019',
+      date: '8 May 2019',
       amount: '$137.00',
       status: 'approved',
     },
     
     {
-      salonId: '#5333',
+      id: '#5333',
       img: 'https://enlink.themenate.net/assets/images/avatars/thumb-6.jpg',
       customer: 'Alice Johnson',
-      bookingDate: '10/5/2019',
+      date: '10 May 2019',
       amount: '$89.50',
       status: 'rejected',
     },
     {
-      salonId: '#5332',
+        id: '#5332',
         img: 'https://enlink.themenate.net/assets/images/avatars/thumb-4.jpg',
         customer: 'John Smith',
-        bookingDate: '9/5/2019',
+        date: '9 May 2019',
         amount: '$250.00',
         status: 'pending',
       },
   ];
 
-  const [bookings, setBookings] = useState(initialBookings);
+  const [orders, setOrders] = useState(initialOrders);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
  
   
@@ -47,11 +47,11 @@ const ManagerBooking = () => {
     }
     setSortConfig({ key, direction });
 
-    let sortedBookings;
+    let sortedOrders;
     if (direction === null) {
-      sortedBookings = [...initialBookings];
+      sortedOrders = [...initialOrders];
     } else {
-      sortedBookings = [...bookings].sort((a, b) => {
+      sortedOrders = [...orders].sort((a, b) => {
         if (key === 'amount') {
           return direction === 'ascending' 
             ? parseFloat(a[key].replace('$', '')) - parseFloat(b[key].replace('$', ''))
@@ -63,7 +63,7 @@ const ManagerBooking = () => {
       });
     }
 
-    setBookings(sortedBookings);
+    setOrders(sortedOrders);
   };
 
   const getSortIndicator = (key) => {
@@ -75,46 +75,46 @@ const ManagerBooking = () => {
   };
 
   return (
-    <div className="manager-booking">
-      <div className="manager-booking__container">
-        <div className="manager-booking__breadcrumb">
-          <Link to="#" className="manager-booking__breadcrumb-link">Dashboard</Link> &gt;
-          <Link to="#" className="manager-booking__breadcrumb-link">Apps</Link> &gt;
-          <Link to="#" className="manager-booking__breadcrumb-link">E-commerce</Link> &gt;
-          <span className="manager-booking__breadcrumb-current">Booking</span>
+    <div className="manager-customer">
+      <div className="manager-customer__container">
+        <div className="manager-customer__breadcrumb">
+          <Link to="#" className="manager-customer__breadcrumb-link">Dashboard</Link> &gt;
+          <Link to="#" className="manager-customer__breadcrumb-link">Apps</Link> &gt;
+          <Link to="#" className="manager-customer__breadcrumb-link">E-commerce</Link> &gt;
+          <span className="manager-customer__breadcrumb-current">Booking</span>
         </div>
-        <div className="manager-booking__content">
-          <table className="manager-booking__table">
+        <div className="manager-customer__content">
+          <table className="manager-customer__table">
             <thead>
               <tr>
-                <th onClick={() => sortBy('salonId')}>ID{getSortIndicator('salonId')}</th>
+                <th onClick={() => sortBy('id')}>ID{getSortIndicator('id')}</th>
                 <th onClick={() => sortBy('customer')}>Customer{getSortIndicator('customer')}</th>
-                <th onClick={() => sortBy('bookingDate')}>Date{getSortIndicator('bookingDate')}</th>
+                <th onClick={() => sortBy('date')}>Date{getSortIndicator('date')}</th>
                 <th onClick={() => sortBy('amount')}>Amount{getSortIndicator('amount')}</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {bookings.map((booking) => (
-                <tr key={booking.salonId}>
-                  <td className="manager-booking__id">{booking.salonId}</td>
+              {orders.map((order) => (
+                <tr key={order.id}>
+                  <td className="manager-customer__id">{order.id}</td>
                   <td>
-                    <div className="manager-booking__customer">
-                      <img src={booking.img} alt={booking.customer} className="manager-booking__customer-image" />
-                      <span className="manager-booking__customer-name">{booking.customer}</span>
+                    <div className="manager-customer__customer">
+                      <img src={order.img} alt={order.customer} className="manager-customer__customer-image" />
+                      <span className="manager-customer__customer-name">{order.customer}</span>
                     </div>
                   </td>
-                  <td className="manager-booking__date">{booking.bookingDate}</td>
-                  <td className="manager-booking__amount">{booking.amount}</td>
+                  <td className="manager-customer__date">{order.date}</td>
+                  <td className="manager-customer__amount">{order.amount}</td>
                   <td>
-                    <span className={`manager-booking__status manager-booking__status--${booking.status}`}>
-                      {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                    <span className={`manager-customer__status manager-customer__status--${order.status}`}>
+                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                     </span>
                   </td>
-                  <td className="manager-booking__actions">
-                    <button className="manager-booking__action-button">✎</button>
-                    <button className="manager-booking__action-button">🗑</button>
+                  <td className="manager-customer__actions">
+                    <button className="manager-customer__action-button">✎</button>
+                    <button className="manager-customer__action-button">🗑</button>
                   </td>
                 </tr>
               ))}
@@ -126,4 +126,4 @@ const ManagerBooking = () => {
   );
 };
 
-export default ManagerBooking;
+export default ManagerCustomer;

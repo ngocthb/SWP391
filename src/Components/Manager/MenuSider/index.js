@@ -8,6 +8,7 @@ import {
   ContactsOutlined,
   DashboardOutlined,
 } from "@ant-design/icons";
+import { RiCustomerService2Line } from "react-icons/ri";
 import { Link, useLocation } from "react-router-dom";
 
 function MenuSider() {
@@ -31,8 +32,9 @@ function MenuSider() {
           key: "/manager/stylist",
         },
         {
-          label: "Menu 2-1",
-          key: "menu-2-1",
+          label: <Link to="/manager/staff">Staff</Link>,
+          icon: <RiCustomerService2Line />,
+          key: "/manager/staff",
         },
       ],
     },
@@ -47,9 +49,9 @@ function MenuSider() {
       key: "/manager/booking",
     },
     {
-      label: <Link to="/create-room">Create Room</Link>,
+      label: <Link to="/manager/customer">Customer</Link>,
       icon: <PlusOutlined />,
-      key: "/create-room",
+      key: "/manager/customer",
     },
     {
       label: <Link to="/list-room">List Room</Link>,

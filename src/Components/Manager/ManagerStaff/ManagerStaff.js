@@ -8,7 +8,7 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 import { HiTrash } from "react-icons/hi2";
 import { FaUserEdit } from "react-icons/fa";
-import "./ManageStylist.scss";
+import "./ManagerStaff.scss";
 import { useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 import loginUser from "../../../data/loginUser";
@@ -18,11 +18,10 @@ import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
 
-export default function ManageStylist({ buttonLabel }) {
-  const [stylists, setStylists] = useState([]);
+export default function ManagerStaff({ buttonLabel }) {
+  const [staffs, setStaffs] = useState([]);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [salonLocations, setSalonLocations] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
@@ -79,16 +78,16 @@ export default function ManageStylist({ buttonLabel }) {
   }, []);
 
   useEffect(() => {
-    fetchStylistsData();
+    fetchStaffsData();
   }, [isUpdate]);
 
-  const fetchStylistsData = async () => {
+  const fetchStaffsData = async () => {
     try {
       const response = await api.get(`stylist-read`);
       const data = response.data; /*.result*/
 
       if (data) {
-        setStylists(data);
+        setStaffs(data);
       }
     } catch (err) {
       console.error(err);
@@ -142,7 +141,7 @@ export default function ManageStylist({ buttonLabel }) {
       if (result.isConfirmed) {
         try {
           await deleteStylistData(accountid);
-          fetchStylistsData();
+          fetchStaffsData();
         } catch (error) {
         }
       }
@@ -171,8 +170,8 @@ export default function ManageStylist({ buttonLabel }) {
     setLoading(true);
     try {
       
-      const response = await api.put(`stylist-read?accountid=${formData.accountid}`, updateValues);
-      const data = response.data;
+      const response = await api.put(`stylist/read?accountid=${formData.accountid}`, updateValues);
+      const data = response.data.result;
       
       if (data) {
         setFormData((prev) => ({
@@ -203,8 +202,8 @@ export default function ManageStylist({ buttonLabel }) {
     setSelectedFile(null);
   };
 
-  const createStylist = () => {
-    navigate("/manager/stylist/create");
+  const createStaff = () => {
+    navigate("/manager/staff/create");
   };
 
   const handleSubmit = (e) => {
@@ -214,26 +213,26 @@ export default function ManageStylist({ buttonLabel }) {
   return (
     <>
     {contextHolder}
-      <div className="ManageStylist">
-        <div className="ManageStylist__header">
-          <div className="ManageStylist__header-searchBar">
+      <div className="ManagerStaff">
+        <div className="ManagerStaff__header">
+          <div className="ManagerStaff__header-searchBar">
             <BiSearchAlt className="searchBar-icon" />
             {/* <i class="fas fa-search"></i> */}
             <input placeholder="Search here..." type="text" />
           </div>
-          <div className="ManageStylist__header-filter">
+          <div className="ManagerStaff__header-filter">
             <select>
               <option>Newest</option>
               <option>Oldest</option>
             </select>
-            <button onClick={createStylist}> {buttonLabel}</button>
+            <button onClick={createStaff}> {buttonLabel}</button>
           </div>
         </div>
         <div className="container">
-          {(stylists || []).map((stylist) => (
+          {(staffs || []).map((stylist) => (
             <div key={stylist.accountid} className="container__card">
               <img
-                alt="ManageStylist picture"
+                alt="ManagerStaff picture"
                 height="50"
                 src={stylist.image ? stylist.image : loginUser.avatar}
                 width="50"
@@ -269,9 +268,9 @@ export default function ManageStylist({ buttonLabel }) {
             </div>
           ))}
         </div>
-        <div className="ManageStylist__pagination">
-          <p>Showing 1-8 from {stylists.length} data</p>
-          <div className="ManageStylist__pagination-pages">
+        <div className="ManagerStaff__pagination">
+          <p>Showing 1-8 from {staffs.length} data</p>
+          <div className="ManagerStaff__pagination-pages">
             <span>
               {/* <i class="fas fa-chevron-left"></i> */}
               <FaAngleLeft className="pagination-icon" />
@@ -289,30 +288,30 @@ export default function ManageStylist({ buttonLabel }) {
 
       {isModalOpen && (
         <>
-          <div className="ManageStylist-backdrop" onClick={toggleModal}>
+          <div className="ManagerStaff-backdrop" onClick={toggleModal}>
             <div
-              className="ManageStylist-modal"
+              className="ManagerStaff-modal"
               onClick={(e) => e.stopPropagation()}
             >
               <form onSubmit={handleSubmit}>
-                <h2 className="ManageStylist-modal__header">
-                  Update ManageStylist
+                <h2 className="ManagerStaff-modal__header">
+                  Update ManagerStaff
                 </h2>
-                <div className="ManageStylist-modal__avatar-section">
-                  <div className="ManageStylist-modal__avatar">
+                <div className="ManagerStaff-modal__avatar-section">
+                  <div className="ManagerStaff-modal__avatar">
                     <img
                       src={selectedFile || formData.image}
                       alt={formData.fullname}
                     />
                   </div>
-                  <div className="ManageStylist-modal__avatar-info">
-                    <h3 className="ManageStylist-modal__avatar-title">
+                  <div className="ManagerStaff-modal__avatar-info">
+                    <h3 className="ManagerStaff-modal__avatar-title">
                       Change Avatar
                     </h3>
-                    <p className="ManageStylist-modal__avatar-description">
+                    <p className="ManagerStaff-modal__avatar-description">
                       Recommended Dimensions: 120x120 Max file size: 5MB
                     </p>
-                    <label className="ManageStylist-modal__upload-btn">
+                    <label className="ManagerStaff-modal__upload-btn">
                       Upload
                       <input
                         type="file"
@@ -323,57 +322,57 @@ export default function ManageStylist({ buttonLabel }) {
                     </label>
                   </div>
                 </div>
-                <div className="ManageStylist-modal__form-section">
-                  <div className="ManageStylist-modal__form-grid">
-                    <div className="ManageStylist-modal__form-group ManageStylist-modal__form-group--full-width">
+                <div className="ManagerStaff-modal__form-section">
+                  <div className="ManagerStaff-modal__form-grid">
+                    <div className="ManagerStaff-modal__form-group ManagerStaff-modal__form-group--full-width">
                       <label
                         htmlFor="fullname"
-                        className="ManageStylist-modal__label"
+                        className="ManagerStaff-modal__label"
                       >
                         Full Name:
                       </label>
                       <input
                         type="text"
                         id="fullname"
-                        className="ManageStylist-modal__input"
+                        className="ManagerStaff-modal__input"
                         placeholder="Full Name"
                         defaultValue={formData.fullname}
                       />
                     </div>
-                    <div className="ManageStylist-modal__form-group ManageStylist-modal__form-group--full-width">
+                    <div className="ManagerStaff-modal__form-group ManagerStaff-modal__form-group--full-width">
                       <label
                         htmlFor="email"
-                        className="ManageStylist-modal__label"
+                        className="ManagerStaff-modal__label"
                       >
                         Email:
                       </label>
                       <input
                         type="email"
                         id="email"
-                        className="ManageStylist-modal__input"
+                        className="ManagerStaff-modal__input"
                         placeholder="Email"
                         defaultValue={formData.email}
                       />
                     </div>
-                    <div className="ManageStylist-modal__form-group">
+                    <div className="ManagerStaff-modal__form-group">
                       <label
                         htmlFor="phone"
-                        className="ManageStylist-modal__label"
+                        className="ManagerStaff-modal__label"
                       >
                         Phone:
                       </label>
                       <input
                         type="tel"
                         id="phone"
-                        className="ManageStylist-modal__input"
+                        className="ManagerStaff-modal__input"
                         placeholder="Phone"
                         defaultValue={formData.phone}
                       />
                     </div>
-                    <div className="ManageStylist-modal__form-group">
+                    <div className="ManagerStaff-modal__form-group">
                       <label
                         htmlFor="levelName"
-                        className="ManageStylist-modal__label"
+                        className="ManagerStaff-modal__label"
                       >
                         Level:
                       </label>
@@ -381,7 +380,7 @@ export default function ManageStylist({ buttonLabel }) {
                         value={formData.levelName}
                         onChange={handleLevelChange}
                         id="levelName"
-                        className="ManageStylist-modal__input"
+                        className="ManagerStaff-modal__input"
                       >
                         <option value="" disabled>Select a level</option>
                         <option value="assistan stylist">
@@ -390,10 +389,10 @@ export default function ManageStylist({ buttonLabel }) {
                         <option value="master stylist">master stylist</option>
                       </select>
                     </div>
-                    <div className="ManageStylist-modal__form-group ManageStylist-modal__form-group--full-width">
+                    <div className="ManagerStaff-modal__form-group ManagerStaff-modal__form-group--full-width">
                       <label
                         htmlFor="salonAddress"
-                        className="ManageStylist-modal__label"
+                        className="ManagerStaff-modal__label"
                       >
                         Salon address:
                       </label>
@@ -401,7 +400,7 @@ export default function ManageStylist({ buttonLabel }) {
                         value={formData.salonAddress}
                         onChange={handleSalonAddressChange}
                         id="salonAddress"
-                        className="ManageStylist-modal__input"
+                        className="ManagerStaff-modal__input"
                       >
                         <option value="" disabled>
                           Select a salon
@@ -415,10 +414,10 @@ export default function ManageStylist({ buttonLabel }) {
                     </div>
                   </div>
                 </div>
-                <div className="ManageStylist-modal__button-container">
+                <div className="ManagerStaff-modal__button-container">
                   <button
                     type="submit"
-                    className="ManageStylist-modal__button"
+                    className="ManagerStaff-modal__button"
                     disabled={loading}
                   >
                     {loading ? <Spin size="small" /> : "Save"}
@@ -427,12 +426,6 @@ export default function ManageStylist({ buttonLabel }) {
               </form>
             </div>
           </div>
-        </>
-      )}
-
-      {isDeleteModalOpen && (
-        <>
-
         </>
       )}
     </>

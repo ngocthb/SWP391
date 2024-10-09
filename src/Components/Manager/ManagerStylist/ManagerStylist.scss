@@ -1,4 +1,4 @@
-.ManageStylist {
+.ManagerStylist {
   width: 90%;
   margin: 0 auto;
   padding: 20px 0;
@@ -198,7 +198,7 @@
   }
 }
 
-.ManageStylist-backdrop {
+.ManagerStylist-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -211,8 +211,9 @@
   align-items: center;
 }
 
-.ManageStylist-modal {
+.ManagerStylist-modal {
   max-width: 800px;
+  width: 90%;
   margin: 40px auto;
   background-color: #ffffff;
   padding: 24px;
@@ -291,9 +292,14 @@
   &__form-grid {
     display: grid;
     gap: 24px;
+    grid-template-columns: repeat(1, 1fr);
 
     &--half-width {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+    &--full-width {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -359,10 +365,55 @@
       background-color: #16435f;
     }
   }
+
+  &__skills-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    padding: 8px;
+
+    &:hover {
+      background-color: #f0f4f8;
+    }
+
+    & span {
+      display: inline-block;
+      align-items: center;
+      line-height: 16px;
+      color: #4a5568;
+      margin-left: 10px;
+    }
+  }
+
+  &__checkbox {
+    margin-right: 8px;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #1b5077;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:checked {
+      background-color: #1b5077;
+      border: 2px solid #1b5077;
+    }
+
+    &:hover {
+      border-color: #16435f;
+    }
+  }
 }
 
 @media (min-width: 640px) {
-  .ManageStylist {
+  .ManagerStylist {
     &__header {
       &-searchBar {
         input {
@@ -403,7 +454,7 @@
 }
 
 @media (min-width: 768px) {
-  .ManageStylist {
+  .ManagerStylist {
     &__header {
       &-searchBar {
         input {
@@ -445,7 +496,7 @@
 }
 
 @media (min-width: 1024px) {
-  .ManageStylist {
+  .ManagerStylist {
     &__header {
       padding: 0 5%;
     }
@@ -469,7 +520,7 @@
 }
 
 @media (min-width: 1280px) {
-  .ManageStylist {
+  .ManagerStylist {
     &__header {
       padding: 0 4%;
       &-filter {
@@ -524,7 +575,7 @@
 }
 
 @media (min-width: 1536px) {
-  .ManageStylist {
+  .ManagerStylist {
     padding: 20px 0;
     &__header {
       padding: 0 20px;

@@ -9,9 +9,13 @@ import "./ManagerHeader.scss";
 
 const pageNames = {
   "/manager/dashboard": "Dashboard",
-  "/manager/stylish": "Stylish",
+  "/manager/stylist": "Stylist",
+  "/manager/stylist/create": "New Stylist",
   "/manager/booking": "Booking",
   "/manager/service": "Service",
+  "/manager/staff": "Staff",
+  "/manager/staff/create": "New Staff",
+  "/manager/customer": "Customer",
 };
 
 const ManagerHeader = () => {

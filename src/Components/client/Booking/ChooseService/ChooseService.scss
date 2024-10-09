@@ -6,6 +6,8 @@
   align-items: center;
   height: 70%;
   &__tagNavigation {
+    display: none;
+    // display: block;
     ul {
       list-style: none;
     }
@@ -120,7 +122,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 500px;
+    // width: 400px;
     &-header {
       display: flex;
       align-items: center;
@@ -169,17 +171,6 @@
       gap: 10px;
       max-height: 450px;
       overflow-y: overlay;
-      //   background-color: #f5f5f5;
-
-      //   div {
-      //     width: 98%;
-      //     border: 2px solid var(--PrimaryColor);
-      //     gap: 2rem;
-      //     color: var(--blackColor);
-      //     border-radius: 5px;
-      //     padding: 10px 15px;
-      //     cursor: pointer;
-      //   }
 
       .chooseService__card {
         border: 1px solid var(--PrimaryColor);
@@ -188,6 +179,7 @@
         padding: 10px 15px;
         cursor: pointer;
         img {
+          object-fit: cover;
           width: 410px;
           height: 250px;
           border-radius: 8px;
@@ -279,6 +271,7 @@
         padding: 10px 0;
         border-bottom: 1px solid var(--greyText);
         &-name {
+          max-width: 250px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -289,7 +282,7 @@
           align-items: center;
           justify-content: space-between;
           display: flex;
-          max-width: 80px;
+          max-width: 280px;
           padding-left: 1rem;
           right: 0;
           .footer__service-price {
@@ -373,21 +366,80 @@
     }
   }
 }
+.voucher__modal {
+  h1 {
+    color: var(--PrimaryColor);
+  }
+  &-lists {
+    padding-bottom: 10px;
+    height: 400px;
+    overflow-y: scroll;
+    .voucher-item {
+      border: 1px solid var(--PrimaryColor);
+      background-color: #fff;
+      padding: 20px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+@media (min-width: 640px) {
+}
+@media (min-width: 768px) {
+  .chooseService {
+    &__tagNavigation {
+      display: block;
+    }
 
-// .checkbox-item {
-//   display: flex;
-//   align-items: center;
-//   padding: 10px 0;
-//   border-bottom: 1px solid #ddd;
-// }
-// .checkbox-item input {
-//   margin-right: 10px;
-// }
-// .checkbox-item .checkbox-label {
-//   font-size: 14px;
-//   color: #333;
-// }
-// .checkbox-item .checkbox-description {
-//   font-size: 12px;
-//   color: #888;
-// }
+    &__container {
+      width: 500px;
+
+      &-footer {
+        .footer__service {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px 0;
+          border-bottom: 1px solid var(--greyText);
+          &-name {
+            max-width: 250px;
+          }
+          div {
+            max-width: 300px;
+            .footer__service-price {
+              font-size: 16px;
+            }
+          }
+        }
+        .footer__pay {
+          display: flex;
+          flex-direction: column;
+          align-items: start;
+          justify-content: flex-start;
+          &-content {
+            gap: 135px;
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--greyText);
+
+            &-services {
+              font-size: 16px;
+            }
+          }
+
+          &-price {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+@media (min-width: 1024px) {
+}
+
+@media (min-width: 1280px) {
+}
+@media (min-width: 1536px) {
+}

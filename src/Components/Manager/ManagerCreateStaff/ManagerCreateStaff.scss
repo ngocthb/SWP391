@@ -1,4 +1,4 @@
- .manager-create-stylist {
+.manager-create-staff {
     max-width: 800px;
     margin: 40px auto;
     background-color: #ffffff;
@@ -173,51 +173,6 @@
   
       &:hover {
         background-color: #16435f;
-      }
-    }
-   
-    &__skills-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-  
-    &__option {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      padding: 8px;
-  
-      &:hover {
-        background-color: #f0f4f8;
-      }
-  
-      & span {
-        display: inline-block;
-        align-items: center;
-        line-height: 16px;
-        color: #4a5568;
-        margin-left: 10px;
-      }
-    }
-  
-    &__checkbox {
-      margin-right: 8px;
-      appearance: none;
-      width: 16px;
-      height: 16px;
-      border: 2px solid #1b5077;
-      border-radius: 4px;
-      cursor: pointer;
-  
-      &:checked {
-        background-color: #1b5077;
-        border: 2px solid #1b5077;
-      }
-  
-      &:hover {
-        border-color: #16435f;
       }
     }
   }
