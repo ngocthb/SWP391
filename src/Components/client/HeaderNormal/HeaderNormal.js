@@ -97,7 +97,18 @@ export default function HeaderNormal() {
                   isLoggedIn ? "logged-in" : ""
                 }`}
               >
-                <Link to={"/aboutus"} onClick={handleHomeClick}>About Us</Link>
+                <Link to={"/"} onClick={handleHomeClick}>
+                  Home
+                </Link>
+              </li>
+              <li
+                className={`header-normal__lists-items ${
+                  isLoggedIn ? "logged-in" : ""
+                }`}
+              >
+                <Link to={"/aboutus"} onClick={handleHomeClick}>
+                  About Us
+                </Link>
               </li>
               <li
                 className={`header-normal__lists-items ${
@@ -111,7 +122,9 @@ export default function HeaderNormal() {
                   isLoggedIn ? "logged-in" : ""
                 }`}
               >
-                <Link to={"/contact"} onClick={handleHomeClick}>Contact</Link>
+                <Link to={"/contact"} onClick={handleHomeClick}>
+                  Contact
+                </Link>
               </li>
 
               <div className="header-normal__lists-infor flex">

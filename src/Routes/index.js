@@ -14,7 +14,6 @@ import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking"
 
 import HomePageLayout from "../Layouts/client/HomePageLayout";
 import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
-import ManagerCreateService from "../Components/Manager/ManagerCreateService/ManagerCreateService";
 
 import BookingLayout from "../Layouts/client/BookingLayout";
 import Booking from "../Components/client/Booking/Booking";
@@ -30,6 +29,8 @@ import ManagerService from "../Components/Manager/ManagerService/ManagerService"
 import ManagerCustomer from "../Components/Manager/ManagerCustomer/ManagerCustomer";
 import ManagerCreateStaff from "../Components/Manager/ManagerCreateStaff/ManagerCreateStaff";
 
+import Services from "../Components/client/Services/Services";
+import MyBooking from "../Components/client/MyBooking/MyBooking";
 export const Routes = [
   {
     path: "/",
@@ -42,6 +43,10 @@ export const Routes = [
       {
         path: "/aboutus",
         element: <AboutUsPage />,
+      },
+      {
+        path: "/services",
+        element: <Services />,
       },
       {
         path: "/contact",
@@ -87,6 +92,10 @@ export const Routes = [
         path: "profile",
         element: <UserInfor />,
       },
+      {
+        path: "mybooking",
+        element: <MyBooking />,
+      },
     ],
   },
   {
@@ -99,11 +108,7 @@ export const Routes = [
       },
       {
         path: "stylist/create",
-        element: <ManagerCreateStylist/>
-      },
-      {
-        path: "staff",
-        element: <ManagerStaff buttonLabel={"+ New staff"} />,
+        element: <ManagerCreateStylist />,
       },
       {
         path: "dashboard",
@@ -116,10 +121,6 @@ export const Routes = [
       {
         path: "service",
         element: <ManagerService/>,
-      },
-      {
-        path: "service/create",
-        element: <ManagerCreateService />,
       },
       {
         path: "customer",
@@ -149,7 +150,7 @@ export const Routes = [
       },
       {
         path: "step3",
-        element: <ChooseStylist/>
+        element: <ChooseStylist />,
       },
       {
         path: "step4",

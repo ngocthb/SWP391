@@ -7,6 +7,7 @@
   height: 70%;
 
   &__tagNavigation {
+    display: none;
     ul {
       list-style: none;
     }
@@ -115,7 +116,7 @@
       }
     }
   }
-  
+
   &__container {
     background-color: white;
     border-radius: 5px;
@@ -188,7 +189,7 @@
       .time-slot.disabled {
         opacity: 0.5; // Change opacity to indicate it's disabled
         cursor: not-allowed; // Change cursor to indicate it's not clickable
-      
+
         &:hover {
           // Prevent hover effect on disabled slots
           background-color: #e0e0e0; // Keep the background color the same
@@ -223,4 +224,19 @@
       }
     }
   }
+}
+@media (min-width: 640px) {
+}
+@media (min-width: 768px) {
+  .chooseDateTime {
+    &__tagNavigation {
+      display: block;
+    }
+  }
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1280px) {
+}
+@media (min-width: 1536px) {
 }

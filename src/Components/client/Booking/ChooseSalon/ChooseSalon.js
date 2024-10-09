@@ -45,7 +45,6 @@ export default function ChooseSalon() {
     }
   }, [salonLocations]);
 
-
   // useEffect(() => {
 
   //   if (!searchValue.trim()) {
@@ -100,28 +99,48 @@ export default function ChooseSalon() {
             </Link>
             <div className="tooltip">Salon</div>
           </li>
-          <li className={`chooseSalon__tagNavigation--item-content ${isSelectedBranch ? '' : 'disable'}`}>
-            <Link to={isSelectedBranch ? "/booking/step2" : "/booking/step1"} aria-label="Select Service">
+          <li
+            className={`chooseSalon__tagNavigation--item-content ${
+              isSelectedBranch ? "" : "disable"
+            }`}
+          >
+            <Link
+              to={isSelectedBranch ? "/booking/step2" : "/booking/step1"}
+              aria-label="Select Service"
+            >
               <div className="filled"></div>
               <PiScissors />
             </Link>
             <div className="tooltip">Service</div>
           </li>
-          <li className={`chooseSalon__tagNavigation--item-content ${isSelectedServices ? '' : 'disable'}`}>
-            <Link to={isSelectedServices ? "/booking/step3" : "/booking/step1"} aria-label="Select Stylist">
+          <li
+            className={`chooseSalon__tagNavigation--item-content ${
+              isSelectedServices ? "" : "disable"
+            }`}
+          >
+            <Link
+              to={isSelectedServices ? "/booking/step3" : "/booking/step1"}
+              aria-label="Select Stylist"
+            >
               <div className="filled"></div>
               <SlPeople />
             </Link>
             <div className="tooltip">Stylist</div>
           </li>
-          <li className={`chooseSalon__tagNavigation--item-content ${isSelectedStylist ? '' : 'disable'}`}>
-            <Link to={isSelectedStylist ? "/booking/step4" : "/booking/step1"} aria-label="Select Time">
+          <li
+            className={`chooseSalon__tagNavigation--item-content ${
+              isSelectedStylist ? "" : "disable"
+            }`}
+          >
+            <Link
+              to={isSelectedStylist ? "/booking/step4" : "/booking/step1"}
+              aria-label="Select Time"
+            >
               <div className="filled"></div>
               <RiCalendarScheduleLine />
             </Link>
             <div className="tooltip">Time</div>
           </li>
-          
         </ul>
       </div>
 
@@ -154,7 +173,11 @@ export default function ChooseSalon() {
           {salonLocations.map((branch) => (
             <div
               onClick={() => handleBranchSelect(branch)}
-              className={`chooseSalon__container-single ${selectedBranch && selectedBranch.id === branch.id ? "selected" : ""}`}
+              className={`chooseSalon__container-single ${
+                selectedBranch && selectedBranch.id === branch.id
+                  ? "selected"
+                  : ""
+              }`}
               key={branch.id}
               aria-label={`Select ${branch.address}`}
             >
@@ -164,7 +187,9 @@ export default function ChooseSalon() {
         </div>
         <Link
           to="/booking/step2"
-          className={`chooseSalon__container-btn btn flex ${!!selectedBranch ? "" : "btn-disable"}`}
+          className={`chooseSalon__container-btn btn flex ${
+            !!selectedBranch ? "" : "btn-disable"
+          }`}
           onClick={(e) => {
             if (!selectedBranch) {
               e.preventDefault();

@@ -32,38 +32,22 @@ export default function ManagerService() {
       <div className="service">
         {(services || []).map((service) => (
           <div key={service.id} class="service__card">
-            <img alt="Service Img" src={service.image} />
-            <div class="service__card-info">
-              <h3>{service.name}</h3>
-              <p>{service.description}</p>
-              {/* <div class="service__outcome">
-                <div class="service__outcome-rating">
-                  <p>Rating</p>
-                  <p>
-                    <FaStar />
-                    {service.rating}
-                  </p>
-                </div>
-                <div class="service__outcome-order">
-                  <p>{service.totalOrder}</p>
-                  <p>Total Order</p>
-                </div>
-                <div class="service__outcome-interest">
-                  <p>
-                    {service.interest}
-                    <br />
-                    Interest
-                  </p>
-                </div>
-              </div> */}
-              <div class="service-actions">
-                <button class="delete btn">
-                  <HiTrash />
-                </button>
-                <button class="update btn">
-                  <FaUserEdit />
-                </button>
+            <div className="service__card-content">
+              <img alt="Service Img" src={service.image} />
+              <div class="content-info">
+                <h3>{service.name}</h3>
+                <p>Price : {service.price} VND</p>
+                <p>Duration : {service.duration}</p>
+                <p>{service.description}</p>
               </div>
+            </div>
+            <div class="service-actions">
+              <button class="delete btn">
+                <HiTrash />
+              </button>
+              <button class="update btn">
+                <FaUserEdit />
+              </button>
             </div>
           </div>
         ))}

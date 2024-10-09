@@ -78,12 +78,9 @@ export default function Booking() {
       };
 
       try {
-        const response = await api./*post*/get(
-          "booking-stylists",
-          bookingValue
-        );
-        if (response.data /*&& response.data.result*/) {
-          setStylists(response.data/*.result*/);
+        const response = await api.post("booking/stylists", bookingValue);
+        if (response.data && response.data.result) {
+          setStylists(response.data.result);
         }
       } catch (error) {}
     };
@@ -98,20 +95,23 @@ export default function Booking() {
     const fetchTimeSlots = async () => {
       const bookingValue = {
         salonId: branchId,
-        serviceId: serviceIds,  
+        serviceId: serviceIds,
         accountId: stylistId,
         date: formatDateForInput(date),
       };
 
       try {
         const response = await api.get(
-          "booking-slots",
+          "booking/slots",
           bookingValue
         );
-        if (response.data /*&& response.data.result*/) {
-          setTimeSlots(response.data/*.result*/);
+        if (response.data) {
+          setTimeSlots(response.data.result);
+        const response = await api.get("booking/slots", bookingValue);
+        if (response.data && response.data.result) {
+          setTimeSlots(response.data.result);
         }
-      } catch (error) {}
+      }} catch (error) {}
     };
     fetchTimeSlots();
   }, []);
@@ -185,7 +185,6 @@ export default function Booking() {
   }, []);
 
   const handleBookNow = async () => {
-
     const customerId = userInfo.accountid;
 
     const storedBranchId = sessionStorage.getItem("selectedBranchId");
@@ -204,22 +203,22 @@ export default function Booking() {
     const slotId = parseInt(storeSlotId, 10);
 
     const bookingValue = {
-        salonId: branchId,
-        serviceId: serviceIds,
-        stylistId: stylistId,
-        customerId: customerId,
-        slotId: slotId,
-        bookingDate: formatDateForInput(date),
-        voucherId: null,
+      salonId: branchId,
+      serviceId: serviceIds,
+      stylistId: stylistId,
+      customerId: customerId,
+      slotId: slotId,
+      bookingDate: formatDateForInput(date),
+      voucherId: null,
     };
 
     try {
-        const response = await api.post("booking", bookingValue);
-        if (response.data && response.data.result) {
-            navigate("/");
-        }
+      const response = await api.post("booking", bookingValue);
+      if (response.data && response.data.result) {
+        navigate("/");
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
 
     sessionStorage.removeItem("selectedBranchId");
@@ -227,7 +226,7 @@ export default function Booking() {
     sessionStorage.removeItem("selectedTimeId");
     sessionStorage.removeItem("selectedDate");
     sessionStorage.removeItem("selectedStylistId");
-};
+  };
 
   const formatDate = (date) => {
     const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" });
@@ -243,10 +242,9 @@ export default function Booking() {
     sessionStorage.removeItem("selectedTimeId");
     sessionStorage.removeItem("selectedDate");
     sessionStorage.removeItem("selectedStylistId");
-  }
+  };
 
   const formattedDate = selectedDate ? formatDate(selectedDate) : "";
-
 
   return (
     <div className="booking">
@@ -326,21 +324,21 @@ export default function Booking() {
             </div>
           </div>
           <div className="booking__button-group">
-          <Link
-            to="/"
-            className="booking__container-btn btn flex"
-            onClick={handleCancle}
-          >
-            Cancel
-          </Link>
-          <Link
-            to="/"
-            className="booking__container-btn btn flex"
-            onClick={handleBookNow}
-          >
-            Book Now
-          </Link>
-        </div>
+            <Link
+              to="/"
+              className="booking__container-btn btn flex"
+              onClick={handleCancle}
+            >
+              Cancel
+            </Link>
+            <Link
+              to="/"
+              className="booking__container-btn btn flex"
+              onClick={handleBookNow}
+            >
+              Book Now
+            </Link>
+          </div>
         </form>
       </div>
     </div>

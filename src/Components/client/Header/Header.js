@@ -109,7 +109,7 @@ export default function Header() {
             <li className="navBar__lists-items">
               <Link to="/" onClick={handleHomeClick}>
                 {" "}
-                Home Page
+                Home
               </Link>
             </li>
             <li className="navBar__lists-items">
