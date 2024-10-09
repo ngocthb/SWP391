@@ -22,9 +22,33 @@ import { slots } from "../../../../data/booking";
 
 export function ChooseSalon({ onNext }) {
   const [searchValue, setSearchValue] = useState("");
+  // const [salonLocations, setSalonLocations] = useState([]);
   const [searchResults, setSearchResults] = useState(salonLocations);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const inputRef = useRef();
+
+  // useEffect(() => {
+  //   const fetchSalonLocations = async () => {
+  //     try {
+  //       const response = await api.get("salon");
+  //       if (response.data && response.data.result) {
+  //         setSalonLocations(response.data.result);
+  //       }
+  //     } catch (error) {}
+  //   };
+  //   fetchSalonLocations();
+  // }, []);
+
+  useEffect(() => {
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
+    if (storedBranchId) {
+      const branchId = parseInt(storedBranchId, 10);
+      const branch = salonLocations.find((b) => b.id === branchId);
+      if (branch) {
+        setSelectedBranch(branch);
+      }
+    }
+  }, [salonLocations]);
 
   useEffect(() => {
     if (!searchValue.trim()) {
@@ -63,6 +87,10 @@ export function ChooseSalon({ onNext }) {
   const handleBranchSelect = (branch) => {
     setSelectedBranch(branch);
   };
+
+  const isSelectedBranch = !!sessionStorage.getItem("selectedBranchId");
+  const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
+  const isSelectedServices = !!sessionStorage.getItem("selectedServicesId");
   return (
     <>
       <div className="myBooking__salon">

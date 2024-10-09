@@ -21,15 +21,11 @@
         border: 1px solid #ccc;
         border-radius: 50px;
         margin-right: 10px;
-        font-size: 16px;
+        font-size: 12px;
         width: 100%;
         padding: 10px 10px 10px 40px;
       }
-      i {
-        position: absolute;
-        margin-left: 15px;
-        color: #aaa;
-      }
+
       .searchBar-icon {
         position: absolute;
         left: 10px;
@@ -84,47 +80,53 @@
       text-align: center;
       position: relative;
       width: 100%;
-      img {
-        border-radius: 15px;
-        width: 150px;
-        height: 150px;
+      flex-direction: column;
+      &-content {
+        display: flex;
+        img {
+          border-radius: 15px;
+          width: 150px;
+          height: 180px;
+          object-fit: cover;
+        }
+        .content-info {
+          flex: 1;
+          margin-left: 20px;
+          text-align: start;
+          h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #002855;
+          }
+          p {
+            margin: 10px 0;
+            color: #666;
+          }
+        }
       }
-      &-info {
-        flex: 1;
-        margin-left: 20px;
-        h3 {
-          margin: 0;
-          font-size: 20px;
-          color: #002855;
-        }
-        p {
-          margin: 10px 0;
-          color: #666;
-        }
 
-        .service-actions {
-          display: flex;
-          justify-content: space-evenly;
-          margin-top: 10px;
-          button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 50px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            :hover {
-              color: var(--greyText);
-            }
+      .service-actions {
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+        button {
+          padding: 10px 20px;
+          border: none;
+          border-radius: 50px;
+          font-size: 14px;
+          cursor: pointer;
+          transition: background-color 0.3s ease, color 0.3s ease;
+          :hover {
+            color: var(--greyText);
           }
-          .delete {
-            background-color: #f44336;
-            color: #fff;
-          }
-          .update {
-            background-color: var(--PrimaryColor);
-            color: #fff;
-          }
+        }
+        .delete {
+          background-color: #f44336;
+          color: #fff;
+        }
+        .update {
+          background-color: var(--PrimaryColor);
+          color: #fff;
         }
       }
     }
@@ -201,14 +203,15 @@
       justify-content: flex-start;
       gap: 80px;
       &__card {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
         width: 43%;
-        margin-bottom: 0;
-        img {
-          width: 220px;
-          height: 150px;
+
+        &-content {
+          display: flex;
+          flex-direction: column;
+          img {
+            border-radius: 15px;
+            width: 100%;
+          }
         }
       }
     }
@@ -217,18 +220,16 @@
 
 @media (min-width: 1280px) {
   .ManageService {
-    &__header {
-      padding: 0 4%;
-    }
     .service {
-      gap: 40px;
       &__card {
-        flex-direction: row;
-        width: 45%;
-        margin-top: 0;
-        img {
-          width: 200px;
-          height: 150px;
+        width: 43%;
+
+        &-content {
+          display: flex;
+          flex-direction: row;
+          img {
+            width: 40%;
+          }
         }
       }
     }
@@ -240,8 +241,7 @@
     .service {
       &__card {
         img {
-          width: 280px;
-          height: 150px;
+          width: 60%;
         }
       }
     }

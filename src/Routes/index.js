@@ -15,7 +15,7 @@ import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking"
 import HomePageLayout from "../Layouts/client/HomePageLayout";
 import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
 import ManageService from "../Components/Manager/ManageService/ManageService";
-import ManagerCreateService from "../Components/Manager/ManagerCreateService/ManagerCreateService";
+
 import BookingLayout from "../Layouts/client/BookingLayout";
 import Booking from "../Components/client/Booking/Booking";
 import ChooseSalon from "../Components/client/Booking/ChooseSalon/ChooseSalon";
@@ -117,10 +117,6 @@ export const Routes = [
       {
         path: "service",
         element: <ManageService />,
-      },
-      {
-        path: "service/create",
-        element: <ManagerCreateService />,
       },
     ],
   },

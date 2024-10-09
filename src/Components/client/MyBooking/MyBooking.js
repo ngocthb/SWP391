@@ -6,21 +6,104 @@ import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 import { RiTimeLine } from "react-icons/ri";
 import { LiaUserEditSolid } from "react-icons/lia";
+import { GoDotFill } from "react-icons/go";
 
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+// import api from "../../../config/axios";
 import { Modal } from "antd";
 
 import * as UpdateMyBooking from "./UpdateMyBooking/UpdateMyBooking";
 
 import "./MyBooking.scss";
-import services from "../../../data/services";
+// import bookingHistory from "../../../data/services";
+
+const bookingHistory = [
+  {
+    bookingId: 8,
+    salonName: "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+    stylistName: "Hồ Thành Minh",
+    date: "2024-10-09",
+    time: "08:00:00",
+    serviceName: [
+      {
+        serviceName: "Basic Standard Hair straightening",
+      },
+      {
+        serviceName: "Basic Standard Hair Crul",
+      },
+      {
+        serviceName: "Hair cut",
+      },
+    ],
+    status: "PENDING",
+  },
+  {
+    bookingId: 9,
+    salonName: "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+    stylistName: "Hồ Thành Minh",
+    date: "2024-10-09",
+    time: "10:00:00",
+    serviceName: [
+      {
+        serviceName: "Basic Standard Hair Crul",
+      },
+      {
+        serviceName: "Hair cut",
+      },
+    ],
+    status: "PENDING",
+  },
+  {
+    bookingId: 10,
+    salonName: "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+    stylistName: "Hồ Thành Minh",
+    date: "2024-10-09",
+    time: "10:00:00",
+    serviceName: [
+      {
+        serviceName: "Basic Standard Hair Crul",
+      },
+      {
+        serviceName: "Hair cut",
+      },
+    ],
+    status: "PENDING",
+  },
+];
 
 export default function MyBooking() {
   const { confirm } = Modal;
-  const [activeTab, setActiveTab] = useState("finish");
-
+  const [activeTab, setActiveTab] = useState("completed");
+  // const [bookingHistory, setBookingHistory] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [accountId, setAcountId] = useState(0);
+  // const fetchAccountId = async () => {
+  //   try {
+  //     const response = await api.get(`customer/profile`);
+  //     const data = response.data.result;
+
+  //     if (data) {
+  //       setAcountId(data.accountid);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const fetchBookingHistory = async () => {
+  //     try {
+  //       const response = await api.get(`customer/${accountId}/${activeTab}`);
+  //       // console.log(response);
+  //       if (response.data && response.data.data) {
+  //         setBookingHistory(response.data.data);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchBookingHistory();
+  // }, []);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -56,38 +139,64 @@ export default function MyBooking() {
       setCurrentStep("dateTime");
     }
   };
+
   return (
     <>
       <div className="myBooking">
         <div className="myBooking__tabs">
           <label
-            onClick={() => setActiveTab("finish")}
+            onClick={() => setActiveTab("completed")}
             htmlFor="tab1"
-            className={activeTab === "finish" ? "label-active" : ""}
+            className={activeTab === "completed" ? "label-active" : ""}
           >
-            Finish
+            Completed
           </label>
 
           <label
-            onClick={() => setActiveTab("coming")}
+            onClick={() => setActiveTab("pending")}
             htmlFor="tab2"
-            className={activeTab === "coming" ? "label-active" : ""}
+            className={activeTab === "pending" ? "label-active" : ""}
           >
-            Coming
+            Pending
           </label>
 
           <div className="myBooking__tabs-panels">
             {/* xem lịch sử giao dịch và thêm feedback */}
-            {activeTab === "finish" && (
+            {activeTab === "completed" && (
               <section className="tab-panel">
                 <h2>Booking history </h2>
                 <div className="panel">
-                  {(services || []).map((service) => (
-                    <div key={service.id} className="panel__card">
-                      {/* <img alt="Service Img" src={service.image} /> */}
+                  {(bookingHistory || []).map((booking) => (
+                    <div key={booking.bookingId} className="panel__card">
                       <div className="panel__card-info">
-                        <h3>{service.name}</h3>
-                        <p>{service.description}</p>
+                        <div className="info__title">
+                          <h3>#{booking.bookingId}</h3>
+                          <div className="info__title-right">
+                            <h3>#{booking.date}</h3>
+                            <h4>{booking.time}</h4>
+                          </div>
+                        </div>
+                        <div className="info__content">
+                          <p>
+                            <label>Address :</label>
+                            {booking.salonName}
+                          </p>
+                          <p>
+                            <label>Stylist :</label> {booking.stylistName}
+                          </p>
+                          <div className="info__content-lists">
+                            <label>Services :</label>
+                            {Array.isArray(booking.serviceName) &&
+                            booking.serviceName.length > 0
+                              ? booking.serviceName.map((service, index) => (
+                                  <div key={index}>
+                                    <GoDotFill className="lists-icon" />
+                                    {service.serviceName}
+                                  </div>
+                                ))
+                              : null}
+                          </div>
+                        </div>
 
                         <div className="panel-action" onClick={showModal}>
                           <button className="panel-btn btn">
@@ -180,76 +289,48 @@ export default function MyBooking() {
             )}
 
             {/* update và xóa booking */}
-            {activeTab === "coming" && (
+            {activeTab === "pending" && (
               <section className="tab-panel">
                 <h2>Booking upcoming </h2>
                 <div className="panel">
-                  {(services || []).map((service) => (
-                    <div key={service.id} className="panel__card">
-                      <div className="panel__card-items">
-                        <div
-                          className="panel__card-item"
-                          // onClick={() => showModal(<chooseSalon />)}
-                        >
-                          <label>Salon</label>
-                          <div className="form-input">
-                            <CiHome className="form-icon" />
-                            <input
-                              type="text"
-                              placeholder="View All Salons"
-                              readOnly
-                            />
+                  {(bookingHistory || []).map((booking) => (
+                    <div key={booking.bookingId} className="panel__card">
+                      <div className="panel__card-info">
+                        <div className="info__title">
+                          <h3>#{booking.bookingId}</h3>
+                          <div className="info__title-right">
+                            <h3>#{booking.date}</h3>
+                            <h4>{booking.time}</h4>
+                          </div>
+                        </div>
+                        <div className="info__content">
+                          <p>
+                            <label>Address :</label>
+                            {booking.salonName}
+                          </p>
+                          <p>
+                            <label>Stylist :</label> {booking.stylistName}
+                          </p>
+                          <div className="info__content-lists">
+                            <label>Services :</label>
+                            {Array.isArray(booking.serviceName) &&
+                            booking.serviceName.length > 0
+                              ? booking.serviceName.map((service, index) => (
+                                  <div key={index}>
+                                    <GoDotFill className="lists-icon" />
+                                    {service.serviceName}
+                                  </div>
+                                ))
+                              : null}
                           </div>
                         </div>
 
-                        <div className="panel__card-item">
-                          <label>Service</label>
-                          <div className="form-input">
-                            <PiScissors className="form-icon" />
-                            <input placeholder="View all  services" readOnly />
-                          </div>
-                        </div>
-
-                        <div className="panel__card-item">
-                          <label>Date</label>
-                          <div className="form-input">
-                            <RiCalendarScheduleLine className="form-icon" />
-                            <input
-                              type="text"
-                              placeholder="View Selected Date"
-                              readOnly
-                            />
-                          </div>
-                        </div>
-
-                        <div className="panel__card-item">
-                          <label>Time</label>
-                          <div className="form-input">
-                            <RiTimeLine className="form-icon" />
-                            <input
-                              type="text"
-                              placeholder="View Selected Time"
-                              readOnly
-                            />
-                          </div>
-                        </div>
-
-                        <div className="panel__card-item">
-                          <label>Stylist</label>
-                          <div className="form-input">
-                            <SlPeople className="form-icon" />
-                            <input
-                              type="text"
-                              placeholder="View All Stylists"
-                              readOnly
-                            />
-                          </div>
-                        </div>
                         <div className="panel-actions">
                           <button
                             className="panel-btn btn"
                             onClick={() =>
-                              showModal(<UpdateMyBooking.ChooseSalon />)
+                              // showModal(<UpdateMyBooking.ChooseSalon />)
+                              console.log(booking)
                             }
                           >
                             <LiaUserEditSolid className="myBooking-icon" />
@@ -265,7 +346,6 @@ export default function MyBooking() {
                     </div>
                   ))}
                 </div>
-
                 <Modal
                   open={isModalOpen}
                   onCancel={() => setIsModalOpen(false)}
