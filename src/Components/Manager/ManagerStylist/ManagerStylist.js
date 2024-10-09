@@ -178,7 +178,7 @@ export default function ManagerStylist({ buttonLabel }) {
     });
   };
 
-  const updateStylishData = async (e) => {
+  const updateStylistData = async (e) => {
     e.preventDefault();
     const selectedSkillsId = selectedSkills.map(Number);
     const numberOfSkillId = skills.reduce((total, item) => {
@@ -265,7 +265,7 @@ export default function ManagerStylist({ buttonLabel }) {
   };
 
   const handleSubmit = (e) => {
-    updateStylishData(e);
+    updateStylistData(e);
   };
 
   return (
@@ -356,7 +356,7 @@ export default function ManagerStylist({ buttonLabel }) {
             >
               <form onSubmit={handleSubmit}>
                 <h2 className="ManagerStylist-modal__header">
-                  Update ManagerStylist
+                  Update Stylist
                 </h2>
                 <div className="ManagerStylist-modal__avatar-section">
                   <div className="ManagerStylist-modal__avatar">

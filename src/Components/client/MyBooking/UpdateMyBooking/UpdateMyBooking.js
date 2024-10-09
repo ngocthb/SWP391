@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import { FaArrowRight } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
@@ -7,7 +8,7 @@ import { LuCalendarSearch } from "react-icons/lu";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaStar } from "react-icons/fa6";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -15,39 +16,51 @@ import { Navigation } from "swiper/modules";
 import api from "../../../../config/axios";
 import "./UpdateMyBooking.scss";
 
-import { salonLocations } from "../../../../data/booking";
-import { services } from "../../../../data/booking";
+// import { salonLocations } from "../../../../data/booking";
+// import { services } from "../../../../data/booking";
 import { stylists } from "../../../../data/booking";
 import { slots } from "../../../../data/booking";
+import { bookingIdContext } from "../MyBooking";
 
 export function ChooseSalon({ onNext }) {
   const [searchValue, setSearchValue] = useState("");
-  // const [salonLocations, setSalonLocations] = useState([]);
+  const [salonLocations, setSalonLocations] = useState([]);
   const [searchResults, setSearchResults] = useState(salonLocations);
-  const [selectedBranch, setSelectedBranch] = useState(null);
+  const [selectedBranch, setSelectedBranch] = useState(0);
   const inputRef = useRef();
-
-  // useEffect(() => {
-  //   const fetchSalonLocations = async () => {
-  //     try {
-  //       const response = await api.get("salon");
-  //       if (response.data && response.data.result) {
-  //         setSalonLocations(response.data.result);
-  //       }
-  //     } catch (error) {}
-  //   };
-  //   fetchSalonLocations();
-  // }, []);
+  const bookingId = useContext(bookingIdContext);
 
   useEffect(() => {
-    const storedBranchId = sessionStorage.getItem("selectedBranchId");
-    if (storedBranchId) {
-      const branchId = parseInt(storedBranchId, 10);
-      const branch = salonLocations.find((b) => b.id === branchId);
-      if (branch) {
-        setSelectedBranch(branch);
+    const fetchSalonLocations = async () => {
+      try {
+        const response = await api.get("salons");
+        if (response.data) {
+          setSalonLocations(response.data /*.result*/);
+        }
+      } catch (error) {}
+    };
+    fetchSalonLocations();
+  }, []);
+
+  useEffect(() => {
+    const fetchBooking = async () => {
+      try {
+        const response = await api.get(
+          /*`customer/${accountId}/${activeTab}`*/ `bookingHistory?bookingId=${bookingId}`
+        );
+        const data = response.data[0];
+        if (data) {
+          const foundSalon = salonLocations.find(item => item.address === data.salonName);
+          const salonId = foundSalon ? foundSalon.id : null;
+          if (salonId) {
+            setSelectedBranch(salonId);
+          }
+        }
+      } catch (error) {
+        console.log(error);
       }
-    }
+    };
+    fetchBooking();
   }, [salonLocations]);
 
   useEffect(() => {
@@ -87,10 +100,6 @@ export function ChooseSalon({ onNext }) {
   const handleBranchSelect = (branch) => {
     setSelectedBranch(branch);
   };
-
-  const isSelectedBranch = !!sessionStorage.getItem("selectedBranchId");
-  const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
-  const isSelectedServices = !!sessionStorage.getItem("selectedServicesId");
   return (
     <>
       <div className="myBooking__salon">
@@ -120,9 +129,7 @@ export function ChooseSalon({ onNext }) {
             <div
               onClick={() => handleBranchSelect(branch)}
               className={`myBooking__salon-single ${
-                selectedBranch && selectedBranch.id === branch.id
-                  ? "selected"
-                  : ""
+                selectedBranch && selectedBranch === branch.id ? "selected" : ""
               }`}
               key={branch.id}
             >
@@ -142,19 +149,23 @@ export function ChooseSalon({ onNext }) {
 export function ChooseService({ onNext }) {
   const [searchValue, setSearchValue] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
+  const [services, setServices] = useState([]);
   const [searchResults, setSearchResults] = useState(services);
   const [areServicesHidden, setAreServicesHidden] = useState(false);
   const inputRef = useRef(null);
+  const bookingId = useContext(bookingIdContext);
 
   useEffect(() => {
-    const storedServices = localStorage.getItem("selectedServicesId");
-    if (storedServices) {
-      const serviceIds = JSON.parse(storedServices);
-      const selected = services.filter((service) =>
-        serviceIds.includes(service.id)
-      );
-      setSelectedServices(selected);
-    }
+    const fetchServices = async () => {
+      try {
+        const response = await api.get("service");
+        if (response.data) {
+          setServices(response.data /*.result*/);
+
+        }
+      } catch (error) {}
+    };
+    fetchServices();
   }, []);
 
   useEffect(() => {
@@ -177,7 +188,30 @@ export function ChooseService({ onNext }) {
     };
 
     fetchServices();
-  }, [searchValue]);
+  }, [searchValue, services]);
+
+  useEffect(() => {
+    const fetchBooking = async () => {
+      try {
+        const response = await api.get(
+          /*`customer/${accountId}/${activeTab}`*/ `bookingHistory?bookingId=${bookingId}`
+        );
+        const data = response.data[0];
+        if (data) {
+          console.log(data.serviceName[1].serviceName);
+          console.log(services[1].serviceName);
+          console.log(services[1].serviceName === data.serviceName[1].serviceName);
+          const foundService = services.filter(item => item.serviceName === data.serviceName);
+          if (foundService) {
+            setSelectedServices(foundService);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBooking();
+  }, [services]);
 
   const handleChange = (e) => {
     setSearchValue(e.target.value);

@@ -1,15 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FiTrash2 } from "react-icons/fi";
 import { VscFeedback } from "react-icons/vsc";
-import { CiHome } from "react-icons/ci";
-import { PiScissors } from "react-icons/pi";
-import { RiCalendarScheduleLine } from "react-icons/ri";
-import { SlPeople } from "react-icons/sl";
-import { RiTimeLine } from "react-icons/ri";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
 
-import React, { useState, useEffect } from "react";
-// import api from "../../../config/axios";
+import React, { useState, useEffect, createContext } from "react";
+import api from "../../../config/axios";
 import { Modal } from "antd";
 
 import * as UpdateMyBooking from "./UpdateMyBooking/UpdateMyBooking";
@@ -17,95 +13,109 @@ import * as UpdateMyBooking from "./UpdateMyBooking/UpdateMyBooking";
 import "./MyBooking.scss";
 // import bookingHistory from "../../../data/services";
 
-const bookingHistory = [
-  {
-    bookingId: 8,
-    salonName: "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
-    stylistName: "Hồ Thành Minh",
-    date: "2024-10-09",
-    time: "08:00:00",
-    serviceName: [
-      {
-        serviceName: "Basic Standard Hair straightening",
-      },
-      {
-        serviceName: "Basic Standard Hair Crul",
-      },
-      {
-        serviceName: "Hair cut",
-      },
-    ],
-    status: "PENDING",
-  },
-  {
-    bookingId: 9,
-    salonName: "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
-    stylistName: "Hồ Thành Minh",
-    date: "2024-10-09",
-    time: "10:00:00",
-    serviceName: [
-      {
-        serviceName: "Basic Standard Hair Crul",
-      },
-      {
-        serviceName: "Hair cut",
-      },
-    ],
-    status: "PENDING",
-  },
-  {
-    bookingId: 10,
-    salonName: "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
-    stylistName: "Hồ Thành Minh",
-    date: "2024-10-09",
-    time: "10:00:00",
-    serviceName: [
-      {
-        serviceName: "Basic Standard Hair Crul",
-      },
-      {
-        serviceName: "Hair cut",
-      },
-    ],
-    status: "PENDING",
-  },
-];
+// const bookingHistory = [
+//   {
+//     bookingId: 8,
+//     salonName: "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+//     stylistName: "Hồ Thành Minh",
+//     date: "2024-10-09",
+//     time: "08:00:00",
+//     serviceName: [
+//       {
+//         serviceName: "Basic Standard Hair straightening",
+//       },
+//       {
+//         serviceName: "Basic Standard Hair Crul",
+//       },
+//       {
+//         serviceName: "Hair cut",
+//       },
+//     ],
+//     status: "PENDING",
+//   },
+//   {
+//     bookingId: 9,
+//     salonName: "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+//     stylistName: "Hồ Thành Minh",
+//     date: "2024-10-09",
+//     time: "10:00:00",
+//     serviceName: [
+//       {
+//         serviceName: "Basic Standard Hair Crul",
+//       },
+//       {
+//         serviceName: "Hair cut",
+//       },
+//     ],
+//     status: "PENDING",
+//   },
+//   {
+//     bookingId: 10,
+//     salonName: "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+//     stylistName: "Hồ Thành Minh",
+//     date: "2024-10-09",
+//     time: "10:00:00",
+//     serviceName: [
+//       {
+//         serviceName: "Basic Standard Hair Crul",
+//       },
+//       {
+//         serviceName: "Hair cut",
+//       },
+//     ],
+//     status: "PENDING",
+//   },
+// ];
+
+export const bookingIdContext = createContext();
 
 export default function MyBooking() {
   const { confirm } = Modal;
   const [activeTab, setActiveTab] = useState("completed");
-  // const [bookingHistory, setBookingHistory] = useState([]);
+  const [bookingHistory, setBookingHistory] = useState([]);
+  const [bookingId, setBookingId] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [accountId, setAcountId] = useState(0);
-  // const fetchAccountId = async () => {
-  //   try {
-  //     const response = await api.get(`customer/profile`);
-  //     const data = response.data.result;
+  const [accountId, setAcountId] = useState(0);
 
-  //     if (data) {
-  //       setAcountId(data.accountid);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  useEffect(() => {
+    fetchUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // useEffect(() => {
-  //   const fetchBookingHistory = async () => {
-  //     try {
-  //       const response = await api.get(`customer/${accountId}/${activeTab}`);
-  //       // console.log(response);
-  //       if (response.data && response.data.data) {
-  //         setBookingHistory(response.data.data);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchBookingHistory();
-  // }, []);
-  const showModal = () => {
-    setIsModalOpen(true);
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get(`customer/profile`);
+      const data = response.data.result;
+
+      if (data) {
+        setAcountId(data.accountid);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchBookingHistory = async () => {
+      try {
+        const response = await api.get(
+          /*`customer/${accountId}/${activeTab}`*/ "bookingHistory"
+        );
+        if (response.data) {
+          setBookingHistory(response.data /*.result*/);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBookingHistory();
+  }, []);
+
+  const showModal = (bookingId) => {
+    if (bookingId) {
+      setIsModalOpen(true);
+      setBookingId(bookingId);
+    }
   };
   const handleOk = () => {
     setIsModalOpen(false);
@@ -126,7 +136,7 @@ export default function MyBooking() {
       },
     });
   };
-  const [currentStep, setCurrentStep] = useState("salon"); // Start with salon selection
+  const [currentStep, setCurrentStep] = useState("salon");
 
   const handleNextStep = () => {
     if (currentStep === "salon") {
@@ -328,10 +338,7 @@ export default function MyBooking() {
                         <div className="panel-actions">
                           <button
                             className="panel-btn btn"
-                            onClick={() =>
-                              // showModal(<UpdateMyBooking.ChooseSalon />)
-                              console.log(booking)
-                            }
+                            onClick={() => showModal(booking.bookingId)}
                           >
                             <LiaUserEditSolid className="myBooking-icon" />
                           </button>
@@ -346,11 +353,15 @@ export default function MyBooking() {
                     </div>
                   ))}
                 </div>
+                <bookingIdContext.Provider value={bookingId}>
                 <Modal
                   open={isModalOpen}
                   onCancel={() => setIsModalOpen(false)}
-                  footer={null} // We will provide our own footer
+                  footer={null}
                 >
+                  
+                    
+                 
                   {currentStep === "salon" ? (
                     <UpdateMyBooking.ChooseSalon onNext={handleNextStep} />
                   ) : currentStep === "service" ? (
@@ -361,6 +372,7 @@ export default function MyBooking() {
                     <UpdateMyBooking.ChooseDateTime />
                   ) : null}
                 </Modal>
+                </bookingIdContext.Provider>
               </section>
             )}
           </div>
