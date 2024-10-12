@@ -34,8 +34,9 @@ const ManagerCreateStylist = () => {
     const fetchData = async (endpoint, setter) => {
       try {
         const response = await api.get(endpoint);
-        if (response.data) {
-          setter(response.data /*.result*/);
+        const data = response.data.result;
+        if (data) {
+          setter(data);
         }
       } catch (error) {
         console.error(`Error fetching ${endpoint}:`, error);
@@ -63,14 +64,14 @@ const ManagerCreateStylist = () => {
     e.preventDefault();
     const selectedSkillsId = selectedSkills.map(Number);
     const createValues = {
-      fullName: e.target[1].value,
+      fullname: e.target[1].value,
       email: e.target[2].value,
       phone: e.target[3].value,
       dob: e.target[4].value,
       gender: e.target[5].value,
       username: e.target[6].value,
       password: e.target[7].value,
-      skillIds: selectedSkillsId,
+      skillId: selectedSkillsId,
       levelId: e.target[9].value,
       salonId: e.target[10].value,
       image: null,
@@ -83,6 +84,7 @@ const ManagerCreateStylist = () => {
       createValues.image = formData.image;
     }
 
+    console.log(createValues);
     setLoading(true);
     try {
       const response = await api.post(`stylist/create`, createValues);
@@ -116,13 +118,13 @@ const ManagerCreateStylist = () => {
         </Link>{" "}
         &gt;
         <span className="manager-create-stylist__breadcrumb-current">
-          New Stylish
+          New Stylist
         </span>
       </div>
       <div className="manager-create-stylist">
         <div className="manager-create-stylist__container">
           <form onSubmit={handleSubmit}>
-            <h2 className="manager-create-stylist__header">New Stylish</h2>
+            <h2 className="manager-create-stylist__header">New Stylist</h2>
             <div className="manager-create-stylist__avatar-section">
               <div className="manager-create-stylist__avatar">
                 <img

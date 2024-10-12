@@ -310,9 +310,6 @@ export default function ChooseService() {
               <span className="footer__service-name">
                 {service.serviceName}
               </span>
-              <span className="footer__service-name">
-                {service.serviceName}
-              </span>
               <div>
                 <span className="footer__service-price">
                   {formatCurrency(service.price)}

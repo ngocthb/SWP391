@@ -9,7 +9,7 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 import { HiTrash } from "react-icons/hi2";
 import { FaUserEdit } from "react-icons/fa";
-import "./ManagerStaff.scss";
+import "./AdminManager.scss";
 import { useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 import loginUser from "../../../data/loginUser";
@@ -19,18 +19,19 @@ import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
 
-export default function ManagerStaff({ buttonLabel }) {
-  const [staffs, setStaffs] = useState([]);
+export default function AdminManager({ buttonLabel }) {
+  const [stylists, setStylists] = useState([]);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [salonLocations, setSalonLocations] = useState([]);
   const [genders, setGenders] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
   const [formData, setFormData] = useState({
     accountid: 0,
     fullName: "",
-    email: "",
     username: "",
+    email: "",
     phone: "",
     dob: "",
     gender: "",
@@ -39,7 +40,7 @@ export default function ManagerStaff({ buttonLabel }) {
   });
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const isUpdate = useSelector((state) => state.updateStaffReducer);
+  const isUpdate = useSelector((state) => state.updateStylistReducer);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
 
   const handleFileChange = (e) => {
@@ -68,27 +69,26 @@ export default function ManagerStaff({ buttonLabel }) {
     fetchData("gender", setGenders);
   }, []);
 
-  
 
   useEffect(() => {
-    fetchStaffsData();
+    fetchManagersData();
   }, [isUpdate]);
 
-  const fetchStaffsData = async () => {
+  const fetchManagersData = async () => {
     try {
-      const response = await api.get(`staffs`);
+      const response = await api.get(`managers`);
       const data = response.data.result;
       if (data) {
-        setStaffs(data);
+        setStylists(data);
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const fetchStaffData = async (accountid) => {
+  const fetchStylistData = async (accountid) => {
     try {
-      const response = await api.get(`staffs/${accountid}`);
+      const response = await api.get(`managers/${accountid}`);
       const data = response.data.result;
 
       if (data) {
@@ -101,6 +101,7 @@ export default function ManagerStaff({ buttonLabel }) {
           ...prev,
           accountid: accountid,
           fullName: data.fullName || "",
+          username: data.username || "",
           email: data.email || "",
           phone: data.phone || "",
           dob: data.dob || "",
@@ -114,13 +115,13 @@ export default function ManagerStaff({ buttonLabel }) {
     }
   };
 
-  const deleteStaffData = async (accountid) => {
+  const deleteStylistData = async (accountid) => {
     try {
-      const response = await api.delete(`staff/${accountid}`);
+      const response = await api.delete(`manager/${accountid}`);
       if (response.data) {
         Swal.fire({
           title: "Deleted!",
-          text: "The staff has been deleted.",
+          text: "The Manager has been deleted.",
           icon: "success",
         });
       }
@@ -137,19 +138,19 @@ export default function ManagerStaff({ buttonLabel }) {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete this staff!",
+      confirmButtonText: "Yes, delete this Manager!",
     }).then(async (result) => {
       console.log(result.isConfirmed);
       if (result.isConfirmed) {
         try {
-          await deleteStaffData(accountid);
-          fetchStaffData();
+          await deleteStylistData(accountid);
+          fetchManagersData();
         } catch (error) {}
       }
     });
   };
 
-  const updateStaffData = async (e) => {
+  const updateStylistData = async (e) => {
     e.preventDefault();
     const updateValues = {
       fullName: e.target[1].value,
@@ -167,15 +168,16 @@ export default function ManagerStaff({ buttonLabel }) {
     // } else {
     //   updateValues.image = formData.image;
     // }
-    console.log(updateValues)
+
+    // console.log(updateValues);
 
     setLoading(true);
     try {
       const response = await api.put(
-        `staff/${formData.accountid}`,
+        `manager/${formData.accountid}`,
         updateValues
       );
-      const data = response.data.result;
+      const data = response.data.result
 
       if (data) {
         const foundSalon = salonLocations.find(
@@ -205,94 +207,97 @@ export default function ManagerStaff({ buttonLabel }) {
   useEffect(() => {
     if (isModalOpen) {
       if (formData.accountid) {
-        fetchStaffData(formData.accountid);
+        fetchStylistData(formData.accountid);
       }
+      setSelectedSkills(formData.skillId);
     }
   }, [isModalOpen]);
 
   const toggleModal = async (accountid) => {
     if (accountid) {
-      await fetchStaffData(accountid);
+      await fetchStylistData(accountid);
     }
-    
+
+    setSelectedSkills(formData.skillId);
+
     setIsModalOpen(!isModalOpen);
     setSelectedFile(null);
   };
 
   const createStylist = () => {
-    navigate("/manager/staff/create");
+    navigate("/admin/manager/create");
   };
 
   const handleSubmit = (e) => {
-    updateStaffData(e);
+    updateStylistData(e);
   };
 
   return (
     <>
-      <div className="manager-staff">
-      <div className="admin-service__content">
-        <div className="manager-staff__header">
-          <div className="manager-staff__header-searchBar">
-            <BiSearchAlt className="searchBar-icon" />
-            {/* <i class="fas fa-search"></i> */}
-            <input placeholder="Search here..." type="text" />
-          </div>
-          <div className="manager-staff__header-filter">
-            <select>
-              <option>Newest</option>
-              <option>Oldest</option>
-            </select>
-            <button onClick={createStylist}> {buttonLabel}</button>
-          </div>
-        </div>
-        <div className="container">
-          {(staffs || []).map((staff) => (
-            <div key={staff.accountid} className="container__card">
-              <img
-                alt="manager-staff picture"
-                height="50"
-                src={staff.image ? staff.image : loginUser.avatar}
-                width="50"
-              />
-              <h3>{staff.fullName}</h3>
-              <p>
-                User Name: <b>{staff.username}</b>
-              </p>
-              <div className="container__card-info">
-                <p>
-                  <FaLocationDot />
-                  {staff.salonAddress}
-                </p>
-                <p>
-                  <FaPhone /> {staff.phone}
-                </p>
-                <p>
-                  <IoMail />
-                  {staff.email}
-                </p>
-              </div>
-              <div className="container__card-actions">
-                <button
-                  className="delete btn"
-                  onClick={() => confirmDeleteModal(staff.accountid)}
-                >
-                  <HiTrash />
-                </button>
-                <button
-                  className="update btn"
-                  onClick={() => toggleModal(staff.accountid)}
-                >
-                  <FaUserEdit />
-                </button>
-              </div>
+      <div className="admin-manager">
+        <div className="admin-service__content">
+          <div className="admin-manager__header">
+            <div className="admin-manager__header-searchBar">
+              <BiSearchAlt className="searchBar-icon" />
+              {/* <i class="fas fa-search"></i> */}
+              <input placeholder="Search here..." type="text" />
             </div>
-          ))}
+            <div className="admin-manager__header-filter">
+              <select>
+                <option>Newest</option>
+                <option>Oldest</option>
+              </select>
+              <button onClick={createStylist}> {buttonLabel}</button>
+            </div>
+          </div>
+          <div className="container">
+            {(stylists || []).map((stylist) => (
+              <div key={stylist.accountid} className="container__card">
+                <img
+                  alt="admin-manager picture"
+                  height="50"
+                  src={stylist.image ? stylist.image : loginUser.avatar}
+                  width="50"
+                />
+                <h3>{stylist.fullName}</h3>
+                <p>
+                  User Name: <b>{stylist.username}</b>
+                </p>
+                <div className="container__card-info">
+                  <p>
+                    <FaLocationDot />
+                    {stylist.salonAddress}
+                  </p>
+                  <p>
+                    <FaPhone /> {stylist.phone}
+                  </p>
+                  <p>
+                    <IoMail />
+                    {stylist.email}
+                  </p>
+                </div>
+                <div className="container__card-actions">
+                  <button
+                    className="delete btn"
+                    onClick={() => confirmDeleteModal(stylist.accountid)}
+                  >
+                    <HiTrash />
+                  </button>
+                  <button
+                    className="update btn"
+                    onClick={() => toggleModal(stylist.accountid)}
+                  >
+                    <FaUserEdit />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        </div>
-        
-        <div className="manager-staff__pagination">
-          <p>Showing 1-8 from {staffs.length} data</p>
-          <div className="manager-staff__pagination-pages">
+
+        <div className="admin-manager__pagination">
+          <p>Showing 1-8 from {stylists.length} data</p>
+          <div className="admin-manager__pagination-pages">
             <span>
               {/* <i class="fas fa-chevron-left"></i> */}
               <FaAngleLeft className="pagination-icon" />
@@ -310,30 +315,28 @@ export default function ManagerStaff({ buttonLabel }) {
 
       {isModalOpen && (
         <>
-          <div className="manager-staff-backdrop" onClick={toggleModal}>
+          <div className="admin-manager-backdrop" onClick={toggleModal}>
             <div
-              className="manager-staff-modal"
+              className="admin-manager-modal"
               onClick={(e) => e.stopPropagation()}
             >
               <form onSubmit={handleSubmit}>
-                <h2 className="manager-staff-modal__header">
-                  Update Stylist
-                </h2>
-                <div className="manager-staff-modal__avatar-section">
-                  <div className="manager-staff-modal__avatar">
+                <h2 className="admin-manager-modal__header">Update Stylist</h2>
+                <div className="admin-manager-modal__avatar-section">
+                  <div className="admin-manager-modal__avatar">
                     <img
                       src={selectedFile || formData.image}
                       alt={formData.fullName}
                     />
                   </div>
-                  <div className="manager-staff-modal__avatar-info">
-                    <h3 className="manager-staff-modal__avatar-title">
+                  <div className="admin-manager-modal__avatar-info">
+                    <h3 className="admin-manager-modal__avatar-title">
                       Change Avatar
                     </h3>
-                    <p className="manager-staff-modal__avatar-description">
+                    <p className="admin-manager-modal__avatar-description">
                       Recommended Dimensions: 120x120 Max file size: 5MB
                     </p>
-                    <label className="manager-staff-modal__upload-btn">
+                    <label className="admin-manager-modal__upload-btn">
                       Upload
                       <input
                         type="file"
@@ -344,85 +347,85 @@ export default function ManagerStaff({ buttonLabel }) {
                     </label>
                   </div>
                 </div>
-                <div className="manager-staff-modal__form-section">
-                  <div className="manager-staff-modal__form-grid">
-                    <div className="manager-staff-modal__form-grid manager-staff-modal__form-grid--half-width">
-                      <div className="manager-staff-modal__form-group">
+                <div className="admin-manager-modal__form-section">
+                  <div className="manager-create-stylist__form-grid">
+                    <div className="manager-create-stylist__form-grid manager-create-stylist__form-grid--half-width">
+                      <div className="manager-create-stylist__form-group">
                         <label
                           htmlFor="fullName"
-                          className="manager-staff-modal__label"
+                          className="manager-create-stylist__label"
                         >
                           Full Name:
                         </label>
                         <input
                           type="text"
                           id="fullName"
-                          className="manager-staff-modal__input"
+                          className="manager-create-stylist__input"
                           placeholder="Full Name"
                           defaultValue={formData.fullName}
                         />
                       </div>
-                      <div className="manager-staff-modal__form-group">
+                      <div className="manager-create-stylist__form-group">
                         <label
                           htmlFor="email"
-                          className="manager-staff-modal__label"
+                          className="manager-create-stylist__label"
                         >
                           Email:
                         </label>
                         <input
                           type="text"
                           id="email"
-                          className="manager-staff-modal__input"
+                          className="manager-create-stylist__input"
                           placeholder="Email"
                           defaultValue={formData.email}
                         />
                       </div>
                     </div>
                     <div
-                      className="manager-staff-modal__form-grid
-              manager-staff-modal__form-grid--half-width"
+                      className="manager-create-stylist__form-grid
+              manager-create-stylist__form-grid--half-width"
                     >
-                      <div className="manager-staff-modal__form-group">
+                      <div className="manager-create-stylist__form-group">
                         <label
                           htmlFor="phone"
-                          className="manager-staff-modal__label"
+                          className="manager-create-stylist__label"
                         >
                           Phone Number:
                         </label>
                         <input
                           type="text"
                           id="phone"
-                          className="manager-staff-modal__input"
+                          className="manager-create-stylist__input"
                           placeholder="Phone Number"
                           defaultValue={formData.phone}
                         />
                       </div>
-                      <div className="manager-staff-modal__form-grid manager-staff-modal__form-grid--half-width">
-                        <div className="manager-staff-modal__form-group">
+                      <div className="manager-create-stylist__form-grid manager-create-stylist__form-grid--half-width">
+                        <div className="manager-create-stylist__form-group">
                           <label
                             htmlFor="dob"
-                            className="manager-staff-modal__label"
+                            className="manager-create-stylist__label"
                           >
                             Date of Birth:
                           </label>
                           <input
                             type="date"
                             id="dob"
-                            className="manager-staff-modal__input"
+                            className="manager-create-stylist__input"
                             placeholder="Date of Birth"
                             defaultValue={formData.dob}
                           />
                         </div>
-                        <div className="manager-staff-modal__form-group">
+                        <div className="manager-create-stylist__form-group">
                           <label
                             htmlFor="gender"
-                            className="manager-staff-modal__label"
+                            className="manager-create-stylist__label"
                           >
                             Gender:
                           </label>
                           <select
                             id="gender"
-                            className="manager-staff-modal__select"
+                            className="manager-create-stylist__select"
                             defaultValue={
                               formData.gender ? formData.gender : ""
                             }
@@ -440,19 +443,19 @@ export default function ManagerStaff({ buttonLabel }) {
                       </div>
                     </div>
                     <div
-                      className="manager-staff-modal__form-grid
-                manager-staff-modal__form-grid--half-width"
+                      className="manager-create-stylist__form-grid
+                manager-create-stylist__form-grid--half-width"
                     >
-                      <div className="manager-staff-modal__form-group manager-staff-modal__form-group--full-width">
+                      <div className="manager-create-stylist__form-group manager-create-stylist__form-group--full-width">
                         <label
                           htmlFor="salon"
-                          className="manager-staff-modal__label"
+                          className="manager-create-stylist__label"
                         >
                           Select Salon:
                         </label>
                         <select
                           id="salon"
-                          className="manager-staff-modal__select"
+                          className="manager-create-stylist__select"
                           defaultValue={formData.salonId ? formData.salonId : 0}
                         >
                           <option value={0} disabled>
@@ -468,10 +471,10 @@ export default function ManagerStaff({ buttonLabel }) {
                     </div>
                   </div>
                 </div>
-                <div className="manager-staff-modal__button-container">
+                <div className="admin-manager-modal__button-container">
                   <button
                     type="submit"
-                    className="manager-staff-modal__button"
+                    className="admin-manager-modal__button"
                     disabled={loading}
                   >
                     {loading ? <Spin size="small" /> : "Save"}

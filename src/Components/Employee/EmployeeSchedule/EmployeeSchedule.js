@@ -1,5 +1,7 @@
 import React from "react";
 import { Badge, Calendar } from "antd";
+
+import "./EmployeeSchedule.scss";
 const getListData = (value) => {
   let listData = []; // Specify the type of listData
   switch (value.date()) {
@@ -95,6 +97,13 @@ const EmployeeSchedule = () => {
     if (info.type === "month") return monthCellRender(current);
     return info.originNode;
   };
-  return <Calendar cellRender={cellRender} />;
+  return (
+    <div className="EmployeeSchedule">
+      <Calendar
+        className="EmployeeSchedule__calendar"
+        cellRender={cellRender}
+      />
+    </div>
+  );
 };
 export default EmployeeSchedule;

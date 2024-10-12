@@ -10,7 +10,6 @@ import UserInfor from "../Components/client/UserInfor/UserInfor";
 import ManagerLayout from "../Layouts/manager/ManagerLayout";
 import UserLayout from "../Layouts/UserLayout";
 import ManagerDashboard from "../Components/Manager/ManagerDashboard/ManagerDashboard";
-import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
 
 import HomePageLayout from "../Layouts/client/HomePageLayout";
 import AboutUsPage from "../Components/client/AboutUsPage/AboutUsPage";
@@ -23,14 +22,22 @@ import ChooseDateTime from "../Components/client/Booking/ChooseDateTime/ChooseDa
 import Contact from "../Components/client/Contact/Contact";
 import ManagerCreateStylist from "../Components/Manager/ManagerCreateStylist/ManagerCreateStylist";
 import ChooseStylist from "../Components/client/Booking/ChooseStylist/ChooseStylist";
-import ManagerStaff from "../Components/Manager/ManagerStaff/ManagerStaff";
 import ManagerStylist from "../Components/Manager/ManagerStylist/ManagerStylist";
-import ManagerService from "../Components/Manager/ManagerService/ManagerService";
 import ManagerCustomer from "../Components/Manager/ManagerCustomer/ManagerCustomer";
 import ManagerCreateStaff from "../Components/Manager/ManagerCreateStaff/ManagerCreateStaff";
 
 import Services from "../Components/client/Services/Services";
 import MyBooking from "../Components/client/MyBooking/MyBooking";
+import AdminLayout from "../Layouts/admin/AdminLayout";
+import AdminService from "../Components/Admin/AdminService/AdminService";
+import AdminCreateService from "../Components/Admin/AdminCreateService/AdminCreateService";
+import AdminVoucher from "../Components/Admin/AdminVoucher/AdminVoucher";
+import AdminCreateVoucher from "../Components/Admin/AdminCreateVoucher/AdminCreateVoucher";
+import ManagerStaff from "../Components/Manager/ManagerStaff/ManagerStaff";
+import AdminManager from "../Components/Admin/AdminManager/AdminManager";
+import AdminCustomer from "../Components/Admin/AdminCustomer/AdminCustomer";
+import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
+import AdminCreateManager from "../Components/Admin/AdminCreateManager/AdminCreateManager";
 export const Routes = [
   {
     path: "/",
@@ -112,16 +119,20 @@ export const Routes = [
         element: <ManagerCreateStylist />,
       },
       {
+        path: "staff",
+        element: <ManagerStaff buttonLabel={"+ New staff"}/>
+      },
+      {
+        path: "staff/create",
+        element: <ManagerCreateStaff/>
+      },
+      {
         path: "dashboard",
         element: <ManagerDashboard />,
       },
       {
         path: "booking",
-        element: <ManagerBooking />,
-      },
-      {
-        path: "service",
-        element: <ManagerService/>,
+        element: <ManagerBooking/>
       },
       {
         path: "customer",
@@ -159,4 +170,42 @@ export const Routes = [
       },
     ],
   },
+  {
+      path: "admin",
+      element: <AdminLayout/>,
+      children: [
+        {
+          path: "dashboard",
+          element: <ManagerDashboard />,
+        }, 
+        {
+          path: "service",
+          element: <AdminService/>
+        },
+        {
+          path: "service/create",
+          element: <AdminCreateService/>
+        },
+        {
+          path: "voucher",
+          element: <AdminVoucher buttonLabel={"New Voucher"}/>
+        },
+        {
+          path: "voucher/create",
+          element: <AdminCreateVoucher/>
+        },
+        {
+          path: "manager",
+          element: <AdminManager buttonLabel={"New Manager"}/>
+        },
+        {
+          path: "manager/create",
+          element: <AdminCreateManager/>
+        },
+        {
+          path: "customer",
+          element: <AdminCustomer buttonLabel={"New Customer"}/>
+        },
+      ]
+  }
 ];
