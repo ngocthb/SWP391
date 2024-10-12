@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import "./ManagerCreateStaff.scss";
+import "./AdminCreateManager.scss";
 import { Spin } from "antd";
 import loginUser from "../../../data/loginUser";
 import api from "../../../config/axios";
 import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../../../utils/upload";
 
-const ManagerCreateStaff = () => {
+const AdminCreateManager = () => {
   const [loading, setLoading] = useState(false);
   const [salonLocations, setSalonLocations] = useState([]);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
@@ -64,10 +64,9 @@ const ManagerCreateStaff = () => {
     //   createValues.image = formData.image;
     // }
 
-    console.log(createValues);
     setLoading(true);
     try {
-      const response = await api.post(`staff`, createValues);
+      const response = await api.post(`manager`, createValues);
       const data = response.data.result;
 
       if (data) {
@@ -75,7 +74,7 @@ const ManagerCreateStaff = () => {
           ...prev,
           image: selectedFile || prev.image,
         }));
-        navigate("/manager/staff");
+        navigate("/admin/manager");
       }
     } catch (err) {
     } finally {
@@ -89,37 +88,37 @@ const ManagerCreateStaff = () => {
 
   return (
     <>
-      <div className="manager-create-staff__breadcrumb">
+      <div className="admin-create-manager__breadcrumb">
         <Link
-          to="/manager/staff"
-          className="manager-create-staff__breadcrumb-link"
+          to="/admin/manager"
+          className="admin-create-manager__breadcrumb-link"
         >
-          Staff
+          Manager
         </Link>{" "}
         &gt;
-        <span className="manager-create-staff__breadcrumb-current">
-          New Staff
+        <span className="admin-create-manager__breadcrumb-current">
+          New Manager
         </span>
       </div>
-      <div className="manager-create-staff">
-        <div className="manager-create-staff__container">
+      <div className="admin-create-manager">
+        <div className="admin-create-manager__container">
           <form onSubmit={handleSubmit}>
-            <h2 className="manager-create-staff__header">New Staff</h2>
-            <div className="manager-create-staff__avatar-section">
-              <div className="manager-create-staff__avatar">
+            <h2 className="admin-create-manager__header">New Manager</h2>
+            <div className="admin-create-manager__avatar-section">
+              <div className="admin-create-manager__avatar">
                 <img
                   src={selectedFile || formData.image}
                   alt={formData.fullname}
                 />
               </div>
-              <div className="manager-create-staff__avatar-info">
-                <h3 className="manager-create-staff__avatar-title">
+              <div className="admin-create-manager__avatar-info">
+                <h3 className="admin-create-manager__avatar-title">
                   Change Avatar
                 </h3>
-                <p className="manager-create-staff__avatar-description">
+                <p className="admin-create-manager__avatar-description">
                   Recommended Dimensions: 120x120 Max file size: 5MB
                 </p>
-                <label className="manager-create-staff__upload-btn">
+                <label className="admin-create-manager__upload-btn">
                   Upload
                   <input
                     type="file"
@@ -130,81 +129,81 @@ const ManagerCreateStaff = () => {
                 </label>
               </div>
             </div>
-            <div className="manager-create-staff__form-section">
-              <div className="manager-create-staff__form-grid">
-                <div className="manager-create-staff__form-grid manager-create-staff__form-grid--half-width">
-                  <div className="manager-create-staff__form-group">
+            <div className="admin-create-manager__form-section">
+              <div className="admin-create-manager__form-grid">
+                <div className="admin-create-manager__form-grid admin-create-manager__form-grid--half-width">
+                  <div className="admin-create-manager__form-group">
                     <label
                       htmlFor="fullname"
-                      className="manager-create-staff__label"
+                      className="admin-create-manager__label"
                     >
                       Full Name:
                     </label>
                     <input
                       type="text"
                       id="fullname"
-                      className="manager-create-staff__input"
+                      className="admin-create-manager__input"
                       placeholder="Full Name"
                     />
                   </div>
-                  <div className="manager-create-staff__form-group">
+                  <div className="admin-create-manager__form-group">
                     <label
                       htmlFor="email"
-                      className="manager-create-staff__label"
+                      className="admin-create-manager__label"
                     >
                       Email:
                     </label>
                     <input
                       type="text"
                       id="email"
-                      className="manager-create-staff__input"
+                      className="admin-create-manager__input"
                       placeholder="Email"
                     />
                   </div>
                 </div>
                 <div
-                  className="manager-create-staff__form-grid
-              manager-create-staff__form-grid--half-width"
+                  className="admin-create-manager__form-grid
+              admin-create-manager__form-grid--half-width"
                 >
-                  <div className="manager-create-staff__form-group">
+                  <div className="admin-create-manager__form-group">
                     <label
                       htmlFor="phone"
-                      className="manager-create-staff__label"
+                      className="admin-create-manager__label"
                     >
                       Phone Number:
                     </label>
                     <input
                       type="text"
                       id="phone"
-                      className="manager-create-staff__input"
+                      className="admin-create-manager__input"
                       placeholder="Phone Number"
                     />
                   </div>
-                  <div className="manager-create-staff__form-grid manager-create-staff__form-grid--half-width">
-                    <div className="manager-create-staff__form-group">
+                  <div className="admin-create-manager__form-grid admin-create-manager__form-grid--half-width">
+                    <div className="admin-create-manager__form-group">
                       <label
                         htmlFor="dob"
-                        className="manager-create-staff__label"
+                        className="admin-create-manager__label"
                       >
                         Date of Birth:
                       </label>
                       <input
                         type="date"
                         id="dob"
-                        className="manager-create-staff__input"
+                        className="admin-create-manager__input"
                         placeholder="Date of Birth"
                       />
                     </div>
-                    <div className="manager-create-staff__form-group">
+                    <div className="admin-create-manager__form-group">
                       <label
                         htmlFor="gender"
-                        className="manager-create-staff__label"
+                        className="admin-create-manager__label"
                       >
                         Gender:
                       </label>
                       <select
                         id="gender"
-                        className="manager-create-staff__select"
+                        className="admin-create-manager__select"
                         defaultValue=""
                       >
                         <option value="" disabled>
@@ -220,52 +219,52 @@ const ManagerCreateStaff = () => {
                   </div>
                 </div>
                 <div
-                  className="manager-create-staff__form-grid
-                manager-create-staff__form-grid--half-width"
+                  className="admin-create-manager__form-grid
+                admin-create-manager__form-grid--half-width"
                 >
-                  <div className="manager-create-staff__form-group">
+                  <div className="admin-create-manager__form-group">
                     <label
                       htmlFor="username"
-                      className="manager-create-staff__label"
+                      className="admin-create-manager__label"
                     >
                       Username:
                     </label>
                     <input
                       type="text"
                       id="username"
-                      className="manager-create-staff__input"
+                      className="admin-create-manager__input"
                       placeholder="Username"
                     />
                   </div>
-                  <div className="manager-create-staff__form-group">
+                  <div className="admin-create-manager__form-group">
                     <label
                       htmlFor="password"
-                      className="manager-create-staff__label"
+                      className="admin-create-manager__label"
                     >
                       Password:
                     </label>
                     <input
                       type="password"
                       id="password"
-                      className="manager-create-staff__input"
+                      className="admin-create-manager__input"
                       placeholder="Password"
                     />
                   </div>
                 </div>
                 <div
-                  className="manager-create-staff__form-grid
-                manager-create-staff__form-grid--half-width"
+                  className="admin-create-manager__form-grid
+                admin-create-manager__form-grid--half-width"
                 >
-                  <div className="manager-create-staff__form-group manager-create-staff__form-group--full-width">
+                  <div className="admin-create-manager__form-group admin-create-manager__form-group--full-width">
                     <label
                       htmlFor="salon"
-                      className="manager-create-staff__label"
+                      className="admin-create-manager__label"
                     >
                       Select Salon:
                     </label>
                     <select
                       id="salon"
-                      className="manager-create-staff__select"
+                      className="admin-create-manager__select"
                       defaultValue={0}
                     >
                       <option value={0} disabled>
@@ -281,10 +280,10 @@ const ManagerCreateStaff = () => {
                 </div>
               </div>
             </div>
-            <div className="manager-create-staff__button-container">
+            <div className="admin-create-manager__button-container">
               <button
                 type="submit"
-                className="manager-create-staff__button"
+                className="admin-create-manager__button"
                 disabled={loading}
               >
                 {loading ? <Spin size="small" /> : "Save"}
@@ -297,4 +296,4 @@ const ManagerCreateStaff = () => {
   );
 };
 
-export default ManagerCreateStaff;
+export default AdminCreateManager;

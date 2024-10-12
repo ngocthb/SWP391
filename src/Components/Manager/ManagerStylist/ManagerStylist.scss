@@ -1,7 +1,15 @@
-.ManagerStylist {
+.manager-stylist {
   width: 90%;
   margin: 0 auto;
   padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__content {
+    flex-grow: 1;
+  }
+  
   &__header {
     display: flex;
     padding: 0 20px;
@@ -198,7 +206,7 @@
   }
 }
 
-.ManagerStylist-backdrop {
+.manager-stylist-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -211,7 +219,7 @@
   align-items: center;
 }
 
-.ManagerStylist-modal {
+.manager-stylist-modal {
   max-width: 800px;
   width: 90%;
   margin: 40px auto;
@@ -413,7 +421,7 @@
 }
 
 @media (min-width: 640px) {
-  .ManagerStylist {
+  .manager-stylist {
     &__header {
       &-searchBar {
         input {
@@ -454,7 +462,7 @@
 }
 
 @media (min-width: 768px) {
-  .ManagerStylist {
+  .manager-stylist {
     &__header {
       &-searchBar {
         input {
@@ -496,7 +504,7 @@
 }
 
 @media (min-width: 1024px) {
-  .ManagerStylist {
+  .manager-stylist {
     &__header {
       padding: 0 5%;
     }
@@ -520,7 +528,7 @@
 }
 
 @media (min-width: 1280px) {
-  .ManagerStylist {
+  .manager-stylist {
     &__header {
       padding: 0 4%;
       &-filter {
@@ -575,7 +583,7 @@
 }
 
 @media (min-width: 1536px) {
-  .ManagerStylist {
+  .manager-stylist {
     padding: 20px 0;
     &__header {
       padding: 0 20px;

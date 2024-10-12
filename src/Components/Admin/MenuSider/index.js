@@ -3,13 +3,13 @@ import { Menu } from "antd";
 import {
   HighlightOutlined,
   InsertRowAboveOutlined,
-  PlusOutlined,
-  ScissorOutlined,
   ContactsOutlined,
   DashboardOutlined,
 } from "@ant-design/icons";
-import { RiCustomerService2Line } from "react-icons/ri";
 import { Link, useLocation } from "react-router-dom";
+import { LiaUserTieSolid } from "react-icons/lia";
+import { FiUser } from "react-icons/fi";
+import { MdOutlineDiscount } from "react-icons/md";
 
 function MenuSider() {
   const location = useLocation();
@@ -17,9 +17,9 @@ function MenuSider() {
 
   const items = [
     {
-      label: <Link to="/manager/dashboard">Dashboard</Link>,
+      label: <Link to="/admin/dashboard">Dashboard</Link>,
       icon: <DashboardOutlined />,
-      key: "/manager/dashboard",
+      key: "/admin/dashboard",
     },
     {
       label: "Employee",
@@ -27,26 +27,26 @@ function MenuSider() {
       key: "Employee",
       children: [
         {
-          label: <Link to="/manager/stylist">Stylist</Link>,
-          icon: <ScissorOutlined />,
-          key: "/manager/stylist",
-        },
-        {
-          label: <Link to="/manager/staff">Staff</Link>,
-          icon: <RiCustomerService2Line />,
-          key: "/manager/staff",
-        },
+          label: <Link to="/admin/manager">Manager</Link>,
+          icon: <LiaUserTieSolid />,
+          key: "/admin/manager",
+        } 
       ],
     },
     {
-      label: <Link to="/manager/booking">Booking</Link>,
-      icon: <InsertRowAboveOutlined />,
-      key: "/manager/booking",
+      label: <Link to="/admin/service">Service</Link>,
+      icon: <HighlightOutlined />,
+      key: "/admin/service",
     },
     {
-      label: <Link to="/manager/customer">Customer</Link>,
-      icon: <PlusOutlined />,
-      key: "/manager/customer",
+      label: <Link to="/admin/voucher">Voucher</Link>,
+      icon: <MdOutlineDiscount />,
+      key: "/admin/voucher",
+    },
+    {
+      label: <Link to="/admin/customer">Customer</Link>,
+      icon: <FiUser />,
+      key: "/admin/customer",
     },
   ];
 

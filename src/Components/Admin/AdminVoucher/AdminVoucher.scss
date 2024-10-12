@@ -1,8 +1,8 @@
-.manager-booking {
+.admin-voucher {
     background-color: #f3f4f6;
     margin: 0;
     padding: 20px;
-  
+
     &__header {
       display: flex;
       padding: 0 20px;
@@ -98,7 +98,7 @@
         cursor: pointer;
         user-select: none;
         transition: background-color 0.2s;
-  
+
         &:hover {
             background-color: #f3f4f6;
           }
@@ -109,34 +109,28 @@
       }
     }
   
-    &__id, &__date, &__amount {
+    &__id, &__date, &__discountAmount {
       color: #6b7280;
     }
-  
-    &__date{
-      width: 350px;
-    }
-  
+
     &__id {
       width: 80px;
       color: #6b7280;
     }
-  
+
+    &__discountAmount {
+      width: 180px;
+      color: #6b7280;
+    }
+
+    &__code {
+      
+      color: #6b7280;
+    }
   
     &__customer {
       display: flex;
       align-items: center;
-  
-  
-      &-image {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        margin-right: 8px;
-      }
-    }
-  
-    &__discountAmount{
       color: #6b7280;
     }
   
@@ -147,7 +141,6 @@
   
     &__actions {
       gap: 8px;
-      display: flex;
     }
   
     &__action-button {
@@ -170,8 +163,7 @@
     }
   }
 
-
-  .manager-booking-backdrop {
+  .admin-voucher-backdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -184,10 +176,9 @@
     align-items: center;
   }
   
-  .manager-booking-modal {
+  .admin-voucher-modal {
     max-width: 800px;
     width: 90%;
-    height: 90%;
     overflow: auto;
     margin: 40px auto;
     background-color: #ffffff;
@@ -219,9 +210,10 @@
       justify-content: center;
   
       & img {
+        border-radius: 15px;
         width: 96px;
         height: 96px;
-        border-radius: 50%;
+        object-fit: cover;
       }
   
       svg {
@@ -343,7 +335,7 @@
   
     &__skills-list {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
   
@@ -367,14 +359,13 @@
       }
     }
   
-    &__radio  {
+    &__checkbox {
       margin-right: 8px;
       appearance: none;
       width: 16px;
       height: 16px;
       border: 2px solid #1b5077;
       border-radius: 4px;
-      border-radius: 50%;
       cursor: pointer;
   
       &:checked {
@@ -387,9 +378,9 @@
       }
     }
   }
-  
+
   @media (min-width: 640px) {
-    .manager-booking {
+    .admin-voucher {
       &__header {
         &-searchBar {
           input {
@@ -405,10 +396,10 @@
       }
     }
   }
-  
-  
+
+
   @media (min-width: 768px) {
-    .manager-booking {
+    .admin-voucher {
       &__header {
         &-searchBar {
           input {
@@ -427,17 +418,17 @@
       }
     }
   }
-  
+
   @media (min-width: 1024px) {
-    .manager-booking {
+    .admin-voucher {
       &__header {
         padding: 0 5%;
       }
     }
   }
-  
+
   @media (min-width: 1280px) {
-    .manager-booking {
+    .admin-voucher {
       &__header {
         padding: 0 4%;
         &-filter {
@@ -451,4 +442,3 @@
       }
     }
   }
-  
