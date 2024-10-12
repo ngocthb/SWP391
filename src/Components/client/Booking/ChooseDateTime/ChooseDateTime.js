@@ -35,7 +35,6 @@ export default function ChooseDateTime() {
         }
       }
     }
-   
   }, []);
 
   useEffect(() => {
@@ -51,7 +50,7 @@ export default function ChooseDateTime() {
   }, [timeSlots]);
 
   const handleTimeSlotClick = (slotId) => {
-    if ( availableSlots.some(slot => slot.slotid === slotId)) {
+    if (availableSlots.some((slot) => slot.slotid === slotId)) {
       setSelectedTime(slotId);
     }
   };
@@ -79,8 +78,7 @@ export default function ChooseDateTime() {
     return `${year}-${month}-${day}`;
   };
 
-   useEffect(() => {
-
+  useEffect(() => {
     const storedBranchId = sessionStorage.getItem("selectedBranchId");
     const branchId = parseInt(storedBranchId, 10);
 
@@ -91,23 +89,27 @@ export default function ChooseDateTime() {
     const stylistId = JSON.parse(storedStylist);
 
     const fetchTimeSlots = async () => {
-
       const bookingValue = {
         salonId: branchId,
         serviceId: serviceIds,
         accountId: stylistId,
         date: formatDateForInput(selectedDate),
-      }
+      };
 
+<<<<<<< HEAD
        try {
         const response = await api.post("booking/slots", bookingValue);
         const data = response.data.result;
         if (data) {
           setAvailableSlots(data);
+=======
+      try {
+        const response = await api./*post*/ get("booking-slots", bookingValue);
+        if (response.data /*&& response.data.result*/) {
+          setAvailableSlots(response.data /*.result*/);
+>>>>>>> 1844756712c796dd52419eec85766857d4e71179
         }
-       } catch (error) {
-        
-       }
+      } catch (error) {}
     };
     fetchTimeSlots();
   }, [selectedDate, handleTimeSlotClick]);
@@ -130,7 +132,7 @@ export default function ChooseDateTime() {
             </Link>
             <div className="tooltip">Service</div>
           </li>
-          
+
           <li className={`chooseDateTime__tagNavigation--item-content`}>
             <Link to={"/booking/step3"} aria-label="Stylist">
               <div className="filled"></div>
@@ -139,7 +141,7 @@ export default function ChooseDateTime() {
             <div className="tooltip">Stylist</div>
           </li>
           <li className="chooseDateTime__tagNavigation--item-content active">
-            <Link to= "/booking/step4" aria-label="Time">
+            <Link to="/booking/step4" aria-label="Time">
               <div className="filled"></div>
               <RiCalendarScheduleLine />
             </Link>
@@ -157,8 +159,14 @@ export default function ChooseDateTime() {
         </div>
         <div className="chooseDateTime__container-date">
           <LuCalendarSearch className="select-icon" />
-          <select  value={selectedDate.toDateString() === today.toDateString() ? "today" : "tomorrow"} 
-        onChange={handleDateChange}>
+          <select
+            value={
+              selectedDate.toDateString() === today.toDateString()
+                ? "today"
+                : "tomorrow"
+            }
+            onChange={handleDateChange}
+          >
             <option value="today">Today, {formatDate(today)}</option>
             <option value="tomorrow">Tomorrow, {formatDate(tomorrow)}</option>
           </select>
@@ -167,7 +175,13 @@ export default function ChooseDateTime() {
           {timeSlots.map((slot) => (
             <div
               key={slot.slotid}
-              className={`time-slot ${availableSlots.some(availableSlot => availableSlot.slotid === slot.slotid) ? "" : "disabled"} ${selectedTime === slot.slotid ? "selected" : ""}`}
+              className={`time-slot ${
+                availableSlots.some(
+                  (availableSlot) => availableSlot.slotid === slot.slotid
+                )
+                  ? ""
+                  : "disabled"
+              } ${selectedTime === slot.slotid ? "selected" : ""}`}
               onClick={() => handleTimeSlotClick(slot.slotid)}
             >
               {slot.slottime}
@@ -176,13 +190,18 @@ export default function ChooseDateTime() {
         </div>
         <Link
           to="/booking"
-          className={`chooseDateTime__container-btn btn flex ${isSelectedTime ? "" : "btn-disable"}`}
+          className={`chooseDateTime__container-btn btn flex ${
+            isSelectedTime ? "" : "btn-disable"
+          }`}
           onClick={(e) => {
             if (!isSelectedTime) {
               e.preventDefault();
             } else {
-              sessionStorage.setItem('selectedTimeId', selectedTime);
-              sessionStorage.setItem('selectedDate', selectedDate.toISOString());
+              sessionStorage.setItem("selectedTimeId", selectedTime);
+              sessionStorage.setItem(
+                "selectedDate",
+                selectedDate.toISOString()
+              );
             }
           }}
         >

@@ -111,9 +111,7 @@ export default function ManagerStylist({ buttonLabel }) {
         );
         const salonId = foundSalon ? foundSalon.id : null;
 
-        const foundLevel = levels.find(
-          (item) => item.name === data.levelName
-        );
+        const foundLevel = levels.find((item) => item.name === data.levelName);
         const levelId = foundLevel ? foundLevel.id : null;
 
         const foundSkills = skills.filter((skill) =>
@@ -260,9 +258,9 @@ export default function ManagerStylist({ buttonLabel }) {
     if (accountid) {
       await fetchStylistData(accountid);
     }
-    
+
     setSelectedSkills(formData.skillId);
-    
+
     setIsModalOpen(!isModalOpen);
     setSelectedFile(null);
   };
@@ -278,67 +276,67 @@ export default function ManagerStylist({ buttonLabel }) {
   return (
     <>
       <div className="manager-stylist">
-      <div className="admin-service__content">
-        <div className="manager-stylist__header">
-          <div className="manager-stylist__header-searchBar">
-            <BiSearchAlt className="searchBar-icon" />
-            {/* <i class="fas fa-search"></i> */}
-            <input placeholder="Search here..." type="text" />
-          </div>
-          <div className="manager-stylist__header-filter">
-            <select>
-              <option>Newest</option>
-              <option>Oldest</option>
-            </select>
-            <button onClick={createStylist}> {buttonLabel}</button>
-          </div>
-        </div>
-        <div className="container">
-          {(stylists || []).map((stylist) => (
-            <div key={stylist.accountid} className="container__card">
-              <img
-                alt="manager-stylist picture"
-                height="50"
-                src={stylist.image ? stylist.image : loginUser.avatar}
-                width="50"
-              />
-              <h3>{stylist.fullname}</h3>
-              <p>
-                User Name: <b>{stylist.username}</b>
-              </p>
-              <p>
-                Level: <b>{stylist.levelName}</b>
-              </p>
-              <div className="container__card-info">
-                <p>
-                  <FaLocationDot />
-                  {stylist.salonAddress}
-                </p>
-                <p>
-                  <FaPhone /> {stylist.phone}
-                </p>
-                <p>
-                  <IoMail />
-                  {stylist.email}
-                </p>
-              </div>
-              <div className="container__card-actions">
-                <button
-                  className="delete btn"
-                  onClick={() => confirmDeleteModal(stylist.accountid)}
-                >
-                  <HiTrash />
-                </button>
-                <button
-                  className="update btn"
-                  onClick={() => toggleModal(stylist.accountid)}
-                >
-                  <FaUserEdit />
-                </button>
-              </div>
+        <div className="admin-service__content">
+          <div className="manager-stylist__header">
+            <div className="manager-stylist__header-searchBar">
+              <BiSearchAlt className="searchBar-icon" />
+              {/* <i class="fas fa-search"></i> */}
+              <input placeholder="Search here..." type="text" />
             </div>
-          ))}
-        </div>
+            <div className="manager-stylist__header-filter">
+              <select>
+                <option>Newest</option>
+                <option>Oldest</option>
+              </select>
+              <button onClick={createStylist}> {buttonLabel}</button>
+            </div>
+          </div>
+          <div className="container">
+            {(stylists || []).map((stylist) => (
+              <div key={stylist.accountid} className="container__card">
+                <img
+                  alt="manager-stylist picture"
+                  height="50"
+                  src={stylist.image ? stylist.image : loginUser.avatar}
+                  width="50"
+                />
+                <h3>{stylist.fullname}</h3>
+                <p>
+                  User Name: <b>{stylist.username}</b>
+                </p>
+                <p>
+                  Level: <b>{stylist.levelName}</b>
+                </p>
+                <div className="container__card-info">
+                  <p>
+                    <FaLocationDot />
+                    {stylist.salonAddress}
+                  </p>
+                  <p>
+                    <FaPhone /> {stylist.phone}
+                  </p>
+                  <p>
+                    <IoMail />
+                    {stylist.email}
+                  </p>
+                </div>
+                <div className="container__card-actions">
+                  <button
+                    className="delete btn"
+                    onClick={() => confirmDeleteModal(stylist.accountid)}
+                  >
+                    <HiTrash />
+                  </button>
+                  <button
+                    className="update btn"
+                    onClick={() => toggleModal(stylist.accountid)}
+                  >
+                    <FaUserEdit />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="manager-stylist__pagination">
