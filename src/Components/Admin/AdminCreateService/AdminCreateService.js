@@ -67,7 +67,7 @@ const AdminCreateService = () => {
       const response = await api.post(`service`, createValues);
       const data = response.data.result;
 
-      console.log(data) 
+      console.log(data);
       if (data) {
         setFormData((prev) => ({
           ...prev,

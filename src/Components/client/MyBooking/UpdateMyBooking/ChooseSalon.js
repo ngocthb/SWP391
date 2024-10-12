@@ -1,4 +1,3 @@
-import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -9,11 +8,8 @@ import "./UpdateMyBooking.scss";
 import { bookingIdContext } from "../MyBooking";
 
 export function ChooseSalon({ onClose, onNext }) {
-  const [searchValue, setSearchValue] = useState("");
   const [salonLocations, setSalonLocations] = useState([]);
-  const [searchResults, setSearchResults] = useState(salonLocations);
   const [selectedBranch, setSelectedBranch] = useState(0);
-  const inputRef = useRef();
   const bookingId = useContext(bookingIdContext);
 
   useEffect(() => {
@@ -21,7 +17,7 @@ export function ChooseSalon({ onClose, onNext }) {
       try {
         const response = await api.get("salons");
         if (response.data) {
-          //      setSalonLocations(response.data);
+          // setSalonLocations(response.data);
           setSalonLocations(response.data.result);
         }
       } catch (error) {}
@@ -60,40 +56,6 @@ export function ChooseSalon({ onClose, onNext }) {
     fetchBooking();
   }, [salonLocations, bookingId]);
 
-  // useEffect(() => {
-  //   if (!searchValue.trim()) {
-  //     setSearchResults(salonLocations);
-  //     return;
-  //   }
-
-  //   const fetchSalons = async () => {
-  //     try {
-  //       const response = await axios.get(`users/search`, {
-  //         params: {
-  //           q: searchValue,
-  //           type: "less",
-  //         },
-  //       });
-  //       if (response.data && response.data.data) {
-  //         setSearchResults(response.data.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching salons:", error);
-  //     }
-  //   };
-
-  //   fetchSalons();
-  // }, [searchValue]);
-
-  const handleClearSearch = () => {
-    setSearchValue("");
-    inputRef.current.focus();
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchValue(e.target.value);
-  };
-
   const handleBranchSelect = (branch) => {
     setSelectedBranch(branch.id);
   };
@@ -106,26 +68,12 @@ export function ChooseSalon({ onClose, onNext }) {
           </div>
           <h1>Choose Salon</h1>
         </div>
-        <div className="myBooking__salon-search">
-          <IoSearchOutline className="myBooking__salon-icon" />
-          <input
-            placeholder="Search for salons by address..."
-            ref={inputRef}
-            value={searchValue}
-            onChange={handleSearchChange}
-          />
-          <IoCloseCircle
-            className="myBooking__salon-closeIcon"
-            aria-label="Clear search"
-            onClick={handleClearSearch}
-          />
-        </div>
 
         <div className="myBooking__salon-locations">
           F-salon is available in the following:
         </div>
         <div className="myBooking__salon-lists">
-          {salonLocations.map((branch) => (
+          {(salonLocations || []).map((branch) => (
             <div
               onClick={() => handleBranchSelect(branch)}
               className={`myBooking__salon-single ${

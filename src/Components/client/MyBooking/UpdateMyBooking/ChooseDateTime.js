@@ -146,9 +146,13 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
       };
 
       try {
-        const response = await api./*post*/ get("booking-slots", bookingValue);
-        if (response.data /*&& response.data.result*/) {
-          setAvailableSlots(response.data /*.result*/);
+        // const response = await api.get("booking-slots", bookingValue);
+        // if (response.data /*&& response.data.result*/) {
+        //   setAvailableSlots(response.data /*.result*/);
+        // }
+        const response = await api.post("booking/slots", bookingValue);
+        if (response.data && response.data.result) {
+          setAvailableSlots(response.data.result);
         }
       } catch (error) {}
     };
@@ -164,17 +168,19 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
   const updateBookingData = async (e) => {
     e.preventDefault();
     const updateValues = {
-      salonId: sessionStorage.getItem("selectedBranchId"),
+      salonId: parseInt(sessionStorage.getItem("selectedBranchId"), 10),
       customerId: accountId,
-      slotId: sessionStorage.getItem("selectedTimeId"),
+      slotId: parseInt(sessionStorage.getItem("selectedTimeId"), 10),
       bookingDate: sessionStorage.getItem("selectedDate"),
-      serviceId: sessionStorage.getItem("selectedServicesId"),
-      stylistId: sessionStorage.getItem("selectedStylistId"),
-      voucherId: sessionStorage.getItem("selectedVoucherId"),
+      serviceId: JSON.parse(sessionStorage.getItem("selectedServicesId")),
+      stylistId: parseInt(sessionStorage.getItem("selectedStylistId"), 10),
+      voucherId: parseInt(sessionStorage.getItem("selectedVoucherId"), 10),
     };
 
     setLoading(true);
     try {
+      console.log(updateValues);
+      console.log(bookingId);
       const response = await api.put(
         // `bookingHistory/${bookingId}`,
         `booking/${bookingId}`,

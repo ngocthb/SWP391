@@ -5,7 +5,11 @@ import loginUser from "../../../data/loginUser";
 import api from "../../../config/axios";
 import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../../../utils/upload";
+<<<<<<< HEAD
 import {genders} from "../../../data/gender";
+=======
+import { genders } from "../../../data/gender";
+>>>>>>> 02eb4ec47cd1f96292e3d4a4f488cec2ff293d2c
 
 const AdminCreateManager = () => {
   const [loading, setLoading] = useState(false);

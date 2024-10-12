@@ -22,13 +22,13 @@ export default function UserInfor() {
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
-  const isUpdate = useSelector(state => state.updateUserReducer);
+  const isUpdate = useSelector((state) => state.updateUserReducer);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     console.log(file);
-     
+
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setSelectedFile(imageUrl);
@@ -55,7 +55,7 @@ export default function UserInfor() {
 
   useEffect(() => {
     fetchUserData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdate]);
 
   const fetchUserData = async () => {
@@ -89,20 +89,22 @@ export default function UserInfor() {
       phone: e.target[3].value,
       dob: e.target[4].value,
       image: null,
-    }; 
+    };
     if (selectedFileObject) {
       const firebaseResponse = await uploadFile(selectedFileObject);
       updateValues.image = firebaseResponse;
     } else {
       updateValues.image = formData.avatarFile;
-    }   
-      
+    }
+
     setLoading(true);
     try {
-      
-      const response = await api.put(`customer/${formData.accountid}`, updateValues);
+      const response = await api.put(
+        `customer/${formData.accountid}`,
+        updateValues
+      );
       const data = response.data;
-      
+
       if (data) {
         setFormData((prev) => ({
           ...prev,
@@ -127,11 +129,10 @@ export default function UserInfor() {
     updateUserData(e);
   };
 
-  const toggleModal = () =>{
+  const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
     setSelectedFile(null);
-  } ;
-  
+  };
 
   return (
     <>
@@ -185,7 +186,10 @@ export default function UserInfor() {
                 <h2 className="profile-modal__header">Update Profile</h2>
                 <div className="profile-modal__avatar-section">
                   <div className="profile-modal__avatar">
-                    <img src={selectedFile || formData.avatarFile} alt={formData.fullname} />
+                    <img
+                      src={selectedFile || formData.avatarFile}
+                      alt={formData.fullname}
+                    />
                   </div>
                   <div className="profile-modal__avatar-info">
                     <h3 className="profile-modal__avatar-title">

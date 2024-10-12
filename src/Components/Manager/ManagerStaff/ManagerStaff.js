@@ -67,8 +67,6 @@ export default function ManagerStaff({ buttonLabel }) {
     fetchData("salons", setSalonLocations);
   }, []);
 
-  
-
   useEffect(() => {
     fetchStaffsData();
   }, [isUpdate]);
@@ -157,16 +155,16 @@ export default function ManagerStaff({ buttonLabel }) {
       dob: e.target[4].value,
       gender: e.target[5].value,
       salonId: Number(e.target[6].value),
-      // image: null,
+      image: null,
     };
 
-    // if (selectedFileObject) {
-    //   const firebaseResponse = await uploadFile(selectedFileObject);
-    //   updateValues.image = firebaseResponse;
-    // } else {
-    //   updateValues.image = formData.image;
-    // }
-    console.log(updateValues)
+    if (selectedFileObject) {
+      const firebaseResponse = await uploadFile(selectedFileObject);
+      updateValues.image = firebaseResponse;
+    } else {
+      updateValues.image = formData.image;
+    }
+    console.log(updateValues);
 
     setLoading(true);
     try {
@@ -213,7 +211,7 @@ export default function ManagerStaff({ buttonLabel }) {
     if (accountid) {
       await fetchStaffData(accountid);
     }
-    
+
     setIsModalOpen(!isModalOpen);
     setSelectedFile(null);
   };
@@ -229,66 +227,66 @@ export default function ManagerStaff({ buttonLabel }) {
   return (
     <>
       <div className="manager-staff">
-      <div className="admin-service__content">
-        <div className="manager-staff__header">
-          <div className="manager-staff__header-searchBar">
-            <BiSearchAlt className="searchBar-icon" />
-            {/* <i class="fas fa-search"></i> */}
-            <input placeholder="Search here..." type="text" />
-          </div>
-          <div className="manager-staff__header-filter">
-            <select>
-              <option>Newest</option>
-              <option>Oldest</option>
-            </select>
-            <button onClick={createStylist}> {buttonLabel}</button>
-          </div>
-        </div>
-        <div className="container">
-          {(staffs || []).map((staff) => (
-            <div key={staff.accountid} className="container__card">
-              <img
-                alt="manager-staff picture"
-                height="50"
-                src={staff.image ? staff.image : loginUser.avatar}
-                width="50"
-              />
-              <h3>{staff.fullName}</h3>
-              <p>
-                User Name: <b>{staff.username}</b>
-              </p>
-              <div className="container__card-info">
-                <p>
-                  <FaLocationDot />
-                  {staff.salonAddress}
-                </p>
-                <p>
-                  <FaPhone /> {staff.phone}
-                </p>
-                <p>
-                  <IoMail />
-                  {staff.email}
-                </p>
-              </div>
-              <div className="container__card-actions">
-                <button
-                  className="delete btn"
-                  onClick={() => confirmDeleteModal(staff.accountid)}
-                >
-                  <HiTrash />
-                </button>
-                <button
-                  className="update btn"
-                  onClick={() => toggleModal(staff.accountid)}
-                >
-                  <FaUserEdit />
-                </button>
-              </div>
+        <div className="admin-service__content">
+          <div className="manager-staff__header">
+            <div className="manager-staff__header-searchBar">
+              <BiSearchAlt className="searchBar-icon" />
+              {/* <i class="fas fa-search"></i> */}
+              <input placeholder="Search here..." type="text" />
             </div>
-          ))}
+            <div className="manager-staff__header-filter">
+              <select>
+                <option>Newest</option>
+                <option>Oldest</option>
+              </select>
+              <button onClick={createStylist}> {buttonLabel}</button>
+            </div>
+          </div>
+          <div className="container">
+            {(staffs || []).map((staff) => (
+              <div key={staff.accountid} className="container__card">
+                <img
+                  alt="manager-staff picture"
+                  height="50"
+                  src={staff.image ? staff.image : loginUser.avatar}
+                  width="50"
+                />
+                <h3>{staff.fullName}</h3>
+                <p>
+                  User Name: <b>{staff.username}</b>
+                </p>
+                <div className="container__card-info">
+                  <p>
+                    <FaLocationDot />
+                    {staff.salonAddress}
+                  </p>
+                  <p>
+                    <FaPhone /> {staff.phone}
+                  </p>
+                  <p>
+                    <IoMail />
+                    {staff.email}
+                  </p>
+                </div>
+                <div className="container__card-actions">
+                  <button
+                    className="delete btn"
+                    onClick={() => confirmDeleteModal(staff.accountid)}
+                  >
+                    <HiTrash />
+                  </button>
+                  <button
+                    className="update btn"
+                    onClick={() => toggleModal(staff.accountid)}
+                  >
+                    <FaUserEdit />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        </div>
-        
+
         <div className="manager-staff__pagination">
           <p>Showing 1-8 from {staffs.length} data</p>
           <div className="manager-staff__pagination-pages">
@@ -315,9 +313,7 @@ export default function ManagerStaff({ buttonLabel }) {
               onClick={(e) => e.stopPropagation()}
             >
               <form onSubmit={handleSubmit}>
-                <h2 className="manager-staff-modal__header">
-                  Update Stylist
-                </h2>
+                <h2 className="manager-staff-modal__header">Update Stylist</h2>
                 <div className="manager-staff-modal__avatar-section">
                   <div className="manager-staff-modal__avatar">
                     <img
