@@ -289,25 +289,44 @@
   ],
   "bookingHistory": [
     {
-      "salonId": "2",
+      "salonId": 2,
       "customerId": 1,
-      "slotId": "15",
+      "slotId": 8,
       "bookingDate": "2024-10-12",
-      "serviceId": "[\"1\"]",
-      "stylistId": "2",
-      "voucherId": "2",
-      "id": "7"
+      "serviceId": [
+        "1",
+        "2"
+      ],
+      "stylistId": 2,
+      "voucherId": 2,
+      "id": "4"
     },
     {
-      "id": "10",
-      "bookingId": 10,
-      "salonName": "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+      "id": "3",
+      "bookingId": 3,
+      "salonName": "99 Le Van Viet, P. Tang Nhon Phu A, Quan 9, TP Thu Duc",
       "stylistName": "Sơn Nguyễn",
-      "date": "2024-10-21",
+      "date": "2024-10-12",
       "time": "09:00:00",
+      "voucherId": "2",
       "serviceName": [
         {
-          "serviceName": "Basic Vip Hair Crul"
+          "serviceName": "Hair cut"
+        }
+      ],
+      "status": "COMPLETED"
+    },
+    {
+      "id": "2",
+      "bookingId": 2,
+      "salonName": "99 Le Van Viet, P. Tang Nhon Phu A, Quan 9, TP Thu Duc",
+      "stylistName": "Sơn Nguyễn",
+      "date": "2024-10-12",
+      "time": "09:00:00",
+      "voucherId": "2",
+      "serviceName": [
+        {
+          "serviceName": "Hair cut"
         }
       ],
       "status": "COMPLETED"

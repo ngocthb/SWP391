@@ -52,7 +52,7 @@ export function ChooseService({ onNext, onPre }) {
           params: { q: searchValue, type: "less" },
         });
         if (response.data && response.data.data) {
-          setSearchResults(response.data.data);
+          setSearchResults(response.data.result);
         }
       } catch (error) {
         console.error("Error fetching services:", error);

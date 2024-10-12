@@ -1,5 +1,5 @@
 import { FiTrash2 } from "react-icons/fi";
-import { VscFeedback } from "react-icons/vsc";
+
 import { LiaUserEditSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
 
@@ -43,11 +43,8 @@ export default function MyBooking() {
 
   const fetchBookingHistory = async () => {
     try {
-      const response = await api
-        .get
-        // "bookingHistory"
-        // `customer/${accountId}/${activeTab}`
-        ();
+      // const response = await api.get("bookingHistory");
+      const response = await api.get(`customer/${accountId}/${activeTab}`);
       if (response.data) {
         // setBookingHistory(response.data);
         setBookingHistory(response.data.result);

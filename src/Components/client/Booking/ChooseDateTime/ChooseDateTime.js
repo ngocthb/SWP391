@@ -96,18 +96,11 @@ export default function ChooseDateTime() {
         date: formatDateForInput(selectedDate),
       };
 
-<<<<<<< HEAD
-       try {
+      try {
         const response = await api.post("booking/slots", bookingValue);
         const data = response.data.result;
         if (data) {
           setAvailableSlots(data);
-=======
-      try {
-        const response = await api./*post*/ get("booking-slots", bookingValue);
-        if (response.data /*&& response.data.result*/) {
-          setAvailableSlots(response.data /*.result*/);
->>>>>>> 1844756712c796dd52419eec85766857d4e71179
         }
       } catch (error) {}
     };

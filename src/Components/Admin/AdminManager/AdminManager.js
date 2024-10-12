@@ -18,7 +18,7 @@ import { Spin } from "antd";
 import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
-import genders from "../../../data/gender";
+import { genders } from "../../../data/gender";
 
 export default function AdminManager({ buttonLabel }) {
   const [stylists, setStylists] = useState([]);
@@ -67,7 +67,6 @@ export default function AdminManager({ buttonLabel }) {
 
     fetchData("salons", setSalonLocations);
   }, []);
-
 
   useEffect(() => {
     fetchManagersData();
@@ -176,7 +175,7 @@ export default function AdminManager({ buttonLabel }) {
         `manager/${formData.accountid}`,
         updateValues
       );
-      const data = response.data.result
+      const data = response.data.result;
 
       if (data) {
         const foundSalon = salonLocations.find(
