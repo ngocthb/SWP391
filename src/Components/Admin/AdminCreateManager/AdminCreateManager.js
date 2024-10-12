@@ -5,13 +5,13 @@ import loginUser from "../../../data/loginUser";
 import api from "../../../config/axios";
 import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../../../utils/upload";
+import genders from "../../../data/gender";
 
 const AdminCreateManager = () => {
   const [loading, setLoading] = useState(false);
   const [salonLocations, setSalonLocations] = useState([]);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [genders, setGenders] = useState([]);
   const [formData, setFormData] = useState({
     image: loginUser.avatar,
   });
@@ -40,7 +40,6 @@ const AdminCreateManager = () => {
     };
 
     fetchData("salons", setSalonLocations);
-    fetchData("gender", setGenders);
   }, []);
 
   const createStylishData = async (e) => {

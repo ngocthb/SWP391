@@ -18,6 +18,7 @@ import { Spin } from "antd";
 import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
+import genders from "../../../data/gender";
 
 export default function ManagerStaff({ buttonLabel }) {
   const [staffs, setStaffs] = useState([]);
@@ -25,7 +26,6 @@ export default function ManagerStaff({ buttonLabel }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [salonLocations, setSalonLocations] = useState([]);
-  const [genders, setGenders] = useState([]);
   const [formData, setFormData] = useState({
     accountid: 0,
     fullName: "",
@@ -65,7 +65,6 @@ export default function ManagerStaff({ buttonLabel }) {
     };
 
     fetchData("salons", setSalonLocations);
-    fetchData("gender", setGenders);
   }, []);
 
   

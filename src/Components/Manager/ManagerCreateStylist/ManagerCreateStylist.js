@@ -5,6 +5,7 @@ import loginUser from "../../../data/loginUser";
 import api from "../../../config/axios";
 import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../../../utils/upload";
+import genders from "../../../data/gender";
 
 const ManagerCreateStylist = () => {
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,6 @@ const ManagerCreateStylist = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [levels, setLevels] = useState([]);
   const [skills, setSkills] = useState([]);
-  const [genders, setGenders] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [formData, setFormData] = useState({
     image: loginUser.avatar,
@@ -46,7 +46,6 @@ const ManagerCreateStylist = () => {
     fetchData("salons", setSalonLocations);
     fetchData("levels", setLevels);
     fetchData("skills", setSkills);
-    fetchData("gender", setGenders);
   }, []);
 
   const handleSkillToggle = (skillId) => {
@@ -63,6 +62,12 @@ const ManagerCreateStylist = () => {
   const createStylishData = async (e) => {
     e.preventDefault();
     const selectedSkillsId = selectedSkills.map(Number);
+    const numberOfSkillId = skills.reduce((total, item) => {
+      if (item) {
+        total++;
+      }
+      return total;
+    }, 0);
     const createValues = {
       fullname: e.target[1].value,
       email: e.target[2].value,
@@ -72,8 +77,8 @@ const ManagerCreateStylist = () => {
       username: e.target[6].value,
       password: e.target[7].value,
       skillId: selectedSkillsId,
-      levelId: e.target[9].value,
-      salonId: e.target[10].value,
+      levelId: e.target[7 + numberOfSkillId + 1].value,
+      salonId: e.target[7 + numberOfSkillId + 2].value,
       image: null,
     };
 

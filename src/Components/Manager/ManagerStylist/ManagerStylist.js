@@ -18,6 +18,7 @@ import { Spin } from "antd";
 import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
+import genders from "../../../data/gender";
 
 export default function ManagerStylist({ buttonLabel }) {
   const [stylists, setStylists] = useState([]);
@@ -27,7 +28,6 @@ export default function ManagerStylist({ buttonLabel }) {
   const [salonLocations, setSalonLocations] = useState([]);
   const [levels, setLevels] = useState([]);
   const [skills, setSkills] = useState([]);
-  const [genders, setGenders] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [formData, setFormData] = useState({
     accountid: 0,
@@ -72,7 +72,6 @@ export default function ManagerStylist({ buttonLabel }) {
     fetchData("salons", setSalonLocations);
     fetchData("levels", setLevels);
     fetchData("skills", setSkills);
-    fetchData("gender", setGenders);
   }, []);
 
   const handleSkillToggle = (skillId) => {
@@ -205,7 +204,6 @@ export default function ManagerStylist({ buttonLabel }) {
       updateValues.image = formData.image;
     }
 
-    console.log(updateValues);
 
     setLoading(true);
     try {

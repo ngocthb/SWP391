@@ -14,7 +14,6 @@ import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 
 import "./ChooseStylist.scss";
-// import {stylists} from "../../../../data/booking";
 import api from "../../../../config/axios";
 
 
@@ -43,9 +42,10 @@ export default function ChooseStylist() {
       }
 
        try {
-        const response = await api./*post*/get(`booking-stylists`, bookingValue);
-        if (response.data /*&& response.data.result*/) {
-          setStylists(response.data/*.result*/);
+        const response = await api.post(`booking/stylists`, bookingValue);
+        const data = response.data.result;
+        if (data) {
+          setStylists(data);
         }
        } catch (error) {
         

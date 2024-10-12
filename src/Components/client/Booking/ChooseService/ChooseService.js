@@ -74,8 +74,9 @@ export default function ChooseService() {
     const fetchVoucher = async () => {
       try {
         const response = await api.get("voucher");
-        if (response.data /*&& response.data.result*/) {
-          setVoucher(response.data /*.result*/);
+        const data = response.data.result;
+        if (data) {
+          setVoucher(data);
         }
       } catch (error) {}
     };
@@ -94,8 +95,9 @@ export default function ChooseService() {
       };
       try {
         const response = await api.post(`service/searchByName`, value);
-        if (response.data && response.data.result) {
-          setSearchResults(response.data.result);
+        const data = response.data.result;
+        if (data) {
+          setSearchResults(data);
         }
       } catch (error) {
         console.error("Error fetching services:", error);
