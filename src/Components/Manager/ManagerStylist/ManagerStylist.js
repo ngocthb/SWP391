@@ -122,15 +122,19 @@ export default function ManagerStylist({ buttonLabel }) {
     try {
       const response = await api.get(`stylist-read?accountid=${accountid}`);
       const data = response.data; /*.result*/
-      
+
       if (data[0]) {
-        const foundSalon = salonLocations.find(item => item.address === data[0].salonAddress);
+        const foundSalon = salonLocations.find(
+          (item) => item.address === data[0].salonAddress
+        );
         const salonId = foundSalon ? foundSalon.id : null;
-  
-        const foundLevel = levels.find(item => item.name === data[0].levelName);
+
+        const foundLevel = levels.find(
+          (item) => item.name === data[0].levelName
+        );
         const levelId = foundLevel ? foundLevel.id : null;
-  
-        setFormData(prev => ({
+
+        setFormData((prev) => ({
           ...prev,
           accountid: accountid,
           fullname: data[0].fullname || "",
@@ -178,7 +182,7 @@ export default function ManagerStylist({ buttonLabel }) {
     });
   };
 
-  const updateStylishData = async (e) => {
+  const updateStylistData = async (e) => {
     e.preventDefault();
     const selectedSkillsId = selectedSkills.map(Number);
     const numberOfSkillId = skills.reduce((total, item) => {
@@ -199,7 +203,6 @@ export default function ManagerStylist({ buttonLabel }) {
       image: null,
     };
 
-
     if (selectedFileObject) {
       const firebaseResponse = await uploadFile(selectedFileObject);
       updateValues.image = firebaseResponse;
@@ -216,10 +219,12 @@ export default function ManagerStylist({ buttonLabel }) {
       const data = response.data.result;
 
       if (data) {
-        const foundSalon = salonLocations.find(item => item.address === data.salonAddress);
+        const foundSalon = salonLocations.find(
+          (item) => item.address === data.salonAddress
+        );
         const salonId = foundSalon ? foundSalon.id : null;
-  
-        const foundLevel = levels.find(item => item.name === data.levelName);
+
+        const foundLevel = levels.find((item) => item.name === data.levelName);
         const levelId = foundLevel ? foundLevel.id : null;
 
         setFormData((prev) => ({
@@ -249,7 +254,6 @@ export default function ManagerStylist({ buttonLabel }) {
       }
     }
   }, [isModalOpen]);
-  
 
   const toggleModal = async (accountid) => {
     if (accountid) {
@@ -258,14 +262,13 @@ export default function ManagerStylist({ buttonLabel }) {
     setIsModalOpen(!isModalOpen);
     setSelectedFile(null);
   };
-  
 
   const createStylist = () => {
     navigate("/manager/stylist/create");
   };
 
   const handleSubmit = (e) => {
-    updateStylishData(e);
+    updateStylistData(e);
   };
 
   return (
@@ -355,9 +358,7 @@ export default function ManagerStylist({ buttonLabel }) {
               onClick={(e) => e.stopPropagation()}
             >
               <form onSubmit={handleSubmit}>
-                <h2 className="ManagerStylist-modal__header">
-                  Update ManagerStylist
-                </h2>
+                <h2 className="ManagerStylist-modal__header">Update Stylist</h2>
                 <div className="ManagerStylist-modal__avatar-section">
                   <div className="ManagerStylist-modal__avatar">
                     <img
@@ -462,7 +463,9 @@ export default function ManagerStylist({ buttonLabel }) {
                           <select
                             id="gender"
                             className="manager-create-stylist__select"
-                            defaultValue={formData.gender ? formData.gender : ""}
+                            defaultValue={
+                              formData.gender ? formData.gender : ""
+                            }
                           >
                             <option value="" disabled>
                               Select Gender

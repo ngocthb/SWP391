@@ -1,0 +1,334 @@
+{
+  "customer-profile": [
+    {
+      "accountid": 1,
+      "fullname": "Huỳnh Công Minh Trí",
+      "email": "huynhcongminhtri79@gmail.com",
+      "dob": null,
+      "phone": "0902177436",
+      "image": "https://scontent.fsgn20-1.fna.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=dst-png_s200x200&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_eui2=AeHNx03Gcl25psZHbcOertu8Wt9TLzuBU1Ba31MvO4FTUGiH6hRD2pilieDkq0rIL06oOr-CKAWxBX-SnKs-Unlx&_nc_ohc=jZ-PuitTc3oQ7kNvgEOiHWa&_nc_ht=scontent.fsgn20-1.fna&_nc_gid=AhF3AJ1eAH9-W1Q8ty1s6YD&oh=00_AYBpwPzBUnM0l_D3znN6bqp8CV0XNmt5av4WuUygbjhaWw&oe=67245EFA",
+      "id": "dd34"
+    }
+  ],
+  "booking-stylists": [
+    {
+      "id": "1",
+      "fullname": "Hồ Thành Minh",
+      "rating": {
+        "cut": 4.8,
+        "perm": 4.9,
+        "dye": 4.8
+      },
+      "customers": {
+        "cut": 7800,
+        "perm": 197,
+        "dye": 313
+      },
+      "image": "https://i.pinimg.com/564x/eb/b9/e3/ebb9e37fdb471de44a56c087768ff6d0.jpg"
+    },
+    {
+      "id": "2",
+      "fullname": "Bắc Lý",
+      "rating": {
+        "cut": 4.7,
+        "perm": 4.8,
+        "dye": 4.7
+      },
+      "customers": {
+        "cut": 6500,
+        "perm": 190,
+        "dye": 280
+      },
+      "image": "https://i.pinimg.com/564x/8a/3a/9e/8a3a9ee75482b6c27b0f03bae4439522.jpg"
+    },
+    {
+      "id": "3",
+      "fullname": "Trung Hồ",
+      "rating": {
+        "cut": 4.9,
+        "perm": 5,
+        "dye": 4.9
+      },
+      "customers": {
+        "cut": 8200,
+        "perm": 230,
+        "dye": 400
+      },
+      "image": "https://i.pinimg.com/564x/26/cf/ba/26cfba0581fe35dea4ea1a1cef1275b2.jpg"
+    },
+    {
+      "id": "4",
+      "fullname": "Sơn Nguyễn",
+      "rating": {
+        "cut": 4.6,
+        "perm": 4.7,
+        "dye": 4.8
+      },
+      "customers": {
+        "cut": 5000,
+        "perm": 180,
+        "dye": 350
+      },
+      "image": "https://i.pinimg.com/564x/66/5f/c0/665fc084f50fb7b2959d80c30f68e2d7.jpg"
+    },
+    {
+      "id": "f5e6",
+      "salonId": 2,
+      "serviceId": [
+        1
+      ]
+    }
+  ],
+  "service": [
+    {
+      "id": "1",
+      "serviceName": "Hair cut",
+      "price": 100000,
+      "description": "Hair cut",
+      "duration": "00:30:00",
+      "image": "https://i.pinimg.com/564x/71/00/cd/7100cdf88f9f52393c2c42f1305002f0.jpg"
+    },
+    {
+      "id": "2",
+      "serviceName": "Basic Standard Hair Crul",
+      "price": 379000,
+      "description": "Hair Crul",
+      "duration": "01:00:00",
+      "image": "https://i.pinimg.com/564x/71/00/cd/7100cdf88f9f52393c2c42f1305002f0.jpg"
+    }
+  ],
+  "salons": [
+    {
+      "id": "5",
+      "address": "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+      "hotline": "0902177436",
+      "delete": false
+    },
+    {
+      "id": "2",
+      "address": "99 Le Van Viet, P. Tang Nhon Phu A, Quan 9, TP Thu Duc",
+      "hotline": "0908139025",
+      "delete": false
+    }
+  ],
+  "booking-slots": [
+    {
+      "slotid": 2,
+      "slottime": "09h00",
+      "id": "26ba"
+    },
+    {
+      "slotid": 3,
+      "slottime": "10h00",
+      "id": "ec2c"
+    },
+    {
+      "slotid": 4,
+      "slottime": "11h00",
+      "id": "8ebf"
+    },
+    {
+      "slotid": 5,
+      "slottime": "12h00",
+      "id": "a6f4"
+    },
+    {
+      "slotid": 6,
+      "slottime": "13h00",
+      "id": "aadb"
+    },
+    {
+      "slotid": 7,
+      "slottime": "14h00",
+      "id": "135d"
+    },
+    {
+      "slotid": 8,
+      "slottime": "15h00",
+      "id": "054d"
+    },
+    {
+      "slotid": 9,
+      "slottime": "16h00",
+      "id": "6f88"
+    },
+    {
+      "slotid": 10,
+      "slottime": "17h00",
+      "id": "8258"
+    },
+    {
+      "slotid": 11,
+      "slottime": "18h00",
+      "id": "1e98"
+    },
+    {
+      "slotid": 12,
+      "slottime": "19h00",
+      "id": "73e0"
+    },
+    {
+      "slotid": 13,
+      "slottime": "20h00",
+      "id": "8e52"
+    },
+    {
+      "slotid": 14,
+      "slottime": "21h00",
+      "id": "09ed"
+    },
+    {
+      "slotid": 15,
+      "slottime": "22h00",
+      "id": "23f0"
+    }
+  ],
+  "service-searchByName": [
+    {
+      "id": "2",
+      "serviceName": "Basic Standard Hair Crul",
+      "price": 379000,
+      "description": "Hair Crul",
+      "duration": "01:00:00",
+      "image": null
+    },
+    {
+      "id": "3",
+      "serviceName": "Basic Vip Hair Crul",
+      "price": 449000,
+      "description": "Hair Crul",
+      "duration": "01:00:00",
+      "image": null
+    }
+  ],
+  "stylist-read": [
+    {
+      "accountid": 2,
+      "username": "stylist1",
+      "email": "stylist1@gmail.com",
+      "fullname": "Nguyen Hoang Phuc",
+      "phone": "0912345670",
+      "image": null,
+      "gender": "male",
+      "dob": "2000-10-04",
+      "salonAddress": "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+      "levelName": "assistan stylist",
+      "id": "0f85"
+    },
+    {
+      "accountid": 3,
+      "username": "stylist2",
+      "email": "stylist2@gmail.com",
+      "fullname": "Nguyen Minh Hieu",
+      "phone": "0912345671",
+      "image": "",
+      "gender": "male",
+      "dob": "2004-10-12",
+      "salonAddress": "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+      "levelName": "master stylist",
+      "id": "3125"
+    }
+  ],
+  "voucher": [
+    {
+      "id": "1",
+      "code": "SDS20",
+      "name": "Super discount",
+      "discountAmount": 20,
+      "expiryDate": "2024-10-20",
+      "quantity": 10,
+      "delete": false
+    },
+    {
+      "id": "2",
+      "code": "SDS25",
+      "name": "Discount",
+      "discountAmount": 1,
+      "expiryDate": "2024-10-08",
+      "quantity": 1,
+      "delete": false
+    }
+  ],
+  "levels": [
+    {
+      "id": "1",
+      "name": "assistan stylist"
+    },
+    {
+      "id": "2",
+      "name": "master stylist"
+    }
+  ],
+  "skills": [
+    {
+      "id": "1",
+      "name": "assistan stylist"
+    },
+    {
+      "id": "2",
+      "name": "master stylist"
+    },
+    {
+      "id": "3",
+      "name": "assistan stylist"
+    },
+    {
+      "id": "4",
+      "name": "master stylist"
+    }
+  ],
+  "gender": [
+    {
+      "id": "0",
+      "name": "male"
+    },
+    {
+      "id": "2",
+      "name": "female"
+    }
+  ],
+  "bookingHistory": [
+    {
+      "salonId": "2",
+      "customerId": 1,
+      "slotId": "15",
+      "bookingDate": "2024-10-12",
+      "serviceId": "[\"1\"]",
+      "stylistId": "2",
+      "voucherId": "2",
+      "id": "7"
+    },
+    {
+      "id": "10",
+      "bookingId": 10,
+      "salonName": "68 Dinh Phong Phu, P. Tang Nhon Phu B, Quan 9, TP Thu Duc",
+      "stylistName": "Sơn Nguyễn",
+      "date": "2024-10-21",
+      "time": "09:00:00",
+      "serviceName": [
+        {
+          "serviceName": "Basic Vip Hair Crul"
+        }
+      ],
+      "status": "COMPLETED"
+    }
+  ],
+  "feedbacks": [
+    {
+      "date": "2024-10-11",
+      "content": "good",
+      "score": 10,
+      "accountId": 1,
+      "bookingId": 7,
+      "id": "dc12"
+    },
+    {
+      "id": "bf5a",
+      "date": "2024-10-12",
+      "content": "ASASADADAFD",
+      "score": 8,
+      "accountId": 1,
+      "bookingId": 10
+    }
+  ]
+}

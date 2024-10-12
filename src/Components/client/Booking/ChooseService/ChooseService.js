@@ -325,20 +325,7 @@ export default function ChooseService() {
             </div>
           ))}
 
-          {/* <div className="checkbox-item">
-            <input type="checkbox" id="unknown-service" />
-            <div>
-              <label htmlFor="unknown-service" className="checkbox-label">
-                Anh không biết chọn dịch vụ gì!
-              </label>
-              <div className="checkbox-description">
-                Nhân viên sẽ giúp anh chọn dịch vụ tại cửa hàng
-              </div>
-            </div>
-          </div> */}
-
           <div className="footer__promo">
-            {/* <span className="footer__promo-label"></span> */}
             <span onClick={showModal} className="footer__promo-action">
               Voucher
             </span>

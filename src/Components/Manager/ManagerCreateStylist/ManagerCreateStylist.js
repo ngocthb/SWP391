@@ -3,7 +3,7 @@ import "./ManagerCreateStylist.scss";
 import { Spin } from "antd";
 import loginUser from "../../../data/loginUser";
 import api from "../../../config/axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../../../utils/upload";
 
 const ManagerCreateStylist = () => {
@@ -18,6 +18,7 @@ const ManagerCreateStylist = () => {
   const [formData, setFormData] = useState({
     image: loginUser.avatar,
   });
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -92,6 +93,7 @@ const ManagerCreateStylist = () => {
           ...prev,
           image: selectedFile || prev.image,
         }));
+        navigate("/manager/stylist");
       }
     } catch (err) {
     } finally {
