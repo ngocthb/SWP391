@@ -18,7 +18,7 @@ import { Spin } from "antd";
 import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
-import genders from "../../../data/gender";
+import {genders} from "../../../data/gender";
 
 export default function AdminManager({ buttonLabel }) {
   const [stylists, setStylists] = useState([]);

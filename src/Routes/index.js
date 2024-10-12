@@ -90,9 +90,9 @@ export const Routes = [
   {
     path: "user",
     element: (
-      // <PrivateRoute>
-       
-      // </PrivateRoute> 
+      // <PrivateRoute requiredRole="CUSTOMER">
+      //<UserLayout />
+      // </PrivateRoute>
       <UserLayout />
     ),
     children: [
@@ -108,7 +108,9 @@ export const Routes = [
   },
   {
     path: "manager",
-    element: <ManagerLayout />,
+    element: /*<PrivateRoute requiredRole="BRANCH_MANAGER">
+    <ManagerLayout />
+  </PrivateRoute>*/ <ManagerLayout />,
     children: [
       {
         path: "stylist",
@@ -120,11 +122,11 @@ export const Routes = [
       },
       {
         path: "staff",
-        element: <ManagerStaff buttonLabel={"+ New staff"}/>
+        element: <ManagerStaff buttonLabel={"+ New staff"} />,
       },
       {
         path: "staff/create",
-        element: <ManagerCreateStaff/>
+        element: <ManagerCreateStaff />,
       },
       {
         path: "dashboard",
@@ -132,15 +134,15 @@ export const Routes = [
       },
       {
         path: "booking",
-        element: <ManagerBooking/>
+        element: <ManagerBooking />,
       },
       {
         path: "customer",
-        element: <ManagerCustomer/>
+        element: <ManagerCustomer />,
       },
       {
         path: "staff/create",
-        element: <ManagerCreateStaff/>
+        element: <ManagerCreateStaff />,
       },
     ],
   },
@@ -171,41 +173,45 @@ export const Routes = [
     ],
   },
   {
-      path: "admin",
-      element: <AdminLayout/>,
-      children: [
-        {
-          path: "dashboard",
-          element: <ManagerDashboard />,
-        }, 
-        {
-          path: "service",
-          element: <AdminService/>
-        },
-        {
-          path: "service/create",
-          element: <AdminCreateService/>
-        },
-        {
-          path: "voucher",
-          element: <AdminVoucher buttonLabel={"New Voucher"}/>
-        },
-        {
-          path: "voucher/create",
-          element: <AdminCreateVoucher/>
-        },
-        {
-          path: "manager",
-          element: <AdminManager buttonLabel={"New Manager"}/>
-        },
-        {
-          path: "manager/create",
-          element: <AdminCreateManager/>
-        },
-        {
-          path: "customer",
-          element: <AdminCustomer buttonLabel={"New Customer"}/>
-        },
-      ]
-  }
+    path: "admin",
+    element: (
+      /*<PrivateRoute requiredRole="ADMIN">
+      <AdminLayout />
+    </PrivateRoute>*/ <AdminLayout />
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <ManagerDashboard />,
+      },
+      {
+        path: "service",
+        element: <AdminService />,
+      },
+      {
+        path: "service/create",
+        element: <AdminCreateService />,
+      },
+      {
+        path: "voucher",
+        element: <AdminVoucher buttonLabel={"New Voucher"} />,
+      },
+      {
+        path: "voucher/create",
+        element: <AdminCreateVoucher />,
+      },
+      {
+        path: "manager",
+        element: <AdminManager buttonLabel={"New Manager"} />,
+      },
+      {
+        path: "manager/create",
+        element: <AdminCreateManager />,
+      },
+      {
+        path: "customer",
+        element: <AdminCustomer buttonLabel={"New Customer"} />,
+      },
+    ],
+  },
 ];

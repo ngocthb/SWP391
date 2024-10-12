@@ -8,6 +8,8 @@ import "./Login.scss";
 import { message, Spin } from "antd";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { googleProvider } from "../../../config/firebase";
+import { useDispatch } from "react-redux";
+import { setRole } from "../../../actions/Role";
 
 const Login = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -15,6 +17,7 @@ const Login = () => {
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handlePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -31,12 +34,21 @@ const Login = () => {
         username: userName,
         password: password,
       });
-      const { token } = response.data;
+      const { token, role } = response.data;
       sessionStorage.setItem("token", token);
+      dispatch(setRole(role));
 
-      if (response) {
-        navigate("/");
-      }
+     if (role === "ADMIN") {
+      navigate("/admin/dashboard");
+     }else if (role === "BRANCH_MANAGER"){
+      navigate("/manager/dashboard");
+     }else if (role === "STYLIST") {
+      navigate("/stylist")
+     }else if (role === "STAFF") {
+      navigate("/staff")
+     }else{
+      navigate("/");
+     }
     } catch (error) {
       console.log(error);
       messageApi.open({

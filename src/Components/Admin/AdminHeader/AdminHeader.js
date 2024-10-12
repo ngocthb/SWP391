@@ -6,6 +6,10 @@ import logo from "../../../Assets/logo.png";
 import logoFold from "../../../Assets/logo_blue_noBackground.png";
 import { collapse } from "../../../actions/Collapse";
 import "./AdminHeader.scss";
+import api from "../../../config/axios";
+import loginUser from "../../../data/loginUser";
+import { CgProfile } from "react-icons/cg";
+import { TbLogout } from "react-icons/tb";
 
 const pageNames = {
   "/admin/dashboard": "Dashboard",
@@ -25,6 +29,7 @@ const AdminHeader = () => {
   const location = useLocation();
   const [pageName, setPageName] = useState("");
   const navigate = useNavigate();
+  const [adminInfo, setAdminInfo] = useState([]);
 
   const toggleDropdown = useCallback(() => {
     setDropdownOpen((prev) => !prev);
@@ -44,6 +49,23 @@ const AdminHeader = () => {
   }, []);
 
   useEffect(() => {
+    const fetchManagerData = async () => {
+      try {
+        const response = await api.get(`admin/profile`);
+        const data = response.data.result;
+        console.log(data);
+        if (data) {
+          setAdminInfo(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchManagerData();
+  }, []);
+
+
+  useEffect(() => {
     setPageName(pageNames[location.pathname] || "");
   }, [location.pathname]);
 
@@ -54,6 +76,15 @@ const AdminHeader = () => {
   const handleGoback = () => {
     navigate("/admin/dashboard");
   }
+
+  function formatRole(role) {
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+}
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    navigate("/");
+  };
 
   return (
     <header className="header-admin">
@@ -77,13 +108,13 @@ const AdminHeader = () => {
         <div className="header-admin__nav-right">
           <div className="header-admin__user-info" onClick={toggleDropdown}>
             <div className="header-admin__text">
-              <div className="header-admin__name">Nabila A.</div>
-              <div className="header-admin__role">Admin</div>
+              <div className="header-admin__name">{adminInfo.fullname}</div>
+              <div className="header-admin__role">{adminInfo.role ? formatRole(adminInfo.role) : ""}</div>
             </div>
             <div className="header-admin__avatar">
               <img
                 alt="User avatar"
-                src="https://enlink.themenate.net/assets/images/avatars/thumb-3.jpg"
+                src={adminInfo.image || loginUser.avatar}
               />
             </div>
           </div>
@@ -93,24 +124,25 @@ const AdminHeader = () => {
                 <img
                   height={60}
                   alt="User avatar"
-                  src="https://enlink.themenate.net/assets/images/avatars/thumb-3.jpg"
+                  src={adminInfo.image || loginUser.avatar}
                 />
                 <div>
-                  <h2>Marshall Nichols</h2>
-                  <p>UI/UX Designer</p>
+                  <h2>{adminInfo.fullname}</h2>
+                  <p>{adminInfo.role ? formatRole(adminInfo.role) : ""}</p>
                 </div>
               </div>
               <Link to="#">
-                <i className="fas fa-user"></i> Edit Profile
+                <i>
+                  <CgProfile />
+                </i>{" "}
+                Edit Profile
               </Link>
-              <Link to="#">
-                <i className="fas fa-cog"></i> Account Setting
-              </Link>
-              <Link to="#">
-                <i className="fas fa-folder"></i> Projects
-              </Link>
-              <Link to="#">
-                <i className="fas fa-sign-out-alt"></i> Logout
+              <Link to="/" onClick={handleLogout}>
+                <i>
+                  {" "}
+                  <TbLogout />
+                </i>{" "}
+                Logout
               </Link>
             </div>
           )}

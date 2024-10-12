@@ -34,9 +34,10 @@ const ManagerBooking = () => {
     serviceId: [],
     salonId: 0,
     time: "",
-    serviceName: []
+    serviceName: [],
   });
   const [selectedTime, setSelectedTime] = useState("");
+  const [manager, setManager] = useState([]);
 
   const handleDateChange = (event) => {
     setFormData((prev) => ({ ...prev, date: event.target.value }));
@@ -52,7 +53,7 @@ const ManagerBooking = () => {
   };
 
   const handleServiceNameChange = (e) => {
-    setSelectedTime([e.target.value])
+    setSelectedTime([e.target.value]);
     setFormData((prev) => ({
       ...prev,
       serviceName: selectedTime,
@@ -64,7 +65,6 @@ const ManagerBooking = () => {
       ? formData.serviceName.map((service) => `• ${service}`).join("\n")
       : "";
   };
-
 
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
@@ -82,15 +82,37 @@ const ManagerBooking = () => {
     fetchData("customers", setCustomers);
     fetchData("vouchers", setVouchers);
     fetchData("service", setServices);
-    fetchData("stylist-read", setAllStylists);
+    fetchData("stylist/read", setAllStylists);
   }, []);
 
+  useEffect(() => {
+    const fetchManagerData = async () => {
+      setLoading(true);
+      try {
+        const response = await api.get(`manager/profile`);
+        const data = response.data.result;
 
+        if (data) {
+          setManager(data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchManagerData();
+  }, []);
+
+  const date = new Date();
+  const formattedDate = date.toISOString().split("T")[0];
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await api.get("booking");
+        const response = await api.get(
+          `manager/stylists/booking/${manager.salonId}/${formattedDate}`
+        );
         const data = response.data.result;
 
         if (data) {
@@ -129,8 +151,6 @@ const ManagerBooking = () => {
         );
         const stylistId = foundStylist ? foundStylist.accountid : null;
 
-       
-
         const foundServices = services.filter((service) =>
           data.serviceName.includes(service.serviceName)
         );
@@ -151,11 +171,9 @@ const ManagerBooking = () => {
           time: data.time,
           salonName: data.salonName,
           voucherCode: data.voucherCode,
-          serviceName: data.serviceName
+          serviceName: data.serviceName,
         }));
-        
       }
-      
     } catch (err) {
       console.error(err);
     }
@@ -170,29 +188,26 @@ const ManagerBooking = () => {
     }
   }, [isModalOpen]);
 
-    const fetchStylistsData = async () => {
-      const foundSlot = slots.find(
-        (item) => item.slottime === formatTime(formData.time)
-      );
-      const slotId = foundSlot ? foundSlot.slotid : null;
-      const value = {
-        salonId: formData.salonId,
-        serviceId: formData.serviceId,
-        date: formData.bookingDate,
-        slotId: slotId
-      }
+  const fetchStylistsData = async () => {
+    const foundSlot = slots.find(
+      (item) => item.slottime === formatTime(formData.time)
+    );
+    const slotId = foundSlot ? foundSlot.slotid : null;
+    const value = {
+      salonId: formData.salonId,
+      serviceId: formData.serviceId,
+      date: formData.bookingDate,
+      slotId: slotId,
+    };
 
-      try {
-        const response = await api.post("booking/stylist/update", value);
-        const data = response.data.result;
-        if (data) {
-          setStylists(data);
-        }
-      } catch (error) {
-        
+    try {
+      const response = await api.post("booking/stylist/update", value);
+      const data = response.data.result;
+      if (data) {
+        setStylists(data);
       }
-    
-    }
+    } catch (error) {}
+  };
 
   const updateCustomerData = async (e) => {
     e.preventDefault();
@@ -270,10 +285,6 @@ const ManagerBooking = () => {
       if (sortConfig.direction === "descending") return " ▼";
     }
     return "";
-  };
-
-  const createVoucher = () => {
-    navigate("/admin/voucher/create");
   };
 
   const toggleModal = async (id) => {
@@ -465,7 +476,9 @@ const ManagerBooking = () => {
                                 type="radio"
                                 name="time"
                                 value={convertTime(time.slottime)}
-                                checked={formData.time === convertTime(time.slottime)}
+                                checked={
+                                  formData.time === convertTime(time.slottime)
+                                }
                                 onChange={handleTimeChange}
                                 className="manager-booking-modal__radio"
                               />
