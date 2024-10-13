@@ -61,9 +61,9 @@ export default function ChooseService() {
     const fetchService = async () => {
       try {
         const response = await api.get("service");
-        if (response.data /*&& response.data.result*/) {
-          setServices(response.data /*.result*/);
-          setSearchResults(response.data);
+        if (response.data && response.data.result) {
+          setServices(response.data.result);
+          setSearchResults(response.data.result);
         }
       } catch (error) {}
     };

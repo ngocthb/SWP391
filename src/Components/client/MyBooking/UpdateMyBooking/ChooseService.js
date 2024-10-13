@@ -66,11 +66,12 @@ export function ChooseService({ onNext, onPre }) {
   useEffect(() => {
     const fetchBooking = async () => {
       const storedService = sessionStorage.getItem("selectedServicesId");
+      console.log(storedService);
       if (!storedService) {
         try {
           const response = await api.get(
             // `bookingHistory?bookingId=${bookingId}`
-            `booking?bookingId=${bookingId}`
+            `booking/${bookingId}`
           );
           // const data = response.data[0];
           const data = response.data.result;
@@ -84,7 +85,10 @@ export function ChooseService({ onNext, onPre }) {
 
             // Store only the IDs of the found services
             if (foundService) {
+              
               setSelectedServices(foundService.map((service) => service.id));
+
+              console.log(selectedServices);
             }
           }
         } catch (error) {

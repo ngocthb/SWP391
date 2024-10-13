@@ -6,8 +6,8 @@ import { BiSearchAlt } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCustomer } from "../../../actions/Update";
-import { slots } from "../../../data/booking";
+import { updateBooking, updateCustomer } from "../../../actions/Update";
+
 
 const ManagerBooking = () => {
   const [bookings, setBookings] = useState([]);
@@ -21,8 +21,10 @@ const ManagerBooking = () => {
   const [salonLocations, setSalonLocations] = useState([]);
   const [allStylist, setAllStylists] = useState([]);
   const [stylists, setStylists] = useState([]);
-  const [customers, setCustomers] = useState([]);
   const [vouchers, setVouchers] = useState([]);
+
+  const [slots, setSlots] = useState([]);
+
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
     bookingId: 0,
@@ -45,9 +47,9 @@ const ManagerBooking = () => {
 
   const handleTimeChange = (event) => {
     setFormData((prev) => ({ ...prev, time: event.target.value }));
-    fetchStylistsData();
+    
   };
-
+  useEffect(() => {fetchStylistsData();},[formData.time])
   const handleStylistChange = (event) => {
     setFormData((prev) => ({ ...prev, stylistId: event.target.value }));
   };
@@ -79,10 +81,10 @@ const ManagerBooking = () => {
     };
 
     fetchData("salons", setSalonLocations);
-    fetchData("customers", setCustomers);
     fetchData("vouchers", setVouchers);
     fetchData("service", setServices);
     fetchData("stylist/read", setAllStylists);
+    fetchData("slot/read", setSlots);
   }, []);
 
   useEffect(() => {
@@ -91,7 +93,6 @@ const ManagerBooking = () => {
       try {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
-
         if (data) {
           setManager(data);
         }
@@ -106,7 +107,7 @@ const ManagerBooking = () => {
 
   const date = new Date();
   const formattedDate = date.toISOString().split("T")[0];
-
+  console.log(manager.salonId);
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -123,23 +124,21 @@ const ManagerBooking = () => {
     };
 
     fetchBookings();
-  }, [isUpdate]);
+  }, [isUpdate,manager]);
 
   const fetchBookingData = async (bookingId) => {
     try {
       const response = await api.get(`booking/${bookingId}`);
       const data = response.data.result;
-
+      console.log(data.stylistName);
+      console.log(allStylist);
       if (data) {
         const foundSalon = salonLocations.find(
           (item) => item.address === data.salonName
         );
         const salonId = foundSalon ? foundSalon.id : null;
 
-        const foundCustomer = customers.find(
-          (item) => item.fullname === data.customerName
-        );
-        const customerId = foundCustomer ? foundCustomer.accountid : null;
+      
 
         const foundVoucher = vouchers.find(
           (item) => item.code === data.voucherCode
@@ -159,7 +158,7 @@ const ManagerBooking = () => {
         setFormData((prev) => ({
           ...prev,
           bookingId: bookingId,
-          customerId: Number(customerId),
+          customerId: data.customerId,
           voucherId: Number(voucherId),
           bookingDate: data.date,
           stylistId: stylistId,
@@ -187,10 +186,10 @@ const ManagerBooking = () => {
       }
     }
   }, [isModalOpen]);
-
+  console.log(slots);
   const fetchStylistsData = async () => {
     const foundSlot = slots.find(
-      (item) => item.slottime === formatTime(formData.time)
+      (item) => item.slottime === formData.time
     );
     const slotId = foundSlot ? foundSlot.slotid : null;
     const value = {
@@ -199,10 +198,11 @@ const ManagerBooking = () => {
       date: formData.bookingDate,
       slotId: slotId,
     };
-
+    console.log(value);
     try {
-      const response = await api.post("booking/stylist/update", value);
+      const response = await api.post("booking/stylists/update", value);
       const data = response.data.result;
+      console.log(data);
       if (data) {
         setStylists(data);
       }
@@ -211,11 +211,11 @@ const ManagerBooking = () => {
 
   const updateCustomerData = async (e) => {
     e.preventDefault();
-
     const foundSlot = slots.find(
-      (item) => item.slottime === formatTime(formData.time)
+      (item) => item.slottime === formData.time
     );
     const slotId = foundSlot ? foundSlot.slotid : null;
+    
 
     const updateValues = {
       customerId: formData.customerId,
@@ -226,18 +226,16 @@ const ManagerBooking = () => {
       serviceId: formData.serviceId,
       salonId: formData.salonId,
     };
-
-    console.log(updateValues);
     setLoading(true);
     try {
       const response = await api.put(
-        `bookings/${formData.bookingId}`,
+        `booking/${formData.bookingId}`,
         updateValues
       );
       const data = response.data.result;
 
       if (data) {
-        dispatch(updateCustomer());
+        dispatch(updateBooking());
         toggleModal();
       }
     } catch (err) {
@@ -467,7 +465,7 @@ const ManagerBooking = () => {
                           Select Time:
                         </label>
                         <div className="manager-booking-modal__skills-list">
-                          {slots.map((time) => (
+                          {(slots || []).map((time) => (
                             <label
                               key={time.slotid}
                               className="manager-booking-modal__option"
@@ -475,9 +473,9 @@ const ManagerBooking = () => {
                               <input
                                 type="radio"
                                 name="time"
-                                value={convertTime(time.slottime)}
+                                value={time.slottime}
                                 checked={
-                                  formData.time === convertTime(time.slottime)
+                                  formData.time === time.slottime
                                 }
                                 onChange={handleTimeChange}
                                 className="manager-booking-modal__radio"

@@ -10,7 +10,7 @@ export default function Feedback({ bookingHistory, accountId }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true);
+  // const [isDisabled, setIsDisabled] = useState(true);
 
   const showModal = (bookingId) => {
     if (bookingId) {
@@ -43,33 +43,33 @@ export default function Feedback({ bookingHistory, accountId }) {
     fetchFeedbackData();
   }, []);
 
-  useEffect(() => {
-    fetchFeedback(bookingId);
-  }, [bookingId, feedBackData]);
+  // useEffect(() => {
+  //   fetchFeedback(bookingId);
+  // }, [bookingId, feedBackData]);
 
-  const fetchFeedback = async () => {
-    try {
-      const response = await api.get(`feedbacks?bookingId=${bookingId}`);
-      const data = response.data[0];
-      if (data) {
-        setIsDisabled(true);
-        const foundFeedback = feedBackData.find(
-          (item) => item.bookingId === data.bookingId
-        );
+  // const fetchFeedback = async () => {
+  //   try {
+  //     // const response = await api.get(`feedbacks?bookingId=${bookingId}`);
+  //     const data = response.data[0];
+  //     if (data) {
+  //       setIsDisabled(true);
+  //       const foundFeedback = feedBackData.find(
+  //         (item) => item.bookingId === data.bookingId
+  //       );
 
-        if (foundFeedback) {
-          setRating(Math.ceil(foundFeedback.score / 2));
-          setFeedback(foundFeedback.content);
-        }
-      } else {
-        setFeedback("");
-        setRating(0);
-        setIsDisabled(false);
-      }
-    } catch (error) {
-      console.log("Error fetching feedback:", error);
-    }
-  };
+  //       if (foundFeedback) {
+  //         setRating(Math.ceil(foundFeedback.score / 2));
+  //         setFeedback(foundFeedback.content);
+  //       }
+  //     } else {
+  //       setFeedback("");
+  //       setRating(0);
+  //       setIsDisabled(false);
+  //     }
+  //   } catch (error) {
+  //     console.log("Error fetching feedback:", error);
+  //   }
+  // };
 
   function getNowDate() {
     const currentDate = new Date();
@@ -95,7 +95,7 @@ export default function Feedback({ bookingHistory, accountId }) {
     } catch (err) {
       console.error("Error saving feedback:", err);
     } finally {
-      setIsDisabled(true);
+      // setIsDisabled(true);
     }
   };
   return (
@@ -154,9 +154,9 @@ export default function Feedback({ bookingHistory, accountId }) {
           onCancel={handleCancel}
           okText="Send"
           className="myBooking__model"
-          okButtonProps={{
-            disabled: isDisabled,
-          }}
+          // okButtonProps={{
+          //   // disabled: isDisabled,
+          // }}
         >
           <div className="model__rating">
             {[5, 4, 3, 2, 1].map((star) => (

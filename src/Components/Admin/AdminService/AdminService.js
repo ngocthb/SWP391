@@ -35,7 +35,9 @@ export default function AdminService() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
   const dispatch = useDispatch();
-  const isUpdate = useSelector(state => state.updateServiceReducer);
+  const isUpdate = useSelector((state) => state.updateServiceReducer);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -49,18 +51,26 @@ export default function AdminService() {
 
   const [services, setServices] = useState([]);
 
-  const fetchServices = async () => {
-    const response = await api.get("service");
-    const data = response.data.result;
+  const fetchServices = async (page) => {
+    const response = await api.get(`"service/page?page=${page}&size=4`);
+    const data = response.data.result.content;
+    const total = response.data.result.totalPages;
 
     if (data) {
       setServices(data);
+      setTotalPages(total);
     }
   };
 
   useEffect(() => {
-    fetchServices();
-  }, [isUpdate]);
+    fetchServices(currentPage);
+  }, [isUpdate, currentPage]);
+
+  const handlePageChange = (page) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   const formatCurrency = (value) => {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
@@ -135,11 +145,11 @@ export default function AdminService() {
     setLoading(true);
     try {
       const response = await api.put(
-        `service/${formData.serviceId}`,
+        `service/update/${formData.serviceId}`,
         updateValues
       );
       const data = response.data.result;
-
+      console.log(data);
       if (data) {
         setFormData((prev) => ({
           ...prev,
@@ -149,9 +159,9 @@ export default function AdminService() {
           duration: data.duration,
           image: selectedFileObject || prev.image,
         }));
-        dispatch(updateService());
-        toggleModal();
       }
+      dispatch(updateService());
+      toggleModal();
     } catch (err) {
     } finally {
       setLoading(false);
@@ -161,11 +171,10 @@ export default function AdminService() {
   const fetchServiceData = async (serviceId) => {
     try {
       const response = await api.get(`service/${serviceId}`);
-      const data = response.data; /*.result*/
-      
+      const data = response.data.result;
+
       if (data) {
-  
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           serviceId: serviceId,
           serviceName: data.serviceName,
@@ -197,71 +206,87 @@ export default function AdminService() {
   };
 
   const handleSubmit = (e) => {
-    updateStylistData(e)
+    updateStylistData(e);
   };
 
   return (
     <>
       <div className="admin-service">
-      <div className="admin-service__content">
-        <div className="admin-service__header">
-          <div className="admin-service__header-searchBar">
-            <BiSearchAlt className="searchBar-icon" />
-            <input placeholder="Search here..." type="text" />
+        <div className="admin-service__content">
+          <div className="admin-service__header">
+            <div className="admin-service__header-searchBar">
+              <BiSearchAlt className="searchBar-icon" />
+              <input placeholder="Search here..." type="text" />
+            </div>
+            <div className="admin-service__header-filter">
+              <select>
+                <option>Newest</option>
+                <option>Oldest</option>
+              </select>
+              <button onClick={createService}> + New Service</button>
+            </div>
           </div>
-          <div className="admin-service__header-filter">
-            <select>
-              <option>Newest</option>
-              <option>Oldest</option>
-            </select>
-            <button onClick={createService}> + New Service</button>
-          </div>
-        </div>
-        <div className="service">
-          {(services || []).map((service) => (
-            <div key={service.id} className="service__card">
-              <div className="service__card-content">
-                <img alt="Service Img" src={service.image} />
-                <div className="content-info">
-                  <h3>{service.serviceName}</h3>
-                  <p>Price : {formatCurrency(service.price)}</p>
-                  <p>Duration : {formatDuration(service.duration)}</p>
-                  <p
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(service.description || ""),
-                    }}
-                  />
+          <div className="service">
+            {(services || []).map((service) => (
+              <div key={service.id} className="service__card">
+                <div className="service__card-content">
+                  <img alt="Service Img" src={service.image} />
+                  <div className="content-info">
+                    <h3>{service.serviceName}</h3>
+                    <p>Price : {formatCurrency(service.price)}</p>
+                    <p>Duration : {formatDuration(service.duration)}</p>
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(service.description || ""),
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="service-actions">
+                  <button
+                    className="delete btn"
+                    onClick={() => confirmDeleteModal(service.id)}
+                  >
+                    <HiTrash />
+                  </button>
+                  <button
+                    className="update btn"
+                    onClick={() => toggleModal(service.id)}
+                  >
+                    <FaUserEdit />
+                  </button>
                 </div>
               </div>
-              <div className="service-actions">
-                <button
-                  className="delete btn"
-                  onClick={() => confirmDeleteModal(service.id)}
-                >
-                  <HiTrash />
-                </button>
-                <button
-                  className="update btn"
-                  onClick={() => toggleModal(service.id)}
-                >
-                  <FaUserEdit />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </div>
 
         <div className="admin-service__pagination">
-          <p>Showing 1-6 from {services.length} data</p>
+          <p>
+            Showing {currentPage * 4 + 1} -{" "}
+            {Math.min((currentPage + 1) * 4, services.length)} from{" "}
+            {services.length} data
+          </p>
           <div className="admin-service__pagination-pages">
-            <span>
+            <span
+              onClick={() => handlePageChange(currentPage - 1)}
+              className={currentPage === 0 ? "disabled" : ""}
+            >
               <FaAngleLeft className="pagination-icon" />
             </span>
-            <span className="active">1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>
+            {[...Array(totalPages)].map((_, index) => (
+              <span
+                key={index}
+                onClick={() => handlePageChange(index)}
+                className={currentPage === index ? "active" : ""}
+              >
+                {index + 1}
+              </span>
+            ))}
+            <span
+              onClick={() => handlePageChange(currentPage + 1)}
+              className={currentPage === totalPages - 1 ? "disabled" : ""}
+            >
               <FaChevronRight className="pagination-icon" />
             </span>
           </div>

@@ -46,6 +46,8 @@ export default function ManagerStylist({ buttonLabel }) {
   const dispatch = useDispatch();
   const isUpdate = useSelector((state) => state.updateStylistReducer);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -85,18 +87,28 @@ export default function ManagerStylist({ buttonLabel }) {
   };
 
   useEffect(() => {
-    fetchStylistsData();
-  }, [isUpdate]);
+    fetchStylistsData(currentPage);
+  }, [isUpdate, currentPage]);
 
-  const fetchStylistsData = async () => {
+  const fetchStylistsData = async (page) => {
     try {
-      const response = await api.get(`stylist/read`);
-      const data = response.data.result;
+      const response = await api.get(
+        `stylist/page/{salonId}?page=${page}&size=4`
+      );
+      const data = response.data.result.content;
+      const total = response.data.result.totalPages;
       if (data) {
         setStylists(data);
+        setTotalPages(total);
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handlePageChange = (page) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
     }
   };
 
@@ -235,9 +247,9 @@ export default function ManagerStylist({ buttonLabel }) {
           skillId: skillId,
           image: selectedFile || prev.image,
         }));
-        dispatch(updateStylist());
-        toggleModal();
       }
+      dispatch(updateStylist());
+      toggleModal();
     } catch (err) {
     } finally {
       setLoading(false);
@@ -338,18 +350,32 @@ export default function ManagerStylist({ buttonLabel }) {
           </div>
         </div>
 
-        <div className="manager-stylist__pagination">
-          <p>Showing 1-8 from {stylists.length} data</p>
-          <div className="manager-stylist__pagination-pages">
-            <span>
-              {/* <i class="fas fa-chevron-left"></i> */}
+        <div className="admin-service__pagination">
+          <p>
+            Showing {currentPage * 4 + 1} -{" "}
+            {Math.min((currentPage + 1) * 4, stylists.length)} from{" "}
+            {stylists.length} data
+          </p>
+          <div className="admin-service__pagination-pages">
+            <span
+              onClick={() => handlePageChange(currentPage - 1)}
+              className={currentPage === 0 ? "disabled" : ""}
+            >
               <FaAngleLeft className="pagination-icon" />
             </span>
-            <span className="active">1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>
-              {/* <i class="fas fa-chevron-right"></i> */}
+            {[...Array(totalPages)].map((_, index) => (
+              <span
+                key={index}
+                onClick={() => handlePageChange(index)}
+                className={currentPage === index ? "active" : ""}
+              >
+                {index + 1}
+              </span>
+            ))}
+            <span
+              onClick={() => handlePageChange(currentPage + 1)}
+              className={currentPage === totalPages - 1 ? "disabled" : ""}
+            >
               <FaChevronRight className="pagination-icon" />
             </span>
           </div>

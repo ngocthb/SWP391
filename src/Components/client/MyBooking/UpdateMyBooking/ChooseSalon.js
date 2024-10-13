@@ -32,10 +32,11 @@ export function ChooseSalon({ onClose, onNext }) {
         try {
           const response = await api.get(
             // `bookingHistory?bookingId=${bookingId}`
-            `booking?bookingId=${bookingId}`
+            `booking/${bookingId}`
           );
           // const data = response.data[0];
           const data = response.data.result;
+          console.log(data);
           if (data) {
             const foundSalon = salonLocations.find(
               (item) => item.address === data.salonName

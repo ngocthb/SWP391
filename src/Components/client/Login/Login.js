@@ -34,7 +34,7 @@ const Login = () => {
         username: userName,
         password: password,
       });
-      const { token, role } = response.data;
+      const { token, role } = response.data.result;
       sessionStorage.setItem("token", token);
       dispatch(setRole(role));
 
