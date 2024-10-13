@@ -30,41 +30,12 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
     salonId: 0,
     customerId: 0,
     slotId: 0,
-    bookingDate: 0,
+    bookingDate: "",
     serviceId: 0,
     stylistId: 0,
     voucherId: 0,
   });
   const dispatch = useDispatch();
-  const fetchBooking = async () => {
-    const storedSlotId = sessionStorage.getItem("selectedTimeId");
-    if (!storedSlotId) {
-      try {
-        const response = await api.get(
-          // `bookingHistory?bookingId=${bookingId}`
-          `customer/${accountId}/pending/${bookingId}`
-        );
-        const data = response.data[0];
-        if (data) {
-          setSelectedDate(new Date(data.date));
-          const foundSlot = timeSlots.find(
-            (item) => item.slottime === formatSlot(data.time)
-          );
-          if (foundSlot) {
-            setSelectedTime(foundSlot.slotid);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      setSelectedTime(sessionStorage.getItem("selectedTimeId"));
-      setSelectedDate(sessionStorage.getItem("selectedDate"));
-    }
-  };
-  useEffect(() => {
-    fetchBooking();
-  }, [timeSlots, bookingId]);
 
   useEffect(() => {
     const storedTimeId = sessionStorage.getItem("selectedTimeId");
@@ -78,25 +49,28 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
     }
   }, [timeSlots]);
 
-  // chỉnh format của time slot "10:00:00" thành 10h00
-  function formatSlot(timeString) {
-    if (!timeString) {
-      console.error("Invalid time string:", timeString);
-      return null; // or some default value
+  const fetchBooking = async () => {
+    try {
+      const response = await api.get(
+        // `bookingHistory?bookingId=${bookingId}`
+        `booking/${bookingId}`
+      );
+      // const data = response.data[0];
+      const data = response.data.result;
+      if (data) {
+        setSelectedDate(new Date(data.date));
+        const foundSlot = timeSlots.find((item) => item.slotid === data.slotId);
+        if (foundSlot) {
+          setSelectedTime(foundSlot.slotid);
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
-    const timeParts = timeString.split(":");
-    if (timeParts.length < 2) {
-      console.error("Time string is not in the correct format:", timeString);
-      return null;
-    }
-    const [hours, minutes] = timeParts;
-    const formattedTime = `${String(parseInt(hours)).padStart(
-      2,
-      "0"
-    )}h${minutes}`;
-
-    return formattedTime;
-  }
+  };
+  useEffect(() => {
+    fetchBooking();
+  }, [timeSlots, bookingId]);
 
   const handleTimeSlotClick = (slotId) => {
     if (availableSlots.some((slot) => slot.slotid === slotId)) {
@@ -147,8 +121,8 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
 
       try {
         // const response = await api.get("booking-slots", bookingValue);
-        // if (response.data /*&& response.data.result*/) {
-        //   setAvailableSlots(response.data /*.result*/);
+        // if (response.data) {
+        //   setAvailableSlots(response.data);
         // }
         const response = await api.post("booking/slots", bookingValue);
         if (response.data && response.data.result) {
@@ -157,7 +131,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
       } catch (error) {}
     };
     fetchTimeSlots();
-  }, [selectedDate, handleTimeSlotClick]);
+  }, [selectedDate, selectedTime]);
 
   const toggleModal = async (bookingId) => {
     if (bookingId) {
@@ -179,8 +153,6 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
 
     setLoading(true);
     try {
-      console.log(updateValues);
-      console.log(bookingId);
       const response = await api.put(
         // `bookingHistory/${bookingId}`,
         `booking/${bookingId}`,
@@ -246,7 +218,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
                   (availableSlot) => availableSlot.slotid === slot.slotid
                 )
                   ? ""
-                  : ""
+                  : "disabled"
               } ${selectedTime === slot.slotid ? "selected" : ""}`}
               onClick={() => handleTimeSlotClick(slot.slotid)}
             >

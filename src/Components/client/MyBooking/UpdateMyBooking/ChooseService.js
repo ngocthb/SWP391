@@ -23,6 +23,17 @@ export function ChooseService({ onNext, onPre }) {
   const inputRef = useRef(null);
   const bookingId = useContext(bookingIdContext);
 
+  useEffect(() => {
+    const storedServices = sessionStorage.getItem("selectedServicesId");
+    if (storedServices) {
+      const serviceIds = JSON.parse(storedServices);
+      const selected = services.filter((service) =>
+        serviceIds.includes(service.id)
+      );
+      setSelectedServices(selected);
+    }
+  }, [services]);
+
   // Fetch all services
   useEffect(() => {
     const fetchServices = async () => {
@@ -62,8 +73,8 @@ export function ChooseService({ onNext, onPre }) {
     fetchServices();
   }, [searchValue, services]);
 
-  // Fetch booking history
   useEffect(() => {
+<<<<<<< HEAD
     const fetchBooking = async () => {
       const storedService = sessionStorage.getItem("selectedServicesId");
       console.log(storedService);
@@ -96,10 +107,19 @@ export function ChooseService({ onNext, onPre }) {
         }
       } else {
         setSelectedServices(JSON.parse(storedService));
+=======
+    const storedVoucher = sessionStorage.getItem("selectedServicesId");
+    if (storedVoucher) {
+      const voucherIds = parseInt(storedVoucher, 10);
+      const voucherSelect = voucher.find(
+        (v) => Number(v.voucherId) === voucherIds
+      );
+      if (voucherSelect) {
+        setSelectVoucherId(voucherSelect);
+>>>>>>> fbacf3eb2ca81b0f7f177ef2fd251fc8a57ef246
       }
-    };
-    fetchBooking();
-  }, [services, bookingId]);
+    }
+  }, [services]);
 
   // Fetch vouchers
   useEffect(() => {
@@ -116,6 +136,42 @@ export function ChooseService({ onNext, onPre }) {
     };
     fetchVoucher();
   }, []);
+
+  // Fetch booking history
+  useEffect(() => {
+    const fetchBooking = async () => {
+      try {
+        const response = await api.get(
+          // `bookingHistory?bookingId=${bookingId}`
+          `booking/${bookingId}`
+        );
+        // const data = response.data[0];
+        const data = response.data.result;
+        if (data) {
+          const dataServiceId = data.serviceId.map((id) => Number(id));
+          const dataService = services.filter((service) =>
+            dataServiceId.includes(Number(service.id))
+          );
+          const foundService = dataService.map((service) => service.id);
+
+          if (foundService) {
+            setSelectedServices(foundService);
+          }
+          const foundVoucher = voucher.find(
+            (item) => item.id === data.voucherId
+          );
+          const voucherId = foundVoucher ? foundVoucher.id : null;
+
+          if (voucherId) {
+            setSelectVoucherId(voucherId);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBooking();
+  }, [services, bookingId, voucher]);
 
   const handleChange = (e) => {
     setSearchValue(e.target.value);
@@ -199,12 +255,12 @@ export function ChooseService({ onNext, onPre }) {
   };
 
   const selectedVoucher = voucher.find((v) => {
-    const storedVoucherId = sessionStorage.getItem("selectedVoucherId");
-    return !storedVoucherId
+    const storedVoucherId = Number(sessionStorage.getItem("selectedVoucherId"));
+    const result = !storedVoucherId
       ? v.id === selectVoucherId
       : v.id === storedVoucherId;
+    return result;
   });
-
   return (
     <div className="myBooking__service">
       <div className="myBooking__service-header">

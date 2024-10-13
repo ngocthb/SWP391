@@ -17,7 +17,7 @@ import Feedback from "./Feedback/Feedback";
 
 export const bookingIdContext = createContext();
 export default function MyBooking() {
-  const [activeTab, setActiveTab] = useState("completed");
+  const [activeTab, setActiveTab] = useState("pending");
   const [bookingHistory, setBookingHistory] = useState([]);
   const [bookingId, setBookingId] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -130,19 +130,19 @@ export default function MyBooking() {
       <div className="myBooking">
         <div className="myBooking__tabs">
           <label
-            onClick={() => setActiveTab("completed")}
-            htmlFor="tab1"
-            className={activeTab === "completed" ? "label-active" : ""}
-          >
-            Completed
-          </label>
-
-          <label
             onClick={() => setActiveTab("pending")}
             htmlFor="tab2"
             className={activeTab === "pending" ? "label-active" : ""}
           >
             Pending
+          </label>
+
+          <label
+            onClick={() => setActiveTab("completed")}
+            htmlFor="tab1"
+            className={activeTab === "completed" ? "label-active" : ""}
+          >
+            Completed
           </label>
 
           <div className="myBooking__tabs-panels">

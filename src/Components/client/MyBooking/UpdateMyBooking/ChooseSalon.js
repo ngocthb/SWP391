@@ -1,6 +1,6 @@
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import api from "../../../../config/axios";
 import "./UpdateMyBooking.scss";
@@ -11,6 +11,17 @@ export function ChooseSalon({ onClose, onNext }) {
   const [salonLocations, setSalonLocations] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState(0);
   const bookingId = useContext(bookingIdContext);
+
+  useEffect(() => {
+    const storedBranchId = sessionStorage.getItem("selectedBranchId");
+    if (storedBranchId) {
+      const branchId = parseInt(storedBranchId, 10);
+      const branch = salonLocations.find((b) => b.id === branchId);
+      if (branch) {
+        setSelectedBranch(branch);
+      }
+    }
+  }, [salonLocations]);
 
   useEffect(() => {
     const fetchSalonLocations = async () => {
@@ -27,6 +38,7 @@ export function ChooseSalon({ onClose, onNext }) {
 
   useEffect(() => {
     const fetchBooking = async () => {
+<<<<<<< HEAD
       const storedBranchId = sessionStorage.getItem("selectedBranchId");
       if (!storedBranchId) {
         try {
@@ -46,12 +58,26 @@ export function ChooseSalon({ onClose, onNext }) {
             if (salonId) {
               setSelectedBranch(salonId);
             }
+=======
+      try {
+        const response = await api.get(
+          // `bookingHistory?bookingId=${bookingId}`
+          `booking/${bookingId}`
+        );
+        // const data = response.data[0];
+        const data = response.data.result;
+        if (data) {
+          const foundSalon = salonLocations.find(
+            (item) => parseInt(item.id, 10) === data.salonId
+          );
+          const salonId = foundSalon ? foundSalon.id : null;
+          if (salonId) {
+            setSelectedBranch(salonId);
+>>>>>>> fbacf3eb2ca81b0f7f177ef2fd251fc8a57ef246
           }
-        } catch (error) {
-          console.log("Error fetching booking:", error);
         }
-      } else {
-        setSelectedBranch(sessionStorage.getItem("selectedBranchId"));
+      } catch (error) {
+        console.log("Error fetching booking:", error);
       }
     };
     fetchBooking();
@@ -90,7 +116,6 @@ export function ChooseSalon({ onClose, onNext }) {
           className="myBooking__salon-btn flex btn"
           onClick={(e) => {
             onNext();
-
             if (!selectedBranch) {
               e.preventDefault();
             } else {
