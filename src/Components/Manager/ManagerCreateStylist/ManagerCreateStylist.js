@@ -5,7 +5,7 @@ import loginUser from "../../../data/loginUser";
 import api from "../../../config/axios";
 import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../../../utils/upload";
-import { genders } from "../../../data/gender";
+import {genders} from "../../../data/gender";
 
 const ManagerCreateStylist = () => {
   const [loading, setLoading] = useState(false);

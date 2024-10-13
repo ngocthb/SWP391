@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ children, requiredRole }) => {
   const navigate = useNavigate();
+  const role = useSelector((state) => state.setRoleReducer);
 
   useEffect(() => {
-    const isLoggedIn = !!localStorage.getItem("token");
-    
-    if (!isLoggedIn) {
+    if (!role || (requiredRole && role !== requiredRole)) {
       navigate("/login");
     }
-  }, [navigate]);
+  }, [role, navigate, requiredRole]);
 
   return children ? children : <Outlet />;
 };

@@ -62,7 +62,7 @@ export default function ManagerStylist({ buttonLabel }) {
       try {
         const response = await api.get(endpoint);
         if (response.data) {
-          setter(response.data /*.result*/);
+          setter(response.data.result);
         }
       } catch (error) {
         console.error(`Error fetching ${endpoint}:`, error);

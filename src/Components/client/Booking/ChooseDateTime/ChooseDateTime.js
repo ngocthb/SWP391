@@ -96,7 +96,7 @@ export default function ChooseDateTime() {
         date: formatDateForInput(selectedDate),
       };
 
-      try {
+       try {
         const response = await api.post("booking/slots", bookingValue);
         const data = response.data.result;
         if (data) {

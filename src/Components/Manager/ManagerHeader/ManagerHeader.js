@@ -6,6 +6,10 @@ import logo from "../../../Assets/logo.png";
 import logoFold from "../../../Assets/logo_blue_noBackground.png";
 import { collapse } from "../../../actions/Collapse";
 import "./ManagerHeader.scss";
+import api from "../../../config/axios";
+import loginUser from "../../../data/loginUser";
+import { CgProfile } from "react-icons/cg";
+import { TbLogout } from "react-icons/tb";
 
 const pageNames = {
   "/manager/dashboard": "Dashboard",
@@ -25,6 +29,7 @@ const ManagerHeader = () => {
   const location = useLocation();
   const [pageName, setPageName] = useState("");
   const navigate = useNavigate();
+  const [managerInfo, setManagerInfo] = useState([]);
 
   const toggleDropdown = useCallback(() => {
     setDropdownOpen((prev) => !prev);
@@ -44,6 +49,22 @@ const ManagerHeader = () => {
   }, []);
 
   useEffect(() => {
+    const fetchManagerData = async () => {
+      try {
+        const response = await api.get(`manager/profile`);
+        const data = response.data.result;
+        console.log(data);
+        if (data) {
+          setManagerInfo(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchManagerData();
+  }, []);
+
+  useEffect(() => {
     setPageName(pageNames[location.pathname] || "");
   }, [location.pathname]);
 
@@ -53,7 +74,20 @@ const ManagerHeader = () => {
 
   const handleGoback = () => {
     navigate("/manager/dashboard");
+  };
+
+  function formatRole(input) {
+    return input
+      .toLowerCase()
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   }
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    navigate("/");
+  };
 
   return (
     <header className="header-manager">
@@ -62,7 +96,8 @@ const ManagerHeader = () => {
           collapsed ? "header-manager__logo--collapsed" : ""
         }`}
       >
-        <img onClick={handleGoback}
+        <img
+          onClick={handleGoback}
           src={collapsed ? logoFold : logo}
           alt={collapsed ? "Logo Fold" : "Logo"}
         />
@@ -77,13 +112,15 @@ const ManagerHeader = () => {
         <div className="header-manager__nav-right">
           <div className="header-manager__user-info" onClick={toggleDropdown}>
             <div className="header-manager__text">
-              <div className="header-manager__name">Nabila A.</div>
-              <div className="header-manager__role">Admin</div>
+              <div className="header-manager__name">{managerInfo.fullname}</div>
+              <div className="header-manager__role">
+                {managerInfo.role ? formatRole(managerInfo.role) : ""}
+              </div>
             </div>
             <div className="header-manager__avatar">
               <img
                 alt="User avatar"
-                src="https://enlink.themenate.net/assets/images/avatars/thumb-3.jpg"
+                src={managerInfo.image || loginUser.avatar}
               />
             </div>
           </div>
@@ -93,24 +130,29 @@ const ManagerHeader = () => {
                 <img
                   height={60}
                   alt="User avatar"
-                  src="https://enlink.themenate.net/assets/images/avatars/thumb-3.jpg"
+                  src={managerInfo.image || loginUser.avatar}
                 />
                 <div>
-                  <h2>Marshall Nichols</h2>
-                  <p>UI/UX Designer</p>
+                  <h2>{managerInfo.fullname}</h2>
+                  <p>
+                    {managerInfo.role
+                      ? formatRole(managerInfo.role)
+                      : ""}
+                  </p>
                 </div>
               </div>
               <Link to="#">
-                <i className="fas fa-user"></i> Edit Profile
+                <i>
+                  <CgProfile />
+                </i>{" "}
+                Edit Profile
               </Link>
-              <Link to="#">
-                <i className="fas fa-cog"></i> Account Setting
-              </Link>
-              <Link to="#">
-                <i className="fas fa-folder"></i> Projects
-              </Link>
-              <Link to="#">
-                <i className="fas fa-sign-out-alt"></i> Logout
+              <Link to="/" onClick={handleLogout}>
+                <i>
+                  {" "}
+                  <TbLogout />
+                </i>{" "}
+                Logout
               </Link>
             </div>
           )}
