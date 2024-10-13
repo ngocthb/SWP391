@@ -29,17 +29,14 @@ export function ChooseStylist({ onNext, onPre }) {
       };
 
       try {
-        const response = await api.get(
-          `booking-stylists`,
-          // "booking/stylists",
-
-          {
-            params: bookingValue,
-          }
-        );
+        // const response = await api.get(
+        //   `booking-stylists`,
+        //   bookingValue
+        // );
+        const response = await api.post("booking/stylists", bookingValue);
         if (response.data) {
-          setStylists(response.data);
-          // setStylists(response.data.result);
+          // setStylists(response.data);
+          setStylists(response.data.result);
         }
       } catch (error) {
         console.error("Error fetching stylists:", error);
@@ -49,30 +46,36 @@ export function ChooseStylist({ onNext, onPre }) {
   }, []);
 
   useEffect(() => {
-    const fetchBooking = async () => {
-      const storedStylistId = sessionStorage.getItem("selectedStylistId");
-      if (!storedStylistId) {
-        try {
-          const response = await api.get(
-            `bookingHistory?bookingId=${bookingId}`
-            // `booking?bookingId=${bookingId}`
-          );
-          const data = response.data[0];
-          // const data = response.data.result;
+    const storedStylistId = sessionStorage.getItem("selectedStylistId");
+    if (storedStylistId) {
+      const stylistId = parseInt(storedStylistId, 10);
+      const stylistSelect = stylists.find((s) => Number(s.id) === stylistId);
+      if (stylistSelect) {
+        setSelectedStylistId(stylistSelect);
+      }
+    }
+  }, [stylists]);
 
-          if (data) {
-            const foundStylistId = stylists.find(
-              (item) => item.fullname === data.stylistName
-            )?.id;
-            if (foundStylistId) {
-              setSelectedStylistId(foundStylistId);
-            }
+  useEffect(() => {
+    const fetchBooking = async () => {
+      try {
+        const response = await api.get(
+          // `bookingHistory?bookingId=${bookingId}`
+          `booking?bookingId=${bookingId}`
+        );
+        // const data = response.data[0];
+        const data = response.data.result;
+
+        if (data) {
+          const foundStylistId = stylists.find(
+            (item) => item.id === data.stylistId
+          )?.id;
+          if (foundStylistId) {
+            setSelectedStylistId(foundStylistId);
           }
-        } catch (error) {
-          console.log(error);
         }
-      } else {
-        setSelectedStylistId(sessionStorage.getItem("selectedStylistId")); // Set the ID from session storage
+      } catch (error) {
+        console.log(error);
       }
     };
     fetchBooking();

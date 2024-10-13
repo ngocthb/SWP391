@@ -31,8 +31,8 @@ export default function Feedback({ bookingHistory, accountId }) {
   useEffect(() => {
     const fetchFeedbackData = async () => {
       try {
-        // const response = await api.get("feedbacks");
         const response = await api.get("feedback");
+
         if (response.data) {
           setFeedBackData(response.data);
         }
@@ -49,9 +49,14 @@ export default function Feedback({ bookingHistory, accountId }) {
 
   const fetchFeedback = async () => {
     try {
-      const response = await api.get(`feedbacks?bookingId=${bookingId}`);
-      const data = response.data[0];
+      // const response = await api.get(`feedback?bookingId=${bookingId}`);
+      // const data = response.data[0];
+
+      const response = await api.get(`feedback/${bookingId}`);
+      const data = response.data.result;
+
       if (data) {
+        console.log(data);
         setIsDisabled(true);
         const foundFeedback = feedBackData.find(
           (item) => item.bookingId === data.bookingId
@@ -89,7 +94,6 @@ export default function Feedback({ bookingHistory, accountId }) {
       bookingId: bookingId,
     };
     try {
-      // const response = await api.post(`feedbacks`, createValues);
       const response = await api.post(`feedback`, createValues);
       console.log("Created feedback:", response.data);
     } catch (err) {
