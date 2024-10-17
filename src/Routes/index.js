@@ -38,6 +38,12 @@ import AdminManager from "../Components/Admin/AdminManager/AdminManager";
 import AdminCustomer from "../Components/Admin/AdminCustomer/AdminCustomer";
 import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
 import AdminCreateManager from "../Components/Admin/AdminCreateManager/AdminCreateManager";
+import StaffLayout from "../Layouts/staff/StaffLayout";
+import StaffPayment from "../Components/Staff/StaffPayment/StaffPayment";
+import StaffBooking from "../Components/Staff/StaffBooking/StaffBooking";
+import StaffCreateBooking from "../Components/Staff/StaffCreateBooking/StaffCreateBooking";
+import StaffBookingService from "../Components/Staff/StaffBookingService/StaffBookingService";
+import StaffPaymentConfirm from "../Components/Staff/StaffPaymentConfirm/StaffPaymentConfirm";
 export const Routes = [
   {
     path: "/",
@@ -213,5 +219,35 @@ export const Routes = [
         element: <AdminCustomer buttonLabel={"New Customer"} />,
       },
     ],
+  },
+  {
+    path: "staff",
+    element: (
+      /*<PrivateRoute requiredRole="ADMIN">
+      <AdminLayout />
+    </PrivateRoute>*/ <StaffLayout/>
+    ),
+    children: [
+      {
+        path: "payment/:bookingId",
+        element: <StaffPayment/>
+      },
+      {
+        path: "booking",
+        element: <StaffBooking buttonLabel={"New Booking"}/>
+      },
+      {
+        path: "booking/create",
+        element: <StaffCreateBooking/>
+      },
+      {
+        path: "booking-service",
+        element: <StaffBookingService/>
+      }
+    ]
+  },
+  {
+    path: "payment/confirm",
+    element: <StaffPaymentConfirm/>
   },
 ];

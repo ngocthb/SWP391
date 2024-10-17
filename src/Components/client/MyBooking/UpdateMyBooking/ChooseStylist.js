@@ -29,25 +29,16 @@ export function ChooseStylist({ onNext, onPre }) {
       };
       console.log(bookingValue);
       try {
-<<<<<<< HEAD
         const response = await api.post(
           // `booking-stylists`,
           "booking/stylists",
-
-          
-            bookingValue,
-          
+          bookingValue
         );
-=======
-        // const response = await api.get(
-        //   `booking-stylists`,
-        //   bookingValue
-        // );
-        const response = await api.post("booking/stylists", bookingValue);
->>>>>>> fbacf3eb2ca81b0f7f177ef2fd251fc8a57ef246
+        console.log(response);
         if (response.data) {
           // setStylists(response.data);
           setStylists(response.data.result);
+          console.log(stylists);
         }
       } catch (error) {
         console.error("Error fetching stylists:", error);
@@ -57,18 +48,6 @@ export function ChooseStylist({ onNext, onPre }) {
   }, []);
 
   useEffect(() => {
-<<<<<<< HEAD
-    const fetchBooking = async () => {
-      const storedStylistId = sessionStorage.getItem("selectedStylistId");
-      if (!storedStylistId) {
-        try {
-          const response = await api.get(
-            // `bookingHistory?bookingId=${bookingId}`
-            `booking/${bookingId}`
-          );
-          // const data = response.data[0];
-          const data = response.data.result;
-=======
     const storedStylistId = sessionStorage.getItem("selectedStylistId");
     if (storedStylistId) {
       const stylistId = parseInt(storedStylistId, 10);
@@ -78,24 +57,26 @@ export function ChooseStylist({ onNext, onPre }) {
       }
     }
   }, [stylists]);
->>>>>>> fbacf3eb2ca81b0f7f177ef2fd251fc8a57ef246
 
   useEffect(() => {
     const fetchBooking = async () => {
       try {
         const response = await api.get(
           // `bookingHistory?bookingId=${bookingId}`
-          `booking?bookingId=${bookingId}`
+          `booking/${bookingId}`
         );
         // const data = response.data[0];
         const data = response.data.result;
 
         if (data) {
+          console.log(data);
+          console.log(stylists);
           const foundStylistId = stylists.find(
-            (item) => item.id === data.stylistId
-          )?.id;
+            (item) => item.fullname === data.stylistName
+          );
+          console.log(foundStylistId);
           if (foundStylistId) {
-            setSelectedStylistId(foundStylistId);
+            setSelectedStylistId(foundStylistId.id);
           }
         }
       } catch (error) {
@@ -113,68 +94,67 @@ export function ChooseStylist({ onNext, onPre }) {
       if (stylist) {
         setSelectedStylistId(stylist.id); // Just ensure it is the ID
       }
-    }
-  }, [stylists]);
+    }}, [stylists]);
 
-  // Determine selected stylist object
-  const selectedStylist = stylists.find(
-    (stylist) => stylist.id === selectedStylistId
-  );
-
-  return (
-    <div className="myBooking__stylist">
-      <div className="myBooking__stylist-header">
-        <div onClick={onPre}>
-          <FaArrowLeft className="myBooking__stylist-icon" />
+    // Determine selected stylist object
+    const selectedStylist = stylists.find(
+      (stylist) => stylist.id === selectedStylistId
+    );
+  
+    return (
+      <div className="myBooking__stylist">
+        <div className="myBooking__stylist-header">
+          <div onClick={onPre}>
+            <FaArrowLeft className="myBooking__stylist-icon" />
+          </div>
+          <h1>Choose Stylist</h1>
         </div>
-        <h1>Choose Stylist</h1>
-      </div>
-      {selectedStylist && (
-        <>
-          <div className="myBooking__stylist-name">
-            <IoPersonOutline className="stylist-icon" />
-            <h1>{selectedStylist.fullname}</h1>
-          </div>
-          <div className="myBooking__stylist-info">
-            <p>Stylist: {selectedStylist.fullname}</p>
-            {/* Additional stylist details can be displayed here if needed */}
-          </div>
-        </>
-      )}
-      <Swiper
-        className="myBooking__stylist-lists"
-        slidesPerView={3}
-        navigation={true}
-        modules={[Navigation]}
-      >
-        {stylists.map((stylist) => (
-          <SwiperSlide key={stylist.id}>
-            <div
-              onClick={() => handleSelected(stylist)}
-              className={`myBooking__stylist-single ${
-                selectedStylistId === stylist.id ? "selected" : ""
-              }`}
-            >
-              <img alt={stylist.fullname} src={stylist.image} />
-              <p>{stylist.fullname}</p>
+        {selectedStylist && (
+          <>
+            <div className="myBooking__stylist-name">
+              <IoPersonOutline className="stylist-icon" />
+              <h1>{selectedStylist.fullname}</h1>
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      <button
-        className="myBooking__stylist-btn btn flex"
-        onClick={(e) => {
-          if (!selectedStylistId) {
-            e.preventDefault();
-          } else {
-            sessionStorage.setItem("selectedStylistId", selectedStylistId); // Store only the ID
-            onNext();
-          }
-        }}
-      >
-        Next Step
-        <FaArrowRight className="myBooking__stylist-icon" />
-      </button>
-    </div>
-  );
-}
+            <div className="myBooking__stylist-info">
+              <p>Stylist: {selectedStylist.fullname}</p>
+              {/* Additional stylist details can be displayed here if needed */}
+            </div>
+          </>
+        )}
+        <Swiper
+          className="myBooking__stylist-lists"
+          slidesPerView={3}
+          navigation={true}
+          modules={[Navigation]}
+        >
+          {stylists.map((stylist) => (
+            <SwiperSlide key={stylist.id}>
+              <div
+                onClick={() => handleSelected(stylist)}
+                className={`myBooking__stylist-single ${
+                  selectedStylistId === stylist.id ? "selected" : ""
+                }`}
+              >
+                <img alt={stylist.fullname} src={stylist.image} />
+                <p>{stylist.fullname}</p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <button
+          className="myBooking__stylist-btn btn flex"
+          onClick={(e) => {
+            if (!selectedStylistId) {
+              e.preventDefault();
+            } else {
+              sessionStorage.setItem("selectedStylistId", selectedStylistId); // Store only the ID
+              onNext();
+            }
+          }}
+        >
+          Next Step
+          <FaArrowRight className="myBooking__stylist-icon" />
+        </button>
+      </div>
+    );
+  }

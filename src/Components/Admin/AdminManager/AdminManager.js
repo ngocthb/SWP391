@@ -294,23 +294,6 @@ export default function AdminManager({ buttonLabel }) {
             ))}
           </div>
         </div>
-
-        <div className="admin-manager__pagination">
-          <p>Showing 1-8 from {stylists.length} data</p>
-          <div className="admin-manager__pagination-pages">
-            <span>
-              {/* <i class="fas fa-chevron-left"></i> */}
-              <FaAngleLeft className="pagination-icon" />
-            </span>
-            <span className="active">1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>
-              {/* <i class="fas fa-chevron-right"></i> */}
-              <FaChevronRight className="pagination-icon" />
-            </span>
-          </div>
-        </div>
       </div>
 
       {isModalOpen && (

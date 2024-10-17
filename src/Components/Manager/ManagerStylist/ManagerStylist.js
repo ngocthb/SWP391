@@ -29,6 +29,7 @@ export default function ManagerStylist({ buttonLabel }) {
   const [levels, setLevels] = useState([]);
   const [skills, setSkills] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
+  const [managerInfo, setManagerInfo] = useState([]);
   const [formData, setFormData] = useState({
     accountid: 0,
     fullname: "",
@@ -48,7 +49,7 @@ export default function ManagerStylist({ buttonLabel }) {
   const [selectedFileObject, setSelectedFileObject] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
+ 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
@@ -58,6 +59,21 @@ export default function ManagerStylist({ buttonLabel }) {
       setSelectedFileObject(file);
     }
   };
+  useEffect(() => {
+    const fetchManagerData = async () => {
+      try {
+        const response = await api.get(`manager/profile`);
+        const data = response.data.result;
+        console.log(data);
+        if (data) {
+          setManagerInfo(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchManagerData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
@@ -88,13 +104,14 @@ export default function ManagerStylist({ buttonLabel }) {
 
   useEffect(() => {
     fetchStylistsData(currentPage);
-  }, [isUpdate, currentPage]);
+  }, [isUpdate, currentPage, managerInfo]);
 
   const fetchStylistsData = async (page) => {
     try {
       const response = await api.get(
-        `stylist/page/{salonId}?page=${page}&size=4`
+        `stylist/page/${managerInfo.salonId}?page=${page}&size=4`
       );
+      console.log(response);
       const data = response.data.result.content;
       const total = response.data.result.totalPages;
       if (data) {
@@ -222,6 +239,9 @@ export default function ManagerStylist({ buttonLabel }) {
       );
       const data = response.data.result;
 
+      dispatch(updateStylist());
+      toggleModal();
+      
       if (data) {
         const foundSalon = salonLocations.find(
           (item) => item.address === data.salonAddress
@@ -248,8 +268,9 @@ export default function ManagerStylist({ buttonLabel }) {
           image: selectedFile || prev.image,
         }));
       }
-      dispatch(updateStylist());
-      toggleModal();
+      
+      
+      
     } catch (err) {
     } finally {
       setLoading(false);
@@ -273,6 +294,7 @@ export default function ManagerStylist({ buttonLabel }) {
     setSelectedSkills(formData.skillId);
 
     setIsModalOpen(!isModalOpen);
+    console.log(isModalOpen);
     setSelectedFile(null);
   };
 
@@ -287,7 +309,7 @@ export default function ManagerStylist({ buttonLabel }) {
   return (
     <>
       <div className="manager-stylist">
-        <div className="admin-service__content">
+        <div className="manager-stylist__content">
           <div className="manager-stylist__header">
             <div className="manager-stylist__header-searchBar">
               <BiSearchAlt className="searchBar-icon" />
@@ -350,13 +372,13 @@ export default function ManagerStylist({ buttonLabel }) {
           </div>
         </div>
 
-        <div className="admin-service__pagination">
+        <div className="manager-stylist__pagination">
           <p>
             Showing {currentPage * 4 + 1} -{" "}
             {Math.min((currentPage + 1) * 4, stylists.length)} from{" "}
             {stylists.length} data
           </p>
-          <div className="admin-service__pagination-pages">
+          <div className="manager-stylist__pagination-pages">
             <span
               onClick={() => handlePageChange(currentPage - 1)}
               className={currentPage === 0 ? "disabled" : ""}

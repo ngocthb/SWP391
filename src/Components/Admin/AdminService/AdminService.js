@@ -52,13 +52,17 @@ export default function AdminService() {
   const [services, setServices] = useState([]);
 
   const fetchServices = async (page) => {
-    const response = await api.get(`"service/page?page=${page}&size=4`);
-    const data = response.data.result.content;
-    const total = response.data.result.totalPages;
+    try {
+      const response = await api.get(`service/page?page=${page}&size=4`);
+      const data = response.data.result.content;
+      const total = response.data.result.totalPages;
 
-    if (data) {
-      setServices(data);
-      setTotalPages(total);
+      if (data) {
+        setServices(data);
+        setTotalPages(total);
+      }
+    } catch (error) {
+
     }
   };
 
@@ -118,7 +122,7 @@ export default function AdminService() {
         try {
           await deleteServiceData(serviceId);
           fetchServices();
-        } catch (error) {}
+        } catch (error) { }
       }
     });
   };
@@ -150,6 +154,8 @@ export default function AdminService() {
       );
       const data = response.data.result;
       console.log(data);
+      dispatch(updateService());
+      toggleModal();
       if (data) {
         setFormData((prev) => ({
           ...prev,
@@ -160,8 +166,7 @@ export default function AdminService() {
           image: selectedFileObject || prev.image,
         }));
       }
-      dispatch(updateService());
-      toggleModal();
+      
     } catch (err) {
     } finally {
       setLoading(false);

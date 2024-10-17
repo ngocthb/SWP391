@@ -69,6 +69,10 @@ export default function HeaderNormal() {
     // }
   };
 
+  function formatRole(role) {
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+}
+
   return (
     <>
       <section className="header-normalSection">
@@ -127,7 +131,7 @@ export default function HeaderNormal() {
                       <div className="content__infor">
                         <div>
                           <h3>{userInfo.fullname || ""}</h3>
-                          <p>{userInfo.role || "User"}</p>
+                          <p>{formatRole(userInfo.role) || "User"}</p>
                         </div>
                         <div>
                           <img
@@ -147,7 +151,7 @@ export default function HeaderNormal() {
                           />
                           <div>
                             <h2>{userInfo.fullname || ""}</h2>
-                            <p>{userInfo.role || "User"}</p>
+                            <p>{userInfo.role(userInfo.role) || "User"}</p>
                           </div>
                         </div>
                         <Link to="/user/profile">

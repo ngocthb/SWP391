@@ -74,40 +74,6 @@ export function ChooseService({ onNext, onPre }) {
   }, [searchValue, services]);
 
   useEffect(() => {
-<<<<<<< HEAD
-    const fetchBooking = async () => {
-      const storedService = sessionStorage.getItem("selectedServicesId");
-      console.log(storedService);
-      if (!storedService) {
-        try {
-          const response = await api.get(
-            // `bookingHistory?bookingId=${bookingId}`
-            `booking/${bookingId}`
-          );
-          // const data = response.data[0];
-          const data = response.data.result;
-          if (data) {
-            const selectedServiceNames = data.serviceName.map(
-              (service) => service.serviceName
-            );
-            const foundService = services.filter((service) =>
-              selectedServiceNames.includes(service.serviceName)
-            );
-
-            // Store only the IDs of the found services
-            if (foundService) {
-              
-              setSelectedServices(foundService.map((service) => service.id));
-
-              console.log(selectedServices);
-            }
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        setSelectedServices(JSON.parse(storedService));
-=======
     const storedVoucher = sessionStorage.getItem("selectedServicesId");
     if (storedVoucher) {
       const voucherIds = parseInt(storedVoucher, 10);
@@ -116,7 +82,6 @@ export function ChooseService({ onNext, onPre }) {
       );
       if (voucherSelect) {
         setSelectVoucherId(voucherSelect);
->>>>>>> fbacf3eb2ca81b0f7f177ef2fd251fc8a57ef246
       }
     }
   }, [services]);
@@ -124,7 +89,7 @@ export function ChooseService({ onNext, onPre }) {
   // Fetch vouchers
   useEffect(() => {
     const fetchVoucher = async () => {
-      try {
+      try { 
         const response = await api.get("voucher");
         if (response.data) {
           // setVoucher(response.data);
@@ -145,17 +110,22 @@ export function ChooseService({ onNext, onPre }) {
           // `bookingHistory?bookingId=${bookingId}`
           `booking/${bookingId}`
         );
-        // const data = response.data[0];
         const data = response.data.result;
+        console.log(data.serviceName);
         if (data) {
-          const dataServiceId = data.serviceId.map((id) => Number(id));
-          const dataService = services.filter((service) =>
-            dataServiceId.includes(Number(service.id))
+          const dataServiceName = data.serviceName;
+          const selectedServiceNames = dataServiceName.map(
+            (service) => service
           );
-          const foundService = dataService.map((service) => service.id);
-
+          console.log(selectedServiceNames);
+          const foundService = services.filter((service) =>
+            selectedServiceNames.includes(service.serviceName)
+          );
+          // Store only the IDs of the found services
+          console.log(foundService);
           if (foundService) {
-            setSelectedServices(foundService);
+            setSelectedServices(foundService.map((service) => service.id));
+            console.log(selectedServices);
           }
           const foundVoucher = voucher.find(
             (item) => item.id === data.voucherId
@@ -314,7 +284,7 @@ export function ChooseService({ onNext, onPre }) {
                 >
                   {isServiceSelected(service.id) ? "Added" : "Add service"}
                 </button>
-              </div>
+                </div>
             </div>
           </div>
         ))}

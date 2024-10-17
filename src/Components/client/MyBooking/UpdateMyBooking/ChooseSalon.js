@@ -38,27 +38,6 @@ export function ChooseSalon({ onClose, onNext }) {
 
   useEffect(() => {
     const fetchBooking = async () => {
-<<<<<<< HEAD
-      const storedBranchId = sessionStorage.getItem("selectedBranchId");
-      if (!storedBranchId) {
-        try {
-          const response = await api.get(
-            // `bookingHistory?bookingId=${bookingId}`
-            `booking/${bookingId}`
-          );
-          // const data = response.data[0];
-          const data = response.data.result;
-          console.log(data);
-          if (data) {
-            const foundSalon = salonLocations.find(
-              (item) => item.address === data.salonName
-            );
-            const salonId = foundSalon ? foundSalon.id : null;
-
-            if (salonId) {
-              setSelectedBranch(salonId);
-            }
-=======
       try {
         const response = await api.get(
           // `bookingHistory?bookingId=${bookingId}`
@@ -66,14 +45,14 @@ export function ChooseSalon({ onClose, onNext }) {
         );
         // const data = response.data[0];
         const data = response.data.result;
+        console.log(data);
         if (data) {
           const foundSalon = salonLocations.find(
-            (item) => parseInt(item.id, 10) === data.salonId
+            (item) => item.address === data.salonName
           );
           const salonId = foundSalon ? foundSalon.id : null;
           if (salonId) {
             setSelectedBranch(salonId);
->>>>>>> fbacf3eb2ca81b0f7f177ef2fd251fc8a57ef246
           }
         }
       } catch (error) {
@@ -118,8 +97,7 @@ export function ChooseSalon({ onClose, onNext }) {
             onNext();
             if (!selectedBranch) {
               e.preventDefault();
-            } else {
-              sessionStorage.setItem("selectedBranchId", selectedBranch);
+            } else {sessionStorage.setItem("selectedBranchId", selectedBranch);
             }
           }}
         >

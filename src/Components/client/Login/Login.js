@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import eyeOff from "../../../Assets/eye-off.svg";
 import eye from "../../../Assets/eye.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as GoogleIcon } from "../../../Assets/GoogleIcon.svg";
 import api from "../../../config/axios";
 import "./Login.scss";
@@ -60,6 +60,40 @@ const Login = () => {
     }
   };
 
+  const fetchLoginGG = async () => {
+  
+    const auth = getAuth();
+    try {
+      const idToken = await auth.currentUser.getIdToken(true);
+      const value = {
+        token: idToken
+      }
+      const response = await api.post("login-gg", value);
+      const data = response.data.result;
+      
+      if (data) {
+        const { token, role } = data;
+        sessionStorage.setItem("token", token);
+        dispatch(setRole(role));
+
+        if (role === "ADMIN") {
+          navigate("/admin/dashboard");
+         }else if (role === "BRANCH_MANAGER"){
+          navigate("/manager/dashboard");
+         }else if (role === "STYLIST") {
+          navigate("/stylist")
+         }else if (role === "STAFF") {
+          navigate("/staff")
+         }else{
+          navigate("/");
+         }
+      }
+    } catch (error) {
+      
+    }
+
+  }
+
   const handleLoginGoogle = () => {
     const auth = getAuth();
     signInWithPopup(auth, googleProvider)
@@ -68,6 +102,7 @@ const Login = () => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         console.log(token);
+        fetchLoginGG()
 
         // The signed-in user info.
         const user = result.user;

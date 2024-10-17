@@ -13,10 +13,9 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Modal } from "antd";
 import "./ChooseService.scss";
-// import { services } from "../../../../data/booking";
-// import { voucher } from "../../../../data/booking";
 
 import api from "../../../../config/axios";
+import DOMPurify from "dompurify";
 
 export default function ChooseService() {
   const [selectVoucher, setSelectVoucher] = useState("");
@@ -264,7 +263,11 @@ export default function ChooseService() {
                     <LuClock className="card-icon" />
                     <span>{formatDuration(service.duration)}</span>
                   </div>
-                  <p>{service.serviceName}</p>
+                  <p
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(service.description || ""),
+                      }}
+                    />
                   <div className="card__content-action">
                     <div className="card__content-price">
                       Price: {formatCurrency(service.price)}
@@ -278,7 +281,7 @@ export default function ChooseService() {
                           setSelectedService((prev) => [...prev, service]);
                         }
                       }}
-                      disabled={isServiceSelected(service.id)} // Disable button if service is already selected
+                      disabled={isServiceSelected(service.id)}
                     >
                       {isServiceSelected(service.id) ? "Added" : "Add service"}
                     </button>

@@ -187,13 +187,13 @@
         }
       }
       .time-slot.disabled {
-        opacity: 0.5; // Change opacity to indicate it's disabled
-        cursor: not-allowed; // Change cursor to indicate it's not clickable
+        opacity: 0.5; 
+        cursor: not-allowed;
 
         &:hover {
-          // Prevent hover effect on disabled slots
-          background-color: #e0e0e0; // Keep the background color the same
-          color: inherit; // Maintain original text color
+          
+          background-color: #e0e0e0;
+          color: inherit;
         }
       }
       .selected {

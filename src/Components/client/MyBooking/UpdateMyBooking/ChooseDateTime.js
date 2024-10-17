@@ -49,19 +49,34 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
     }
   }, [timeSlots]);
 
+  function convertTime(timeString) {
+    if (!/^\d{2}:\d{2}:\d{2}$/.test(timeString)) {
+      throw new Error("Invalid time format. Expected format is HH:MM:SS.");
+    }
+    const parts = timeString.split(":");
+    return `${parts[0]}h${parts[1]}`;
+  }
+
+  // Example usage:
+  const inputTime = "09:00:00";
+  const convertedTime = convertTime(inputTime);
+  console.log(convertedTime); // Outputs: 09:00
+
   const fetchBooking = async () => {
     try {
       const response = await api.get(
         // `bookingHistory?bookingId=${bookingId}`
         `booking/${bookingId}`
       );
-      // const data = response.data[0];
       const data = response.data.result;
       if (data) {
         setSelectedDate(new Date(data.date));
-        const foundSlot = timeSlots.find((item) => item.slotid === data.slotId);
+        const foundSlot = timeSlots.find(
+          (item) => item.slottime === convertTime(data.time)
+        ).slotid;
+
         if (foundSlot) {
-          setSelectedTime(foundSlot.slotid);
+          setSelectedTime(foundSlot);
         }
       }
     } catch (error) {
@@ -118,7 +133,6 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
         accountId: stylistId,
         date: formatDateForInput(selectedDate),
       };
-
       try {
         // const response = await api.get("booking-slots", bookingValue);
         // if (response.data) {
@@ -153,6 +167,8 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
 
     setLoading(true);
     try {
+      console.log(updateValues);
+      console.log(bookingId);
       const response = await api.put(
         // `bookingHistory/${bookingId}`,
         `booking/${bookingId}`,
