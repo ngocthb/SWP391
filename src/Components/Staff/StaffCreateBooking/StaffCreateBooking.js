@@ -49,8 +49,11 @@ const StaffCreateBooking = () => {
     stylistId: 0,
   });
 
+  const [selectedTime , setSelectedTime] = useState("");
+
   const handleTimeChange = (event) => {
-    setFormData((prev) => ({ ...prev, time: event.target.value }));
+    setSelectedTime(event.target.value )
+    setFormData((prev) => ({ ...prev, time: selectedTime}));
   };
 
   const handleStylistChange = (event) => {
@@ -112,14 +115,17 @@ const StaffCreateBooking = () => {
   useEffect(() => {
     const fetchStylists = async () => {
       const serviceId = staff.map((item) => item.serviceId);
-
+      const foundSlot = slots.find((item) => item.slottime === formData.time);
+      const slotId = foundSlot ? foundSlot.slotid : null;
       const bookingValue = {
         salonId: staff.salonId,
         serviceId: serviceId,
+        date: formatDateForInput(selectedDate),
+        slotId: slotId,
       };
 
       try {
-        const response = await api.post(`booking/stylists`, bookingValue);
+        const response = await api.post(`booking/stylist/update`, bookingValue);
         const data = response.data.result;
         if (data) {
           setStylists(data);
@@ -127,7 +133,8 @@ const StaffCreateBooking = () => {
       } catch (error) {}
     };
     fetchStylists();
-  }, [staff]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [staff, selectedTime, selectedServices, selectedDate]);
 
   const handleServiceToggle = (serviceId) => {
     setSelectedServices((prevSelected) => {

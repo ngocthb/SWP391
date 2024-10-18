@@ -45,7 +45,7 @@ const StaffBooking = ({ buttonLabel }) => {
     serviceName: [],
   });
   const [selectedTime, setSelectedTime] = useState("");
-  const [manager, setManager] = useState([]);
+  const [staff, setStaff] = useState([]);
 
   const today = new Date();
   const tomorrow = new Date();
@@ -86,7 +86,6 @@ const StaffBooking = ({ buttonLabel }) => {
 
     fetchData("salons", setSalonLocations);
     fetchData("vouchers", setVouchers);
-    fetchData("service", setServices);
     fetchData("stylist/read", setAllStylists);
     fetchData("slot/read", setSlots);
   }, []);
@@ -113,7 +112,7 @@ const StaffBooking = ({ buttonLabel }) => {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
         if (data) {
-          setManager(data);
+          setStaff(data);
         }
       } catch (err) {
         console.error(err);
@@ -124,13 +123,29 @@ const StaffBooking = ({ buttonLabel }) => {
     fetchManagerData();
   }, []);
 
+  useEffect(() => {
+    const fetchService = async () => {
+     try {
+      const response = await api.get(`stylist/service/${staff.accountId}`)
+      const data = response.data.result;
+      if (data) {
+        setServices(data)
+      }
+     } catch (error) {
+      console.log(error)
+     }
+    }
+    fetchService();
+  }, [])
+
+
   const date = new Date();
   const formattedDate = date.toISOString().split("T")[0];
   useEffect(() => {
     const fetchBookings = async () => {
       try {
         const response = await api.get(
-          `manager/stylists/booking/${manager.salonId}/${formattedDate}`
+          `manager/stylists/booking/${staff.salonId}/${formattedDate}`
         );
         const data = response.data.result;
 
@@ -142,7 +157,7 @@ const StaffBooking = ({ buttonLabel }) => {
     };
 
     fetchBookings();
-  }, [isUpdate, manager]);
+  }, [isUpdate, staff]);
 
   const fetchBookingData = async (bookingId) => {
     try {
@@ -241,7 +256,7 @@ const StaffBooking = ({ buttonLabel }) => {
     setLoading(true);
     try {
       const response = await api.put(
-        `bookings/${formData.bookingId}`,
+        `update/service/${formData.bookingId}`,
         updateValues
       );
       const data = response.data.result;
@@ -552,6 +567,7 @@ const StaffBooking = ({ buttonLabel }) => {
                           className="staff-booking-modal__select"
                           defaultValue={formData.stylistId || ""}
                           onChange={handleStylistChange}
+                          disabled
                         >
                           <option value="" disabled>
                             Select Stylist
