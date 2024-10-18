@@ -51,7 +51,7 @@ const AdminHeader = () => {
   useEffect(() => {
     const fetchManagerData = async () => {
       try {
-        const response = await api.get(`admin/profile`);
+        const response = await api.get(`customer/profile`);
         const data = response.data.result;
         console.log(data);
         if (data) {

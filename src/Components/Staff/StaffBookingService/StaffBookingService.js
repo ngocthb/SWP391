@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./StaffBookingService.scss";
 import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SlLocationPin } from "react-icons/sl";
 import { GrCompliance } from "react-icons/gr";
 import Swal from 'sweetalert2';
+import { IoCloseCircle } from "react-icons/io5";
 
 
 const StaffBookingService = () => {
@@ -25,6 +26,9 @@ const StaffBookingService = () => {
   const [stylists, setStylists] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
+  const [searchValue, setSearchValue] = useState([]);
+  const [searchResults, setSearchResults] = useState(bookings);
+  const inputRef = useRef(null);
 
   const [slots, setSlots] = useState([]);
 
@@ -280,6 +284,39 @@ const StaffBookingService = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleClick = () => {
+    setSearchValue("");
+    inputRef.current.focus();
+  };
+
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setSearchResults(bookings);
+      return;
+    }
+
+    const fetchBookings = async () => {
+      const value = {
+        phone: searchValue,
+      };
+      try {
+        const response = await api.post(`staff/booking/${selectedDate}`, value);
+        const data = response.data.result;
+        if (data) {
+          setSearchResults(data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchBookings();
+  }, [searchValue]);
+
   const handlePayment = (bookingId) => {
     navigate(`/staff/payment/${bookingId}`)
   }
@@ -292,7 +329,17 @@ const StaffBookingService = () => {
           <div className="staff-booking-service__header-searchBar">
             <BiSearchAlt className="searchBar-icon" />
             {/* <i class="fas fa-search"></i> */}
-            <input placeholder="Search here..." type="text" />
+            <input
+              ref={inputRef}
+              placeholder="Search here..."
+              type="text"
+              value={searchValue}
+              onChange={handleChange}
+            />
+            <IoCloseCircle
+              className="chooseService-closeIcon"
+              onClick={handleClick}
+            />
           </div>
           <div className="staff-booking-service__header-filter">
             <select
@@ -338,7 +385,8 @@ const StaffBookingService = () => {
               </thead>
 
               <tbody>
-                {(bookings || []).map((booking) => (
+                {searchResults &&
+                  searchResults.map((booking) => (
                   <tr key={booking.id}>
                     <td className="staff-booking-service__id">{booking.id}</td>
                     <td>

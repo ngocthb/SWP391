@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./StaffBooking.scss";
 import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBooking, updateCustomer } from "../../../actions/Update";
+import { IoCloseCircle } from "react-icons/io5";
 
 const StaffBooking = ({ buttonLabel }) => {
   const [bookings, setBookings] = useState([]);
@@ -22,6 +23,9 @@ const StaffBooking = ({ buttonLabel }) => {
   const [stylists, setStylists] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
+  const [searchValue, setSearchValue] = useState([]);
+  const [searchResults, setSearchResults] = useState(bookings);
+  const inputRef = useRef(null);
 
   const [slots, setSlots] = useState([]);
   const [slotRealTime, setSlotRealTime] = useState([]);
@@ -37,6 +41,7 @@ const StaffBooking = ({ buttonLabel }) => {
     serviceId: [],
     salonId: 0,
     time: "",
+    status: "",
     serviceName: [],
   });
   const [selectedTime, setSelectedTime] = useState("");
@@ -66,7 +71,6 @@ const StaffBooking = ({ buttonLabel }) => {
   const handleStylistChange = (event) => {
     setFormData((prev) => ({ ...prev, stylistId: event.target.value }));
   };
-
 
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
@@ -182,6 +186,7 @@ const StaffBooking = ({ buttonLabel }) => {
           salonName: data.salonName,
           voucherCode: data.voucherCode,
           serviceName: data.serviceName,
+          status: data.status,
         }));
       }
     } catch (err) {
@@ -322,7 +327,7 @@ const StaffBooking = ({ buttonLabel }) => {
 
   useEffect(() => {
     if (formData.serviceId) {
-      setSelectedServices(formData.serviceId.map(id => id.toString()));
+      setSelectedServices(formData.serviceId.map((id) => id.toString()));
     }
   }, [formData.serviceId]);
 
@@ -337,6 +342,39 @@ const StaffBooking = ({ buttonLabel }) => {
     });
   };
 
+  const handleChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleClick = () => {
+    setSearchValue("");
+    inputRef.current.focus();
+  };
+
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setSearchResults(bookings);
+      return;
+    }
+
+    const fetchBookings = async () => {
+      const value = {
+        phone: searchValue,
+      };
+      try {
+        const response = await api.post(`staff/booking/${selectedDate}`, value);
+        const data = response.data.result;
+        if (data) {
+          setSearchResults(data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchBookings();
+  }, [searchValue]);
+
   const createBooking = () => {
     navigate("/staff/booking/create");
   };
@@ -348,10 +386,20 @@ const StaffBooking = ({ buttonLabel }) => {
           <div className="staff-booking__header-searchBar">
             <BiSearchAlt className="searchBar-icon" />
             {/* <i class="fas fa-search"></i> */}
-            <input placeholder="Search here..." type="text" />
+            <input
+              ref={inputRef}
+              placeholder="Search here..."
+              type="text"
+              value={searchValue}
+              onChange={handleChange}
+            />
+            <IoCloseCircle
+              className="chooseService-closeIcon"
+              onClick={handleClick}
+            />
           </div>
           <div className="staff-booking__header-filter">
-          <select
+            <select
               value={
                 selectedDate.toDateString() === today.toDateString()
                   ? "today"
@@ -387,52 +435,55 @@ const StaffBooking = ({ buttonLabel }) => {
                   <th onClick={() => sortBy("time")}>
                     Time{getSortIndicator("time")}
                   </th>
-                  <th onClick={() => sortBy("salonName")}>
-                    Salon Name{getSortIndicator("salonName")}
+                  <th onClick={() => sortBy("status")}>
+                    Salon Name{getSortIndicator("status")}
                   </th>
                   <th>Action</th>
                 </tr>
               </thead>
 
               <tbody>
-                {(bookings || []).map((booking) => (
-                  <tr key={booking.id}>
-                    <td className="staff-booking__id">{booking.id}</td>
-                    <td>
-                      <div className="staff-booking__customer">
-                        <span className="staff-booking__customer-name">
-                          {booking.customerName}
-                        </span>
-                      </div>
-                    </td>
+                {searchResults &&
+                  searchResults.map((booking) => (
+                    <tr key={booking.id}>
+                      <td className="staff-booking__id">{booking.id}</td>
+                      <td>
+                        <div className="staff-booking__customer">
+                          <span className="staff-booking__customer-name">
+                            {booking.customerName}
+                          </span>
+                        </div>
+                      </td>
 
-                    <td className="staff-booking__discountAmount">
-                      {booking.stylistName}
-                    </td>
-                    <td>
-                      <span className={`staff-booking__quantity`}>
-                        {formatDate(booking.date)}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`staff-booking__quantity`}>
-                        {booking.time ? formatTime(booking.time) : ""}
-                      </span>
-                    </td>
-                    <td className="staff-booking__date">{booking.salonName}</td>
-                    <td className="staff-booking__actions">
-                      <button
-                        className="staff-booking__action-button"
-                        onClick={() => toggleModal(booking.id)}
-                      >
-                        ✎
-                      </button>
-                      <button className="staff-booking__action-button">
-                        🗑
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      <td className="staff-booking__discountAmount">
+                        {booking.stylistName}
+                      </td>
+                      <td>
+                        <span className={`staff-booking__quantity`}>
+                          {formatDate(booking.date)}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`staff-booking__quantity`}>
+                          {booking.time ? formatTime(booking.time) : ""}
+                        </span>
+                      </td>
+                      <td className="staff-booking__status">
+                        {booking.status}
+                      </td>
+                      <td className="staff-booking__actions">
+                        <button
+                          className="staff-booking__action-button"
+                          onClick={() => toggleModal(booking.id)}
+                        >
+                          ✎
+                        </button>
+                        <button className="staff-booking__action-button">
+                          🗑
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

@@ -27,8 +27,6 @@ export default function ChooseService() {
   const [voucher, setVoucher] = useState([]);
   const inputRef = useRef(null);
 
-  const navigate = useNavigate();
-
   const formatDateString = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
