@@ -31,7 +31,7 @@ export default function Feedback({ bookingHistory, accountId }) {
   useEffect(() => {
     const fetchFeedbackData = async () => {
       try {
-        const response = await api.get("feedback");
+        const response = await api.get(`feedback/${bookingId}`);
 
         if (response.data) {
           setFeedBackData(response.data);
@@ -49,18 +49,13 @@ export default function Feedback({ bookingHistory, accountId }) {
 
   const fetchFeedback = async () => {
     try {
-      const response = await api.get(`feedback?bookingId=${bookingId}`);
-      const data = response.data[0];
-
-      // const response = await api.get(`feedback/${bookingId}`);
-      // const data = response.data.result;
-
-      if (data !== "Not feedback yet") {
+      const response = await api.get(`feedback/${bookingId}`);
+      const data = response.data.result;
+      console.log(data);
+      if (data !== "Not feedback yet" || !data) {
         console.log(data);
         setIsDisabled(true);
-        const foundFeedback = feedBackData.find(
-          (item) => item.bookingId === data.bookingId
-        );
+        const foundFeedback = data;
 
         if (foundFeedback) {
           setRating(Math.ceil(foundFeedback.score / 2));

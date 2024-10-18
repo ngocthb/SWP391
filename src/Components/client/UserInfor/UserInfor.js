@@ -84,7 +84,7 @@ export default function UserInfor() {
   const updateUserData = async (e) => {
     e.preventDefault();
     const updateValues = {
-      fullName: e.target[1].value,
+      fullname: e.target[1].value,
       email: e.target[2].value,
       phone: e.target[3].value,
       dob: e.target[4].value,
@@ -103,7 +103,7 @@ export default function UserInfor() {
         `customer/${formData.accountid}`,
         updateValues
       );
-      const data = response.data;
+      const data = response.data.result;
 
       if (data) {
         setFormData((prev) => ({

@@ -90,6 +90,13 @@ export default function Header() {
     // }
   };
 
+  function formatRole(role) {
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+}
+
+console.log(formatRole("CUSTOMER"));
+
+
   return (
     <section className="navBarSection">
       {/* navBarSection__header navBarSection__header-active */}
@@ -136,7 +143,7 @@ export default function Header() {
                     <div className="content__infor">
                       <div>
                         <h3>{userInfo.fullname || ""}</h3>
-                        <p>{userInfo.role || "User"}</p>
+                        <p>{formatRole(userInfo.role) || "User"}</p>
                       </div>
                       <div>
                         <img
@@ -156,7 +163,7 @@ export default function Header() {
                         />
                         <div>
                           <h2>{userInfo.fullname || ""}</h2>
-                          <p>{userInfo.role || "User"}</p>
+                          <p>{userInfo.role(userInfo.role) || "User"}</p>
                         </div>
                       </div>
                       <Link to="/user/profile">

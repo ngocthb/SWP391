@@ -5,31 +5,25 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import logo from "../../../Assets/logo.png";
 import logoFold from "../../../Assets/logo_blue_noBackground.png";
 import { collapse } from "../../../actions/Collapse";
-import "./AdminHeader.scss";
+import "./StaffHeader.scss";
 import api from "../../../config/axios";
 import loginUser from "../../../data/loginUser";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
 
 const pageNames = {
-  "/admin/dashboard": "Dashboard",
-  "/admin/booking": "Booking",
-  "/admin/service": "Service",
-  "/admin/service/create": "New Service",
-  "/admin/customer": "Customer",
-  "/admin/voucher": "Voucher",
-  "/admin/voucher/create": "New Voucher",
-  "/admin/manager": "Manager",
+  "/staff/booking": "Booking",
+  "/staff/booking-service": "Booking Service",
 };
 
-const AdminHeader = () => {
+const StaffHeader = () => {
   const collapsed = useSelector((state) => state.collapseReducer);
   const dispatch = useDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
   const [pageName, setPageName] = useState("");
   const navigate = useNavigate();
-  const [adminInfo, setAdminInfo] = useState([]);
+  const [staffInfo, setStaffInfo] = useState([]);
 
   const toggleDropdown = useCallback(() => {
     setDropdownOpen((prev) => !prev);
@@ -37,7 +31,7 @@ const AdminHeader = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!event.target.closest(".header-admin__user-info")) {
+      if (!event.target.closest(".header-staff__user-info")) {
         setDropdownOpen(false);
       }
     };
@@ -51,11 +45,11 @@ const AdminHeader = () => {
   useEffect(() => {
     const fetchManagerData = async () => {
       try {
-        const response = await api.get(`customer/profile`);
+        const response = await api.get(`staff/profile`);
         const data = response.data.result;
         console.log(data);
         if (data) {
-          setAdminInfo(data);
+          setStaffInfo(data);
         }
       } catch (err) {
         console.error(err);
@@ -63,7 +57,6 @@ const AdminHeader = () => {
     };
     fetchManagerData();
   }, []);
-
 
   useEffect(() => {
     setPageName(pageNames[location.pathname] || "");
@@ -74,8 +67,8 @@ const AdminHeader = () => {
   }, [dispatch]);
 
   const handleGoback = () => {
-    navigate("/admin/dashboard");
-  }
+    navigate("/manager/dashboard");
+  };
 
   function formatRole(role) {
     return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
@@ -87,48 +80,55 @@ const AdminHeader = () => {
   };
 
   return (
-    <header className="header-admin">
+    <header className="header-staff">
       <div
-        className={`header-admin__logo ${
-          collapsed ? "header-admin__logo--collapsed" : ""
+        className={`header-staff__logo ${
+          collapsed ? "header-staff__logo--collapsed" : ""
         }`}
       >
-        <img onClick={handleGoback}
+        <img
+          onClick={handleGoback}
           src={collapsed ? logoFold : logo}
           alt={collapsed ? "Logo Fold" : "Logo"}
         />
       </div>
-      <div className="header-admin__nav">
-        <div className="header-admin__nav-left">
-          <div className="header-admin__collapse" onClick={handleCollapse}>
+      <div className="header-staff__nav">
+        <div className="header-staff__nav-left">
+          <div className="header-staff__collapse" onClick={handleCollapse}>
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </div>
-          <div className="header-admin__name-page">{pageName}</div>
+          <div className="header-staff__name-page">{pageName}</div>
         </div>
-        <div className="header-admin__nav-right">
-          <div className="header-admin__user-info" onClick={toggleDropdown}>
-            <div className="header-admin__text">
-              <div className="header-admin__name">{adminInfo.fullname}</div>
-              <div className="header-admin__role">{adminInfo.role ? formatRole(adminInfo.role) : ""}</div>
+        <div className="header-staff__nav-right">
+          <div className="header-staff__user-info" onClick={toggleDropdown}>
+            <div className="header-staff__text">
+              <div className="header-staff__name">{staffInfo.fullname}</div>
+              <div className="header-staff__role">
+                {staffInfo.role ? formatRole(staffInfo.role) : ""}
+              </div>
             </div>
-            <div className="header-admin__avatar">
+            <div className="header-staff__avatar">
               <img
                 alt="User avatar"
-                src={adminInfo.image || loginUser.avatar}
+                src={staffInfo.image || loginUser.avatar}
               />
             </div>
           </div>
           {dropdownOpen && (
-            <div className="header-admin__dropdown">
-              <div className="header-admin__dropdown--header">
+            <div className="header-staff__dropdown">
+              <div className="header-staff__dropdown--header">
                 <img
                   height={60}
                   alt="User avatar"
-                  src={adminInfo.image || loginUser.avatar}
+                  src={staffInfo.image || loginUser.avatar}
                 />
                 <div>
-                  <h2>{adminInfo.fullname}</h2>
-                  <p>{adminInfo.role ? formatRole(adminInfo.role) : ""}</p>
+                  <h2>{staffInfo.fullname}</h2>
+                  <p>
+                    {staffInfo.role
+                      ? formatRole(staffInfo.role)
+                      : ""}
+                  </p>
                 </div>
               </div>
               <Link to="#">
@@ -152,4 +152,4 @@ const AdminHeader = () => {
   );
 };
 
-export default AdminHeader;
+export default StaffHeader;

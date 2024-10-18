@@ -97,8 +97,7 @@ export function ChooseSalon({ onClose, onNext }) {
             onNext();
             if (!selectedBranch) {
               e.preventDefault();
-            } else {
-              sessionStorage.setItem("selectedBranchId", selectedBranch);
+            } else {sessionStorage.setItem("selectedBranchId", selectedBranch);
             }
           }}
         >

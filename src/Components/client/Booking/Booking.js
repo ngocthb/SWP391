@@ -58,8 +58,8 @@ export default function Booking() {
     const fetchService = async () => {
       try {
         const response = await api.get("service");
-        if (response.data /*&& response.data.result*/) {
-          setServices(response.data/*.result*/);
+        if (response.data && response.data.result) {
+          setServices(response.data.result);
         }
       } catch (error) {}
     };
@@ -101,16 +101,12 @@ export default function Booking() {
       };
 
       try {
-        const response = await api.get(
+        const response = await api.post(
           "booking/slots",
           bookingValue
         );
         if (response.data) {
           setTimeSlots(response.data.result);
-        const response = await api.get("booking/slots", bookingValue);
-        if (response.data && response.data.result) {
-          setTimeSlots(response.data.result);
-        }
       }} catch (error) {}
     };
     fetchTimeSlots();

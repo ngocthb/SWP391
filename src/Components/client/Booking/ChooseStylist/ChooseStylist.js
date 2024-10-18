@@ -134,7 +134,7 @@ export default function ChooseStylist() {
               </div>
               <div className="chooseStylist__container-info">
                 <p>Stylist: {selectedStylist.fullname}</p>
-                <p className="infor__rating">
+                {/* <p className="infor__rating">
                   <span>
                     Cut {selectedStylist.rating.cut}
                     <FaStar className="infor__rating-icon" />(
@@ -154,7 +154,7 @@ export default function ChooseStylist() {
                     <FaStar className="infor__rating-icon" />(
                     {selectedStylist.customers.dye})
                   </span>
-                </p>
+                </p> */}
               </div>
             </>
           ) : (

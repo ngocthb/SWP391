@@ -18,6 +18,7 @@ import { Spin } from "antd";
 import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
+
 import { genders } from "../../../data/gender";
 
 export default function AdminManager({ buttonLabel }) {
@@ -86,7 +87,7 @@ export default function AdminManager({ buttonLabel }) {
 
   const fetchStylistData = async (accountid) => {
     try {
-      const response = await api.get(`managers/${accountid}`);
+      const response = await api.get(`manager/${accountid}`);
       const data = response.data.result;
 
       if (data) {
@@ -290,23 +291,6 @@ export default function AdminManager({ buttonLabel }) {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        <div className="admin-manager__pagination">
-          <p>Showing 1-8 from {stylists.length} data</p>
-          <div className="admin-manager__pagination-pages">
-            <span>
-              {/* <i class="fas fa-chevron-left"></i> */}
-              <FaAngleLeft className="pagination-icon" />
-            </span>
-            <span className="active">1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>
-              {/* <i class="fas fa-chevron-right"></i> */}
-              <FaChevronRight className="pagination-icon" />
-            </span>
           </div>
         </div>
       </div>

@@ -1,16 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import "./ManagerBooking.scss";
+import React, { useEffect, useRef, useState } from "react";
+import "./StaffBooking.scss";
 import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { updateBooking } from "../../../actions/Update";
+import { updateBooking, updateCustomer } from "../../../actions/Update";
+import { IoCloseCircle } from "react-icons/io5";
 
-const ManagerBooking = () => {
+const StaffBooking = ({ buttonLabel }) => {
   const [bookings, setBookings] = useState([]);
   const [originalBookings, setOriginalBookings] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -20,11 +23,9 @@ const ManagerBooking = () => {
   const [stylists, setStylists] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-
-  const today = new Date();
-  const tomorrow = new Date();
-  tomorrow.setDate(today.getDate() + 1);
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [searchValue, setSearchValue] = useState([]);
+  const [searchResults, setSearchResults] = useState(bookings);
+  const inputRef = useRef(null);
 
   const [slots, setSlots] = useState([]);
   const [slotRealTime, setSlotRealTime] = useState([]);
@@ -40,18 +41,16 @@ const ManagerBooking = () => {
     serviceId: [],
     salonId: 0,
     time: "",
+    status: "",
     serviceName: [],
   });
   const [selectedTime, setSelectedTime] = useState("");
-  const [manager, setManager] = useState([]);
+  const [staff, setStaff] = useState([]);
 
-  const formatDateForInput = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+  const [selectedDate, setSelectedDate] = useState(today);
 
   const handleDateChangeFilter = (e) => {
     const date = e.target.value === "today" ? today : tomorrow;
@@ -65,28 +64,12 @@ const ManagerBooking = () => {
   const handleTimeChange = (event) => {
     setFormData((prev) => ({ ...prev, time: event.target.value }));
   };
+
   useEffect(() => {
     fetchStylistsData();
   }, [formData.time]);
   const handleStylistChange = (event) => {
     setFormData((prev) => ({ ...prev, stylistId: event.target.value }));
-  };
-
-  useEffect(() => {
-    if (formData.serviceId) {
-      setSelectedServices(formData.serviceId.map(id => id.toString()));
-    }
-  }, [formData.serviceId]);
-
-  const handleServiceToggle = (serviceId) => {
-    setSelectedServices((prevSelected) => {
-      const newSelected = prevSelected.includes(serviceId)
-        ? prevSelected.filter((id) => id !== serviceId)
-        : [...prevSelected, serviceId];
-
-      setSelectedServices(newSelected);
-      return newSelected;
-    });
   };
 
   useEffect(() => {
@@ -103,7 +86,6 @@ const ManagerBooking = () => {
 
     fetchData("salons", setSalonLocations);
     fetchData("vouchers", setVouchers);
-    fetchData("service", setServices);
     fetchData("stylist/read", setAllStylists);
     fetchData("slot/read", setSlots);
   }, []);
@@ -130,7 +112,7 @@ const ManagerBooking = () => {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
         if (data) {
-          setManager(data);
+          setStaff(data);
         }
       } catch (err) {
         console.error(err);
@@ -142,12 +124,28 @@ const ManagerBooking = () => {
   }, []);
 
   useEffect(() => {
+    const fetchService = async () => {
+     try {
+      const response = await api.get(`stylist/service/${staff.accountId}`)
+      const data = response.data.result;
+      if (data) {
+        setServices(data)
+      }
+     } catch (error) {
+      console.log(error)
+     }
+    }
+    fetchService();
+  }, [])
+
+
+  const date = new Date();
+  const formattedDate = date.toISOString().split("T")[0];
+  useEffect(() => {
     const fetchBookings = async () => {
       try {
         const response = await api.get(
-          `manager/stylists/booking/${manager.salonId}/${formatDateForInput(
-            selectedDate
-          )}`
+          `manager/stylists/booking/${staff.salonId}/${formattedDate}`
         );
         const data = response.data.result;
 
@@ -159,7 +157,7 @@ const ManagerBooking = () => {
     };
 
     fetchBookings();
-  }, [isUpdate, manager, selectedDate]);
+  }, [isUpdate, staff]);
 
   const fetchBookingData = async (bookingId) => {
     try {
@@ -203,6 +201,7 @@ const ManagerBooking = () => {
           salonName: data.salonName,
           voucherCode: data.voucherCode,
           serviceName: data.serviceName,
+          status: data.status,
         }));
       }
     } catch (err) {
@@ -218,6 +217,7 @@ const ManagerBooking = () => {
       }
     }
   }, [isModalOpen]);
+
   const fetchStylistsData = async () => {
     const foundSlot = slots.find((item) => item.slottime === formData.time);
     const slotId = foundSlot ? foundSlot.slotid : null;
@@ -231,13 +231,9 @@ const ManagerBooking = () => {
     try {
       const response = await api.post("booking/stylists/update", value);
       const data = response.data.result;
-      console.log(data[0].id);
+      console.log(data);
       if (data) {
         setStylists(data);
-        setFormData((prev) => ({
-          ...prev,
-          stylistId: data[0].id,
-        }));
       }
     } catch (error) {}
   };
@@ -256,15 +252,15 @@ const ManagerBooking = () => {
       serviceId: selectedServices.map(Number),
       salonId: formData.salonId,
     };
-    setLoading(true);
     console.log(updateValues);
+    setLoading(true);
     try {
       const response = await api.put(
-        `booking/${formData.bookingId}`,
+        `update/service/${formData.bookingId}`,
         updateValues
       );
       const data = response.data.result;
-      console.log(data);
+
       if (data) {
         dispatch(updateBooking());
         toggleModal();
@@ -327,6 +323,13 @@ const ManagerBooking = () => {
     updateCustomerData(e);
   };
 
+  const formatTime = (time) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return `${hours.toString().padStart(2, "0")}h${minutes
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
   const formatDate = (dateInput) => {
     const date = new Date(dateInput);
     if (isNaN(date)) return "";
@@ -337,23 +340,80 @@ const ManagerBooking = () => {
     return `${dayOfWeek} (${day}/${month}/${year})`;
   };
 
-  const formatTime = (time) => {
-    const [hours, minutes] = time.split(":").map(Number);
-    return `${hours.toString().padStart(2, "0")}h${minutes
-      .toString()
-      .padStart(2, "0")}`;
+  useEffect(() => {
+    if (formData.serviceId) {
+      setSelectedServices(formData.serviceId.map((id) => id.toString()));
+    }
+  }, [formData.serviceId]);
+
+  const handleServiceToggle = (serviceId) => {
+    setSelectedServices((prevSelected) => {
+      const newSelected = prevSelected.includes(serviceId)
+        ? prevSelected.filter((id) => id !== serviceId)
+        : [...prevSelected, serviceId];
+
+      setSelectedServices(newSelected);
+      return newSelected;
+    });
+  };
+
+  const handleChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleClick = () => {
+    setSearchValue("");
+    inputRef.current.focus();
+  };
+
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setSearchResults(bookings);
+      return;
+    }
+
+    const fetchBookings = async () => {
+      const value = {
+        phone: searchValue,
+      };
+      try {
+        const response = await api.post(`staff/booking/${selectedDate}`, value);
+        const data = response.data.result;
+        if (data) {
+          setSearchResults(data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchBookings();
+  }, [searchValue]);
+
+  const createBooking = () => {
+    navigate("/staff/booking/create");
   };
 
   return (
     <>
-      <div className="manager-booking">
-        <div className="manager-booking__header">
-          <div className="manager-booking__header-searchBar">
+      <div className="staff-booking">
+        <div className="staff-booking__header">
+          <div className="staff-booking__header-searchBar">
             <BiSearchAlt className="searchBar-icon" />
             {/* <i class="fas fa-search"></i> */}
-            <input placeholder="Search here..." type="text" />
+            <input
+              ref={inputRef}
+              placeholder="Search here..."
+              type="text"
+              value={searchValue}
+              onChange={handleChange}
+            />
+            <IoCloseCircle
+              className="chooseService-closeIcon"
+              onClick={handleClick}
+            />
           </div>
-          <div className="manager-booking__header-filter">
+          <div className="staff-booking__header-filter">
             <select
               value={
                 selectedDate.toDateString() === today.toDateString()
@@ -365,11 +425,12 @@ const ManagerBooking = () => {
               <option value="today">Today, {formatDate(today)}</option>
               <option value="tomorrow">Tomorrow, {formatDate(tomorrow)}</option>
             </select>
+            <button onClick={createBooking}> {buttonLabel}</button>
           </div>
         </div>
-        <div className="manager-booking__container">
-          <div className="manager-booking__content">
-            <table className="manager-booking__table">
+        <div className="staff-booking__container">
+          <div className="staff-booking__content">
+            <table className="staff-booking__table">
               <thead>
                 <tr>
                   <th onClick={() => sortBy("id")}>
@@ -389,53 +450,55 @@ const ManagerBooking = () => {
                   <th onClick={() => sortBy("time")}>
                     Time{getSortIndicator("time")}
                   </th>
-                  <th onClick={() => sortBy("salonName")}>
-                    Salon Name{getSortIndicator("salonName")}
+                  <th onClick={() => sortBy("status")}>
+                    Salon Name{getSortIndicator("status")}
                   </th>
                   <th>Action</th>
                 </tr>
               </thead>
 
               <tbody>
-                {bookings.map((booking) => (
-                  <tr key={booking.id}>
-                    <td className="manager-booking__id">{booking.id}</td>
-                    <td>
-                      <div className="manager-booking__customer">
-                        <span className="manager-booking__customer-name">
-                          {booking.customerName}
+                {searchResults &&
+                  searchResults.map((booking) => (
+                    <tr key={booking.id}>
+                      <td className="staff-booking__id">{booking.id}</td>
+                      <td>
+                        <div className="staff-booking__customer">
+                          <span className="staff-booking__customer-name">
+                            {booking.customerName}
+                          </span>
+                        </div>
+                      </td>
+
+                      <td className="staff-booking__discountAmount">
+                        {booking.stylistName}
+                      </td>
+                      <td>
+                        <span className={`staff-booking__quantity`}>
+                          {formatDate(booking.date)}
                         </span>
-                      </div>
-                    </td>
-                    <td className="manager-booking__discountAmount">
-                      {booking.stylistName}
-                    </td>
-                    <td>
-                      <span className={`manager-booking__quantity`}>
-                        {formatDate(booking.date)}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`manager-booking__quantity`}>
-                        {formatTime(booking.time)}
-                      </span>
-                    </td>
-                    <td className="manager-booking__date">
-                      {booking.salonName}
-                    </td>
-                    <td className="manager-booking__actions">
-                      <button
-                        className="manager-booking__action-button"
-                        onClick={() => toggleModal(booking.id)}
-                      >
-                        ✎
-                      </button>
-                      <button className="manager-booking__action-button">
-                        🗑
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td>
+                        <span className={`staff-booking__quantity`}>
+                          {booking.time ? formatTime(booking.time) : ""}
+                        </span>
+                      </td>
+                      <td className="staff-booking__status">
+                        {booking.status}
+                      </td>
+                      <td className="staff-booking__actions">
+                        <button
+                          className="staff-booking__action-button"
+                          onClick={() => toggleModal(booking.id)}
+                        >
+                          ✎
+                        </button>
+                        <button className="staff-booking__action-button">
+                          🗑
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
@@ -444,70 +507,109 @@ const ManagerBooking = () => {
 
       {isModalOpen && (
         <>
-          <div className="manager-booking-backdrop" onClick={toggleModal}>
+          <div className="staff-booking-backdrop" onClick={toggleModal}>
             <div
-              className="manager-booking-modal"
+              className="staff-booking-modal"
               onClick={(e) => e.stopPropagation()}
             >
               <form onSubmit={handleSubmit}>
-                <h2 className="manager-booking-modal__header">
-                  Update Booking
-                </h2>
-                <div className="manager-booking-modal__form-section">
-                  <div className="manager-booking-modal__form-grid">
-                    <div className="manager-booking-modal__form-grid manager-booking-modal__form-grid--half-width">
-                      <div className="manager-booking-modal__form-group">
+                <h2 className="staff-booking-modal__header">Update Booking</h2>
+                <div className="staff-booking-modal__form-section">
+                  <div className="staff-booking-modal__form-grid">
+                    <div className="staff-booking-modal__form-grid staff-booking-modal__form-grid--half-width">
+                      <div className="staff-booking-modal__form-group">
                         <label
                           htmlFor="customerName"
-                          className="manager-booking-modal__label"
+                          className="staff-booking-modal__label"
                         >
                           Customer Name:
                         </label>
                         <input
                           type="text"
                           id="customerName"
-                          className="manager-booking-modal__input"
+                          className="staff-booking-modal__input"
                           placeholder="Customer Name"
                           defaultValue={formData.customerName}
                           disabled
                         />
                       </div>
-                      <div className="manager-booking-modal__form-group">
+                      <div className="staff-booking-modal__form-group">
                         <label
                           htmlFor="voucherCode"
-                          className="manager-booking-modal__label"
+                          className="staff-booking-modal__label"
                         >
                           Voucher Code:
                         </label>
                         <input
                           type="text"
                           id="voucherCode"
-                          className="manager-booking-modal__input"
+                          className="staff-booking-modal__input"
                           placeholder="Voucher Code"
                           defaultValue={formData.voucherCode}
                           disabled
                         />
                       </div>
                     </div>
-                    <div className="manager-booking-modal__form-grid manager-booking-modal__form-grid--full-width">
-                      <div className="manager-booking-modal__form-group">
+
+                    <div
+                      className="staff-booking-modal__form-grid
+              staff-booking-modal__form-grid--half-width"
+                    >
+                      <div className="staff-booking-modal__form-group">
+                        <label
+                          htmlFor="stylistName"
+                          className="staff-booking-modal__label"
+                        >
+                          Stylist Name:
+                        </label>
+                        <select
+                          id="stylistName"
+                          className="staff-booking-modal__select"
+                          defaultValue={formData.stylistId || ""}
+                          onChange={handleStylistChange}
+                          disabled
+                        >
+                          <option value="" disabled>
+                            Select Stylist
+                          </option>
+                          {(stylists || []).map((item) => (
+                            <option key={item.accountid} value={item.accountid}>
+                              {item.fullname}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="staff-booking-modal__form-group">
+                        <label
+                          htmlFor="date"
+                          className="staff-booking-modal__label"
+                        >
+                          Date:
+                        </label>
+                        <input
+                          type="text"
+                          id="date"
+                          className="staff-booking-modal__input"
+                          placeholder="Date"
+                          value={formatDate(formData.date)}
+                          disabled
+                          onChange={handleDateChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="staff-booking-modal__form-grid staff-booking-modal__form-grid--full-width">
+                      <div className="staff-booking-modal__form-group">
                         <label
                           htmlFor="time"
-                          className="manager-booking-modal__label"
+                          className="staff-booking-modal__label"
                         >
                           Select Time:
                         </label>
-                        <div className="manager-booking-modal__slots-list">
+                        <div className="staff-booking-modal__slots-list">
                           {(slots || []).map((time) => (
                             <label
                               key={time.slotid}
-                              className={`manager-booking-modal__slots-option ${
-                                slotRealTime.some(
-                                  (item) => item.slotid === time.slotid
-                                )
-                                  ? ""
-                                  : "disabled"
-                              }`}
+                              className={`staff-booking-modal__slots-option disabled`}
                             >
                               <input
                                 type="radio"
@@ -515,18 +617,8 @@ const ManagerBooking = () => {
                                 value={time.slottime}
                                 checked={formData.time === time.slottime}
                                 onChange={handleTimeChange}
-                                disabled={
-                                  !slotRealTime.some(
-                                    (item) => item.slotid === time.slotid
-                                  )
-                                }
-                                className={`manager-booking-modal__radio ${
-                                  slotRealTime.some(
-                                    (item) => item.slotid === time.slotid
-                                  )
-                                    ? ""
-                                    : "disabled"
-                                }`}
+                                disabled
+                                className={`staff-booking-modal__radio disabled`}
                               />
                               <span>{formatTime(time.slottime)}</span>
                             </label>
@@ -534,75 +626,28 @@ const ManagerBooking = () => {
                         </div>
                       </div>
                     </div>
-
                     <div
-                      className="manager-booking-modal__form-grid
-              manager-booking-modal__form-grid--half-width"
+                      className="staff-booking-modal__form-grid
+                staff-booking-modal__form-grid--full-width"
                     >
-                      <div className="manager-booking-modal__form-group">
-                        <label
-                          htmlFor="date"
-                          className="manager-booking-modal__label"
-                        >
-                          Date:
-                        </label>
-                        <input
-                          type="text"
-                          id="date"
-                          className="manager-booking-modal__input"
-                          placeholder="Date"
-                          value={formatDate(formData.date)}
-                          disabled
-                          onChange={handleDateChange}
-                        />
-                      </div>
-                      <div className="manager-booking-modal__form-group">
-                        <label
-                          htmlFor="stylistName"
-                          className="manager-booking-modal__label"
-                        >
-                          Stylist Name:
-                        </label>
-                        <select
-                          id="stylistName"
-                          className="manager-booking-modal__select"
-                          defaultValue={formData.stylistId || ""}
-                          onChange={handleStylistChange}
-                        >
-                          <option value="" disabled>
-                            Select Stylist
-                          </option>
-                          {stylists.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item.fullname}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div
-                      className="manager-booking-modal__form-grid
-                manager-booking-modal__form-grid--full-width"
-                    >
-                      <div className="manager-booking-modal__form-group">
+                      <div className="staff-booking-modal__form-group">
                         <label
                           htmlFor="serviceName"
-                          className="manager-booking-modal__label"
+                          className="staff-booking-modal__label"
                         >
                           Service Name:
                         </label>
-                        <div className="manager-booking-modal__services-list">
+                        <div className="staff-booking-modal__services-list">
                           {(services || []).map((service) => (
                             <label
                               key={service.id}
-                              className="manager-booking-modal__option"
+                              className="staff-booking-modal__option"
                             >
                               <input
                                 type="checkbox"
                                 checked={selectedServices.includes(service.id)}
                                 onChange={() => handleServiceToggle(service.id)}
-                                className="manager-booking-modal__checkbox"
+                                className="staff-booking-modal__checkbox"
                               />
                               <span>{service.serviceName}</span>
                             </label>
@@ -611,20 +656,20 @@ const ManagerBooking = () => {
                       </div>
                     </div>
                     <div
-                      className="manager-booking-modal__form-grid
-                manager-booking-modal__form-grid--full-width"
+                      className="staff-booking-modal__form-grid
+                staff-booking-modal__form-grid--full-width"
                     >
-                      <div className="manager-booking-modal__form-group manager-booking-modal__form-group--full-width">
+                      <div className="staff-booking-modal__form-group staff-booking-modal__form-group--full-width">
                         <label
                           htmlFor="salon"
-                          className="manager-booking-modal__label"
+                          className="staff-booking-modal__label"
                         >
                           Select Salon:
                         </label>
                         <select
                           disabled
                           id="salon"
-                          className="manager-booking-modal__select"
+                          className="staff-booking-modal__select"
                           defaultValue={
                             formData.salonName ? formData.salonName : ""
                           }
@@ -632,7 +677,7 @@ const ManagerBooking = () => {
                           <option value="" disabled>
                             Select Salon
                           </option>
-                          {salonLocations.map((item) => (
+                          {(salonLocations || []).map((item) => (
                             <option key={item.id} value={item.address}>
                               {item.address}
                             </option>
@@ -660,4 +705,4 @@ const ManagerBooking = () => {
   );
 };
 
-export default ManagerBooking;
+export default StaffBooking;

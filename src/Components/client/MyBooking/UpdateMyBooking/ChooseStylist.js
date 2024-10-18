@@ -94,68 +94,67 @@ export function ChooseStylist({ onNext, onPre }) {
       if (stylist) {
         setSelectedStylistId(stylist.id); // Just ensure it is the ID
       }
-    }
-  }, [stylists]);
+    }}, [stylists]);
 
-  // Determine selected stylist object
-  const selectedStylist = stylists.find(
-    (stylist) => stylist.id === selectedStylistId
-  );
-
-  return (
-    <div className="myBooking__stylist">
-      <div className="myBooking__stylist-header">
-        <div onClick={onPre}>
-          <FaArrowLeft className="myBooking__stylist-icon" />
+    // Determine selected stylist object
+    const selectedStylist = stylists.find(
+      (stylist) => stylist.id === selectedStylistId
+    );
+  
+    return (
+      <div className="myBooking__stylist">
+        <div className="myBooking__stylist-header">
+          <div onClick={onPre}>
+            <FaArrowLeft className="myBooking__stylist-icon" />
+          </div>
+          <h1>Choose Stylist</h1>
         </div>
-        <h1>Choose Stylist</h1>
-      </div>
-      {selectedStylist && (
-        <>
-          <div className="myBooking__stylist-name">
-            <IoPersonOutline className="stylist-icon" />
-            <h1>{selectedStylist.fullname}</h1>
-          </div>
-          <div className="myBooking__stylist-info">
-            <p>Stylist: {selectedStylist.fullname}</p>
-            {/* Additional stylist details can be displayed here if needed */}
-          </div>
-        </>
-      )}
-      <Swiper
-        className="myBooking__stylist-lists"
-        slidesPerView={3}
-        navigation={true}
-        modules={[Navigation]}
-      >
-        {stylists.map((stylist) => (
-          <SwiperSlide key={stylist.id}>
-            <div
-              onClick={() => handleSelected(stylist)}
-              className={`myBooking__stylist-single ${
-                selectedStylistId === stylist.id ? "selected" : ""
-              }`}
-            >
-              <img alt={stylist.fullname} src={stylist.image} />
-              <p>{stylist.fullname}</p>
+        {selectedStylist && (
+          <>
+            <div className="myBooking__stylist-name">
+              <IoPersonOutline className="stylist-icon" />
+              <h1>{selectedStylist.fullname}</h1>
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      <button
-        className="myBooking__stylist-btn btn flex"
-        onClick={(e) => {
-          if (!selectedStylistId) {
-            e.preventDefault();
-          } else {
-            sessionStorage.setItem("selectedStylistId", selectedStylistId); // Store only the ID
-            onNext();
-          }
-        }}
-      >
-        Next Step
-        <FaArrowRight className="myBooking__stylist-icon" />
-      </button>
-    </div>
-  );
-}
+            <div className="myBooking__stylist-info">
+              <p>Stylist: {selectedStylist.fullname}</p>
+              {/* Additional stylist details can be displayed here if needed */}
+            </div>
+          </>
+        )}
+        <Swiper
+          className="myBooking__stylist-lists"
+          slidesPerView={3}
+          navigation={true}
+          modules={[Navigation]}
+        >
+          {stylists.map((stylist) => (
+            <SwiperSlide key={stylist.id}>
+              <div
+                onClick={() => handleSelected(stylist)}
+                className={`myBooking__stylist-single ${
+                  selectedStylistId === stylist.id ? "selected" : ""
+                }`}
+              >
+                <img alt={stylist.fullname} src={stylist.image} />
+                <p>{stylist.fullname}</p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <button
+          className="myBooking__stylist-btn btn flex"
+          onClick={(e) => {
+            if (!selectedStylistId) {
+              e.preventDefault();
+            } else {
+              sessionStorage.setItem("selectedStylistId", selectedStylistId); // Store only the ID
+              onNext();
+            }
+          }}
+        >
+          Next Step
+          <FaArrowRight className="myBooking__stylist-icon" />
+        </button>
+      </div>
+    );
+  }

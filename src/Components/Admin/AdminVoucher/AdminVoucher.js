@@ -42,15 +42,14 @@ const AdminVoucher = ({ buttonLabel }) => {
     fetchVouchers();
   }, [isUpdate]);
 
-  const fetchVoucherData = async (voucherId) => {
+  const fetchVoucherData = async (code) => {
     try {
-      const response = await api.get(`vouchers/${voucherId}`);
+      const response = await api.get(`voucher/${code}`);
       const data = response.data.result;
-
       if (data) {
         setFormData((prev) => ({
           ...prev,
-          id: voucherId,
+          id: data.id,
           code: data.code || "",
           name: data.name || "",
           expiryDate: data.expiryDate || "",
@@ -82,15 +81,15 @@ const AdminVoucher = ({ buttonLabel }) => {
     };
 
     console.log(updateValues);
-
+    console.log(formData.id);
     setLoading(true);
     try {
       const response = await api.put(
-        `voucher`,
+        `voucher/${formData.id}`,
         updateValues
       );
       const data = response.data.result;
-
+      console.log(response);
       if (data) {
 
         setFormData((prev) => ({
@@ -164,9 +163,9 @@ const AdminVoucher = ({ buttonLabel }) => {
     navigate("/admin/voucher/create");
   };
 
-  const toggleModal = async (voucherId) => {
-    if (voucherId) {
-      await fetchVoucherData(voucherId);
+  const toggleModal = async (code) => {
+    if (code) {
+      await fetchVoucherData(code);
     }
     setIsModalOpen(!isModalOpen);
   };
@@ -243,7 +242,7 @@ const AdminVoucher = ({ buttonLabel }) => {
                     <td className="admin-voucher__actions">
                       <button
                         className="admin-voucher__action-button"
-                        onClick={() => toggleModal(voucher.id)}
+                        onClick={() => toggleModal(voucher.code)}
                       >
                         ✎
                       </button>

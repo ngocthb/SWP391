@@ -45,6 +45,12 @@ import StylistSchedule from "../Components/Stylist/StylistSchedule/StylistSchedu
 import StylistFeedback from "../Components/Stylist/StylistFeedback/StylistFeedback";
 import StylistDashboard from "../Components/Stylist/StylistDashboard/StylistDashboard";
 import StylistSalary from "../Components/Stylist/StylistSalary/StylistSalary";
+import StaffLayout from "../Layouts/staff/StaffLayout";
+import StaffPayment from "../Components/Staff/StaffPayment/StaffPayment";
+import StaffBooking from "../Components/Staff/StaffBooking/StaffBooking";
+import StaffCreateBooking from "../Components/Staff/StaffCreateBooking/StaffCreateBooking";
+import StaffBookingService from "../Components/Staff/StaffBookingService/StaffBookingService";
+import StaffPaymentConfirm from "../Components/Staff/StaffPaymentConfirm/StaffPaymentConfirm";
 export const Routes = [
   {
     path: "/",
@@ -298,5 +304,33 @@ export const Routes = [
         element: <StylistSalary />,
       },
     ],
+    path: "staff",
+    element: (
+      /*<PrivateRoute requiredRole="ADMIN">
+      <AdminLayout />
+    </PrivateRoute>*/ <StaffLayout />
+    ),
+    children: [
+      {
+        path: "payment/:bookingId",
+        element: <StaffPayment />,
+      },
+      {
+        path: "booking",
+        element: <StaffBooking buttonLabel={"New Booking"} />,
+      },
+      {
+        path: "booking/create",
+        element: <StaffCreateBooking />,
+      },
+      {
+        path: "booking-service",
+        element: <StaffBookingService />,
+      },
+    ],
+  },
+  {
+    path: "payment/confirm",
+    element: <StaffPaymentConfirm />,
   },
 ];

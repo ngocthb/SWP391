@@ -16,7 +16,7 @@ import loginUser from "../../../data/loginUser";
 import { useDispatch, useSelector } from "react-redux";
 import { Spin } from "antd";
 import uploadFile from "../../../utils/upload";
-import { updateStylist } from "../../../actions/Update";
+import { updateStaff, updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
 import {genders} from "../../../data/gender";
 
@@ -85,7 +85,7 @@ export default function ManagerStaff({ buttonLabel }) {
 
   const fetchStaffData = async (accountid) => {
     try {
-      const response = await api.get(`staffs/${accountid}`);
+      const response = await api.get(`staff/${accountid}`);
       const data = response.data.result;
 
       if (data) {
@@ -190,7 +190,7 @@ export default function ManagerStaff({ buttonLabel }) {
           salonId: salonId,
           image: selectedFile || prev.image,
         }));
-        dispatch(updateStylist());
+        dispatch(updateStaff());
         toggleModal();
       }
     } catch (err) {
@@ -284,23 +284,6 @@ export default function ManagerStaff({ buttonLabel }) {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        <div className="manager-staff__pagination">
-          <p>Showing 1-8 from {staffs.length} data</p>
-          <div className="manager-staff__pagination-pages">
-            <span>
-              {/* <i class="fas fa-chevron-left"></i> */}
-              <FaAngleLeft className="pagination-icon" />
-            </span>
-            <span className="active">1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>
-              {/* <i class="fas fa-chevron-right"></i> */}
-              <FaChevronRight className="pagination-icon" />
-            </span>
           </div>
         </div>
       </div>
