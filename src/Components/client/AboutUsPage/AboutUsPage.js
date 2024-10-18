@@ -47,18 +47,18 @@ export default function AboutUsPage() {
               <div className="iconLoaderProgress">
                 <svg
                   className="iconLoaderProgressFirst"
-                  width="300"
-                  height="300"
+                  width="500"
+                  height="500"
                 >
-                  <circle cx="150" cy="150" r="125"></circle>
+                  <circle cx="250" cy="250" r="175"></circle>
                 </svg>
 
                 <svg
                   className="iconLoaderProgressSecond"
-                  width="300"
-                  height="300"
+                  width="500"
+                  height="500"
                 >
-                  <circle cx="150" cy="150" r="125"></circle>
+                  <circle cx="250" cy="250" r="175"></circle>
                 </svg>
               </div>
             </div>
@@ -99,6 +99,8 @@ export default function AboutUsPage() {
           <div className=" AboutUsPage__main">
             {feedback.map((feed) => (
               <AboutUsPageSwiperSlide
+                arrows
+                infinite={false}
                 key={feed.id}
                 className="AboutUsPageSwiperSlide"
               >

@@ -38,17 +38,17 @@ const Login = () => {
       sessionStorage.setItem("token", token);
       dispatch(setRole(role));
 
-     if (role === "ADMIN") {
-      navigate("/admin/dashboard");
-     }else if (role === "BRANCH_MANAGER"){
-      navigate("/manager/dashboard");
-     }else if (role === "STYLIST") {
-      navigate("/stylist")
-     }else if (role === "STAFF") {
-      navigate("/staff")
-     }else{
-      navigate("/");
-     }
+      if (role === "ADMIN") {
+        navigate("/admin/dashboard");
+      } else if (role === "BRANCH_MANAGER") {
+        navigate("/manager/dashboard");
+      } else if (role === "STYLIST") {
+        navigate("/stylist");
+      } else if (role === "STAFF") {
+        navigate("/staff");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
       messageApi.open({

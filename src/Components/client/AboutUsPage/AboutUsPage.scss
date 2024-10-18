@@ -110,8 +110,8 @@
       }
       .loader-image {
         position: absolute;
-        width: 220px;
-        height: 220px;
+        width: 330px;
+        height: 330px;
         border-radius: 50%;
         z-index: 500;
         transform: none;
@@ -201,8 +201,6 @@
   }
 
   &__container {
-    display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 50px;

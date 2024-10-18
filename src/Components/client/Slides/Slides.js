@@ -2,38 +2,21 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from "react";
 import "./Slides.scss";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
 import slides from "../../../data/slides.js";
-import { Autoplay, Pagination } from "swiper/modules";
 import { Link, useNavigate } from "react-router-dom";
+import { Carousel } from "antd";
 
 const image = slides;
 export default function Slides() {
   const navigate = useNavigate();
-  const handleBooking = () =>{
+  const handleBooking = () => {
     navigate("/booking/step1");
-  }
+  };
   return (
     <>
-      <Swiper
-        slidesPerView={1}
-        spaceBetween={30}
-        centeredSlides={true}
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
-        pagination={{
-          clickable: true,
-        }}
-        modules={[Autoplay, Pagination]}
-        className="mySwiper"
-      >
+      <Carousel autoplay={true} speed={1000} effect="fade">
         {image.map((item) => (
-          <SwiperSlide key={item.id}>
+          <div key={item.id}>
             <section className="slides">
               <img src={item.srcImg} />
               <div className="slides__content">
@@ -43,14 +26,14 @@ export default function Slides() {
                   <span>{item.subTitle}</span>
                 </h1>
                 <p>{item.description}</p>
-                <Link to={""} className="slides__btn" >
+                <Link to={""} className="slides__btn">
                   Read More
                 </Link>
               </div>
             </section>
-          </SwiperSlide>
+          </div>
         ))}
-      </Swiper>
+      </Carousel>
       <div className="homeCard grid center">
         <div className="homeCard-booking">
           <input
@@ -58,7 +41,9 @@ export default function Slides() {
             placeholder="Enter a phone number to make an appointment"
           ></input>
         </div>
-        <button className="slides__btn btn" onClick={handleBooking}>Booking Now</button>
+        <button className="slides__btn btn" onClick={handleBooking}>
+          Booking Now
+        </button>
       </div>
     </>
   );

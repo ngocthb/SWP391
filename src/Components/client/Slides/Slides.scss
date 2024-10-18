@@ -65,14 +65,13 @@
       border-radius: 4rem;
 
       &:hover {
-        background: rgba(178, 178, 178, 0.45);
+        background: #12344d;
         color: var(--WhiteColor);
       }
     }
   }
 
   img {
-    z-index: 000;
     position: absolute;
     top: 0;
     left: 0;
@@ -244,10 +243,15 @@
         font-weight: 650;
         line-height: 3rem;
         margin-bottom: 20px;
+        span {
+          font-size: 1.5rem;
+          font-weight: 700;
+          line-height: 1rem;
+        }
       }
 
       p {
-        font-size: 13px;
+        font-size: 18px;
       }
 
       a {

@@ -56,7 +56,7 @@ export default function MyBooking() {
 
   useEffect(() => {
     fetchBookingHistory();
-  }, [accountId, activeTab]);
+  }, [accountId, activeTab, bookingHistory]);
 
   const showModal = (bookingId) => {
     if (bookingId) {

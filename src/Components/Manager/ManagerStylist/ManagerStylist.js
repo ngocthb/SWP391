@@ -279,7 +279,7 @@ export default function ManagerStylist({ buttonLabel }) {
           <div className="manager-stylist__header">
             <div className="manager-stylist__header-searchBar">
               <BiSearchAlt className="searchBar-icon" />
-              {/* <i class="fas fa-search"></i> */}
+
               <input placeholder="Search here..." type="text" />
             </div>
             <div className="manager-stylist__header-filter">

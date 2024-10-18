@@ -7,6 +7,7 @@ import {
   ScissorOutlined,
   ContactsOutlined,
   DashboardOutlined,
+  ScheduleOutlined,
 } from "@ant-design/icons";
 import { RiCustomerService2Line } from "react-icons/ri";
 import { Link, useLocation } from "react-router-dom";
@@ -47,6 +48,11 @@ function MenuSider() {
       label: <Link to="/manager/customer">Customer</Link>,
       icon: <PlusOutlined />,
       key: "/manager/customer",
+    },
+    {
+      label: <Link to="/manager/shift">Shift</Link>,
+      icon: <ScheduleOutlined />,
+      key: "/manager/shift",
     },
   ];
 

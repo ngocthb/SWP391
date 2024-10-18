@@ -20,6 +20,7 @@ const pageNames = {
   "/manager/staff": "Staff",
   "/manager/staff/create": "New Staff",
   "/manager/customer": "Customer",
+  "/manager/shift": "Shift",
 };
 
 const ManagerHeader = () => {
@@ -134,11 +135,7 @@ const ManagerHeader = () => {
                 />
                 <div>
                   <h2>{managerInfo.fullname}</h2>
-                  <p>
-                    {managerInfo.role
-                      ? formatRole(managerInfo.role)
-                      : ""}
-                  </p>
+                  <p>{managerInfo.role ? formatRole(managerInfo.role) : ""}</p>
                 </div>
               </div>
               <Link to="#">

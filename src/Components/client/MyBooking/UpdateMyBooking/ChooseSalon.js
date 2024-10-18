@@ -45,9 +45,10 @@ export function ChooseSalon({ onClose, onNext }) {
         );
         // const data = response.data[0];
         const data = response.data.result;
+        console.log(data);
         if (data) {
           const foundSalon = salonLocations.find(
-            (item) => parseInt(item.id, 10) === data.salonId
+            (item) => item.address === data.salonName
           );
           const salonId = foundSalon ? foundSalon.id : null;
           if (salonId) {

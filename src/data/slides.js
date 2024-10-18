@@ -1,8 +1,7 @@
 const slides = [
   {
     id: 1,
-    srcImg:
-      "https://i.pinimg.com/564x/69/06/09/690609bde4be41eff2612447d214f5f7.jpg",
+    srcImg: require("../Assets/banner-1.jpg"),
     title: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -10,8 +9,7 @@ const slides = [
   },
   {
     id: 2,
-    srcImg:
-      "https://i.pinimg.com/564x/3f/af/49/3faf4974c2f67018ca2b543d1b9aadd5.jpg",
+    srcImg: require("../Assets/banner-2.jpg"),
     title: "Tempora maiores facilis vitae officia itaque.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -19,8 +17,7 @@ const slides = [
   },
   {
     id: 3,
-    srcImg:
-      "https://i.pinimg.com/564x/05/ef/c7/05efc751769f34dad0f319ff7ba555a3.jpg",
+    srcImg: require("../Assets/banner-3.jpg"),
     title: "Repellat deleniti inventore rerum distinctio.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -28,8 +25,7 @@ const slides = [
   },
   {
     id: 4,
-    srcImg:
-      "https://i.pinimg.com/564x/13/33/ae/1333ae0373dff3cbd8095c9b2f4617e4.jpg",
+    srcImg: require("../Assets/banner-4.jpg"),
     title: "Consequuntur similique quaerat aut cum.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -37,8 +33,7 @@ const slides = [
   },
   {
     id: 5,
-    srcImg:
-      "https://i.pinimg.com/736x/af/73/ef/af73efcd862bee7490276bb38ef38b61.jpg",
+    srcImg: require("../Assets/banner-5.jpg"),
     title: "Consequuntur similique quaerat aut cum.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:

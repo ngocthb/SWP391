@@ -45,3 +45,9 @@ export const updateBooking = () => {
     type: "UPDATE_BOOKING",
   };
 };
+
+export const updateShift = () => {
+  return {
+    type: "UPDATE_SHIFT",
+  };
+};

@@ -49,13 +49,13 @@ export default function Feedback({ bookingHistory, accountId }) {
 
   const fetchFeedback = async () => {
     try {
-      // const response = await api.get(`feedback?bookingId=${bookingId}`);
-      // const data = response.data[0];
+      const response = await api.get(`feedback?bookingId=${bookingId}`);
+      const data = response.data[0];
 
-      const response = await api.get(`feedback/${bookingId}`);
-      const data = response.data.result;
+      // const response = await api.get(`feedback/${bookingId}`);
+      // const data = response.data.result;
 
-      if (data) {
+      if (data !== "Not feedback yet") {
         console.log(data);
         setIsDisabled(true);
         const foundFeedback = feedBackData.find(

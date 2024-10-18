@@ -110,17 +110,22 @@ export function ChooseService({ onNext, onPre }) {
           // `bookingHistory?bookingId=${bookingId}`
           `booking/${bookingId}`
         );
-        // const data = response.data[0];
         const data = response.data.result;
+        console.log(data.serviceName);
         if (data) {
-          const dataServiceId = data.serviceId.map((id) => Number(id));
-          const dataService = services.filter((service) =>
-            dataServiceId.includes(Number(service.id))
+          const dataServiceName = data.serviceName;
+          const selectedServiceNames = dataServiceName.map(
+            (service) => service
           );
-          const foundService = dataService.map((service) => service.id);
-
+          console.log(selectedServiceNames);
+          const foundService = services.filter((service) =>
+            selectedServiceNames.includes(service.serviceName)
+          );
+          // Store only the IDs of the found services
+          console.log(foundService);
           if (foundService) {
-            setSelectedServices(foundService);
+            setSelectedServices(foundService.map((service) => service.id));
+            console.log(selectedServices);
           }
           const foundVoucher = voucher.find(
             (item) => item.id === data.voucherId

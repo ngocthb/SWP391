@@ -1,4 +1,4 @@
-.admin-layout {
+.stylist-layout {
   &__inner {
     display: flex;
     flex-direction: column; // Ensure that inner elements stack vertically
@@ -41,7 +41,7 @@
 
 // Add media query for responsiveness if needed
 @media (max-width: 768px) {
-  .admin-layout__content {
+  .stylist-layout__content {
     margin-left: 0 !important;
   }
 }

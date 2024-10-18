@@ -38,6 +38,13 @@ import AdminManager from "../Components/Admin/AdminManager/AdminManager";
 import AdminCustomer from "../Components/Admin/AdminCustomer/AdminCustomer";
 import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
 import AdminCreateManager from "../Components/Admin/AdminCreateManager/AdminCreateManager";
+import ManagerShift from "../Components/Manager/ManagerShift/ManagerShift";
+import ManagerCreateShift from "../Components/Manager/ManagerCreateShift/ManagerCreateShift";
+import StylistLayout from "../Layouts/stylist";
+import StylistSchedule from "../Components/Stylist/StylistSchedule/StylistSchedule";
+import StylistFeedback from "../Components/Stylist/StylistFeedback/StylistFeedback";
+import StylistDashboard from "../Components/Stylist/StylistDashboard/StylistDashboard";
+import StylistSalary from "../Components/Stylist/StylistSalary/StylistSalary";
 export const Routes = [
   {
     path: "/",
@@ -108,9 +115,11 @@ export const Routes = [
   },
   {
     path: "manager",
-    element: /*<PrivateRoute requiredRole="BRANCH_MANAGER">
+    element: (
+      /*<PrivateRoute requiredRole="BRANCH_MANAGER">
     <ManagerLayout />
-  </PrivateRoute>*/ <ManagerLayout />,
+  </PrivateRoute>*/ <ManagerLayout />
+    ),
     children: [
       {
         path: "stylist",
@@ -143,6 +152,14 @@ export const Routes = [
       {
         path: "staff/create",
         element: <ManagerCreateStaff />,
+      },
+      {
+        path: "shift",
+        element: <ManagerShift />,
+      },
+      {
+        path: "shift/create",
+        element: <ManagerCreateShift />,
       },
     ],
   },
@@ -211,6 +228,74 @@ export const Routes = [
       {
         path: "customer",
         element: <AdminCustomer buttonLabel={"New Customer"} />,
+      },
+    ],
+  },
+  {
+    path: "admin",
+    element: (
+      /*<PrivateRoute requiredRole="ADMIN">
+      <AdminLayout />
+    </PrivateRoute>*/ <AdminLayout />
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <ManagerDashboard />,
+      },
+      {
+        path: "service",
+        element: <AdminService />,
+      },
+      {
+        path: "service/create",
+        element: <AdminCreateService />,
+      },
+      {
+        path: "voucher",
+        element: <AdminVoucher buttonLabel={"New Voucher"} />,
+      },
+      {
+        path: "voucher/create",
+        element: <AdminCreateVoucher />,
+      },
+      {
+        path: "manager",
+        element: <AdminManager buttonLabel={"New Manager"} />,
+      },
+      {
+        path: "manager/create",
+        element: <AdminCreateManager />,
+      },
+      {
+        path: "customer",
+        element: <AdminCustomer buttonLabel={"New Customer"} />,
+      },
+    ],
+  },
+  {
+    path: "stylist",
+    element: (
+      /*<PrivateRoute requiredRole="ADMIN">
+      <AdminLayout />
+    </PrivateRoute>*/ <StylistLayout />
+    ),
+    children: [
+      {
+        path: "schedule",
+        element: <StylistSchedule />,
+      },
+      {
+        path: "feedback",
+        element: <StylistFeedback />,
+      },
+      {
+        path: "dashboard",
+        element: <StylistDashboard />,
+      },
+      {
+        path: "salary",
+        element: <StylistSalary />,
       },
     ],
   },

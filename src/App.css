@@ -60,7 +60,7 @@ li {
 }
 
 .btn:hover {
-  background: hsl(240, 1%, 48%);
+  background: #12344d;
 }
 
 .btn a {
