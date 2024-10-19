@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import eyeOff from "../../../Assets/eye-off.svg";
-import eye from "../../../Assets/eye.svg";
+import eyeOff from "Assets/eye-off.svg";
+import eye from "Assets/eye.svg";
 import './ConfirmPassword.scss';
 import api from '../../../config/axios';
 import { message, Spin } from 'antd';

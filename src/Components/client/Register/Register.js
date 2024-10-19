@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import eyeOff from "../../../Assets/eye-off.svg";
-import eye from "../../../Assets/eye.svg";
-import { ReactComponent as GoogleIcon } from "../../../Assets/GoogleIcon.svg";
+import eyeOff from "Assets/eye-off.svg";
+import eye from "Assets/eye.svg";
+import { ReactComponent as GoogleIcon } from "Assets/GoogleIcon.svg";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 import "./Register.scss";
