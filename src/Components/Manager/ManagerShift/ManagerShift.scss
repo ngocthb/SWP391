@@ -107,6 +107,7 @@
   &__stylist {
     display: flex;
     align-items: center;
+    img{object-fit: cover;}
   }
 
   &__status {

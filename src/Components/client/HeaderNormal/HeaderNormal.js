@@ -131,7 +131,7 @@ export default function HeaderNormal() {
                       <div className="content__infor">
                         <div>
                           <h3>{userInfo.fullname || ""}</h3>
-                          <p>{formatRole(userInfo.role) || "User"}</p>
+                          <p>{userInfo.role ?formatRole(userInfo.role) : "User"}</p>
                         </div>
                         <div>
                           <img
@@ -151,7 +151,7 @@ export default function HeaderNormal() {
                           />
                           <div>
                             <h2>{userInfo.fullname || ""}</h2>
-                            <p>{userInfo.role(userInfo.role) || "User"}</p>
+                            <p>{userInfo.role ?formatRole(userInfo.role) : "User"}</p>
                           </div>
                         </div>
                         <Link to="/user/profile">

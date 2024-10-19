@@ -45,7 +45,7 @@ const Login = () => {
       } else if (role === "STYLIST") {
         navigate("/stylist");
       } else if (role === "STAFF") {
-        navigate("/staff");
+        navigate("/staff/booking");
       } else {
         navigate("/");
       }

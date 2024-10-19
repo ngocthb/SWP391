@@ -76,7 +76,7 @@ const StaffCreateBooking = () => {
     fetchData("salons", setSalonLocations);
     fetchData("slot/read", setSlots);
     fetchData("service", setServices);
-    
+    console.log(services);
   }, []);
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const StaffCreateBooking = () => {
       }
     };
 
-    fetchData(`slot${selectedDate}`, setSlotRealTime);
+    fetchData(`slot/${formatDateForInput(selectedDate)}`, setSlotRealTime);
   }, [selectedDate]);
 
   useEffect(() => {
@@ -100,6 +100,7 @@ const StaffCreateBooking = () => {
       try {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
+        console.log(data);
         if (data) {
           setStaff(data);
         }
@@ -114,23 +115,26 @@ const StaffCreateBooking = () => {
 
   useEffect(() => {
     const fetchStylists = async () => {
-      const serviceId = staff.map((item) => item.serviceId);
+      console.log(selectedServices);
       const foundSlot = slots.find((item) => item.slottime === formData.time);
       const slotId = foundSlot ? foundSlot.slotid : null;
       const bookingValue = {
         salonId: staff.salonId,
-        serviceId: serviceId,
+        serviceId: selectedServices,
         date: formatDateForInput(selectedDate),
         slotId: slotId,
       };
-
+      console.log(bookingValue);
       try {
-        const response = await api.post(`booking/stylist/update`, bookingValue);
+        const response = await api.post(`booking/stylists/update`, bookingValue);
         const data = response.data.result;
+        console.log(data);
         if (data) {
           setStylists(data);
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchStylists();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -154,11 +158,11 @@ const StaffCreateBooking = () => {
     const slotId = foundSlot ? foundSlot.slotid : null;
     const createValues = {
       salonId: Number(staff.salonId),
-      phone: e.target[0].value,
-      date: formatDateForInput(selectedDate),
+      phoneNumber: e.target[0].value,
+      bookingDate: formatDateForInput(selectedDate),
       slotId: slotId,
       serviceId: selectedServicesId,
-      stylistId: 0,
+      stylistId: Number(formData.stylistId),
       voucherId: 0,
     };
 
@@ -172,6 +176,7 @@ const StaffCreateBooking = () => {
         navigate("/staff/booking");
       }
     } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -320,7 +325,6 @@ const StaffCreateBooking = () => {
                         >
                           <input
                             type="checkbox"
-                            checked={selectedServices.includes(service.id)}
                             onChange={() => handleServiceToggle(service.id)}
                             className="staff-create-booking__checkbox"
                           />

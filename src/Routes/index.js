@@ -51,6 +51,7 @@ import StaffBooking from "../Components/Staff/StaffBooking/StaffBooking";
 import StaffCreateBooking from "../Components/Staff/StaffCreateBooking/StaffCreateBooking";
 import StaffBookingService from "../Components/Staff/StaffBookingService/StaffBookingService";
 import StaffPaymentConfirm from "../Components/Staff/StaffPaymentConfirm/StaffPaymentConfirm";
+import StaffVNPayQR from "../Components/Staff/StaffVNPayQR/StaffVNPayQR";
 export const Routes = [
   {
     path: "/",
@@ -304,6 +305,8 @@ export const Routes = [
         element: <StylistSalary />,
       },
     ],
+  },
+  {
     path: "staff",
     element: (
       /*<PrivateRoute requiredRole="ADMIN">
@@ -332,5 +335,9 @@ export const Routes = [
   {
     path: "payment/confirm",
     element: <StaffPaymentConfirm />,
+  },
+  {
+    path: "payment/VNPay",
+    element: <StaffVNPayQR/>
   },
 ];

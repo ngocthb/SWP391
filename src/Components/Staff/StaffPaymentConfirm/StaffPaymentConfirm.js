@@ -26,6 +26,7 @@ const StaffPaymentConfirm = () => {
       vnp_CardType: params.get("vnp_CardType"),
       vnp_ResponseCode: params.get("vnp_ResponseCode"),
       vnp_TxnRef: params.get("vnp_TxnRef"),
+      vnp_Amount: Number(params.get("vnp_Amount"))
     };
     return result;
   }
@@ -38,10 +39,10 @@ const StaffPaymentConfirm = () => {
   useEffect(() => {
     const fetchPayment = async () => {
       try {
-//         const response =
-//           await api.get(`payment/response?vnp_BankCode=${result.vnp_BankCode}&vnp_CardType=${result.vnp_CardType}&vnp_ResponseCode=${result.vnp_ResponseCode}&vnp_TxnRef=${result.vnp_TxnRef}
-// `);
-        const response = await api.get("payment");
+        const response =
+          await api.get(`payment/response?vnp_BankCode=${result.vnp_BankCode}&vnp_CardType=${result.vnp_CardType}&vnp_ResponseCode=${result.vnp_ResponseCode}&vnp_TxnRef=${result.vnp_TxnRef}
+`);
+        
         const data = response.data;
         if (data) {
           setTransactionId(data.match(/Transaction ID:\s*(\d+)/)[1]);
@@ -58,7 +59,7 @@ const StaffPaymentConfirm = () => {
         const response = await api.put(`checkout?transactionId=${transactionId}`)
         const data = response.data.result;
         if (data) {
-          
+        
         }
       } catch (error) {
         
@@ -77,7 +78,7 @@ const StaffPaymentConfirm = () => {
         <h1 className="payment-confirmation__title">PAYMENT SUCCESSFUL</h1>
         <div className="payment-confirmation__details">
           <p>
-            Order ID: #{orderNumber} - Total amount: {formatPrice(totalAmount)}{" "}
+            Total amount: {formatPrice((result.vnp_Amount/100).toString())}{" "}
             VND
           </p>
           <p>Payment method: VNPay</p>

@@ -45,7 +45,7 @@ const StaffHeader = () => {
   useEffect(() => {
     const fetchManagerData = async () => {
       try {
-        const response = await api.get(`staff/profile`);
+        const response = await api.get(`manager/profile`);
         const data = response.data.result;
         console.log(data);
         if (data) {

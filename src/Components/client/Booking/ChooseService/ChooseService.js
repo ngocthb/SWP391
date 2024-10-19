@@ -357,11 +357,8 @@ export default function ChooseService() {
             <span className="footer__pay-services">
               Total Pay :{" "}
               {formatCurrency(
-                (selectedService || []).reduce((total, serviceId) => {
-                  const service = services.find(
-                    (service) => service.id === serviceId
-                  );
-                  return total + (service ? service.price : 0);
+                (selectedService || []).reduce((total, service) => {
+                  return total + service.price;
                 }, 0) *
                   (1 - (selectVoucher ? selectVoucher.discountAmount / 100 : 0)) // Apply discount
               )}

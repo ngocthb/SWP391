@@ -74,7 +74,7 @@ const ManagerBooking = () => {
 
   useEffect(() => {
     if (formData.serviceId) {
-      setSelectedServices(formData.serviceId.map(id => id.toString()));
+      setSelectedServices(formData.serviceId);
     }
   }, [formData.serviceId]);
 
@@ -85,321 +85,312 @@ const ManagerBooking = () => {
         : [...prevSelected, serviceId];
 
       setSelectedServices(newSelected);
-      return newSelected;
-    });
-  };
-
-  useEffect(() => {
-    const fetchData = async (endpoint, setter) => {
-      try {
-        const response = await api.get(endpoint);
-        if (response.data) {
-          setter(response.data.result);
-        }
-      } catch (error) {
-        console.error(`Error fetching ${endpoint}:`, error);
-      }
+      return newSelected;});
     };
-
-    fetchData("salons", setSalonLocations);
-    fetchData("vouchers", setVouchers);
-    fetchData("service", setServices);
-    fetchData("stylist/read", setAllStylists);
-    fetchData("slot/read", setSlots);
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async (endpoint, setter) => {
-      try {
-        const response = await api.get(endpoint);
-        if (response.data) {
-          setter(response.data.result);
+  
+    useEffect(() => {
+      const fetchData = async (endpoint, setter) => {
+        try {
+          const response = await api.get(endpoint);
+          if (response.data) {
+            setter(response.data.result);
+          }
+        } catch (error) {
+          console.error(`Error fetching ${endpoint}:`, error);
         }
-      } catch (error) {
-        console.error(`Error fetching ${endpoint}:`, error);
-      }
-    };
-
-    fetchData(`slot/${selectedDate}`, setSlotRealTime);
-  }, [selectedDate]);
-
-  useEffect(() => {
-    const fetchManagerData = async () => {
-      setLoading(true);
+      };
+  
+      fetchData("salons", setSalonLocations);
+      fetchData("vouchers", setVouchers);
+      fetchData("service", setServices);
+      fetchData("stylist/read", setAllStylists);
+      fetchData("slot/read", setSlots);
+    }, []);
+  
+    useEffect(() => {
+      const fetchData = async (endpoint, setter) => {
+        try {
+          const response = await api.get(endpoint);
+          if (response.data) {
+            setter(response.data.result);
+          }
+        } catch (error) {
+          console.error(`Error fetching ${endpoint}:`, error);
+        }
+      };
+  
+      fetchData(`slot/${selectedDate}`, setSlotRealTime);
+    }, [selectedDate]);
+  
+    useEffect(() => {
+      const fetchManagerData = async () => {
+        setLoading(true);
+        try {
+          const response = await api.get(`manager/profile`);
+          const data = response.data.result;
+          if (data) {
+            setManager(data);
+          }
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchManagerData();
+    }, []);
+  
+    useEffect(() => {
+      const fetchBookings = async () => {
+        try {
+          const response = await api.get(
+            `manager/stylists/booking/${manager.salonId}/${formatDateForInput(
+              selectedDate
+            )}`
+          );
+          const data = response.data.result;
+  
+          if (data) {
+            setBookings(data);
+            setOriginalBookings(data);
+          }
+        } catch (error) {}
+      };
+  
+      fetchBookings();
+    }, [isUpdate, manager, selectedDate]);
+  
+    const fetchBookingData = async (bookingId) => {
       try {
-        const response = await api.get(`manager/profile`);
+        const response = await api.get(`booking/${bookingId}`);
         const data = response.data.result;
+        console.log(data);
         if (data) {
-          setManager(data);
+          const foundSalon = salonLocations.find(
+            (item) => item.address === data.salonName
+          );
+          const salonId = foundSalon ? foundSalon.id : null;
+  
+          const foundVoucher = vouchers.find(
+            (item) => item.code === data.voucherCode
+          );
+          const voucherId = foundVoucher ? foundVoucher.id : null;
+  
+          const foundStylist = allStylist.find(
+            (item) => item.fullname === data.stylistName
+          );
+          const stylistId = foundStylist ? foundStylist.accountid : null;
+  
+          setFormData((prev) => ({
+            ...prev,
+            bookingId: bookingId,
+            customerId: data.customerId,
+            voucherId: Number(voucherId),
+            bookingDate: data.date,
+            stylistId: stylistId,
+            serviceId: data.serviceId,
+            salonId: Number(salonId),
+            customerName: data.customerName,
+            stylistName: data.stylistName,
+            date: data.date,
+            time: data.time,salonName: data.salonName,
+            voucherCode: data.voucherCode,
+            serviceName: data.serviceName,
+          }));
         }
       } catch (err) {
         console.error(err);
+      }
+    };
+  
+    useEffect(() => {
+      if (isModalOpen) {
+        if (formData.bookingId) {
+          fetchBookingData(formData.bookingId);
+          fetchStylistsData();
+        }
+      }
+    }, [isModalOpen]);
+    const fetchStylistsData = async () => {
+      const foundSlot = slots.find((item) => item.slottime === formData.time);
+      const slotId = foundSlot ? foundSlot.slotid : null;
+      const value = {
+        salonId: formData.salonId,
+        serviceId: formData.serviceId,
+        date: formData.bookingDate,
+        slotId: slotId,
+      };
+      console.log(value);
+      try {
+        const response = await api.post("booking/stylists/update", value);
+        const data = response.data.result;
+        console.log(data[0].id);
+        if (data) {
+          setStylists(data);
+          setFormData((prev) => ({
+            ...prev,
+            stylistId: data[0].id,
+          }));
+        }
+      } catch (error) {}
+    };
+  
+    const updateCustomerData = async (e) => {
+      e.preventDefault();
+      const foundSlot = slots.find((item) => item.slottime === formData.time);
+      const slotId = foundSlot ? foundSlot.slotid : null;
+  
+      const updateValues = {
+        customerId: formData.customerId,
+        voucherId: formData.voucherId,
+        slotId: slotId,
+        bookingDate: formData.bookingDate,
+        stylistId: formData.stylistId,
+        serviceId: selectedServices.map(Number),
+        salonId: formData.salonId,
+      };
+      setLoading(true);
+      console.log(updateValues);
+      try {
+        const response = await api.put(
+          `booking/${formData.bookingId}`,
+          updateValues
+        );
+        const data = response.data.result;
+        console.log(data);
+        if (data) {
+          dispatch(updateBooking());
+          toggleModal();
+        }
+      } catch (err) {
       } finally {
         setLoading(false);
       }
     };
-    fetchManagerData();
-  }, []);
-
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const response = await api.get(
-          `manager/stylists/booking/${manager.salonId}/${formatDateForInput(
-            selectedDate
-          )}`
-        );
-        const data = response.data.result;
-
-        if (data) {
-          setBookings(data);
-          setOriginalBookings(data);
+  
+    const sortBy = (key) => {
+      let direction = "ascending";
+  
+      if (sortConfig.key === key) {
+        if (sortConfig.direction === "ascending") {
+          direction = "descending";
+        } else if (sortConfig.direction === "descending") {
+          direction = null;
         }
-      } catch (error) {}
+      }
+  
+      setSortConfig({ key, direction });
+  
+      let sortedBookings;
+  
+      if (direction === null) {
+        sortedBookings = [...originalBookings];
+      } else {
+        sortedBookings = [...bookings].sort((a, b) => {
+          if (key === "discountAmount") {
+            return direction === "ascending"
+              ? parseFloat(a[key]) - parseFloat(b[key])
+              : parseFloat(b[key]) - parseFloat(a[key]);
+          }
+          if (a[key] < b[key]) return direction === "ascending" ? -1 : 1;
+          if (a[key] > b[key]) return direction === "ascending" ? 1 : -1;
+          return 0;
+        });
+      }
+  
+      setBookings(sortedBookings);
     };
-
-    fetchBookings();
-  }, [isUpdate, manager, selectedDate]);
-
-  const fetchBookingData = async (bookingId) => {
-    try {
-      const response = await api.get(`booking/${bookingId}`);
-      const data = response.data.result;
-
-      if (data) {
-        const foundSalon = salonLocations.find(
-          (item) => item.address === data.salonName
-        );
-        const salonId = foundSalon ? foundSalon.id : null;
-
-        const foundVoucher = vouchers.find(
-          (item) => item.code === data.voucherCode
-        );
-        const voucherId = foundVoucher ? foundVoucher.id : null;
-
-        const foundStylist = allStylist.find(
-          (item) => item.fullname === data.stylistName
-        );
-        const stylistId = foundStylist ? foundStylist.accountid : null;
-
-        const foundServices = services.filter((service) =>
-          data.serviceName.includes(service.serviceName)
-        );
-        const serviceIds = foundServices.map((service) => Number(service.id));
-
-        setFormData((prev) => ({
-          ...prev,
-          bookingId: bookingId,
-          customerId: data.customerId,
-          voucherId: Number(voucherId),
-          bookingDate: data.date,
-          stylistId: stylistId,
-          serviceId: serviceIds,
-          salonId: Number(salonId),
-          customerName: data.customerName,
-          stylistName: data.stylistName,
-          date: data.date,
-          time: data.time,
-          salonName: data.salonName,
-          voucherCode: data.voucherCode,
-          serviceName: data.serviceName,
-        }));
+  
+    const getSortIndicator = (key) => {
+      if (sortConfig.key === key) {
+        if (sortConfig.direction === "ascending") return " ▲";if (sortConfig.direction === "descending") return " ▼";
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    if (isModalOpen) {
-      if (formData.bookingId) {
-        fetchBookingData(formData.bookingId);
-        fetchStylistsData();
-      }
-    }
-  }, [isModalOpen]);
-  const fetchStylistsData = async () => {
-    const foundSlot = slots.find((item) => item.slottime === formData.time);
-    const slotId = foundSlot ? foundSlot.slotid : null;
-    const value = {
-      salonId: formData.salonId,
-      serviceId: formData.serviceId,
-      date: formData.bookingDate,
-      slotId: slotId,
+      return "";
     };
-
-    try {
-      const response = await api.post("booking/stylists/update", value);
-      const data = response.data.result;
-      console.log(data[0].id);
-      if (data) {
-        setStylists(data);
-        setFormData((prev) => ({
-          ...prev,
-          stylistId: data[0].id,
-        }));
+  
+    const toggleModal = async (id) => {
+      if (id) {
+        await fetchBookingData(id);
       }
-    } catch (error) {}
-  };
-
-  const updateCustomerData = async (e) => {
-    e.preventDefault();
-    const foundSlot = slots.find((item) => item.slottime === formData.time);
-    const slotId = foundSlot ? foundSlot.slotid : null;
-
-    const updateValues = {
-      customerId: formData.customerId,
-      voucherId: formData.voucherId,
-      slotId: slotId,
-      bookingDate: formData.bookingDate,
-      stylistId: formData.stylistId,
-      serviceId: selectedServices.map(Number),
-      salonId: formData.salonId,
+      setIsModalOpen(!isModalOpen);
     };
-    setLoading(true);
-    console.log(updateValues);
-    try {
-      const response = await api.put(
-        `booking/${formData.bookingId}`,
-        updateValues
-      );
-      const data = response.data.result;
-      console.log(data);
-      if (data) {
-        dispatch(updateBooking());
-        toggleModal();
-      }
-    } catch (err) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const sortBy = (key) => {
-    let direction = "ascending";
-
-    if (sortConfig.key === key) {
-      if (sortConfig.direction === "ascending") {
-        direction = "descending";
-      } else if (sortConfig.direction === "descending") {
-        direction = null;
-      }
-    }
-
-    setSortConfig({ key, direction });
-
-    let sortedBookings;
-
-    if (direction === null) {
-      sortedBookings = [...originalBookings];
-    } else {
-      sortedBookings = [...bookings].sort((a, b) => {
-        if (key === "discountAmount") {
-          return direction === "ascending"
-            ? parseFloat(a[key]) - parseFloat(b[key])
-            : parseFloat(b[key]) - parseFloat(a[key]);
-        }
-        if (a[key] < b[key]) return direction === "ascending" ? -1 : 1;
-        if (a[key] > b[key]) return direction === "ascending" ? 1 : -1;
-        return 0;
-      });
-    }
-
-    setBookings(sortedBookings);
-  };
-
-  const getSortIndicator = (key) => {
-    if (sortConfig.key === key) {
-      if (sortConfig.direction === "ascending") return " ▲";
-      if (sortConfig.direction === "descending") return " ▼";
-    }
-    return "";
-  };
-
-  const toggleModal = async (id) => {
-    if (id) {
-      await fetchBookingData(id);
-    }
-    setIsModalOpen(!isModalOpen);
-  };
-
-  const handleSubmit = (e) => {
-    updateCustomerData(e);
-  };
-
-  const formatDate = (dateInput) => {
-    const date = new Date(dateInput);
-    if (isNaN(date)) return "";
-    const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" });
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${dayOfWeek} (${day}/${month}/${year})`;
-  };
-
-  const formatTime = (time) => {
-    const [hours, minutes] = time.split(":").map(Number);
-    return `${hours.toString().padStart(2, "0")}h${minutes
-      .toString()
-      .padStart(2, "0")}`;
-  };
-
-  return (
-    <>
-      <div className="manager-booking">
-        <div className="manager-booking__header">
-          <div className="manager-booking__header-searchBar">
-            <BiSearchAlt className="searchBar-icon" />
-            {/* <i class="fas fa-search"></i> */}
-            <input placeholder="Search here..." type="text" />
+  
+    const handleSubmit = (e) => {
+      updateCustomerData(e);
+    };
+  
+    const formatDate = (dateInput) => {
+      const date = new Date(dateInput);
+      if (isNaN(date)) return "";
+      const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" });
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${dayOfWeek} (${day}/${month}/${year})`;
+    };
+  
+    const formatTime = (time) => {
+      const [hours, minutes] = time.split(":").map(Number);
+      return `${hours.toString().padStart(2, "0")}h${minutes
+        .toString()
+        .padStart(2, "0")}`;
+    };
+  
+    return (
+      <>
+        <div className="manager-booking">
+          <div className="manager-booking__header">
+            <div className="manager-booking__header-searchBar">
+              <BiSearchAlt className="searchBar-icon" />
+              {/* <i class="fas fa-search"></i> */}
+              <input placeholder="Search here..." type="text" />
+            </div>
+            <div className="manager-booking__header-filter">
+              <select
+                value={
+                  selectedDate.toDateString() === today.toDateString()
+                    ? "today"
+                    : "tomorrow"
+                }
+                onChange={handleDateChangeFilter}
+              >
+                <option value="today">Today, {formatDate(today)}</option>
+                <option value="tomorrow">Tomorrow, {formatDate(tomorrow)}</option>
+              </select>
+            </div>
           </div>
-          <div className="manager-booking__header-filter">
-            <select
-              value={
-                selectedDate.toDateString() === today.toDateString()
-                  ? "today"
-                  : "tomorrow"
-              }
-              onChange={handleDateChangeFilter}
-            >
-              <option value="today">Today, {formatDate(today)}</option>
-              <option value="tomorrow">Tomorrow, {formatDate(tomorrow)}</option>
-            </select>
-          </div>
-        </div>
-        <div className="manager-booking__container">
-          <div className="manager-booking__content">
-            <table className="manager-booking__table">
-              <thead>
-                <tr>
-                  <th onClick={() => sortBy("id")}>
-                    ID{getSortIndicator("id")}
-                  </th>
-                  <th onClick={() => sortBy("customerName")}>
-                    Customer Name{getSortIndicator("customerName")}
-                  </th>
-
-                  <th onClick={() => sortBy("stylistName")}>
-                    Stylist Name{getSortIndicator("stylistName")}
-                  </th>
-                  <th onClick={() => sortBy("date")}>
-                    Date{getSortIndicator("date")}
-                  </th>
-
-                  <th onClick={() => sortBy("time")}>
-                    Time{getSortIndicator("time")}
-                  </th>
-                  <th onClick={() => sortBy("salonName")}>
-                    Salon Name{getSortIndicator("salonName")}
-                  </th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {bookings.map((booking) => (
-                  <tr key={booking.id}>
-                    <td className="manager-booking__id">{booking.id}</td>
+          <div className="manager-booking__container">
+            <div className="manager-booking__content">
+              <table className="manager-booking__table">
+                <thead>
+                  <tr>
+                    <th onClick={() => sortBy("id")}>
+                      ID{getSortIndicator("id")}
+                    </th>
+                    <th onClick={() => sortBy("customerName")}>
+                      Customer Name{getSortIndicator("customerName")}
+                    </th>
+  
+                    <th onClick={() => sortBy("stylistName")}>
+                      Stylist Name{getSortIndicator("stylistName")}
+                    </th>
+                    <th onClick={() => sortBy("date")}>
+                      Date{getSortIndicator("date")}
+                    </th>
+  
+                    <th onClick={() => sortBy("time")}>
+                      Time{getSortIndicator("time")}
+                    </th>
+                    <th onClick={() => sortBy("status")}>
+                      Status{getSortIndicator("status")}
+                    </th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+  
+                <tbody>
+                  {bookings.map((booking) => (
+                    <tr key={booking.id}><td className="manager-booking__id">{booking.id}</td>
                     <td>
                       <div className="manager-booking__customer">
                         <span className="manager-booking__customer-name">
@@ -421,7 +412,7 @@ const ManagerBooking = () => {
                       </span>
                     </td>
                     <td className="manager-booking__date">
-                      {booking.salonName}
+                      {booking.status}
                     </td>
                     <td className="manager-booking__actions">
                       <button
@@ -471,8 +462,7 @@ const ManagerBooking = () => {
                           defaultValue={formData.customerName}
                           disabled
                         />
-                      </div>
-                      <div className="manager-booking-modal__form-group">
+                      </div><div className="manager-booking-modal__form-group">
                         <label
                           htmlFor="voucherCode"
                           className="manager-booking-modal__label"
@@ -535,8 +525,7 @@ const ManagerBooking = () => {
                       </div>
                     </div>
 
-                    <div
-                      className="manager-booking-modal__form-grid
+                    <div className="manager-booking-modal__form-grid
               manager-booking-modal__form-grid--half-width"
                     >
                       <div className="manager-booking-modal__form-group">
@@ -601,63 +590,62 @@ const ManagerBooking = () => {
                               <input
                                 type="checkbox"
                                 checked={selectedServices.includes(service.id)}
-                                onChange={() => handleServiceToggle(service.id)}
-                                className="manager-booking-modal__checkbox"
-                              />
-                              <span>{service.serviceName}</span>
-                            </label>
-                          ))}
+                                onChange={() => handleServiceToggle(service.id)}className="manager-booking-modal__checkbox"
+                                />
+                                <span>{service.serviceName}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="manager-booking-modal__form-grid
+                  manager-booking-modal__form-grid--full-width"
+                      >
+                        <div className="manager-booking-modal__form-group manager-booking-modal__form-group--full-width">
+                          <label
+                            htmlFor="salon"
+                            className="manager-booking-modal__label"
+                          >
+                            Select Salon:
+                          </label>
+                          <select
+                            disabled
+                            id="salon"
+                            className="manager-booking-modal__select"
+                            defaultValue={
+                              formData.salonName ? formData.salonName : ""
+                            }
+                          >
+                            <option value="" disabled>
+                              Select Salon
+                            </option>
+                            {salonLocations.map((item) => (
+                              <option key={item.id} value={item.address}>
+                                {item.address}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                       </div>
                     </div>
-                    <div
-                      className="manager-booking-modal__form-grid
-                manager-booking-modal__form-grid--full-width"
-                    >
-                      <div className="manager-booking-modal__form-group manager-booking-modal__form-group--full-width">
-                        <label
-                          htmlFor="salon"
-                          className="manager-booking-modal__label"
-                        >
-                          Select Salon:
-                        </label>
-                        <select
-                          disabled
-                          id="salon"
-                          className="manager-booking-modal__select"
-                          defaultValue={
-                            formData.salonName ? formData.salonName : ""
-                          }
-                        >
-                          <option value="" disabled>
-                            Select Salon
-                          </option>
-                          {salonLocations.map((item) => (
-                            <option key={item.id} value={item.address}>
-                              {item.address}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
                   </div>
-                </div>
-                <div className="manager-stylist-modal__button-container">
-                  <button
-                    type="submit"
-                    className="manager-stylist-modal__button"
-                    disabled={loading}
-                  >
-                    {loading ? <Spin size="small" /> : "Save"}
-                  </button>
-                </div>
-              </form>
+                  <div className="manager-stylist-modal__button-container">
+                    <button
+                      type="submit"
+                      className="manager-stylist-modal__button"
+                      disabled={loading}
+                    >
+                      {loading ? <Spin size="small" /> : "Save"}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
-        </>
-      )}
-    </>
-  );
-};
-
-export default ManagerBooking;
+          </>
+        )}
+      </>
+    );
+  };
+  
+  export default ManagerBooking;

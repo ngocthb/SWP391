@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./StaffPayment.scss";
 import api from "../../../config/axios";
-import { useLocation, useParams } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const paymentMethod = [
@@ -87,7 +87,7 @@ const StaffPayment = () => {
       handleVNPayPayment();
     }
   };
-
+  const navigate = useNavigate();
   const handleCashPayment = async () => {
     try {
       const response = await api.put(`checkout?bookingId=${bookingId}`);
@@ -99,19 +99,27 @@ const StaffPayment = () => {
           title: data,
           timer: 2500
         });
+        navigate("/staff/booking-service")
       }
     } catch (error) {
       console.error(error)
     }
   };
   
+  const [paymentUrl, setPaymentUrl] = useState("");
+
   const handleVNPayPayment = async () => {
     try {
       const response = await api.get(`Pay/${bookingId}`);
-      const paymentUrl = response.data;
-      window.location.href = paymentUrl;
+      // const paymentUrl = response.data;
+      setPaymentUrl(response.data);
+      const totalAmount = discountAmount > 0 
+      ? Math.floor(subTotal - (subTotal * discountAmount) / 100)
+      : subTotal;
+      navigate("/payment/VNPay", { state: { paymentUrl, totalAmount, bookingId } });
+      // window.location.href = paymentUrl;
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   };
 
@@ -120,6 +128,7 @@ const StaffPayment = () => {
   };
 
   return (
+    <>
     <div className="staff-payment">
       <div className="staff-payment__container">
         <div className="staff-payment__left">
@@ -279,6 +288,8 @@ const StaffPayment = () => {
         </div>
       </div>
     </div>
+  
+    </>
   );
 };
 
