@@ -5,7 +5,7 @@ import { AiFillInstagram } from "react-icons/ai";
 import { FaTwitter } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import "./Footer.scss";
-import logoBlue from "../../../Assets/logo_blue_noBackground.png";
+import logoBlue from "Assets/logo_blue_noBackground.png";
 
 export default function Footer() {
   const location = useLocation();

@@ -12,7 +12,7 @@ import {
   SwiperSlide as AboutUsPageSwiperSlide,
 } from "swiper/react";
 import "./AboutUsPage.scss";
-import video from "../../../Assets/video2.mp4";
+import video from "Assets/video2.mp4";
 import feedback from "../../../data/feedback";
 export default function AboutUsPage() {
   return (

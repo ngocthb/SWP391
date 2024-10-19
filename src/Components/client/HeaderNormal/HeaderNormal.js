@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import api from "../../../config/axios.js";
 import loginUser from "../../../data/loginUser.js";
-import logoWhite from "../../../Assets/logo_white_noBackground.png";
+import logoWhite from "Assets/logo_white_noBackground.png";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
 

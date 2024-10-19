@@ -403,49 +403,6 @@ export default function ChooseService() {
                 <FaArrowRight className="chooseService-icon" />
               </Link>
             </div>
-<<<<<<< HEAD
-          ))}
-
-          <div className="footer__promo">
-            <span onClick={showModal} className="footer__promo-action">
-              Voucher
-            </span>
-            <span>{selectVoucher.code}</span>
-          </div>
-
-          <div className="footer__pay">
-            <div className="footer__pay-content">
-              <span className="footer__pay-services">
-                Selected services : {selectedService.length}
-              </span>
-              <span className="footer__pay-services">
-                Total Duration : {calculateTotalDuration() || "0"}
-              </span>
-            </div>
-            <span className="footer__pay-services">
-              Pay :{" "}
-              {formatCurrency(
-                (selectedService || []).reduce(
-                  (total, service) => total + service.price,
-                  0
-                )
-              )}
-            </span>
-            <span className="footer__pay-services">
-              Discount : {selectVoucher.discountAmount}
-              {"%"}
-            </span>
-            <span className="footer__pay-services">
-              Total Pay :{" "}
-              {formatCurrency(
-                (selectedService || []).reduce((total, service) => {
-                  return total + service.price;
-                }, 0) *
-                  (1 - (selectVoucher ? selectVoucher.discountAmount / 100 : 0)) // Apply discount
-              )}
-            </span>
-=======
->>>>>>> dde247a6a6d19af8c4da204d8dc9fd04052c4388
           </div>
         </div>
       </div>
