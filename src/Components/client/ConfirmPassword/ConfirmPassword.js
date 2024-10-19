@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import eyeOff from "Assets/eye-off.svg";
-import eye from "Assets/eye.svg";
 import './ConfirmPassword.scss';
 import api from '../../../config/axios';
 import { message, Spin } from 'antd';
@@ -86,7 +84,7 @@ const ConfirmPassword = () => {
                 required
               />
               <img
-                src={passwordVisible ? eyeOff : eye}
+                src={passwordVisible ? "assets/eye-off.svg" : "assets/eye.svg"}
                 alt="Eye Icon"
                 onClick={handlePasswordVisibility}
               />
@@ -100,7 +98,7 @@ const ConfirmPassword = () => {
                 required
               />
               <img
-                src={confirmPasswordVisible ? eyeOff : eye}
+                src={confirmPasswordVisible ? "assets/eye-off.svg" : "assets/eye.svg"}
                 alt="Eye Icon"
                 onClick={handleConfirmPasswordVisibility}
               />

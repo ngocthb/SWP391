@@ -1,7 +1,5 @@
 import "./AboutUs.scss";
 
-import video from "Assets/video.mp4";
-
 export default function AboutUs() {
   return (
     <section className="about section">
@@ -60,7 +58,7 @@ export default function AboutUs() {
               </p>
             </div>
             <div className="about__cardVideo">
-              <video src={video} autoPlay loop muted type="video/mp4"></video>
+              <video src="assets/video.mp4" autoPlay loop muted type="video/mp4"></video>
             </div>
           </div>
         </div>

@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import eyeOff from "Assets/eye-off.svg";
-import eye from "Assets/eye.svg";
-import { ReactComponent as GoogleIcon } from "Assets/GoogleIcon.svg";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 import "./Register.scss";
@@ -83,10 +80,6 @@ const Register = () => {
         </div>
         <div className="signup__right-side">
           <h1>Sign Up</h1>
-          <button className="signup__button-google">
-            <GoogleIcon />
-            Sign up with Google
-          </button>
           <form className="signup__form" onSubmit={handleSubmit}>
             <label htmlFor="email">Email</label>
             <input type="email" required id="email" />
@@ -102,7 +95,7 @@ const Register = () => {
                 required
               />
               <img
-                src={passwordVisible ? eyeOff : eye}
+               src={passwordVisible ? "assets/eye-off.svg" : "assets/eye.svg"}
                 alt="Eye Icon"
                 onClick={handlePasswordVisibility}
               />
@@ -115,7 +108,7 @@ const Register = () => {
                 required
               />
               <img
-                src={confirmPasswordVisible ? eyeOff : eye}
+                src={confirmPasswordVisible ? "assets/eye-off.svg" : "assets/eye.svg"}
                 alt="Eye Icon"
                 onClick={handleConfirmPasswordVisibility}
               />

@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import api from "../../../config/axios.js";
 import loginUser from "../../../data/loginUser.js";
-import logoWhite from "Assets/logo_white_noBackground.png";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
 
@@ -80,7 +79,7 @@ export default function HeaderNormal() {
           <div className="header-normalSection__header-logo">
             <Link to={"/"} onClick={handleHomeClick}>
               <h1 className="flex">
-                <img src={logoWhite} alt="logo" />
+                <img src="assets/logo_white_noBackground.png" alt="logo" />
                 F-Salon
               </h1>
             </Link>

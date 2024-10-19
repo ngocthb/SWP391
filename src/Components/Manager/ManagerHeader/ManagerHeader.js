@@ -2,8 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import logo from "Assets/logo.png";
-import logoFold from "Assets/logo_blue_noBackground.png";
 import { collapse } from "../../../actions/Collapse";
 import "./ManagerHeader.scss";
 import api from "../../../config/axios";
@@ -99,7 +97,7 @@ const ManagerHeader = () => {
       >
         <img
           onClick={handleGoback}
-          src={collapsed ? logoFold : logo}
+          src={collapsed ? "assets/logo_blue_noBackground.png" : "assets/logo.png"}
           alt={collapsed ? "Logo Fold" : "Logo"}
         />
       </div>

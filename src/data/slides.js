@@ -1,7 +1,8 @@
+
 const slides = [
   {
     id: 1,
-    srcImg: require("../Assets/banner-1.jpg"),
+    srcImg: "assets/banner-1.jpg",
     title: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -9,7 +10,7 @@ const slides = [
   },
   {
     id: 2,
-    srcImg: require("../Assets/banner-2.jpg"),
+    srcImg: "assets/banner-2.jpg",
     title: "Tempora maiores facilis vitae officia itaque.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -17,7 +18,7 @@ const slides = [
   },
   {
     id: 3,
-    srcImg: require("../Assets/banner-3.jpg"),
+    srcImg: "assets/banner-3.jpg",
     title: "Repellat deleniti inventore rerum distinctio.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -25,7 +26,7 @@ const slides = [
   },
   {
     id: 4,
-    srcImg: require("../Assets/banner-4.jpg"),
+    srcImg: "assets/banner-4.jpg",
     title: "Consequuntur similique quaerat aut cum.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -33,7 +34,7 @@ const slides = [
   },
   {
     id: 5,
-    srcImg: require("../Assets/banner-5.jpg"),
+    srcImg: "assets/banner-5.jpg",
     title: "Consequuntur similique quaerat aut cum.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:

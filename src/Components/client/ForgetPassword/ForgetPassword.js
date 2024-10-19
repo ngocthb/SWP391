@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ReactComponent as GoogleIcon } from "../../../Assets/GoogleIcon.svg";
 import "./ForgetPassword.scss";
 import api from "../../../config/axios";
 import { message, Spin } from "antd";
@@ -135,10 +134,6 @@ const ForgetPassword = () => {
         </div>
         <div className="forget-password__right-side">
           <h1>Forget Password</h1>
-          <button className="forget-password__button-google">
-            <GoogleIcon />
-            Sign in with Google
-          </button>
           <form className="forget-password__form" onSubmit={handleSubmit}>
             <label htmlFor="email">Email</label>
             <input type="email" required id="email" />

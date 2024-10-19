@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import eyeOff from "/Assets/eye-off.svg";
-import eye from "Assets/eye.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { ReactComponent as GoogleIcon } from "Assets/GoogleIcon.svg";
 import api from "../../../config/axios";
 import "./Login.scss";
 import { message, Spin } from "antd";
@@ -149,7 +146,7 @@ const Login = () => {
         <div className="signin__right-side">
           <h1>Welcome back</h1>
           <button className="signin__button-google" onClick={handleLoginGoogle}>
-            <GoogleIcon />
+            <img src="assets/GoogleIcon.svg" alt=""/>
             Sign in with Google
           </button>
           <form className="signin__form" onSubmit={handleSubmit}>
@@ -163,7 +160,7 @@ const Login = () => {
                 required
               />
               <img
-                src={passwordVisible ? eyeOff : eye}
+                src={passwordVisible ? "assets/eye-off.svg" : "assets/eye.svg"}
                 alt="Eye Icon"
                 onClick={handlePasswordVisibility}
               />

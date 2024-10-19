@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import loginUser from "../../../data/loginUser.js";
 import api from "../../../config/axios.js";
 import { useSelector } from "react-redux";
-import logoWhite from "Assets/logo_white_noBackground.png";
 import { TbLogout } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 
@@ -103,7 +102,7 @@ export default function Header() {
         <div className="navBarSection__header-logo">
           <Link to="/" onClick={handleHomeClick}>
             <h1 className="flex">
-              <img src={logoWhite} alt="logo" />
+              <img src="assets/logo_white_noBackground.png" alt="logo" />
               F-Salon
             </h1>
           </Link>
