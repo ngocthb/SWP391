@@ -14,6 +14,7 @@ export default function ManagerCreateShift() {
   const [selectShift, setSelectShift] = useState([]);
   const [loading, setLoading] = useState(false);
   const [stylistsData, setStylistsData] = useState([]);
+  const [availableStylist, setAvailableStylist] = useState([]);
   const [salonId, setSalonId] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
@@ -33,6 +34,9 @@ export default function ManagerCreateShift() {
       const formattedDate = value.format("YYYY-MM-DD");
       setSelectedDay(formattedDate);
     };
+    const disabledDate = (current) => {
+      return current && current < dayjs().startOf("day");
+    };
 
     return (
       <div style={wrapperStyle}>
@@ -40,6 +44,7 @@ export default function ManagerCreateShift() {
           fullscreen={false}
           onSelect={onSelect}
           value={dayjs(selectDay)}
+          disabledDate={disabledDate}
         />
       </div>
     );
@@ -57,7 +62,7 @@ export default function ManagerCreateShift() {
   useEffect(() => {
     const fetchManagerData = async () => {
       try {
-        const response = await api.get(`manager/profile`);
+        const response = await api.get(`manager-profile`);
         const data = response.data.result;
         if (data) {
           setSalonId(data.salonId);
@@ -71,23 +76,34 @@ export default function ManagerCreateShift() {
 
   useEffect(() => {
     fetchShiftData();
+    console.log(availableStylist);
   }, [selectDay, stylistsData]);
 
   const fetchShiftData = async () => {
-    const stylistValue = {
-      date: selectDay,
-      salonId: salonId,
-    };
-
     try {
-      // const response = await api.post(`stylist/schedule${selectDay}${salonId}`);
-      //const data  = response.data.result
-      const response = await api.get(
-        `stylist/schedule/${selectDay}/${salonId}`,
-        stylistValue
-      );
-      const data = response.data.result;
-      if (data) setIsRightDay(!data.length > 0);
+      ///stylist/schedule/{date}/{salonId}
+      const response = await api.get(`shift?workingDate=${selectDay}`);
+      const data = response.data;
+
+      if (data) {
+        const enrichedData = data.map((shift) => {
+          const stylist = stylistsData.find(
+            (stylist) => stylist.fullname === shift.stylistName
+          );
+          return {
+            ...shift,
+            stylistId: stylist ? stylist.id : null,
+            image: stylist ? stylist.image : null,
+          };
+        });
+
+        const filteredData = stylistsData.filter((stylist) => {
+          return !enrichedData.some(
+            (avai) => Number(avai.stylistId) === Number(stylist.id)
+          );
+        });
+        setAvailableStylist(filteredData);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -95,14 +111,16 @@ export default function ManagerCreateShift() {
 
   useEffect(() => {
     fetchStylistsData();
-  }, [salonId, isRightDay]);
+  }, [salonId]);
+
+  //lấy tất cả stylist tại salon đó
   const fetchStylistsData = async () => {
     try {
-      const response = await api.get(`/stylist/salon/${salonId}`);
-      const data = response.data.result;
+      // const response = await api.get(`/stylist/salon/${salonId}`);
+      // const data = response.data.result;
 
-      // const response = await api.get(`stylist-salon`);
-      // const data = response.data;
+      const response = await api.get(`stylist-salon?salonId=${salonId}`);
+      const data = response.data;
       if (data) {
         setStylistsData(data);
       }
@@ -264,47 +282,47 @@ export default function ManagerCreateShift() {
                   <th>Shift 3</th>
                 </tr>
               </thead>
-              {isRightDay ? (
-                <tbody>
-                  {(stylistsData || []).map((stylist) => (
-                    <tr key={stylist.id}>
-                      <td className="manager-create-shift__id">{stylist.id}</td>
-                      <td>
-                        <div className="manager-create-shift__stylist">
-                          <img
-                            src={stylist.image}
-                            alt={stylist.fullname}
-                            className="manager-customer__customer-image"
-                          />
-                          <span className="manager-create-shift__stylist-name">
-                            {stylist.fullname}
-                          </span>
-                        </div>
+
+              <tbody>
+                {(availableStylist || []).map((stylist) => (
+                  <tr key={stylist.id}>
+                    <td className="manager-create-shift__id">{stylist.id}</td>
+                    <td>
+                      <div className="manager-create-shift__stylist">
+                        <img
+                          src={stylist.image}
+                          alt={stylist.fullname}
+                          className="manager-customer__customer-image"
+                        />
+                        <span className="manager-create-shift__stylist-name">
+                          {stylist.fullname}
+                        </span>
+                      </div>
+                    </td>
+                    {[1, 2, 3].map((shift) => (
+                      <td key={`${shift}-${stylist.id}`}>
+                        <Checkbox
+                          onChange={(e) => handleSelect(stylist.id, shift, e)}
+                          checked={selectShift.some(
+                            (entry) =>
+                              entry.stylistId === stylist.id &&
+                              entry.shiftId.includes(shift)
+                          )}
+                        >
+                          {selectShift.some(
+                            (entry) =>
+                              entry.stylistId === stylist.id &&
+                              entry.shiftId.includes(shift)
+                          )
+                            ? "Scheduled"
+                            : "Available"}
+                        </Checkbox>
                       </td>
-                      {[1, 2, 3].map((shift) => (
-                        <td key={`${shift}-${stylist.id}`}>
-                          <Checkbox
-                            onChange={(e) => handleSelect(stylist.id, shift, e)}
-                            checked={selectShift.some(
-                              (entry) =>
-                                entry.stylistId === stylist.id &&
-                                entry.shiftId.includes(shift)
-                            )}
-                          >
-                            {selectShift.some(
-                              (entry) =>
-                                entry.stylistId === stylist.id &&
-                                entry.shiftId.includes(shift)
-                            )
-                              ? "Scheduled"
-                              : "Available"}
-                          </Checkbox>
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              ) : (
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+              {/* ) : (
                 <tbody>
                   <tr>
                     <td colSpan={5}>
@@ -315,7 +333,7 @@ export default function ManagerCreateShift() {
                     </td>
                   </tr>
                 </tbody>
-              )}
+              )} */}
             </table>
             {isRightDay && (
               <div className="manager-create-shift__button-container">

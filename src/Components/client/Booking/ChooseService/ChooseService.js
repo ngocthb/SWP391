@@ -228,101 +228,182 @@ export default function ChooseService() {
       </div>
 
       <div className="chooseService__container">
-        <div className="chooseService__container-header">
-          <Link to="/booking/step1">
-            <FaArrowLeft className="chooseService-icon" />
-          </Link>
-          <h1>Choose service</h1>
-        </div>
-        <div className="chooseService__container-search">
-          <IoSearchOutline className="chooseService-icon" />
-          <input
-            ref={inputRef}
-            placeholder="Search for services..."
-            value={searchValue}
-            onChange={handleChange}
-          />
-          <IoCloseCircle
-            className="chooseService-closeIcon"
-            onClick={handleClick}
-          />
-        </div>
-        <div className="chooseService__container-locations">
-          F-Salon has the following services :
-        </div>
-        <div className="chooseService__container-lists">
-          {searchResults &&
-            searchResults.map((service) => (
-              <div key={service.id} className="chooseService__card">
-                <img alt="service banner" src={service.image} />
-                <div className="card__content">
-                  <h2>{service.serviceName}</h2>
-                  <div className="card__content-time">
-                    <LuClock className="card-icon" />
-                    <span>{formatDuration(service.duration)}</span>
-                  </div>
-                  <p
+        <div className="chooseService__container-left">
+          <div className="chooseService__container-header">
+            <Link to="/booking/step1">
+              <FaArrowLeft className="chooseService-icon" />
+            </Link>
+            <h1>Choose service</h1>
+          </div>
+          <div className="chooseService__container-search">
+            <IoSearchOutline className="chooseService-icon" />
+            <input
+              ref={inputRef}
+              placeholder="Search for services..."
+              value={searchValue}
+              onChange={handleChange}
+            />
+            <IoCloseCircle
+              className="chooseService-closeIcon"
+              onClick={handleClick}
+            />
+          </div>
+          <div className="chooseService__container-locations">
+            F-Salon has the following services :
+          </div>
+          <div className="chooseService__container-lists">
+            {searchResults &&
+              searchResults.map((service) => (
+                <div key={service.id} className="chooseService__card">
+                  <img alt="service banner" src={service.image} />
+                  <div className="card__content">
+                    <h2>{service.serviceName}</h2>
+                    <div className="card__content-time">
+                      <LuClock className="card-icon" />
+                      <span>{formatDuration(service.duration)}</span>
+                    </div>
+                    <p
                       dangerouslySetInnerHTML={{
                         __html: DOMPurify.sanitize(service.description || ""),
                       }}
                     />
-                  <div className="card__content-action">
-                    <div className="card__content-price">
-                      Price: {formatCurrency(service.price)}
+                    <div className="card__content-action">
+                      <div className="card__content-price">
+                        Price: {formatCurrency(service.price)}
+                      </div>
+                      <button
+                        className={`card__content-add ${
+                          isServiceSelected(service.id) ? "disabled" : ""
+                        }`}
+                        onClick={() => {
+                          if (!isServiceSelected(service.id)) {
+                            setSelectedService((prev) => [...prev, service]);
+                          }
+                        }}
+                        disabled={isServiceSelected(service.id)}
+                      >
+                        {isServiceSelected(service.id)
+                          ? "Added"
+                          : "Add service"}
+                      </button>
                     </div>
-                    <button
-                      className={`card__content-add ${
-                        isServiceSelected(service.id) ? "disabled" : ""
-                      }`}
-                      onClick={() => {
-                        if (!isServiceSelected(service.id)) {
-                          setSelectedService((prev) => [...prev, service]);
-                        }
-                      }}
-                      disabled={isServiceSelected(service.id)}
-                    >
-                      {isServiceSelected(service.id) ? "Added" : "Add service"}
-                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
-        </div>
-        <div className="chooseService__container-footer">
-          <div className="footer__hidden" onClick={handleHidden}>
-            {areServicesHidden ? (
-              <>
-                <FaAngleDoubleUp />
-                <span>Show selected services</span>
-                <FaAngleDoubleUp />
-              </>
-            ) : (
-              <>
-                <FaAngleDoubleDown />
-                <span>Hide selected services</span>
-                <FaAngleDoubleDown />
-              </>
-            )}
+              ))}
           </div>
-
-          {selectedService.map((service, index) => (
-            <div
-              key={index}
-              className={`footer__service ${areServicesHidden ? "hidden" : ""}`}
-            >
-              <span className="footer__service-name">
-                {service.serviceName}
-              </span>
-              <div>
-                <span className="footer__service-price">
-                  {formatCurrency(service.price)}
-                </span>
-                <IoIosCloseCircle
-                  className="footer__service-icon"
-                  onClick={() => handleRemoveService(service)}
-                />
-              </div>
+        </div>
+        <div className="chooseService__container-right">
+          <div className="chooseService__container-footer">
+            {/* <div className="footer__hidden" onClick={handleHidden}>
+              {areServicesHidden ? (
+                <>
+                  <FaAngleDoubleUp />
+                  <span>Show selected services</span>
+                  <FaAngleDoubleUp />
+                </>
+              ) : (
+                <>
+                  <FaAngleDoubleDown />
+                  <span>Hide selected services</span>
+                  <FaAngleDoubleDown />
+                </>
+              )}
+            </div> */}
+            <h1>Your service</h1>
+            <div className="footer__services">
+              {selectedService.map((service, index) => (
+                <div
+                  key={index}
+                  className={`footer__service ${
+                    areServicesHidden ? "hidden" : ""
+                  }`}
+                >
+                  <span className="footer__service-name">
+                    {service.serviceName}
+                  </span>
+                  <div>
+                    <span className="footer__service-price">
+                      {formatCurrency(service.price)}
+                    </span>
+                    <IoIosCloseCircle
+                      className="footer__service-icon"
+                      onClick={() => handleRemoveService(service)}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
+
+            <div className="footer__payment">
+              <div className="footer__promo">
+                <button
+                  onClick={showModal}
+                  className="footer__promo-action btn"
+                >
+                  Voucher
+                </button>
+                <span>{selectVoucher.code}</span>
+              </div>
+
+              <div className="footer__pay">
+                <div className="footer__pay-content">
+                  <span className="footer__pay-services">
+                    Selected services : {selectedService.length}
+                  </span>
+                  <span className="footer__pay-services">
+                    Total Duration : {calculateTotalDuration() || "0"}
+                  </span>
+                </div>
+                <span className="footer__pay-services">
+                  Pay :{" "}
+                  {formatCurrency(
+                    (selectedService || []).reduce(
+                      (total, service) => total + service.price,
+                      0
+                    )
+                  )}
+                </span>
+                <span className="footer__pay-services">
+                  Discount : {selectVoucher.discountAmount}
+                  {"%"}
+                </span>
+                <span className="footer__pay-services">
+                  Total Pay :{" "}
+                  {formatCurrency(
+                    (selectedService || []).reduce((total, service) => {
+                      return total + service.price;
+                    }, 0) *
+                      (1 -
+                        (selectVoucher
+                          ? selectVoucher.discountAmount / 100
+                          : 0)) // Apply discount
+                  )}
+                </span>
+              </div>
+              <Link
+                to="/booking/step3"
+                className={`chooseService__container-btn btn flex ${
+                  selectedService.length === 0 ? "btn-disable" : ""
+                }`}
+                onClick={(e) => {
+                  if (selectedService.length === 0) {
+                    e.preventDefault();
+                  } else {
+                    const selectedServiceIds = selectedService.map(
+                      (service) => service.id
+                    );
+                    sessionStorage.setItem(
+                      "selectedServicesId",
+                      JSON.stringify(selectedServiceIds)
+                    );
+                  }
+                }}
+              >
+                Next Step
+                <FaArrowRight className="chooseService-icon" />
+              </Link>
+            </div>
+<<<<<<< HEAD
           ))}
 
           <div className="footer__promo">
@@ -363,30 +444,10 @@ export default function ChooseService() {
                   (1 - (selectVoucher ? selectVoucher.discountAmount / 100 : 0)) // Apply discount
               )}
             </span>
+=======
+>>>>>>> dde247a6a6d19af8c4da204d8dc9fd04052c4388
           </div>
         </div>
-        <Link
-          to="/booking/step3"
-          className={`chooseService__container-btn btn flex ${
-            selectedService.length === 0 ? "btn-disable" : ""
-          }`}
-          onClick={(e) => {
-            if (selectedService.length === 0) {
-              e.preventDefault();
-            } else {
-              const selectedServiceIds = selectedService.map(
-                (service) => service.id
-              );
-              sessionStorage.setItem(
-                "selectedServicesId",
-                JSON.stringify(selectedServiceIds)
-              );
-            }
-          }}
-        >
-          Next Step
-          <FaArrowRight className="chooseService-icon" />
-        </Link>
       </div>
 
       <Modal

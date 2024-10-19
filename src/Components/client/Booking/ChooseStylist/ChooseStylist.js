@@ -16,7 +16,6 @@ import { SlPeople } from "react-icons/sl";
 import "./ChooseStylist.scss";
 import api from "../../../../config/axios";
 
-
 export default function ChooseStylist() {
   const [selectedStylist, setSelectedStylist] = useState(null);
   const handleSelected = (stylist) => {
@@ -24,10 +23,9 @@ export default function ChooseStylist() {
   };
   const navigate = useNavigate();
 
-
   const [stylists, setStylists] = useState([]);
-  
-   useEffect(() => {
+
+  useEffect(() => {
     const storedBranchId = sessionStorage.getItem("selectedBranchId");
     const branchId = parseInt(storedBranchId, 10);
 
@@ -35,21 +33,18 @@ export default function ChooseStylist() {
     const serviceIds = JSON.parse(storedServices);
 
     const fetchStylists = async () => {
-
       const bookingValue = {
         salonId: branchId,
-        serviceId: serviceIds
-      }
+        serviceId: serviceIds,
+      };
 
-       try {
+      try {
         const response = await api.post(`booking/stylists`, bookingValue);
         const data = response.data.result;
         if (data) {
           setStylists(data);
         }
-       } catch (error) {
-        
-       }
+      } catch (error) {}
     };
     fetchStylists();
   }, []);
@@ -64,7 +59,6 @@ export default function ChooseStylist() {
       }
     }
   }, []);
-  
 
   useEffect(() => {
     const storedStylistId = sessionStorage.getItem("selectedStylistId");
@@ -78,12 +72,11 @@ export default function ChooseStylist() {
   }, [stylists]);
 
   const isSelectedStylist = !!sessionStorage.getItem("selectedStylistId");
-  
+
   return (
     <>
       <div className="chooseStylist">
-
-      <div className="chooseStylist__tagNavigation">
+        <div className="chooseStylist__tagNavigation">
           <ul className="chooseStylist__tagNavigation--item">
             <li className="chooseStylist__tagNavigation--item-content">
               <Link to="/booking/step1">
@@ -108,8 +101,14 @@ export default function ChooseStylist() {
               </Link>
               <div className="tooltip">Stylist</div>
             </li>
-            <li className={`chooseStylist__tagNavigation--item-content ${isSelectedStylist ? '' : 'disable'}`}>
-              <Link to={isSelectedStylist ? "/booking/step4" : "/booking/step3"}>
+            <li
+              className={`chooseStylist__tagNavigation--item-content ${
+                isSelectedStylist ? "" : "disable"
+              }`}
+            >
+              <Link
+                to={isSelectedStylist ? "/booking/step4" : "/booking/step3"}
+              >
                 <div className="filled"></div>
 
                 <RiCalendarScheduleLine />
@@ -121,7 +120,7 @@ export default function ChooseStylist() {
 
         <div className="chooseStylist__container">
           <div className="chooseStylist__container-header">
-            <Link to="/booking/step3">
+            <Link to="/booking/step2">
               <FaArrowLeft className="chooseStylist-icon" />
             </Link>
             <h1>Choose Stylist</h1>
@@ -191,12 +190,12 @@ export default function ChooseStylist() {
             onClick={(e) => {
               if (!selectedStylist) {
                 e.preventDefault();
-              }else {
-                sessionStorage.setItem('selectedStylistId', selectedStylist.id);
+              } else {
+                sessionStorage.setItem("selectedStylistId", selectedStylist.id);
               }
             }}
           >
-              Next Step
+            Next Step
             <FaArrowRight className="chooseService-icon" />
           </Link>
         </div>
