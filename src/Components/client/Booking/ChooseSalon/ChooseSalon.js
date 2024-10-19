@@ -22,15 +22,13 @@ export default function ChooseSalon() {
 
   useEffect(() => {
     const fetchSalonLocations = async () => {
-       try {
+      try {
         const response = await api.get("salons");
-        const data = response.data.result
+        const data = response.data.result;
         if (data) {
           setSalonLocations(data);
         }
-       } catch (error) {
-        
-       }
+      } catch (error) {}
     };
     fetchSalonLocations();
   }, []);

@@ -89,7 +89,7 @@ export function ChooseService({ onNext, onPre }) {
   // Fetch vouchers
   useEffect(() => {
     const fetchVoucher = async () => {
-      try { 
+      try {
         const response = await api.get("voucher");
         if (response.data) {
           // setVoucher(response.data);
@@ -284,7 +284,7 @@ export function ChooseService({ onNext, onPre }) {
                 >
                   {isServiceSelected(service.id) ? "Added" : "Add service"}
                 </button>
-                </div>
+              </div>
             </div>
           </div>
         ))}

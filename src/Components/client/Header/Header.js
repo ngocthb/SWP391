@@ -92,10 +92,9 @@ export default function Header() {
 
   function formatRole(role) {
     return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
-}
+  }
 
-console.log(formatRole("CUSTOMER"));
-
+  console.log(formatRole("CUSTOMER"));
 
   return (
     <section className="navBarSection">
@@ -126,7 +125,7 @@ console.log(formatRole("CUSTOMER"));
               </Link>
             </li>
             <li className="navBar__lists-items">
-              <Link to={""} onClick={handleHomeClick}>
+              <Link to={"/services"} onClick={handleHomeClick}>
                 {" "}
                 Service
               </Link>

@@ -238,48 +238,6 @@ export const Routes = [
     ],
   },
   {
-    path: "admin",
-    element: (
-      /*<PrivateRoute requiredRole="ADMIN">
-      <AdminLayout />
-    </PrivateRoute>*/ <AdminLayout />
-    ),
-    children: [
-      {
-        path: "dashboard",
-        element: <ManagerDashboard />,
-      },
-      {
-        path: "service",
-        element: <AdminService />,
-      },
-      {
-        path: "service/create",
-        element: <AdminCreateService />,
-      },
-      {
-        path: "voucher",
-        element: <AdminVoucher buttonLabel={"New Voucher"} />,
-      },
-      {
-        path: "voucher/create",
-        element: <AdminCreateVoucher />,
-      },
-      {
-        path: "manager",
-        element: <AdminManager buttonLabel={"New Manager"} />,
-      },
-      {
-        path: "manager/create",
-        element: <AdminCreateManager />,
-      },
-      {
-        path: "customer",
-        element: <AdminCustomer buttonLabel={"New Customer"} />,
-      },
-    ],
-  },
-  {
     path: "stylist",
     element: (
       /*<PrivateRoute requiredRole="ADMIN">
@@ -304,6 +262,8 @@ export const Routes = [
         element: <StylistSalary />,
       },
     ],
+  },
+  {
     path: "staff",
     element: (
       /*<PrivateRoute requiredRole="ADMIN">

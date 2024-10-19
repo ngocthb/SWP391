@@ -70,6 +70,19 @@
             background-color: var(--PrimaryColor);
           }
         }
+        &::after {
+          content: "";
+          position: absolute;
+          top: 88%; /* Đặt đường thẳng ngay dưới hình tròn */
+          left: 50%; /* Căn giữa theo trục ngang */
+          width: 4px; /* Độ dày của đường nối */
+          height: 50px; /* Độ dài đường nối */
+          background-color: var(--PrimaryColor); /* Màu của đường nối */
+          transform: translateX(-50%);
+        }
+        &:last-child::after {
+          display: none;
+        }
       }
       .active {
         .tooltip {
@@ -187,11 +200,10 @@
         }
       }
       .time-slot.disabled {
-        opacity: 0.5; 
+        opacity: 0.5;
         cursor: not-allowed;
 
         &:hover {
-          
           background-color: #e0e0e0;
           color: inherit;
         }
