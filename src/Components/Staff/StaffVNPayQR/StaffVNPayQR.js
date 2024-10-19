@@ -17,7 +17,7 @@ const StaffVNPayQR = () => {
       <div className="StaffVNPayQR__amount">Payment amount: {totalAmount ? formatPrice(totalAmount) : ""} VND</div>
       <div className="StaffVNPayQR__qr-code">
       <Space>
-        <QRCode type="canvas" value={paymentUrl} />
+        <QRCode type="canvas" value="https://f-salon.vercel.app/" />
       </Space>
       </div>
     </div>

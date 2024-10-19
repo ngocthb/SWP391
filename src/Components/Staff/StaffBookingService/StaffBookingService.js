@@ -162,10 +162,6 @@ const StaffBookingService = () => {
     }
   };
 
-
-
-  
-
   const sortBy = (key) => {
     let direction = "ascending";
 
