@@ -9,6 +9,7 @@ import loginUser from "../../../data/loginUser.js";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
 import { logo_white_noBackground } from "../../../data/image.js";
+import { CiCalendar } from "react-icons/ci";
 
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
@@ -71,7 +72,7 @@ export default function HeaderNormal() {
 
   function formatRole(role) {
     return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
-}
+  }
 
   return (
     <>
@@ -131,7 +132,9 @@ export default function HeaderNormal() {
                       <div className="content__infor">
                         <div>
                           <h3>{userInfo.fullname || ""}</h3>
-                          <p>{userInfo.role ?formatRole(userInfo.role) : "User"}</p>
+                          <p>
+                            {userInfo.role ? formatRole(userInfo.role) : "User"}
+                          </p>
                         </div>
                         <div>
                           <img
@@ -151,7 +154,11 @@ export default function HeaderNormal() {
                           />
                           <div>
                             <h2>{userInfo.fullname || ""}</h2>
-                            <p>{userInfo.role ?formatRole(userInfo.role) : "User"}</p>
+                            <p>
+                              {userInfo.role
+                                ? formatRole(userInfo.role)
+                                : "User"}
+                            </p>
                           </div>
                         </div>
                         <Link to="/user/profile">
@@ -163,11 +170,11 @@ export default function HeaderNormal() {
                         {/* <Link to="#">
                          <i className="fas fa-cog"></i>
                          Account Setting
-                       </Link>
-                       <Link to="#">
-                         <i className="fas fa-folder"></i>
-                         Projects
-                       </Link> */}
+                       </Link>*/}
+                        <Link to="/user/mybooking">
+                          <CiCalendar />
+                          My booking
+                        </Link>
                         <Link to="#" onClick={handleLogout}>
                           <i>
                             {" "}

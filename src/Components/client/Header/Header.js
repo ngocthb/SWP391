@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { TbLogout } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 import { logo_white_noBackground } from "../../../data/image.js";
+import { CiCalendar } from "react-icons/ci";
 
 export default function Header() {
   const [active, setActive] = useState("navBar");
@@ -171,14 +172,14 @@ export default function Header() {
                         </i>
                         Profile
                       </Link>
-                      {/* <Link to="#">
+                       {/* <Link to="#">
                       <i className="fas fa-cog"></i>
                       Account Setting
-                    </Link>
-                    <Link to="#">
-                      <i className="fas fa-folder"></i>
-                      Projects
                     </Link> */}
+                    <Link to="/user/mybooking">
+                      <CiCalendar />
+                     My booking
+                    </Link>
                       <Link to="#" onClick={handleLogout}>
                         <i>
                           <TbLogout />
