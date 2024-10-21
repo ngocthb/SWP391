@@ -3,6 +3,7 @@ import "./ForgetPassword.scss";
 import api from "../../../config/axios";
 import { message, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
+import { logo_blue_noBackground } from "../../../data/image";
 
 const ForgetPassword = () => {
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -115,8 +116,8 @@ const ForgetPassword = () => {
       <div className="forget-password__container">
         <div className="forget-password__left-side">
           <div className="forget-password__logo">
-            <h2>Logo</h2>
-            <img src="arrow.svg" alt="Arrow" />
+          <img src={logo_blue_noBackground} alt="Arrow" />
+          <h2>F-salon</h2>
           </div>
           <div className="forget-password__illustration">
             <img

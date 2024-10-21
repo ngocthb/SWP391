@@ -8,6 +8,7 @@ import api from "../../../config/axios";
 import loginUser from "../../../data/loginUser";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
+import { logo, logo_blue_noBackground } from "../../../data/image";
 
 const pageNames = {
   "/staff/booking": "Booking",
@@ -86,7 +87,7 @@ const StaffHeader = () => {
       >
         <img
           onClick={handleGoback}
-          src={collapsed ? "assets/logo_blue_noBackground.png" : "assets/logo.png"}
+          src={collapsed ? logo_blue_noBackground : logo}
           alt={collapsed ? "Logo Fold" : "Logo"}
         />
       </div>

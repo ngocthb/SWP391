@@ -9,6 +9,7 @@ import api from "../../../config/axios.js";
 import { useSelector } from "react-redux";
 import { TbLogout } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
+import { logo_white_noBackground } from "../../../data/image.js";
 
 export default function Header() {
   const [active, setActive] = useState("navBar");
@@ -102,7 +103,7 @@ export default function Header() {
         <div className="navBarSection__header-logo">
           <Link to="/" onClick={handleHomeClick}>
             <h1 className="flex">
-              <img src="assets/logo_white_noBackground.png" alt="logo" />
+              <img src={logo_white_noBackground} alt="logo" />
               F-Salon
             </h1>
           </Link>

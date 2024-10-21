@@ -1,7 +1,6 @@
 import axios from "axios";
-// const baseUrl = "https://reqres.in/api/";
-const baseUrl = "http://localhost:8080/api/";
-// const baseUrl = "https://tiktok.fullstack.edu.vn/api/";
+const baseUrl = "http://ec2-13-239-24-244.ap-southeast-2.compute.amazonaws.com:8080/api/";
+// const baseUrl = "http://localhost:8080/api/";
 
 const config = {
   baseUrl: baseUrl,

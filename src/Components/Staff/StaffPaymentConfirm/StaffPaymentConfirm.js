@@ -9,8 +9,6 @@ const StaffPaymentConfirm = () => {
   const formatPrice = (amount) => {
     return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
-  const orderNumber = "25641";
-  const totalAmount = "10000000";
   const navigate = useNavigate();
   const handleOnclick = () => {
     navigate("/staff/booking-service");

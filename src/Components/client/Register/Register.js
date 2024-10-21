@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 import "./Register.scss";
 import { message, Spin } from "antd";
+import { eye, eye_off, logo_blue_noBackground } from "../../../data/image";
 
 const Register = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -64,8 +65,8 @@ const Register = () => {
       <div className="signup__container">
         <div className="signup__left-side">
           <div className="signup__logo">
-            <h2>Logo</h2>
-            <img src="arrow.svg" alt="Arrow" />
+          <img src={logo_blue_noBackground} alt="Arrow" />
+          <h2>F-salon</h2>
           </div>
           <div className="signup__illustration">
             <img
@@ -95,7 +96,7 @@ const Register = () => {
                 required
               />
               <img
-               src={passwordVisible ? "assets/eye-off.svg" : "assets/eye.svg"}
+               src={passwordVisible ? eye_off : eye}
                 alt="Eye Icon"
                 onClick={handlePasswordVisibility}
               />
@@ -108,7 +109,7 @@ const Register = () => {
                 required
               />
               <img
-                src={confirmPasswordVisible ? "assets/eye-off.svg" : "assets/eye.svg"}
+                src={confirmPasswordVisible ? eye_off : eye}
                 alt="Eye Icon"
                 onClick={handleConfirmPasswordVisibility}
               />
