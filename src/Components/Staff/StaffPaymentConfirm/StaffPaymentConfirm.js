@@ -11,7 +11,7 @@ const StaffPaymentConfirm = () => {
   };
   const navigate = useNavigate();
   const handleOnclick = () => {
-    navigate("/staff/booking-service");
+    navigate("/");
   };
 
   const location = useLocation();

@@ -235,7 +235,7 @@ const StaffBookingService = () => {
       if (response.data) {
         Swal.fire({
           icon: "success",
-          title: "Check-in successful",
+          title: "Check-in successfully",
           timer: 2500
         });
         fetchBookings()
