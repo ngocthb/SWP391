@@ -1,19 +1,146 @@
+import React, { useEffect, useState } from "react";
+import { DownOutlined } from "@ant-design/icons";
+import { Dropdown, Space, Calendar } from "antd";
+import api from "../../../config/axios";
+import dayjs from "dayjs";
 import "./StylistDashboard.scss";
 
 export default function StylistDashboard() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectDay, setSelectedDay] = useState(dayjs().format("YYYY-MM"));
+  const [stylistInfo, setStylistInfo] = useState(null);
+  const [revenue, setRevenue] = useState({});
+  const [feedback, setFeedback] = useState({});
+  const [totalBooking, setTotalBooking] = useState(0);
+  const CalendarDropdown = () => {
+    const wrapperStyle = {
+      width: 320,
+      padding: "10px",
+      backgroundColor: "#fff",
+    };
+
+    const onSelect = (value) => {
+      const formattedDate = value.format("YYYY-MM");
+      setSelectedDay(formattedDate);
+    };
+
+    return (
+      <div style={wrapperStyle}>
+        <Calendar
+          fullscreen={false}
+          onSelect={onSelect}
+          value={dayjs(selectDay)}
+          mode="year"
+        />
+      </div>
+    );
+  };
+
+  const items = [
+    {
+      key: "1",
+      label: <CalendarDropdown />,
+    },
+  ];
+
+  useEffect(() => {
+    const fetchStylistData = async () => {
+      try {
+        const response = await api.get(`stylist/profile`);
+        const data = response.data.result;
+        console.log(data);
+        if (data) {
+          setStylistInfo(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchStylistData();
+  }, []);
+
+  useEffect(() => {
+    if (stylistInfo) {
+      const fetchRevenueData = async () => {
+        try {
+          const response = await api.get(
+            `stylist/salaries/${stylistInfo.salonId}/${selectDay}/${stylistInfo.accountid}`
+          );
+          const data = response.data.result;
+          console.log(data);
+          setRevenue(data);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fetchRevenueData();
+    }
+  }, [selectDay, stylistInfo]);
+
+  useEffect(() => {
+    if (stylistInfo) {
+      const fetchFeedbackData = async () => {
+        try {
+          const response = await api.get(
+            `stylist/stylists/${stylistInfo.accountid}/feedBack/${selectDay}`
+          );
+          const data = response.data.result;
+          console.log(data);
+          setFeedback(data);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fetchFeedbackData();
+    }
+  }, [selectDay, stylistInfo]);
+
+  useEffect(() => {
+    if (stylistInfo) {
+      const fetchTotalBooking = async () => {
+        try {
+          const response = await api.get(
+            `stylist/stylists/${stylistInfo.accountid}/revenue/${selectDay}`
+          );
+          const data = response.data.result;
+          console.log(data);
+          setTotalBooking(data.bookingQuantity);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fetchTotalBooking();
+    }
+  }, [selectDay, stylistInfo]);
+
+  const formatCurrency = (value) => {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
+  };
   return (
     <>
-      <div class="dashboard">
-        <div class="stats-container">
-          <div class="stat-card">
-            <div class="icon-box green">
+      <div className="dashboard">
+        <div className="dashboard__calendar">
+          <div className="dashboard__calendar-filter">
+            <Dropdown menu={{ items }} trigger={["hover"]}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  {selectDay}
+                  <DownOutlined />
+                </Space>
+              </a>
+            </Dropdown>
+          </div>
+        </div>
+        <div className="dashboard__header">
+          <div className="dashboard__header-card">
+            <div className="icon-box green">
               <svg
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="white"
-                stroke-width="2"
+                strokeWidth={2}
               >
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                 <circle cx="9" cy="7" r="4"></circle>
@@ -22,99 +149,114 @@ export default function StylistDashboard() {
               </svg>
             </div>
             <div>
-              <div class="stat-number">6,680</div>
-              <div class="stat-label">Total Employees</div>
+              <div className="stat-number">{totalBooking || 0}</div>
+              <div className="stat-label">Total Booking</div>
             </div>
           </div>
 
-          <div class="stat-card">
-            <div class="icon-box purple">
+          <div className="dashboard__header-card">
+            <div className="icon-box purple">
               <svg
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="white"
-                stroke-width="2"
+                strokeWidth={2}
               >
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
             </div>
             <div>
-              <div class="stat-number">3,640</div>
-              <div class="stat-label">Male Employees</div>
+              <div className="stat-number">3,640</div>
+              <div className="stat-label">Male Employees</div>
             </div>
           </div>
 
-          <div class="stat-card">
-            <div class="icon-box orange">
+          <div className="dashboard__header-card">
+            <div className="icon-box orange">
               <svg
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="white"
-                stroke-width="2"
+                strokeWidth={2}
               >
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
             </div>
             <div>
-              <div class="stat-number">3,040</div>
-              <div class="stat-label">Female Employees</div>
+              <div className="stat-number">3,040</div>
+              <div className="stat-label">Female Employees</div>
             </div>
           </div>
         </div>
 
-        <div class="details-container">
-          <div class="profile-card">
-            <div class="profile-section">
-              <div class="profile-image"></div>
-              <div class="profile-name">Mrinmoy Krishna</div>
-              <div class="profile-title">UI UX Designer</div>
-              <div class="profile-title">Team Leader</div>
-            </div>
-            <div class="profile-stats">
-              <div class="stat-item">
-                <div class="stat-value">12/31</div>
-                <div class="stat-text">Attendance</div>
+        <div className="dashboard__container">
+          <div className="dashboard__container-left">
+            {stylistInfo && (
+              <div className="profile-section">
+                <img
+                  className="profile-image"
+                  src={stylistInfo.image}
+                  alt={stylistInfo.fullname}
+                />
+                <div className="profile-name">{stylistInfo.fullname}</div>
+                <div className="profile-title">{stylistInfo.email}</div>
+                <div className="profile-title">
+                  {dayjs(stylistInfo.dob).format("DD-MM-YYYY")}
+                </div>
               </div>
-              <div class="stat-item">
-                <div class="stat-value">5/55</div>
-                <div class="stat-text">Leaves</div>
+            )}
+
+            <div className="profile-stats">
+              <div className="stat-item">
+                <div className="stat-value">
+                  {formatCurrency(revenue.salary || 0)}
+                </div>
+                <div className="stat-text">Salary</div>
               </div>
-              <div class="stat-item">
-                <div class="stat-value">0</div>
-                <div class="stat-text">Awards</div>
+              <div className="stat-item">
+                <div className="stat-value">
+                  {formatCurrency(revenue.bonus || 0)}
+                </div>
+                <div className="stat-text">Bonus</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">
+                  {formatCurrency(revenue.totalSalary || 0)}
+                </div>
+                <div className="stat-text">Total</div>
               </div>
             </div>
           </div>
 
-          <div class="stats-card">
-            <div class="wfh-section">
-              <div class="wfh-circle">
-                <div class="wfh-icon"></div>
+          <div className="dashboard__container-right">
+            <div className="wfh-section">
+              <div className="wfh-circle">
+                <div className="wfh-icon"></div>
               </div>
               <div>70% of the employees are working from home today.</div>
             </div>
 
-            <div class="chart-container">
-              <div class="chart-item">
-                <span class="chart-dot orange"></span>
-                <span class="chart-label">User research</span>
-                <span class="chart-value">20</span>
+            <div className="chart-container">
+              <div className="chart-item">
+                <span className="chart-dot orange"></span>
+                <span className="chart-label">User research</span>
+                <span className="chart-value">20</span>
               </div>
-              <div class="chart-item">
-                <span class="chart-dot purple"></span>
-                <span class="chart-label">Marketing</span>
-                <span class="chart-value">12</span>
+              <div className="chart-item">
+                <span className="chart-dot purple"></span>
+                <span className="chart-label">Marketing</span>
+                <span className="chart-value">12</span>
               </div>
-              <div class="chart-item">
-                <span class="chart-dot green"></span>
-                <span class="chart-label">Product design</span>
-                <span class="chart-value">8</span>
+              <div className="chart-item">
+                <span className="chart-dot green"></span>
+                <span className="chart-label">Product design</span>
+                <span className="chart-value">8</span>
               </div>
             </div>
           </div>

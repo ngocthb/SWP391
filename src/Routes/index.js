@@ -51,6 +51,7 @@ import StaffBooking from "../Components/Staff/StaffBooking/StaffBooking";
 import StaffCreateBooking from "../Components/Staff/StaffCreateBooking/StaffCreateBooking";
 import StaffBookingService from "../Components/Staff/StaffBookingService/StaffBookingService";
 import StaffPaymentConfirm from "../Components/Staff/StaffPaymentConfirm/StaffPaymentConfirm";
+import StylistShift from "../Components/Stylist/StylistShift/StylistShift";
 export const Routes = [
   {
     path: "/",
@@ -260,6 +261,10 @@ export const Routes = [
       {
         path: "salary",
         element: <StylistSalary />,
+      },
+      {
+        path: "shift",
+        element: <StylistShift />,
       },
     ],
   },

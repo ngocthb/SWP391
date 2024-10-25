@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { Card, Col, Row, Statistic, Tabs } from "antd";
-import ReactECharts from 'echarts-for-react';
+import ReactECharts from "echarts-for-react";
 import "./ManagerDashboard.scss";
 
 const { TabPane } = Tabs;
@@ -24,10 +24,10 @@ const ManagerDashboard = () => {
     const intervalTime = 50;
     const steps = duration / intervalTime;
 
-    const incrementProfit = (finalValues.profit / steps);
-    const incrementGrowth = (finalValues.growth / steps);
-    const incrementOrders = (finalValues.orders / steps);
-    const incrementCustomers = (finalValues.customers / steps);
+    const incrementProfit = finalValues.profit / steps;
+    const incrementGrowth = finalValues.growth / steps;
+    const incrementOrders = finalValues.orders / steps;
+    const incrementCustomers = finalValues.customers / steps;
 
     let currentProfit = 0;
     let currentGrowth = 0;
@@ -87,46 +87,46 @@ const ManagerDashboard = () => {
 
   const getLineOptions = () => ({
     xAxis: {
-      type: 'category',
-      data: revenueData.map(item => item.date),
+      type: "category",
+      data: revenueData.map((item) => item.date),
     },
     yAxis: {
-      type: 'value',
+      type: "value",
     },
     series: [
       {
-        data: revenueData.map(item => item.revenue),
-        type: 'line',
+        data: revenueData.map((item) => item.revenue),
+        type: "line",
         smooth: true,
         itemStyle: {
-          color: '#2196F3',
+          color: "#2196F3",
         },
       },
     ],
     tooltip: {
-      trigger: 'axis',
+      trigger: "axis",
     },
   });
 
   const getDoughnutOptions = () => ({
     legend: {
-      orient: 'vertical',
-      left: 'right',
+      orient: "vertical",
+      left: "right",
     },
     series: [
       {
-        type: 'pie',
-        radius: ['50%', '70%'],
+        type: "pie",
+        radius: ["50%", "70%"],
         data: customersData,
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)',
+            shadowColor: "rgba(0, 0, 0, 0.5)",
           },
         },
         label: {
-          formatter: '{c}',
+          formatter: "{c}",
         },
       },
     ],
