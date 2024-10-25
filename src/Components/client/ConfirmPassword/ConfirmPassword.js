@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import eyeOff from "../../../Assets/eye-off.svg";
-import eye from "../../../Assets/eye.svg";
 import './ConfirmPassword.scss';
 import api from '../../../config/axios';
 import { message, Spin } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { eye, eye_off, logo_blue_noBackground } from '../../../data/image';
 
 const ConfirmPassword = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -60,8 +59,8 @@ const ConfirmPassword = () => {
       <div className="confirm-password__container">
         <div className="confirm-password__left-side">
           <div className="confirm-password__logo">
-            <h2>Logo</h2>
-            <img src="arrow.svg" alt="Arrow" />
+          <img src={logo_blue_noBackground} alt="Arrow" />
+          <h2>F-salon</h2>
           </div>
           <div className="confirm-password__illustration">
             <img
@@ -86,7 +85,7 @@ const ConfirmPassword = () => {
                 required
               />
               <img
-                src={passwordVisible ? eyeOff : eye}
+                src={passwordVisible ? eye_off : eye}
                 alt="Eye Icon"
                 onClick={handlePasswordVisibility}
               />
@@ -100,7 +99,7 @@ const ConfirmPassword = () => {
                 required
               />
               <img
-                src={confirmPasswordVisible ? eyeOff : eye}
+                src={confirmPasswordVisible ? {eye_off} : {eye}}
                 alt="Eye Icon"
                 onClick={handleConfirmPasswordVisibility}
               />

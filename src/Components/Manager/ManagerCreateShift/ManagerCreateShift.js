@@ -204,9 +204,9 @@ export default function ManagerCreateShift() {
           workingDate: selectDay,
           shiftId: dataValue.shiftId,
         };
-
+        console.log(shiftData);
         const response = await api.post("stylist/schedule", shiftData);
-        return response.data;
+        return response.data.result;
       });
 
       const results = await Promise.all(promises);

@@ -9,7 +9,7 @@ import api from "../../../config/axios.js";
 import { useSelector } from "react-redux";
 import { TbLogout } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
-import logo_white_noBackground from "../../../Assets/logo_white_noBackground.png";
+import { logo_white_noBackground } from "../../../data/image.js";
 import { CiCalendar } from "react-icons/ci";
 
 export default function Header() {

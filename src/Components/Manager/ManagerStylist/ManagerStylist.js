@@ -114,6 +114,7 @@ export default function ManagerStylist({ buttonLabel }) {
       console.log(response);
       const data = response.data.result.content;
       const total = response.data.result.totalPages;
+      console.log(data);
       if (data) {
         setStylists(data);
         setTotalPages(total);
@@ -343,7 +344,7 @@ export default function ManagerStylist({ buttonLabel }) {
                 <div className="container__card-info">
                   <p>
                     <FaLocationDot />
-                    {stylist.salonAddress}
+                    {stylist.getAddress}
                   </p>
                   <p>
                     <FaPhone /> {stylist.phone}

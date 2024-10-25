@@ -44,6 +44,7 @@ import StylistLayout from "../Layouts/stylist";
 import StylistSchedule from "../Components/Stylist/StylistSchedule/StylistSchedule";
 import StylistFeedback from "../Components/Stylist/StylistFeedback/StylistFeedback";
 import StylistDashboard from "../Components/Stylist/StylistDashboard/StylistDashboard";
+import StylistShift from "../Components/Stylist/StylistShift/StylistShift";
 import StylistSalary from "../Components/Stylist/StylistSalary/StylistSalary";
 import StaffLayout from "../Layouts/staff/StaffLayout";
 import StaffPayment from "../Components/Staff/StaffPayment/StaffPayment";
@@ -51,7 +52,7 @@ import StaffBooking from "../Components/Staff/StaffBooking/StaffBooking";
 import StaffCreateBooking from "../Components/Staff/StaffCreateBooking/StaffCreateBooking";
 import StaffBookingService from "../Components/Staff/StaffBookingService/StaffBookingService";
 import StaffPaymentConfirm from "../Components/Staff/StaffPaymentConfirm/StaffPaymentConfirm";
-import StylistShift from "../Components/Stylist/StylistShift/StylistShift";
+import StaffVNPayQR from "../Components/Staff/StaffVNPayQR/StaffVNPayQR";
 export const Routes = [
   {
     path: "/",
@@ -297,5 +298,9 @@ export const Routes = [
   {
     path: "payment/confirm",
     element: <StaffPaymentConfirm />,
+  },
+  {
+    path: "payment/VNPay",
+    element: <StaffVNPayQR />,
   },
 ];

@@ -8,7 +8,7 @@ import api from "../../../config/axios.js";
 import loginUser from "../../../data/loginUser.js";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
-import logo_white_noBackground from "../../../Assets/logo_white_noBackground.png";
+import { logo_white_noBackground } from "../../../data/image.js";
 import { CiCalendar } from "react-icons/ci";
 
 export default function HeaderNormal() {

@@ -2,14 +2,13 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import logo from "../../../Assets/logo.png";
-import logoFold from "../../../Assets/logo_blue_noBackground.png";
 import { collapse } from "../../../actions/Collapse";
 import "./StaffHeader.scss";
 import api from "../../../config/axios";
 import loginUser from "../../../data/loginUser";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
+import { logo, logo_blue_noBackground } from "../../../data/image";
 
 const pageNames = {
   "/staff/booking": "Booking",
@@ -45,7 +44,7 @@ const StaffHeader = () => {
   useEffect(() => {
     const fetchManagerData = async () => {
       try {
-        const response = await api.get(`staff/profile`);
+        const response = await api.get(`manager/profile`);
         const data = response.data.result;
         console.log(data);
         if (data) {
@@ -88,7 +87,7 @@ const StaffHeader = () => {
       >
         <img
           onClick={handleGoback}
-          src={collapsed ? logoFold : logo}
+          src={collapsed ? logo_blue_noBackground : logo}
           alt={collapsed ? "Logo Fold" : "Logo"}
         />
       </div>

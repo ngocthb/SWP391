@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import eyeOff from "../../../Assets/eye-off.svg";
-import eye from "../../../Assets/eye.svg";
-import { ReactComponent as GoogleIcon } from "../../../Assets/GoogleIcon.svg";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 import "./Register.scss";
 import { message, Spin } from "antd";
+import { eye, eye_off, logo_blue_noBackground } from "../../../data/image";
 
 const Register = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -67,8 +65,8 @@ const Register = () => {
       <div className="signup__container">
         <div className="signup__left-side">
           <div className="signup__logo">
-            <h2>Logo</h2>
-            <img src="arrow.svg" alt="Arrow" />
+          <img src={logo_blue_noBackground} alt="Arrow" />
+          <h2>F-salon</h2>
           </div>
           <div className="signup__illustration">
             <img
@@ -83,10 +81,6 @@ const Register = () => {
         </div>
         <div className="signup__right-side">
           <h1>Sign Up</h1>
-          <button className="signup__button-google">
-            <GoogleIcon />
-            Sign up with Google
-          </button>
           <form className="signup__form" onSubmit={handleSubmit}>
             <label htmlFor="email">Email</label>
             <input type="email" required id="email" />
@@ -102,7 +96,7 @@ const Register = () => {
                 required
               />
               <img
-                src={passwordVisible ? eyeOff : eye}
+               src={passwordVisible ? eye_off : eye}
                 alt="Eye Icon"
                 onClick={handlePasswordVisibility}
               />
@@ -115,7 +109,7 @@ const Register = () => {
                 required
               />
               <img
-                src={confirmPasswordVisible ? eyeOff : eye}
+                src={confirmPasswordVisible ? eye_off : eye}
                 alt="Eye Icon"
                 onClick={handleConfirmPasswordVisibility}
               />

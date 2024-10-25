@@ -8,6 +8,7 @@ import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBooking, updateCustomer } from "../../../actions/Update";
 import { IoCloseCircle } from "react-icons/io5";
+import Swal from "sweetalert2";
 
 const StaffBooking = ({ buttonLabel }) => {
   const [bookings, setBookings] = useState([]);
@@ -23,10 +24,10 @@ const StaffBooking = ({ buttonLabel }) => {
   const [stylists, setStylists] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-  const [searchValue, setSearchValue] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState(bookings);
   const inputRef = useRef(null);
-
+  const [isStaffLoaded, setIsStaffLoaded] = useState(false);
   const [slots, setSlots] = useState([]);
   const [slotRealTime, setSlotRealTime] = useState([]);
 
@@ -63,6 +64,14 @@ const StaffBooking = ({ buttonLabel }) => {
 
   const handleTimeChange = (event) => {
     setFormData((prev) => ({ ...prev, time: event.target.value }));
+  };
+
+  const formatDateForInput = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
   };
 
   useEffect(() => {
@@ -102,7 +111,7 @@ const StaffBooking = ({ buttonLabel }) => {
       }
     };
 
-    fetchData(`slot/${selectedDate}`, setSlotRealTime);
+    fetchData(`slot/${formatDateForInput(selectedDate)}`, setSlotRealTime);
   }, [selectedDate]);
 
   useEffect(() => {
@@ -111,8 +120,10 @@ const StaffBooking = ({ buttonLabel }) => {
       try {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
+        console.log(data);
         if (data) {
           setStaff(data);
+          setIsStaffLoaded(true);
         }
       } catch (err) {
         console.error(err);
@@ -123,47 +134,53 @@ const StaffBooking = ({ buttonLabel }) => {
     fetchManagerData();
   }, []);
 
-  useEffect(() => {
-    const fetchService = async () => {
-     try {
-      const response = await api.get(`stylist/service/${staff.accountId}`)
+
+  const fetchService = async () => {
+    try {
+      const response = await api.get(`stylist/service/${Number(formData.stylistId)}`)
       const data = response.data.result;
+      console.log(data);
       if (data) {
         setServices(data)
       }
-     } catch (error) {
+    } catch (error) {
       console.log(error)
-     }
     }
-    fetchService();
-  }, [])
+  }
+
+
 
 
   const date = new Date();
   const formattedDate = date.toISOString().split("T")[0];
+
   useEffect(() => {
     const fetchBookings = async () => {
+      if (!isStaffLoaded || !staff.salonId) return;
       try {
+        console.log(staff.salonId);
         const response = await api.get(
-          `manager/stylists/booking/${staff.salonId}/${formattedDate}`
+          `manager/stylists/booking/${staff.salonId}/${formatDateForInput(selectedDate)}`
         );
         const data = response.data.result;
-
+        console.log(data);
         if (data) {
           setBookings(data);
           setOriginalBookings(data);
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     fetchBookings();
-  }, [isUpdate, staff]);
+  }, [isUpdate, staff, isStaffLoaded, selectedDate]);
 
   const fetchBookingData = async (bookingId) => {
     try {
       const response = await api.get(`booking/${bookingId}`);
       const data = response.data.result;
-
+      console.log(data);
       if (data) {
         const foundSalon = salonLocations.find(
           (item) => item.address === data.salonName
@@ -180,11 +197,6 @@ const StaffBooking = ({ buttonLabel }) => {
         );
         const stylistId = foundStylist ? foundStylist.accountid : null;
 
-        const foundServices = services.filter((service) =>
-          data.serviceName.includes(service.serviceName)
-        );
-        const serviceIds = foundServices.map((service) => Number(service.id));
-
         setFormData((prev) => ({
           ...prev,
           bookingId: bookingId,
@@ -192,7 +204,7 @@ const StaffBooking = ({ buttonLabel }) => {
           voucherId: Number(voucherId),
           bookingDate: data.date,
           stylistId: stylistId,
-          serviceId: serviceIds,
+          serviceId: data.serviceId,
           salonId: Number(salonId),
           customerName: data.customerName,
           stylistName: data.stylistName,
@@ -207,15 +219,18 @@ const StaffBooking = ({ buttonLabel }) => {
     } catch (err) {
       console.error(err);
     }
-  };
 
+  };
+  console.log(services);
   useEffect(() => {
     if (isModalOpen) {
       if (formData.bookingId) {
+        fetchService();
         fetchBookingData(formData.bookingId);
         fetchStylistsData();
       }
     }
+    console.log(formData.serviceId);
   }, [isModalOpen]);
 
   const fetchStylistsData = async () => {
@@ -235,7 +250,7 @@ const StaffBooking = ({ buttonLabel }) => {
       if (data) {
         setStylists(data);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const updateCustomerData = async (e) => {
@@ -266,7 +281,14 @@ const StaffBooking = ({ buttonLabel }) => {
         toggleModal();
       }
     } catch (err) {
-    } finally {
+      console.log(err);
+      Swal.fire({
+        icon: "error",
+        title: err.response.data.message,
+        timer: 2500
+      });
+    }
+    finally {
       setLoading(false);
     }
   };
@@ -314,6 +336,7 @@ const StaffBooking = ({ buttonLabel }) => {
 
   const toggleModal = async (id) => {
     if (id) {
+      await fetchService();
       await fetchBookingData(id);
     }
     setIsModalOpen(!isModalOpen);
@@ -342,8 +365,10 @@ const StaffBooking = ({ buttonLabel }) => {
 
   useEffect(() => {
     if (formData.serviceId) {
-      setSelectedServices(formData.serviceId.map((id) => id.toString()));
+
+      setSelectedServices(formData.serviceId);
     }
+    console.log(formData.serviceId);
   }, [formData.serviceId]);
 
   const handleServiceToggle = (serviceId) => {
@@ -376,8 +401,9 @@ const StaffBooking = ({ buttonLabel }) => {
       const value = {
         phone: searchValue,
       };
+      console.log(value);
       try {
-        const response = await api.post(`staff/booking/${selectedDate}`, value);
+        const response = await api.post(`staff/booking/${formatDateForInput(selectedDate)}`, value);
         const data = response.data.result;
         if (data) {
           setSearchResults(data);
@@ -388,7 +414,7 @@ const StaffBooking = ({ buttonLabel }) => {
     };
 
     fetchBookings();
-  }, [searchValue]);
+  }, [searchValue, staff, bookings]);
 
   const createBooking = () => {
     navigate("/staff/booking/create");
@@ -562,22 +588,15 @@ const StaffBooking = ({ buttonLabel }) => {
                         >
                           Stylist Name:
                         </label>
-                        <select
+                        <input
+                          type="text"
                           id="stylistName"
-                          className="staff-booking-modal__select"
-                          defaultValue={formData.stylistId || ""}
-                          onChange={handleStylistChange}
+                          className="staff-booking-modal__input"
+                          placeholder="Stylist Name"
+                          value={formData.stylistName}
                           disabled
-                        >
-                          <option value="" disabled>
-                            Select Stylist
-                          </option>
-                          {(stylists || []).map((item) => (
-                            <option key={item.accountid} value={item.accountid}>
-                              {item.fullname}
-                            </option>
-                          ))}
-                        </select>
+
+                        />
                       </div>
                       <div className="staff-booking-modal__form-group">
                         <label
@@ -640,13 +659,13 @@ const StaffBooking = ({ buttonLabel }) => {
                         <div className="staff-booking-modal__services-list">
                           {(services || []).map((service) => (
                             <label
-                              key={service.id}
+                              key={service.serviceId}
                               className="staff-booking-modal__option"
                             >
                               <input
                                 type="checkbox"
-                                checked={selectedServices.includes(service.id)}
-                                onChange={() => handleServiceToggle(service.id)}
+                                checked={selectedServices.includes(service.serviceId)}
+                                onChange={() => handleServiceToggle(service.serviceId)}
                                 className="staff-booking-modal__checkbox"
                               />
                               <span>{service.serviceName}</span>

@@ -1,7 +1,9 @@
+import { banner1, banner2, banner3, banner4, banner5 } from "./image";
+
 const slides = [
   {
     id: 1,
-    srcImg: require("../Assets/banner-1.jpg"),
+    srcImg: banner1,
     title: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -9,7 +11,7 @@ const slides = [
   },
   {
     id: 2,
-    srcImg: require("../Assets/banner-2.jpg"),
+    srcImg: banner2,
     title: "Tempora maiores facilis vitae officia itaque.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -17,7 +19,7 @@ const slides = [
   },
   {
     id: 3,
-    srcImg: require("../Assets/banner-3.jpg"),
+    srcImg: banner3,
     title: "Repellat deleniti inventore rerum distinctio.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -25,7 +27,7 @@ const slides = [
   },
   {
     id: 4,
-    srcImg: require("../Assets/banner-4.jpg"),
+    srcImg: banner4,
     title: "Consequuntur similique quaerat aut cum.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:
@@ -33,7 +35,7 @@ const slides = [
   },
   {
     id: 5,
-    srcImg: require("../Assets/banner-5.jpg"),
+    srcImg: banner5,
     title: "Consequuntur similique quaerat aut cum.",
     subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
     description:

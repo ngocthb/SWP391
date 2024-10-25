@@ -86,10 +86,10 @@ export default function ManagerShift() {
   }, [salonId]);
   const fetchStylistsData = async () => {
     try {
-      // const response = await api.get(`stylist/read`);
+      const response = await api.get(`stylist/read`);
       // const data = response.data.result;
-      const response = await api.get(`stylist-salon`);
-      const data = response.data;
+      // const response = await api.get(`stylist-salon`);
+      const data = response.data.result;
       if (!data) return;
       if (data) {
         setStylistsData(data);
@@ -108,21 +108,25 @@ export default function ManagerShift() {
       date: selectDay,
       salonId: salonId,
     };
-
+    console.log(selectDay);
+    console.log(salonId);
     try {
-      const response = await api.post(`stylist/schedule`, stylistValue);
+      const response = await api.get(`stylist/schedule/${selectDay}/${salonId}`);
       const data = response.data.result;
       // const response = await api.get(
       //   `stylist-schedule?workingDate=${selectDay}&`,
       //   stylistValue
       // );
       // const data = response.data;
+      console.log(data);
       if (data) {
         // tìm stylist id
+        console.log(stylistsData);
         const enrichedData = data.map((shift) => {
           const stylist = stylistsData.find(
             (stylist) => stylist.fullname === shift.stylistName
           );
+          
           return {
             ...shift,
             stylistId: stylist ? stylist.id : null,
@@ -176,7 +180,7 @@ export default function ManagerShift() {
       //   updateValues
       // );
       // const data = response.data;
-      const response = await api.get(
+      const response = await api.put(
         `stylist/schedule/${formData.id}`,
         updateValues
       );
@@ -206,7 +210,9 @@ export default function ManagerShift() {
   };
 
   const deleteShiftData = async (shiftId) => {
+    console.log(shiftId);
     try {
+
       const response = await api.delete(`stylist/schedule/${shiftId}`);
       if (response.data) {
         Swal.fire({
@@ -314,7 +320,7 @@ export default function ManagerShift() {
                     // key={stylist.stylistId}
                     key={index}
                   >
-                    <td className="managerShift__id">{stylist.stylistId}</td>
+                    <td className="managerShift__id">{stylist.id}</td>
                     <td>
                       <div className="managerShift__stylist">
                         <img

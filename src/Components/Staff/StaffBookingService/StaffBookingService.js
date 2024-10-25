@@ -26,11 +26,12 @@ const StaffBookingService = () => {
   const [stylists, setStylists] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-  const [searchValue, setSearchValue] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState(bookings);
   const inputRef = useRef(null);
-
+  const [isStaffLoaded, setIsStaffLoaded] = useState(false);
   const [slots, setSlots] = useState([]);
+  const [slotRealTime, setSlotRealTime] = useState([]);
 
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
@@ -43,9 +44,11 @@ const StaffBookingService = () => {
     serviceId: [],
     salonId: 0,
     time: "",
+    status: "",
     serviceName: [],
   });
-  const [manager, setManager] = useState([]);
+  const [selectedTime, setSelectedTime] = useState("");
+  const [staff, setStaff] = useState([]);
 
   const today = new Date();
   const tomorrow = new Date();
@@ -55,6 +58,28 @@ const StaffBookingService = () => {
   const handleDateChangeFilter = (e) => {
     const date = e.target.value === "today" ? today : tomorrow;
     setSelectedDate(date);
+  };
+
+  const handleDateChange = (event) => {
+    setFormData((prev) => ({ ...prev, date: event.target.value }));
+  };
+
+  const handleTimeChange = (event) => {
+    setFormData((prev) => ({ ...prev, time: event.target.value }));
+  };
+
+  const formatDateForInput = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => {
+  }, [formData.time]);
+  const handleStylistChange = (event) => {
+    setFormData((prev) => ({ ...prev, stylistId: event.target.value }));
   };
 
   useEffect(() => {
@@ -71,10 +96,24 @@ const StaffBookingService = () => {
 
     fetchData("salons", setSalonLocations);
     fetchData("vouchers", setVouchers);
-    fetchData("service", setServices);
     fetchData("stylist/read", setAllStylists);
     fetchData("slot/read", setSlots);
   }, []);
+
+  useEffect(() => {
+    const fetchData = async (endpoint, setter) => {
+      try {
+        const response = await api.get(endpoint);
+        if (response.data) {
+          setter(response.data.result);
+        }
+      } catch (error) {
+        console.error(`Error fetching ${endpoint}:`, error);
+      }
+    };
+
+    fetchData(`slot/${formatDateForInput(selectedDate)}`, setSlotRealTime);
+  }, [selectedDate]);
 
   useEffect(() => {
     const fetchManagerData = async () => {
@@ -82,8 +121,10 @@ const StaffBookingService = () => {
       try {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
+        console.log(data);
         if (data) {
-          setManager(data);
+          setStaff(data);
+          setIsStaffLoaded(true);
         }
       } catch (err) {
         console.error(err);
@@ -96,100 +137,29 @@ const StaffBookingService = () => {
 
   const date = new Date();
   const formattedDate = date.toISOString().split("T")[0];
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const response = await api.get(
-          `manager/stylists/booking/${manager.salonId}/${formattedDate}`
-        );
-        const data = response.data.result;
 
-        if (data) {
-          setBookings(data);
-          setOriginalBookings(data);
-        }
-      } catch (error) {}
-    };
+  useEffect(() => {
+    
 
     fetchBookings();
-  }, [isUpdate, manager]);
+  }, [isUpdate, staff, isStaffLoaded, selectedDate]);
 
-  const fetchBookingData = async (bookingId) => {
+  const fetchBookings = async () => {
+    if (!isStaffLoaded || !staff.salonId) return;
     try {
-      const response = await api.get(`booking/${bookingId}`);
-      const data = response.data.result;
-
-      if (data) {
-        const foundSalon = salonLocations.find(
-          (item) => item.address === data.salonName
-        );
-        const salonId = foundSalon ? foundSalon.id : null;
-
-        const foundVoucher = vouchers.find(
-          (item) => item.code === data.voucherCode
-        );
-        const voucherId = foundVoucher ? foundVoucher.id : null;
-
-        const foundStylist = allStylist.find(
-          (item) => item.fullname === data.stylistName
-        );
-        const stylistId = foundStylist ? foundStylist.accountid : null;
-
-        const foundServices = services.filter((service) =>
-          data.serviceName.includes(service.serviceName)
-        );
-        const serviceIds = foundServices.map((service) => Number(service.id));
-
-        setFormData((prev) => ({
-          ...prev,
-          bookingId: bookingId,
-          customerId: data.customerId,
-          voucherId: Number(voucherId),
-          bookingDate: data.date,
-          stylistId: stylistId,
-          serviceId: serviceIds,
-          salonId: Number(salonId),
-          customerName: data.customerName,
-          stylistName: data.stylistName,
-          date: data.date,
-          time: data.time,
-          salonName: data.salonName,
-          voucherCode: data.voucherCode,
-          serviceName: data.serviceName,
-        }));
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    if (isModalOpen) {
-      if (formData.bookingId) {
-        fetchBookingData(formData.bookingId);
-        fetchStylistsData();
-      }
-    }
-  }, [isModalOpen]);
-
-  const fetchStylistsData = async () => {
-    const foundSlot = slots.find((item) => item.slottime === formData.time);
-    const slotId = foundSlot ? foundSlot.slotid : null;
-    const value = {
-      salonId: formData.salonId,
-      serviceId: formData.serviceId,
-      date: formData.bookingDate,
-      slotId: slotId,
-    };
-
-    try {
-      const response = await api.post("booking/stylists/update", value);
+      console.log(staff.salonId);
+      const response = await api.get(
+        `manager/stylists/booking/${staff.salonId}/${formatDateForInput(selectedDate)}`
+      );
       const data = response.data.result;
       console.log(data);
       if (data) {
-        setStylists(data);
+        setBookings(data);
+        setOriginalBookings(data);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const sortBy = (key) => {
@@ -233,12 +203,7 @@ const StaffBookingService = () => {
     return "";
   };
 
-  const toggleModal = async (id) => {
-    if (id) {
-      await fetchBookingData(id);
-    }
-    setIsModalOpen(!isModalOpen);
-  };
+  
 
   const formatTime = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
@@ -270,10 +235,12 @@ const StaffBookingService = () => {
       if (response.data) {
         Swal.fire({
           icon: "success",
-          title: "Check-in successful",
+          title: "Check-in successfully",
           timer: 2500
         });
+        fetchBookings()
       }
+
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -315,7 +282,7 @@ const StaffBookingService = () => {
     };
 
     fetchBookings();
-  }, [searchValue]);
+  }, [searchValue, staff, bookings]);
 
   const handlePayment = (bookingId) => {
     navigate(`/staff/payment/${bookingId}`)
@@ -377,8 +344,8 @@ const StaffBookingService = () => {
                   <th onClick={() => sortBy("time")}>
                     Time{getSortIndicator("time")}
                   </th>
-                  <th onClick={() => sortBy("salonName")}>
-                    Salon Name{getSortIndicator("salonName")}
+                  <th onClick={() => sortBy("status")}>
+                    Status{getSortIndicator("status")}
                   </th>
                   <th>Action</th>
                 </tr>
@@ -411,7 +378,7 @@ const StaffBookingService = () => {
                       </span>
                     </td>
                     <td className="staff-booking-service__date">
-                      {booking.salonName}
+                      {booking.status}
                     </td>
                     <td className="staff-booking-service__actions">
                       <button

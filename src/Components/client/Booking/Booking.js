@@ -211,7 +211,7 @@ export default function Booking() {
     try {
       const response = await api.post("booking", bookingValue);
       if (response.data && response.data.result) {
-        navigate("/");
+        navigate("/user/mybooking");
       }
     } catch (error) {
       console.log(error);

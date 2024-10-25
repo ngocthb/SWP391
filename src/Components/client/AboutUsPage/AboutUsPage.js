@@ -12,7 +12,6 @@ import {
   SwiperSlide as AboutUsPageSwiperSlide,
 } from "swiper/react";
 import "./AboutUsPage.scss";
-import video from "../../../Assets/video2.mp4";
 import feedback from "../../../data/feedback";
 export default function AboutUsPage() {
   return (
@@ -75,7 +74,7 @@ export default function AboutUsPage() {
               </p>
             </div>
             <div className="AboutUsPage__cardVideo">
-              <video src={video} autoPlay loop muted type="video/mp4"></video>
+              <video src="assets/video2.mp4" autoPlay loop muted type="video/mp4"></video>
             </div>
           </div>
         </div>

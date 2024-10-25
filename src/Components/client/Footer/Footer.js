@@ -5,7 +5,7 @@ import { AiFillInstagram } from "react-icons/ai";
 import { FaTwitter } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import "./Footer.scss";
-import logoBlue from "../../../Assets/logo_blue_noBackground.png";
+import { logo_blue_noBackground } from "../../../data/image";
 
 export default function Footer() {
   const location = useLocation();
@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="footer__Logo">
             <Link to="/" onClick={handleHomeClick} className=" flex">
               <h1 className="flex">
-                <img src={logoBlue} alt="logo" />
+                <img src={logo_blue_noBackground} alt="logo" />
                 F-Salon
               </h1>
             </Link>

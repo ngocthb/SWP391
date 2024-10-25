@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import eyeOff from "../../../Assets/eye-off.svg";
-import eye from "../../../Assets/eye.svg";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ReactComponent as GoogleIcon } from "../../../Assets/GoogleIcon.svg";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 import "./Login.scss";
 import { message, Spin } from "antd";
@@ -10,6 +7,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { googleProvider } from "../../../config/firebase";
 import { useDispatch } from "react-redux";
 import { setRole } from "../../../actions/Role";
+import { eye, eye_off, google_icon, logo_blue_noBackground } from "../../../data/image";
 
 const Login = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -45,7 +43,7 @@ const Login = () => {
       } else if (role === "STYLIST") {
         navigate("/stylist");
       } else if (role === "STAFF") {
-        navigate("/staff");
+        navigate("/staff/booking");
       } else {
         navigate("/");
       }
@@ -129,8 +127,8 @@ const Login = () => {
       <div className="signin__container">
         <div className="signin__left-side">
           <div className="signin__logo">
-            <h2>Logo</h2>
-            <img src="arrow.svg" alt="Arrow" />
+            <img src={logo_blue_noBackground} alt="Arrow" />
+            <h2>F-salon</h2>
           </div>
           <div className="signin__illustration">
             <img
@@ -149,7 +147,7 @@ const Login = () => {
         <div className="signin__right-side">
           <h1>Welcome back</h1>
           <button className="signin__button-google" onClick={handleLoginGoogle}>
-            <GoogleIcon />
+            <img src={google_icon} alt=""/>
             Sign in with Google
           </button>
           <form className="signin__form" onSubmit={handleSubmit}>
@@ -163,7 +161,7 @@ const Login = () => {
                 required
               />
               <img
-                src={passwordVisible ? eyeOff : eye}
+                src={passwordVisible ? eye_off : eye}
                 alt="Eye Icon"
                 onClick={handlePasswordVisibility}
               />

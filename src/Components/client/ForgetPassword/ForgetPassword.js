@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ReactComponent as GoogleIcon } from "../../../Assets/GoogleIcon.svg";
 import "./ForgetPassword.scss";
 import api from "../../../config/axios";
 import { message, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
+import { logo_blue_noBackground } from "../../../data/image";
 
 const ForgetPassword = () => {
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -116,8 +116,8 @@ const ForgetPassword = () => {
       <div className="forget-password__container">
         <div className="forget-password__left-side">
           <div className="forget-password__logo">
-            <h2>Logo</h2>
-            <img src="arrow.svg" alt="Arrow" />
+          <img src={logo_blue_noBackground} alt="Arrow" />
+          <h2>F-salon</h2>
           </div>
           <div className="forget-password__illustration">
             <img
@@ -135,10 +135,6 @@ const ForgetPassword = () => {
         </div>
         <div className="forget-password__right-side">
           <h1>Forget Password</h1>
-          <button className="forget-password__button-google">
-            <GoogleIcon />
-            Sign in with Google
-          </button>
           <form className="forget-password__form" onSubmit={handleSubmit}>
             <label htmlFor="email">Email</label>
             <input type="email" required id="email" />
