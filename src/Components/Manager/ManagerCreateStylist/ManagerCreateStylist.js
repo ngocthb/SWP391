@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import "./ManagerCreateStylist.scss";
 import { Spin } from "antd";
@@ -66,7 +67,6 @@ const ManagerCreateStylist = () => {
       try {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
-        console.log(data);
         if (data) {
           setManagerInfo(data);
         }
@@ -76,6 +76,13 @@ const ManagerCreateStylist = () => {
     };
     fetchManagerData();
   }, []);
+
+    useEffect(() => {
+      if (managerInfo.salonId !== undefined) {
+        const salon = salonLocations.find(salon => salon.id === managerInfo.salonId);
+        setSalonAddress(salon ? salon.address : "Salon not found");
+      }
+    }, [managerInfo])
 
   const createStylishData = async (e) => {
     e.preventDefault();
@@ -107,7 +114,6 @@ const ManagerCreateStylist = () => {
       createValues.image = formData.image;
     }
 
-    console.log(createValues);
     setLoading(true);
     try {
       const response = await api.post(`stylist/create`, createValues);
