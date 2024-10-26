@@ -444,6 +444,7 @@ const ManagerBookingInProcess = () => {
             </table>
           </div>
         </div>
+        {bookings && bookings.length > 0 && (
         <div className="manager-booking-in-process__pagination">
           <div className="manager-booking-in-process__pagination-pages">
             <span
@@ -469,6 +470,7 @@ const ManagerBookingInProcess = () => {
             </span>
           </div>
         </div>
+        )}
       </div>
 
       {isModalOpen && (

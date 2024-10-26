@@ -535,6 +535,7 @@ const StaffBookingPending = ({ buttonLabel }) => {
             </table>
           </div>
         </div>
+        {bookings && bookings.length > 0 && (
         <div className="staff-booking-pending__pagination">
           <div className="staff-booking-pending__pagination-pages">
             <span
@@ -560,6 +561,7 @@ const StaffBookingPending = ({ buttonLabel }) => {
             </span>
           </div>
         </div>
+        )}
       </div>
 
       {isModalOpen && (

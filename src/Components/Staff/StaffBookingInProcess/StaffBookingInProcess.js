@@ -499,12 +499,8 @@ const StaffBookingInProcess = ({ buttonLabel }) => {
             </table>
           </div>
         </div>
+        {bookings && bookings.length > 0 && (
         <div className="staff-booking-in-process__pagination">
-          <p>
-            Showing {currentPage * 4 + 1} -{" "}
-            {Math.min((currentPage + 1) * 4, bookings.length)} from{" "}
-            {bookings.length} data
-          </p>
           <div className="staff-booking-in-process__pagination-pages">
             <span
               onClick={() => handlePageChange(currentPage - 1)}
@@ -529,6 +525,7 @@ const StaffBookingInProcess = ({ buttonLabel }) => {
             </span>
           </div>
         </div>
+         )}
       </div>
 
       {isModalOpen && (

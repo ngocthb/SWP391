@@ -274,12 +274,8 @@ const StaffBookingComplete = () => {
             </table>
           </div>
         </div>
+        {bookings && bookings.length > 0 && (
         <div className="staff-booking-complete__pagination">
-          <p>
-            Showing {currentPage * 4 + 1} -{" "}
-            {Math.min((currentPage + 1) * 4, bookings.length)} from{" "}
-            {bookings.length} data
-          </p>
           <div className="staff-booking-complete__pagination-pages">
             <span
               onClick={() => handlePageChange(currentPage - 1)}
@@ -304,6 +300,7 @@ const StaffBookingComplete = () => {
             </span>
           </div>
         </div>
+        )}
       </div>
 
     </>

@@ -219,6 +219,7 @@ const ManagerBookingComplete = () => {
             </table>
           </div>
         </div>
+        {bookings && bookings.length > 0 && (
         <div className="manager-booking-complete__pagination">
           <div className="manager-booking-complete__pagination-pages">
             <span
@@ -244,6 +245,7 @@ const ManagerBookingComplete = () => {
             </span>
           </div>
         </div>
+         )}
       </div>
       </>
     );

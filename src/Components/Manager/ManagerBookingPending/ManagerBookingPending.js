@@ -45,7 +45,6 @@ const ManagerBookingPending = () => {
     time: "",
     serviceName: [],
   });
-  const [selectedTime, setSelectedTime] = useState("");
   const [manager, setManager] = useState([]);
 
   const formatDateForInput = (dateString) => {
@@ -444,6 +443,7 @@ const ManagerBookingPending = () => {
             </table>
           </div>
         </div>
+        {bookings && bookings.length > 0 && (
         <div className="manager-booking-pending__pagination">
           <div className="manager-booking-pending__pagination-pages">
             <span
@@ -469,6 +469,7 @@ const ManagerBookingPending = () => {
             </span>
           </div>
         </div>
+         )}
       </div>
 
       {isModalOpen && (

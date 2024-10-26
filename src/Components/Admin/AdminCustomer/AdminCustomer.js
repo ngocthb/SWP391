@@ -243,6 +243,7 @@ const AdminVoucher = () => {
           </div>
         </div>
 
+        {customers && customers.length > 0 && (
         <div className="admin-customer__pagination">
           <div className="admin-customer__pagination-pages">
             <span
@@ -268,6 +269,7 @@ const AdminVoucher = () => {
             </span>
           </div>
         </div>
+        )}
       </div>
     </>
   );

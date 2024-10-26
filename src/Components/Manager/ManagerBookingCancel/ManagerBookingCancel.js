@@ -218,6 +218,7 @@ const ManagerBookingCancel = () => {
             </table>
           </div>
         </div>
+        {bookings && bookings.length > 0 && (
         <div className="manager-booking-cancel__pagination">
           <div className="manager-booking-cancel__pagination-pages">
             <span
@@ -243,6 +244,7 @@ const ManagerBookingCancel = () => {
             </span>
           </div>
         </div>
+        )}
       </div>
       </>
     );

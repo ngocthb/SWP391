@@ -19,6 +19,8 @@ const ManagerCreateStylist = () => {
     image: loginUser.avatar,
   });
   const navigate = useNavigate();
+  const [managerInfo, setManagerInfo] = useState([]);
+  const [salonAddress, setSalonAddress] = useState("");
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -59,6 +61,22 @@ const ManagerCreateStylist = () => {
     });
   };
 
+  useEffect(() => {
+    const fetchManagerData = async () => {
+      try {
+        const response = await api.get(`manager/profile`);
+        const data = response.data.result;
+        console.log(data);
+        if (data) {
+          setManagerInfo(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchManagerData();
+  }, []);
+
   const createStylishData = async (e) => {
     e.preventDefault();
     const selectedSkillsId = selectedSkills.map(Number);
@@ -78,7 +96,7 @@ const ManagerCreateStylist = () => {
       password: e.target[7].value,
       skillId: selectedSkillsId,
       levelId: e.target[7 + numberOfSkillId + 1].value,
-      salonId: e.target[7 + numberOfSkillId + 2].value,
+      salonId: managerInfo?.salonId,
       image: null,
     };
 
@@ -333,22 +351,16 @@ const ManagerCreateStylist = () => {
                       htmlFor="salon"
                       className="manager-create-stylist__label"
                     >
-                      Select Salon:
+                      Salon:
                     </label>
-                    <select
+                    <input
+                      type="text"
                       id="salon"
-                      className="manager-create-stylist__select"
-                      defaultValue={0}
-                    >
-                      <option value={0} disabled>
-                        Select Salon
-                      </option>
-                      {salonLocations.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.address}
-                        </option>
-                      ))}
-                    </select>
+                      className="manager-create-stylist__input"
+                      value={salonAddress}
+                      disabled
+                      placeholder="Loading salon address..."
+                    />
                   </div>
                 </div>
               </div>

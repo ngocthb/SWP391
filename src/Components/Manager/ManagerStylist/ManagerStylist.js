@@ -374,36 +374,33 @@ export default function ManagerStylist({ buttonLabel }) {
           </div>
         </div>
 
-        <div className="manager-stylist__pagination">
-          <p>
-            Showing {currentPage * 4 + 1} -{" "}
-            {Math.min((currentPage + 1) * 4, stylists.length)} from{" "}
-            {stylists.length} data
-          </p>
-          <div className="manager-stylist__pagination-pages">
-            <span
-              onClick={() => handlePageChange(currentPage - 1)}
-              className={currentPage === 0 ? "disabled" : ""}
-            >
-              <FaAngleLeft className="pagination-icon" />
-            </span>
-            {[...Array(totalPages)].map((_, index) => (
+        {stylists && stylists.length > 0 && (
+          <div className="manager-stylist__pagination">
+            <div className="manager-stylist__pagination-pages">
               <span
-                key={index}
-                onClick={() => handlePageChange(index)}
-                className={currentPage === index ? "active" : ""}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className={currentPage === 0 ? "disabled" : ""}
               >
-                {index + 1}
+                <FaAngleLeft className="pagination-icon" />
               </span>
-            ))}
-            <span
-              onClick={() => handlePageChange(currentPage + 1)}
-              className={currentPage === totalPages - 1 ? "disabled" : ""}
-            >
-              <FaChevronRight className="pagination-icon" />
-            </span>
+              {[...Array(totalPages)].map((_, index) => (
+                <span
+                  key={index}
+                  onClick={() => handlePageChange(index)}
+                  className={currentPage === index ? "active" : ""}
+                >
+                  {index + 1}
+                </span>
+              ))}
+              <span
+                onClick={() => handlePageChange(currentPage + 1)}
+                className={currentPage === totalPages - 1 ? "disabled" : ""}
+              >
+                <FaChevronRight className="pagination-icon" />
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {isModalOpen && (
