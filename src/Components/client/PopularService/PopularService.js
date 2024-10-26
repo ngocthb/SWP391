@@ -1,19 +1,45 @@
-import { React } from "react";
-
+import { React, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RiScissorsFill } from "react-icons/ri";
 import { FiDroplet } from "react-icons/fi";
 import { PiHairDryerBold } from "react-icons/pi";
 import { GiComb } from "react-icons/gi";
 import { FaArrowRight } from "react-icons/fa6";
 import "./PopularService.scss";
-import services from "../../../data/services";
-const Data = services;
+import api from "../../../config/axios";
+import DOMPurify from "dompurify";
 export default function PopularService() {
+  const navigate = useNavigate();
+  const [services, setServices] = useState([]);
+  function formatPrice(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await api.get("service/newest");
+        const data = response.data.result;
+        if (data) {
+          setServices(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  const handleClick = (serviceId) => {
+    sessionStorage.setItem("selectedServicesId", JSON.stringify([serviceId]));
+    navigate("/booking/step1");
+  };
+
   return (
     <section className="service container section">
       <div className="service__container">
         <div className="service__container-title">
-          <h2>Popular Combo</h2>
+          <h2>Popular Service</h2>
           <p>
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis
             esse consequatur veniam quis fugit?
@@ -21,17 +47,16 @@ export default function PopularService() {
         </div>
 
         <div className="mainContent grid">
-          {(Data || []).map((item) => (
-            <div key={item.id} className="service__combo">
+          {(services || []).map((service) => (
+            <div key={service.id} className="service__combo">
               <div className="service__combo-img">
-                <img src={item.imgSrc} alt={item.nameService} />
-                <span className="service__combo-discount">{item.discount}</span>
+                <img src={service.image} alt={service.serviceName} />
+                <span className="service__combo-discount">Hot</span>
               </div>
 
               <div className="service__details">
                 <div className="service__details-price flex">
-                  <h4>{item.price}</h4>
-                  <span>Hot</span>
+                  <h4>{service.price && formatPrice(service.price)} VND</h4>
                 </div>
                 <div className="service__name flex">
                   <div className="service__name-single flex">
@@ -53,10 +78,17 @@ export default function PopularService() {
                 </div>
 
                 <small className="service__details-description">
-                  {item.description}
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(service.description || ""),
+                    }}
+                  />
                 </small>
 
-                <button className="service__details-btn btn flex">
+                <button
+                  className="service__details-btn btn flex"
+                  onClick={() => handleClick(service.id)}
+                >
                   Booking Now
                   <FaArrowRight className="service__details-icon" />
                 </button>

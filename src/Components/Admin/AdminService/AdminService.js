@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import "./AdminService.scss";
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { HiTrash } from "react-icons/hi2";
 import { FaUserEdit } from "react-icons/fa";
@@ -10,16 +10,23 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 import DOMPurify from "dompurify";
 import Swal from "sweetalert2";
-import { Spin } from "antd";
+import { Badge, Spin } from "antd";
 import { Editor } from "@tinymce/tinymce-react";
 import service from "../../../data/service";
 import uploadFile from "../../../utils/upload";
 import { useDispatch, useSelector } from "react-redux";
 import { updateService } from "../../../actions/Update";
+import { IoCloseCircle } from "react-icons/io5";
+import { MdRestartAlt } from "react-icons/md";
+import UploadImage from "./UploadImage";
 
 export default function AdminService() {
+  const [services, setServices] = useState([]);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const inputRef = useRef(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState(services);
   const createService = () => {
     navigate("/admin/service/create");
   };
@@ -38,6 +45,11 @@ export default function AdminService() {
   const isUpdate = useSelector((state) => state.updateServiceReducer);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [collectionImageFiles, setCollectionImageFiles] = useState([]);
+
+  const handleCollectionImagesChange = (newFileList) => {
+    setCollectionImageFiles(newFileList);
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -49,7 +61,10 @@ export default function AdminService() {
     }
   };
 
-  const [services, setServices] = useState([]);
+  const handleClick = () => {
+    setSearchValue("");
+    inputRef.current.focus();
+  };
 
   const fetchServices = async (page) => {
     try {
@@ -59,12 +74,37 @@ export default function AdminService() {
 
       if (data) {
         setServices(data);
+        setSearchResults(data);
         setTotalPages(total);
       }
     } catch (error) {
-
+      console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setSearchResults(services);
+      return;
+    }
+
+    const fetchServices = async () => {
+      const value = {
+        name: searchValue,
+      };
+      try {
+        const response = await api.post(`service/searchByName`, value);
+        const data = response.data.result;
+        if (data) {
+          setSearchResults(data);
+        }
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchServices();
+  }, [searchValue]);
 
   useEffect(() => {
     fetchServices(currentPage);
@@ -101,6 +141,7 @@ export default function AdminService() {
           text: "The service has been deleted.",
           icon: "success",
         });
+        fetchServices(currentPage);
       }
     } catch (err) {
       console.error(err);
@@ -110,24 +151,58 @@ export default function AdminService() {
   const confirmDeleteModal = (serviceId) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You want to delete this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete this service!",
     }).then(async (result) => {
-      console.log(result.isConfirmed);
       if (result.isConfirmed) {
         try {
           await deleteServiceData(serviceId);
           fetchServices();
-        } catch (error) { }
+        } catch (error) {}
       }
     });
   };
 
-  const updateStylistData = async (e) => {
+  const activeServiceData = async (serviceId) => {
+    try {
+      const response = await api.put(`service/active/${serviceId}`);
+      if (response.data) {
+        Swal.fire({
+          title: "Active!",
+          text: "The service has been active again.",
+          icon: "success",
+        });
+        fetchServices(currentPage);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const confirmActiveModal = (serviceId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to active this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, active this service!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await activeServiceData(serviceId);
+          fetchServices();
+        } catch (error) {}
+      }
+    });
+  };
+
+  const updateServiceData = async (e) => {
     e.preventDefault();
 
     const updateValues = {
@@ -136,7 +211,35 @@ export default function AdminService() {
       duration: e.target[3].value,
       description: e.target[4].value,
       image: null,
+      collectionsImage: null,
     };
+
+    if (collectionImageFiles.length > 0) {
+      try {
+        const existingImages = collectionImageFiles.filter(file => file.url).map(file => file.url);
+        const newFiles = collectionImageFiles.filter(file => !file.url);
+    
+ 
+        const uploadPromises = newFiles.map(file => uploadFile(file.originFileObj));
+        const newFirebaseResponses = await Promise.all(uploadPromises);
+    
+        updateValues.collectionsImage = [
+          ...existingImages,
+          ...newFirebaseResponses.filter(url => url)
+        ];
+    
+        if (updateValues.collectionsImage.length === 0) {
+          updateValues.collectionsImage = null;
+        }
+      } catch (error) {
+        console.error("Error uploading collection images:", error);
+        updateValues.collectionsImage = collectionImageFiles
+          .filter(file => file.url)
+          .map(file => file.url);
+      }
+    } else {
+      updateValues.collectionsImage = formData.collectionsImage || null;
+    }
 
     if (selectedFileObject) {
       const firebaseResponse = await uploadFile(selectedFileObject);
@@ -145,7 +248,6 @@ export default function AdminService() {
       updateValues.image = formData.image;
     }
 
-    console.log(updateValues);
     setLoading(true);
     try {
       const response = await api.put(
@@ -153,7 +255,6 @@ export default function AdminService() {
         updateValues
       );
       const data = response.data.result;
-      console.log(data);
       dispatch(updateService());
       toggleModal();
       if (data) {
@@ -166,8 +267,8 @@ export default function AdminService() {
           image: selectedFileObject || prev.image,
         }));
       }
-      
     } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -187,6 +288,7 @@ export default function AdminService() {
           description: data.description,
           duration: data.duration,
           image: data.image,
+          collectionsImage: data.collectionsImage
         }));
       }
     } catch (err) {
@@ -211,7 +313,11 @@ export default function AdminService() {
   };
 
   const handleSubmit = (e) => {
-    updateStylistData(e);
+    updateServiceData(e);
+  };
+
+  const handleChange = (e) => {
+    setSearchValue(e.target.value);
   };
 
   return (
@@ -221,57 +327,76 @@ export default function AdminService() {
           <div className="admin-service__header">
             <div className="admin-service__header-searchBar">
               <BiSearchAlt className="searchBar-icon" />
-              <input placeholder="Search here..." type="text" />
+              <input
+                ref={inputRef}
+                placeholder="Search here..."
+                type="text"
+                value={searchValue}
+                onChange={handleChange}
+              />
+              {searchValue && (
+                <IoCloseCircle className="close-icon" onClick={handleClick} />
+              )}
             </div>
             <div className="admin-service__header-filter">
-              <select>
-                <option>Newest</option>
-                <option>Oldest</option>
-              </select>
               <button onClick={createService}> + New Service</button>
             </div>
           </div>
           <div className="service">
-            {(services || []).map((service) => (
-              <div key={service.id} className="service__card">
-                <div className="service__card-content">
-                  <img alt="Service Img" src={service.image} />
-                  <div className="content-info">
-                    <h3>{service.serviceName}</h3>
-                    <p>Price : {formatCurrency(service.price)}</p>
-                    <p>Duration : {formatDuration(service.duration)}</p>
-                    <p
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(service.description || ""),
-                      }}
-                    />
+            {searchResults &&
+              searchResults.map((service, index) => (
+                <div key={index} className="service__card">
+                  <Badge.Ribbon
+                    style={{ top: "-20px", right: "-25px" }}
+                    text={service.delete ? "Un Active" : "Active"}
+                    color={service.delete ? "gray" : "#0A7042"}
+                  >
+                    <div className="service__card-content">
+                      <img alt="Service Img" src={service.image} />
+
+                      <div className="content-info">
+                        <h3>{service.serviceName}</h3>
+                        <p>Price: {formatCurrency(service.price)}</p>
+                        <p>Duration: {formatDuration(service.duration)}</p>
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(
+                              service.description || ""
+                            ),
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </Badge.Ribbon>
+                  <div className="service-actions">
+                    {service.delete ? (
+                      <button
+                        className="active btn"
+                        onClick={() => confirmActiveModal(service.id)}
+                      >
+                        <MdRestartAlt />
+                      </button>
+                    ) : (
+                      <button
+                        className="delete btn"
+                        onClick={() => confirmDeleteModal(service.id)}
+                      >
+                        <HiTrash />
+                      </button>
+                    )}
+                    <button
+                      className="update btn"
+                      onClick={() => toggleModal(service.id)}
+                    >
+                      <FaUserEdit />
+                    </button>
                   </div>
                 </div>
-                <div className="service-actions">
-                  <button
-                    className="delete btn"
-                    onClick={() => confirmDeleteModal(service.id)}
-                  >
-                    <HiTrash />
-                  </button>
-                  <button
-                    className="update btn"
-                    onClick={() => toggleModal(service.id)}
-                  >
-                    <FaUserEdit />
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
 
         <div className="admin-service__pagination">
-          <p>
-            Showing {currentPage * 4 + 1} -{" "}
-            {Math.min((currentPage + 1) * 4, services.length)} from{" "}
-            {services.length} data
-          </p>
           <div className="admin-service__pagination-pages">
             <span
               onClick={() => handlePageChange(currentPage - 1)}
@@ -386,7 +511,23 @@ export default function AdminService() {
                         />
                       </div>
                     </div>
-
+                    <div
+                      className="admin-service-modal__form-grid
+              admin-service-modal__form-grid--full-width"
+                    >
+                      <div className="admin-service-modal__form-group">
+                        <label
+                          htmlFor="collectionImage"
+                          className="admin-service-modal__label"
+                        >
+                          Collection Image:
+                        </label>
+                        <UploadImage
+                          previewImage={formData.collectionsImage}
+                          onChange={handleCollectionImagesChange}
+                        />
+                      </div>
+                    </div>
                     <div className="admin-service-modal__form-grid">
                       <div className="admin-service-modal__form-group">
                         <label

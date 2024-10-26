@@ -5,6 +5,7 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
+import { GoDotFill } from "react-icons/go";
 
 function MenuSider() {
   const location = useLocation();
@@ -12,21 +13,50 @@ function MenuSider() {
 
   const items = [
     {
-      label: <Link to="/staff/booking">Booking</Link>,
+      label: "Booking",
       icon: <InsertRowAboveOutlined />,
-      key: "/staff/booking",
+      key: "Booking",
+      children: [
+        {
+          label: (
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <GoDotFill style={{ color: "yellow", marginRight: 8 }} />
+              <Link to="/staff/booking/pending">Pending</Link>
+            </span>
+          ),
+          key: "/staff/booking/pending",
+        },
+        {
+          label: (
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <GoDotFill style={{ color: "blue", marginRight: 8 }} />
+              <Link to="/staff/booking/in-process">In Process</Link>
+            </span>
+          ),
+          key: "/staff/booking/in-process",
+        },
+        {
+          label: (
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <GoDotFill style={{ color: "green", marginRight: 8 }} />
+              <Link to="/staff/booking/complete">Complete</Link>
+            </span>
+          ),
+          key: "/staff/booking/complete",
+        },
+      ],
     },
     {
-      label: <Link to="/staff/booking-service">Booking Service</Link>,
+      label: <Link to="/staff/new-customer">New Customer</Link>,
       icon: <PlusOutlined />,
-      key: "/staff/booking-service",
+      key: "/staff/new-customer",
     },
   ];
 
   return (
     <Menu
       mode="inline"
-      defaultOpenKeys={["Employee"]}
+      defaultOpenKeys={["Booking"]}
       selectedKeys={[currentPath]}
       items={items}
       style={{ height: "100%", borderRight: 0 }}

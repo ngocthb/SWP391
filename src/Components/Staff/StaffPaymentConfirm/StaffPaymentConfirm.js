@@ -40,7 +40,6 @@ const StaffPaymentConfirm = () => {
         const response =
           await api.get(`payment/response?vnp_BankCode=${result.vnp_BankCode}&vnp_CardType=${result.vnp_CardType}&vnp_ResponseCode=${result.vnp_ResponseCode}&vnp_TxnRef=${result.vnp_TxnRef}
 `);
-        
         const data = response.data;
         if (data) {
           setTransactionId(data.match(/Transaction ID:\s*(\d+)/)[1]);

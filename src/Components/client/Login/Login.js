@@ -41,9 +41,9 @@ const Login = () => {
       } else if (role === "BRANCH_MANAGER") {
         navigate("/manager/dashboard");
       } else if (role === "STYLIST") {
-        navigate("/stylist");
+        navigate("/stylist/dashboard");
       } else if (role === "STAFF") {
-        navigate("/staff/booking");
+        navigate("/staff/booking/pending");
       } else {
         navigate("/");
       }
@@ -72,17 +72,17 @@ const Login = () => {
       if (data) {
         const { token, role } = data;
         sessionStorage.setItem("token", token);
-        dispatch(setRole(role));
 
         if (role === "ADMIN") {
           navigate("/admin/dashboard");
          }else if (role === "BRANCH_MANAGER"){
           navigate("/manager/dashboard");
          }else if (role === "STYLIST") {
-          navigate("/stylist")
+          navigate("/stylist/dashboard")
          }else if (role === "STAFF") {
-          navigate("/staff")
-         }else{
+          navigate("/staff/booking/pending");
+        }
+        else{
           navigate("/");
          }
       }

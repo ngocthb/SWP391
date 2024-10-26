@@ -10,6 +10,7 @@ import { SlPeople } from "react-icons/sl";
 import "./ChooseDateTime.scss";
 import { slots } from "../../../../data/booking";
 import api from "../../../../config/axios";
+import Swal from "sweetalert2";
 
 export default function ChooseDateTime() {
   const today = new Date();
@@ -98,14 +99,22 @@ export default function ChooseDateTime() {
 
        try {
         const response = await api.post("booking/slots", bookingValue);
-        const data = response.data.result;
+        const data = response.data.result; 
         if (data) {
+          if (data.length === 0) {
+            Swal.fire({
+              icon: "error",
+              title: "Sorry",
+              text: "Today, this stylist is fully booked",
+            });
+          }
           setAvailableSlots(data);
         }
       } catch (error) {}
     };
     fetchTimeSlots();
-  }, [selectedDate, handleTimeSlotClick]);
+    
+  }, [selectedDate]);
 
   return (
     <div className="chooseDateTime">

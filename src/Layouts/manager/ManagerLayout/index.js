@@ -5,15 +5,33 @@ import ManagerHeader from "../../../Components/Manager/ManagerHeader/ManagerHead
 import MenuSider from "../../../Components/Manager/MenuSider/index";
 import { useSelector } from "react-redux";
 import ManagerFooter from "../../../Components/Manager/ManagerFooter/ManagerFooter";
+import { useEffect, useState } from "react";
+import api from "../../../config/axios";
 
 const { Content, Sider } = Layout;
 
 function ManagerLayout() {
   const collapse = useSelector((state) => state.collapseReducer);
+  const [managerInfo, setManagerInfo] = useState([]);
+
+  useEffect(() => {
+    const fetchManagerData = async () => {
+      try {
+        const response = await api.get(`manager/profile`);
+        const data = response.data.result;
+        if (data) {
+          setManagerInfo(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchManagerData();
+  }, []);
 
   return (
     <Layout className="manager-layout" style={{ minHeight: "100vh" }}>
-      <ManagerHeader />
+      <ManagerHeader managerInfo={managerInfo}/>
       <Layout className="manager-layout__inner">
         <Sider
           theme="light"
@@ -30,7 +48,7 @@ function ManagerLayout() {
         </Sider>
         <Layout className={`manager-layout__content ${collapse ? "manager-layout__content--collapsed" : "manager-layout__content--expanded"}`}>
           <Content className="manager-layout__content-inner">
-            <Outlet />
+            <Outlet manager={managerInfo}/>
           </Content>
           <div className="manager-layout__footer">
             <ManagerFooter />

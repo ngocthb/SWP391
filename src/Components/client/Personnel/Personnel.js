@@ -1,7 +1,9 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { BsArrowRightShort } from "react-icons/bs";
 import { FaStar } from "react-icons/fa6";
+import { StarFilled } from "@ant-design/icons";
 import {
   Swiper as PersonnelsSwiper,
   SwiperSlide as PersonnelsSwiperSlide,
@@ -11,11 +13,35 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import Personnels from "../../../data/personnels";
 import { RxDividerHorizontal } from "react-icons/rx";
-const Data = Personnels;
+import api from "../../../config/axios";
 
 export default function Personnel() {
+  const [stylists, setStylists] = useState([]);
+
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const formattedDate = `${year}-${month}`;
+
+  const fetchStylistsData = async () => {
+    try {
+      const response = await api.get(
+        `stylist/stylists/feedback-revenue?yearAndMonth=${formattedDate}`
+      );
+      const data = response.data.result;
+      if (data) {
+        setStylists(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStylistsData();
+  }, []);
+
   return (
     <section className="personnel section container">
       <div className="personnel__container">
@@ -71,17 +97,31 @@ export default function Personnel() {
           className="PersonnelSwiper"
         >
           <div className="grid personnel__main">
-            {Data.map((item) => (
+            {(stylists || []).map((item) => (
               <PersonnelsSwiperSlide
-                key={item.id}
+                key={item.stylistId}
                 className="PersonnelSwiperSlide"
               >
                 <div className="personnel__single">
-                  <img src={item.imgSrc} alt={item.perName} />
+                  <img src={item.image} alt={item.stylistName} />
 
                   <div className="personnel__single-info">
-                    <h3>{item.perName}</h3>
-                    <p>{item.description}</p>
+                    <h3>{item.stylistName}</h3>
+                    <h3>{item.averageFeedback}</h3>
+                    <p>{item.totalRevenue}</p>
+                    <div className="feedback__rating">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <div key={s}>
+                          <StarFilled
+                            className={
+                              item.score / 2 < s
+                                ? "feedback-not-rating"
+                                : "feedback-rating"
+                            }
+                          />
+                        </div>
+                      ))}
+                    </div>
                     <BsArrowRightShort className="info-icon" />
                   </div>
 
@@ -91,7 +131,7 @@ export default function Personnel() {
                       <RxDividerHorizontal className="footer-div-iconLine " />
                     </div>
                     <div className="footer-text flex">
-                      <h6>{item.perName}</h6>
+                      <h6>{item.stylistName}</h6>
                       <img src="logo_blue_noBackground.png" alt="logo" />
                     </div>
                   </div>

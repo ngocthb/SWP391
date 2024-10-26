@@ -52,6 +52,24 @@ export const updateVoucherReducer = (state = false, action) => {
   }
 };
 
+export const updateBranchReducer = (state = false, action) => {
+  switch (action.type) {
+    case "UPDATE_BRANCH":
+      return !state;
+    default:
+      return state;
+  }
+};
+
+export const updateSlotReducer = (state = false, action) => {
+  switch (action.type) {
+    case "UPDATE_SLOT":
+      return !state;
+    default:
+      return state;
+  }
+};
+
 export const updateCustomerReducer = (state = false, action) => {
   switch (action.type) {
     case "UPDATE_CUSTOMER":

@@ -43,6 +43,16 @@
         color: #888;
         margin-top: 20px;
       }
+
+      .close-icon {
+        position: absolute;
+        right: 20px;
+        align-items: center;
+        transform: translateY(-50%);
+        font-size: 15px;
+        color: #888;
+        margin-top: 15px;
+      }
     }
     &-filter {
       display: flex;
@@ -131,6 +141,10 @@
         }
         .delete {
           background-color: #f44336;
+          color: #fff;
+        }
+        .active {
+          background-color: #0A7042;
           color: #fff;
         }
         .update {

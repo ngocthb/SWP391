@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import loginUser from "../../../data/loginUser.js";
 import api from "../../../config/axios.js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TbLogout } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 import { logo_white_noBackground } from "../../../data/image.js";
 import { CiCalendar } from "react-icons/ci";
+import { setRole } from "../../../actions/Role.js";
 
 export default function Header() {
   const [active, setActive] = useState("navBar");
@@ -18,6 +19,7 @@ export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const isUpdate = useSelector((state) => state.updateUserReducer);
+  const dispatch = useDispatch();
 
   //Code to show(toggle) navbar
   const showNav = () => {
@@ -42,6 +44,7 @@ export default function Header() {
       const data = response.data.result;
       if (data) {
         setUserInfo(data);
+        dispatch(setRole(data.role));
       }
     } catch (err) {
       console.log(err);
@@ -80,7 +83,6 @@ export default function Header() {
 
   const handleLogout = () => {
     sessionStorage.clear();
-    // Redirect to home or login page
     window.location.href = "/";
   };
 
@@ -95,7 +97,6 @@ export default function Header() {
     return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
   }
 
-  console.log(formatRole("CUSTOMER"));
 
   return (
     <section className="navBarSection">
@@ -180,10 +181,12 @@ export default function Header() {
                       <i className="fas fa-cog"></i>
                       Account Setting
                     </Link> */}
-                      <Link to="/user/mybooking">
-                        <CiCalendar />
-                        My booking
-                      </Link>
+                    <Link to="/user/mybooking">
+                     <i>
+                     <CiCalendar />
+                     </i>
+                     My booking
+                    </Link>
                       <Link to="#" onClick={handleLogout}>
                         <i>
                           <TbLogout />

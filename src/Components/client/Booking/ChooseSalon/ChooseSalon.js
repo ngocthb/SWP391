@@ -23,7 +23,7 @@ export default function ChooseSalon() {
   useEffect(() => {
     const fetchSalonLocations = async () => {
       try {
-        const response = await api.get("salons");
+        const response = await api.get("salon");
         const data = response.data.result;
         if (data) {
           setSalonLocations(data);

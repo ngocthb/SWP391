@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { collapse } from "../../../actions/Collapse";
 import "./ManagerHeader.scss";
-import api from "../../../config/axios";
+
 import loginUser from "../../../data/loginUser";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
@@ -14,22 +14,27 @@ const pageNames = {
   "/manager/dashboard": "Dashboard",
   "/manager/stylist": "Stylist",
   "/manager/stylist/create": "New Stylist",
-  "/manager/booking": "Booking",
+  "/manager/booking/pending": "Pending Booking",
+  "/manager/booking/in-process": "In-Process Booking",
+  "/manager/booking/complete": "Complete Booking",
+  "/manager/booking/cancel": "Cancel Booking",
   "/manager/service": "Service",
   "/manager/staff": "Staff",
   "/manager/staff/create": "New Staff",
   "/manager/customer": "Customer",
   "/manager/shift": "Shift",
+  "/manager/salary": "Salary",
+  "/manager/salary/calculate": "Salary Calculate",
 };
 
-const ManagerHeader = () => {
+const ManagerHeader = (props) => {
   const collapsed = useSelector((state) => state.collapseReducer);
   const dispatch = useDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
   const [pageName, setPageName] = useState("");
   const navigate = useNavigate();
-  const [managerInfo, setManagerInfo] = useState([]);
+  const {managerInfo} = props;
 
   const toggleDropdown = useCallback(() => {
     setDropdownOpen((prev) => !prev);
@@ -48,21 +53,7 @@ const ManagerHeader = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchManagerData = async () => {
-      try {
-        const response = await api.get(`manager/profile`);
-        const data = response.data.result;
-        console.log(data);
-        if (data) {
-          setManagerInfo(data);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchManagerData();
-  }, []);
+  
 
   useEffect(() => {
     setPageName(pageNames[location.pathname] || "");

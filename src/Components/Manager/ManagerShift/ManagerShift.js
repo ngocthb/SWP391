@@ -321,7 +321,7 @@ export default function ManagerShift() {
               menu={{
                 items,
               }}
-              trigger={["hover"]} // Show dropdown on hover
+              trigger={["hover"]}
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Space>

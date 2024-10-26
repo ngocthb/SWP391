@@ -103,7 +103,7 @@ const StaffPayment = () => {
           title: data,
           timer: 2500,
         });
-        navigate("/staff/booking-service");
+        navigate("/staff/booking/complete");
       }
     } catch (error) {
       console.error(error);

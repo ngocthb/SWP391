@@ -8,7 +8,7 @@ const PrivateRoute = ({ children, requiredRole }) => {
   const role = useSelector((state) => state.setRoleReducer);
 
   useEffect(() => {
-    if (!role || (requiredRole && role !== requiredRole)) {
+    if (!role.role || (requiredRole && role.role !== requiredRole)) {
       navigate("/login");
     }
   }, [role, navigate, requiredRole]);

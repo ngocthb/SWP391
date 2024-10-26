@@ -2,13 +2,14 @@ import React from "react";
 import { Menu } from "antd";
 import {
   HighlightOutlined,
-  InsertRowAboveOutlined,
   ContactsOutlined,
   DashboardOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import { LiaUserTieSolid } from "react-icons/lia";
 import { FiUser } from "react-icons/fi";
+import { IoTimeOutline } from "react-icons/io5";
 import { MdOutlineDiscount } from "react-icons/md";
 
 function MenuSider() {
@@ -47,6 +48,16 @@ function MenuSider() {
       label: <Link to="/admin/customer">Customer</Link>,
       icon: <FiUser />,
       key: "/admin/customer",
+    },
+    {
+      label: <Link to="/admin/branch">Branch</Link>,
+      icon: <HomeOutlined />,
+      key: "/admin/branch",
+    },
+    {
+      label: <Link to="/admin/slot">Slot</Link>,
+      icon: <IoTimeOutline />,
+      key: "/admin/slot",
     },
   ];
 
