@@ -53,6 +53,9 @@ import StaffCreateBooking from "../Components/Staff/StaffCreateBooking/StaffCrea
 import StaffBookingService from "../Components/Staff/StaffBookingService/StaffBookingService";
 import StaffPaymentConfirm from "../Components/Staff/StaffPaymentConfirm/StaffPaymentConfirm";
 import StaffVNPayQR from "../Components/Staff/StaffVNPayQR/StaffVNPayQR";
+import ManagerUpdateShift from "../Components/Manager/ManagerShiftUpdate/ManagerUpdateShift";
+import ServicesDetails from "../Components/client/ServiceDetails/ServiceDetails";
+
 export const Routes = [
   {
     path: "/",
@@ -73,6 +76,10 @@ export const Routes = [
       {
         path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/details",
+        element: <ServicesDetails />,
       },
     ],
   },
@@ -168,6 +175,10 @@ export const Routes = [
       {
         path: "shift/create",
         element: <ManagerCreateShift />,
+      },
+      {
+        path: "shift/update",
+        element: <ManagerUpdateShift />,
       },
     ],
   },

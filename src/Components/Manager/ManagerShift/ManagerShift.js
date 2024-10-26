@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -32,7 +31,8 @@ export default function ManagerShift() {
     workingDate: "",
     shiftId: [],
   });
-
+  const [changedShifts, setChangedShifts] = useState([]);
+  const [selectedStylist, setSelectedStylist] = useState({});
   const CalendarDropdown = () => {
     const wrapperStyle = {
       width: 320,
@@ -63,6 +63,7 @@ export default function ManagerShift() {
       label: <CalendarDropdown />,
     },
   ];
+
   useEffect(() => {
     const fetchManagerData = async () => {
       try {
@@ -111,7 +112,9 @@ export default function ManagerShift() {
     console.log(selectDay);
     console.log(salonId);
     try {
-      const response = await api.get(`stylist/schedule/${selectDay}/${salonId}`);
+      const response = await api.get(
+        `stylist/schedule/${selectDay}/${salonId}`
+      );
       const data = response.data.result;
       // const response = await api.get(
       //   `stylist-schedule?workingDate=${selectDay}&`,
@@ -126,7 +129,7 @@ export default function ManagerShift() {
           const stylist = stylistsData.find(
             (stylist) => stylist.fullname === shift.stylistName
           );
-          
+
           return {
             ...shift,
             stylistId: stylist ? stylist.id : null,
@@ -172,14 +175,10 @@ export default function ManagerShift() {
       workingDate: formData.workingDate,
       shiftId: selectedShift,
     };
-
+    console.log(formData.id);
+    console.log(selectedShift);
     setLoading(true);
     try {
-      // const response = await api.put(
-      //   `stylist-schedule/${formData.id}`,
-      //   updateValues
-      // );
-      // const data = response.data;
       const response = await api.put(
         `stylist/schedule/${formData.id}`,
         updateValues
@@ -197,6 +196,24 @@ export default function ManagerShift() {
         }));
         dispatch(updateShift());
         setIsModalOpen(!isModalOpen);
+        setChangedShifts([]);
+        Swal.fire({
+          title: "Updated!",
+          text: "The booking has been update.",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate(`/manager/shift/update`, {
+              state: {
+                stylistScheduleId: formData.id,
+                shiftId: changedShifts,
+                stylist: selectedStylist,
+                date: selectDay,
+              },
+            });
+          }
+        });
       }
     } catch (err) {
       console.log(err);
@@ -212,7 +229,6 @@ export default function ManagerShift() {
   const deleteShiftData = async (shiftId) => {
     console.log(shiftId);
     try {
-
       const response = await api.delete(`stylist/schedule/${shiftId}`);
       if (response.data) {
         Swal.fire({
@@ -260,11 +276,29 @@ export default function ManagerShift() {
 
   const handleSkillToggle = (shift) => {
     setSelectedShift((prevSelected) => {
-      if (prevSelected.includes(shift)) {
-        return prevSelected.filter((id) => id !== shift);
-      } else {
-        return [...prevSelected, shift];
-      }
+      const isShiftSelected = prevSelected.includes(shift);
+      const newSelectedShift = isShiftSelected
+        ? prevSelected.filter((id) => id !== shift)
+        : [...prevSelected, shift];
+
+      setChangedShifts((prevChanges) => {
+        const isShiftChanged = prevChanges.includes(shift);
+
+        if (
+          !isShiftChanged &&
+          formData.shiftId.includes(shift) !== newSelectedShift.includes(shift)
+        ) {
+          return [...prevChanges, shift];
+        } else if (
+          isShiftChanged &&
+          formData.shiftId.includes(shift) === newSelectedShift.includes(shift)
+        ) {
+          return prevChanges.filter((id) => id !== shift);
+        }
+        return prevChanges;
+      });
+
+      return newSelectedShift;
     });
   };
 
@@ -350,16 +384,13 @@ export default function ManagerShift() {
 
                     <td className="managerShift__actions">
                       <button
-                        onClick={() => toggleModal(stylist)}
+                        onClick={() => {
+                          toggleModal(stylist);
+                          setSelectedStylist(stylist);
+                        }}
                         className="managerShift__action-button"
                       >
                         ✎
-                      </button>
-                      <button
-                        onClick={() => confirmDeleteModal(stylist.id)}
-                        className="managerShift__action-button"
-                      >
-                        🗑
                       </button>
                     </td>
                   </tr>
