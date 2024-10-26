@@ -16,12 +16,13 @@ import loginUser from "../../../data/loginUser";
 import { useDispatch, useSelector } from "react-redux";
 import { Spin } from "antd";
 import uploadFile from "../../../utils/upload";
-import { updateStaff, updateStylist } from "../../../actions/Update";
+import { updateStaff } from "../../../actions/Update";
 import Swal from "sweetalert2";
 import {genders} from "../../../data/gender";
 
 export default function ManagerStaff({ buttonLabel }) {
   const [staffs, setStaffs] = useState([]);
+  const [manager, setManager] = useState([]);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -68,13 +69,33 @@ export default function ManagerStaff({ buttonLabel }) {
   }, []);
 
   useEffect(() => {
-    fetchStaffsData();
-  }, [isUpdate]);
+    const fetchManagerData = async () => {
+      try {
+        const response = await api.get(`manager/profile`);
+        const data = response.data.result;
+        if (data) {
+          setManager(data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+      }
+    };
+    fetchManagerData();
+  }, []);
+
+
+  useEffect(() => {
+    if (manager.salonId !== undefined) {
+      fetchStaffsData();
+    }
+  }, [isUpdate, manager]);
 
   const fetchStaffsData = async () => {
     try {
-      const response = await api.get(`staffs`);
+      const response = await api.get(`staff/salon/${manager.salonId}`);
       const data = response.data.result;
+      console.log(data)
       if (data) {
         setStaffs(data);
       }
@@ -216,7 +237,7 @@ export default function ManagerStaff({ buttonLabel }) {
     setSelectedFile(null);
   };
 
-  const createStylist = () => {
+  const createStaff = () => {
     navigate("/manager/staff/create");
   };
 
@@ -235,11 +256,7 @@ export default function ManagerStaff({ buttonLabel }) {
               <input placeholder="Search here..." type="text" />
             </div>
             <div className="manager-staff__header-filter">
-              <select>
-                <option>Newest</option>
-                <option>Oldest</option>
-              </select>
-              <button onClick={createStylist}> {buttonLabel}</button>
+              <button onClick={createStaff}> {buttonLabel}</button>
             </div>
           </div>
           <div className="container">

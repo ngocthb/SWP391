@@ -6,11 +6,9 @@ import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
-import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 import { LuClock } from "react-icons/lu";
-
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Modal } from "antd";
 import "./ChooseService.scss";
 

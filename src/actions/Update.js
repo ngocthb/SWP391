@@ -34,6 +34,18 @@ export const updateVoucher = () => {
   };
 };
 
+export const updateBranch = () => {
+  return {
+    type: "UPDATE_BRANCH",
+  };
+};
+
+export const updateSlot = () => {
+  return {
+    type: "UPDATE_SLOT",
+  };
+};
+
 export const updateCustomer = () => {
   return {
     type: "UPDATE_CUSTOMER",

@@ -47,11 +47,22 @@ import StylistDashboard from "../Components/Stylist/StylistDashboard/StylistDash
 import StylistSalary from "../Components/Stylist/StylistSalary/StylistSalary";
 import StaffLayout from "../Layouts/staff/StaffLayout";
 import StaffPayment from "../Components/Staff/StaffPayment/StaffPayment";
-import StaffBooking from "../Components/Staff/StaffBooking/StaffBooking";
 import StaffCreateBooking from "../Components/Staff/StaffCreateBooking/StaffCreateBooking";
-import StaffBookingService from "../Components/Staff/StaffBookingService/StaffBookingService";
 import StaffPaymentConfirm from "../Components/Staff/StaffPaymentConfirm/StaffPaymentConfirm";
 import StaffVNPayQR from "../Components/Staff/StaffVNPayQR/StaffVNPayQR";
+import AdminBranch from "../Components/Admin/AdminBranch/AdminBranch";
+import AdminCreateBranch from "../Components/Admin/AdminCreateBranch/AdminCreateBranch";
+import AdminSlot from "../Components/Admin/AdminSlot/AdminSlot";
+import ManagerSalary from "../Components/Manager/ManagerSalary/ManagerSalary";
+import ManagerCalculateSalary from "../Components/Manager/ManagerCalculateSalary/ManagerCalculateSalary";
+import StaffBookingPending from "../Components/Staff/StaffBookingPending/StaffBookingPending";
+import StaffBookingInProcess from "../Components/Staff/StaffBookingInProcess/StaffBookingInProcess";
+import StaffBookingComplete from "../Components/Staff/StaffBookingComplete/StaffBookingComplete";
+import ManagerBookingCancel from "../Components/Manager/ManagerBookingCancel/ManagerBookingCancel";
+import ManagerBookingComplete from "../Components/Manager/ManagerBookingComplete/ManagerBookingComplete";
+import ManagerBookingInProcess from "../Components/Manager/ManagerBookingInProcess/ManagerBookingInProcess";
+import ManagerBookingPending from "../Components/Manager/ManagerBookingPending/ManagerBookingPending";
+import StaffCreateCustomer from "../Components/Staff/StaffCreateCustomer/StaffCreateCustomer";
 export const Routes = [
   {
     path: "/",
@@ -104,10 +115,9 @@ export const Routes = [
   {
     path: "user",
     element: (
-      // <PrivateRoute requiredRole="CUSTOMER">
-      //<UserLayout />
-      // </PrivateRoute>
-      <UserLayout />
+      <PrivateRoute requiredRole="CUSTOMER">
+        <UserLayout />
+      </PrivateRoute>
     ),
     children: [
       {
@@ -153,6 +163,22 @@ export const Routes = [
         element: <ManagerBooking />,
       },
       {
+        path: "booking/pending",
+        element: <ManagerBookingPending buttonLabel={"+ New booking"}/>,
+      },
+      {
+        path: "booking/in-process",
+        element: <ManagerBookingInProcess buttonLabel={"+ New booking"}/>,
+      },
+      {
+        path: "booking/complete",
+        element: <ManagerBookingComplete/>,
+      },
+      {
+        path: "booking/cancel",
+        element: <ManagerBookingCancel/>,
+      },
+      {
         path: "customer",
         element: <ManagerCustomer />,
       },
@@ -168,11 +194,19 @@ export const Routes = [
         path: "shift/create",
         element: <ManagerCreateShift />,
       },
+      {
+        path: "salary",
+        element: <ManagerSalary/>,
+      },
+      {
+        path: "salary/calculate",
+        element: <ManagerCalculateSalary/>
+      },
     ],
   },
   {
     path: "booking",
-    element: <BookingLayout />,
+    element: <PrivateRoute requiredRole="CUSTOMER"><BookingLayout /></PrivateRoute>,
     children: [
       {
         path: "",
@@ -236,6 +270,18 @@ export const Routes = [
         path: "customer",
         element: <AdminCustomer buttonLabel={"New Customer"} />,
       },
+      {
+        path: "branch",
+        element: <AdminBranch buttonLabel={"New Branch"}/>
+      },
+      {
+        path: "branch/create",
+        element: <AdminCreateBranch/>
+      },
+      {
+        path: "slot",
+        element: <AdminSlot/>
+      },
     ],
   },
   {
@@ -277,16 +323,24 @@ export const Routes = [
         element: <StaffPayment />,
       },
       {
-        path: "booking",
-        element: <StaffBooking buttonLabel={"New Booking"} />,
+        path: "booking/pending",
+        element: <StaffBookingPending buttonLabel={"New Booking"} />,
+      },
+      {
+        path: "booking/in-process",
+        element: <StaffBookingInProcess buttonLabel={"New Booking"} />,
+      },
+      {
+        path: "booking/complete",
+        element: <StaffBookingComplete buttonLabel={"New Booking"} />,
       },
       {
         path: "booking/create",
         element: <StaffCreateBooking />,
       },
       {
-        path: "booking-service",
-        element: <StaffBookingService />,
+        path: "new-customer",
+        element: <StaffCreateCustomer/>
       },
     ],
   },
@@ -296,6 +350,6 @@ export const Routes = [
   },
   {
     path: "payment/VNPay",
-    element: <StaffVNPayQR/>
+    element: <StaffVNPayQR />,
   },
 ];

@@ -2,7 +2,6 @@ import { Layout } from "antd";
 import "./StaffLayout.scss";
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
-import AdminFooter from "../../../Components/Admin/AdminFooter/AdminFooter";
 import StaffHeader from "../../../Components/Staff/StaffHeader/StaffHeader";
 import MenuSider from "../../../Components/Staff/MenuSider";
 import StaffFooter from "../../../Components/Staff/StaffFooter/StaffFooter";

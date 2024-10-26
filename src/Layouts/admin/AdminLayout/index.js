@@ -30,7 +30,7 @@ function AdminLayout() {
         </Sider>
         <Layout className={`admin-layout__content ${collapse ? "admin-layout__content--collapsed" : "admin-layout__content--expanded"}`}>
           <Content className="admin-layout__content-inner">
-            <Outlet />
+            <Outlet/>
           </Content>
           <div className="admin-layout__footer">
             <AdminFooter/>

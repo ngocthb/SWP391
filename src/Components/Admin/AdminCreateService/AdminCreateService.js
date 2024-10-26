@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../../../utils/upload";
 import { Editor } from "@tinymce/tinymce-react";
 import service from "../../../data/service";
+import UploadImage from "../AdminService/UploadImage";
 
 const AdminCreateService = () => {
   const [loading, setLoading] = useState(false);
@@ -16,6 +17,11 @@ const AdminCreateService = () => {
     image: service.image,
   });
   const navigate = useNavigate();
+  const [collectionImageFiles, setCollectionImageFiles] = useState([]);
+
+  const handleCollectionImagesChange = (newFileList) => {
+    setCollectionImageFiles(newFileList);
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -51,7 +57,9 @@ const AdminCreateService = () => {
       skillId: Number(e.target[4].value),
       description: e.target[5].value,
       image: null,
+      collectionsImage: null,
     };
+
 
     if (selectedFileObject) {
       const firebaseResponse = await uploadFile(selectedFileObject);
@@ -60,7 +68,32 @@ const AdminCreateService = () => {
       createValues.image = formData.image;
     }
 
-    console.log(createValues);
+    if (collectionImageFiles.length > 0) {
+      try {
+        const existingImages = collectionImageFiles.filter(file => file.url).map(file => file.url);
+        const newFiles = collectionImageFiles.filter(file => !file.url);
+    
+ 
+        const uploadPromises = newFiles.map(file => uploadFile(file.originFileObj));
+        const newFirebaseResponses = await Promise.all(uploadPromises);
+    
+        createValues.collectionsImage = [
+          ...existingImages,
+          ...newFirebaseResponses.filter(url => url)
+        ];
+    
+        if (createValues.collectionsImage.length === 0) {
+          createValues.collectionsImage = null;
+        }
+      } catch (error) {
+        console.error("Error uploading collection images:", error);
+        createValues.collectionsImage = collectionImageFiles
+          .filter(file => file.url)
+          .map(file => file.url);
+      }
+    } else {
+      createValues.collectionsImage = formData.collectionsImage || null;
+    }
 
     setLoading(true);
     try {
@@ -199,6 +232,20 @@ const AdminCreateService = () => {
                         </option>
                       ))}
                     </select>
+                  </div>
+                </div>
+                <div className="admin-create-service__form-grid">
+                  <div className="admin-create-service__form-group">
+                    <label
+                      htmlFor="collectionImage"
+                      className="admin-create-service__label"
+                    >
+                      Collection Image:
+                    </label>
+                    <UploadImage
+                      previewImage={formData.collectionsImage}
+                      onChange={handleCollectionImagesChange}
+                    />
                   </div>
                 </div>
                 <div className="admin-create-service__form-grid">

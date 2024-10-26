@@ -186,6 +186,12 @@
           }
         }
       }
+
+      .active {
+        background-color: var(--PrimaryColor);
+        color: var(--WhiteColor);
+        border: none;
+      }
     }
   }
 }

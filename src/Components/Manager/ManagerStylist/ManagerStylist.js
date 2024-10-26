@@ -103,7 +103,9 @@ export default function ManagerStylist({ buttonLabel }) {
   };
 
   useEffect(() => {
-    fetchStylistsData(currentPage);
+    if (managerInfo.salonId !== undefined) {
+      fetchStylistsData(currentPage);
+    }
   }, [isUpdate, currentPage, managerInfo]);
 
   const fetchStylistsData = async (page) => {
@@ -111,7 +113,6 @@ export default function ManagerStylist({ buttonLabel }) {
       const response = await api.get(
         `stylist/page/${managerInfo.salonId}?page=${page}&size=4`
       );
-      console.log(response);
       const data = response.data.result.content;
       const total = response.data.result.totalPages;
       console.log(data);

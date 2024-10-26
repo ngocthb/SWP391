@@ -30,9 +30,12 @@ const StaffVNPayQR = () => {
                   title: "Payment successfully.",
                   confirmButtonText: "OK",
                   showCancelButton: false,
+                  willClose: () => {
+                    navigate("/staff/booking/complete");
+                  },
               });
               if (result.isConfirmed) {
-                  navigate("/staff/booking");
+                  navigate("/staff/booking/complete");
               }
           }
           } catch (error) {

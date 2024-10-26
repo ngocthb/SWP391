@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./StaffCreateBooking.scss";
 import { Spin } from "antd";
 import api from "../../../config/axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StaffCreateBooking = () => {
   const [loading, setLoading] = useState(false);
-  const [salonLocations, setSalonLocations] = useState([]);
   const [slots, setSlots] = useState([]);
   const [slotRealTime, setSlotRealTime] = useState([]);
   const [services, setServices] = useState([]);
@@ -14,6 +13,10 @@ const StaffCreateBooking = () => {
   const [stylists, setStylists] = useState([]);
   const [staff, setStaff] = useState([]);
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const customerPhone = state?.customerPhone || "";
+
+  console.log(customerPhone)
 
   const today = new Date();
   const tomorrow = new Date();
@@ -49,11 +52,17 @@ const StaffCreateBooking = () => {
     stylistId: 0,
   });
 
-  const [selectedTime , setSelectedTime] = useState("");
+  useEffect(() => {
+    if (customerPhone) {
+      setFormData((prev) => ({ ...prev, phone: customerPhone }));
+    }
+  }, [customerPhone]);
+
+  const [selectedTime, setSelectedTime] = useState("");
 
   const handleTimeChange = (event) => {
-    setSelectedTime(event.target.value )
-    setFormData((prev) => ({ ...prev, time: selectedTime}));
+    setSelectedTime(event.target.value);
+    setFormData((prev) => ({ ...prev, time: selectedTime }));
   };
 
   const handleStylistChange = (event) => {
@@ -73,10 +82,8 @@ const StaffCreateBooking = () => {
       }
     };
 
-    fetchData("salons", setSalonLocations);
     fetchData("slot/read", setSlots);
     fetchData("service", setServices);
-    console.log(services);
   }, []);
 
   useEffect(() => {
@@ -114,30 +121,32 @@ const StaffCreateBooking = () => {
   }, []);
 
   useEffect(() => {
-    const fetchStylists = async () => {
-      console.log(selectedServices);
-      const foundSlot = slots.find((item) => item.slottime === formData.time);
-      const slotId = foundSlot ? foundSlot.slotid : null;
-      const bookingValue = {
-        salonId: staff.salonId,
-        serviceId: selectedServices,
-        date: formatDateForInput(selectedDate),
-        slotId: slotId,
-      };
-      console.log(bookingValue);
-      try {
-        const response = await api.post(`booking/stylists/update`, bookingValue);
-        const data = response.data.result;
-        console.log(data);
-        if (data) {
-          setStylists(data);
+    if (staff.salonId !== undefined) {
+      const fetchStylists = async () => {
+        const foundSlot = slots.find((item) => item.slottime === formData.time);
+        const slotId = foundSlot ? foundSlot.slotid : null;
+        const bookingValue = {
+          salonId: staff.salonId,
+          serviceId: selectedServices,
+          date: formatDateForInput(selectedDate),
+          slotId: slotId,
+        };
+        try {
+          const response = await api.post(
+            `booking/stylists/update`,
+            bookingValue
+          );
+          const data = response.data.result;
+          if (data) {
+            setStylists(data);
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchStylists();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      };
+      fetchStylists();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staff, selectedTime, selectedServices, selectedDate]);
 
   const handleServiceToggle = (serviceId) => {
@@ -151,14 +160,14 @@ const StaffCreateBooking = () => {
     });
   };
 
-  const createStylishData = async (e) => {
+  const createBookingData = async (e) => {
     e.preventDefault();
     const selectedServicesId = selectedServices.map(Number);
     const foundSlot = slots.find((item) => item.slottime === formData.time);
     const slotId = foundSlot ? foundSlot.slotid : null;
     const createValues = {
       salonId: Number(staff.salonId),
-      phoneNumber: e.target[0].value,
+      phoneNumber: formData.phone,
       bookingDate: formatDateForInput(selectedDate),
       slotId: slotId,
       serviceId: selectedServicesId,
@@ -166,14 +175,13 @@ const StaffCreateBooking = () => {
       voucherId: 0,
     };
 
-    console.log(createValues);
     setLoading(true);
     try {
       const response = await api.post(`staff/booking`, createValues);
       const data = response.data.result;
 
       if (data) {
-        navigate("/staff/booking");
+        navigate("/staff/booking/pending");
       }
     } catch (err) {
       console.log(err);
@@ -183,7 +191,9 @@ const StaffCreateBooking = () => {
   };
 
   const handleSubmit = (e) => {
-    createStylishData(e);
+    if (staff.salonId !== undefined) {
+      createBookingData(e);
+    }
   };
 
   const formatTime = (time) => {
@@ -197,7 +207,7 @@ const StaffCreateBooking = () => {
     <>
       <div className="staff-create-booking__breadcrumb">
         <Link
-          to="/staff/booking"
+          to="/staff/booking/pending"
           className="staff-create-booking__breadcrumb-link"
         >
           Booking
@@ -227,6 +237,13 @@ const StaffCreateBooking = () => {
                     <input
                       type="text"
                       id="phone"
+                      value={formData.phone}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          phone: e.target.value,
+                        }))
+                      }
                       className="staff-create-booking__input"
                       placeholder="Phone Number"
                     />
@@ -270,40 +287,40 @@ const StaffCreateBooking = () => {
                       Select Time:
                     </label>
                     <div className="manager-booking-modal__slots-list">
-                          {(slots || []).map((time) => (
-                            <label
-                              key={time.slotid}
-                              className={`manager-booking-modal__slots-option ${
-                                slotRealTime.some(
-                                  (item) => item.slotid === time.slotid
-                                )
-                                  ? ""
-                                  : "disabled"
-                              }`}
-                            >
-                              <input
-                                type="radio"
-                                name="time"
-                                value={time.slottime}
-                                checked={formData.time === time.slottime}
-                                onChange={handleTimeChange}
-                                disabled={
-                                  !slotRealTime.some(
-                                    (item) => item.slotid === time.slotid
-                                  )
-                                }
-                                className={`manager-booking-modal__radio ${
-                                  slotRealTime.some(
-                                    (item) => item.slotid === time.slotid
-                                  )
-                                    ? ""
-                                    : "disabled"
-                                }`}
-                              />
-                              <span>{formatTime(time.slottime)}</span>
-                            </label>
-                          ))}
-                        </div>
+                      {(slots || []).map((time) => (
+                        <label
+                          key={time.slotid}
+                          className={`manager-booking-modal__slots-option ${
+                            slotRealTime.some(
+                              (item) => item.slotid === time.slotid
+                            )
+                              ? ""
+                              : "disabled"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="time"
+                            value={time.slottime}
+                            checked={formData.time === time.slottime}
+                            onChange={handleTimeChange}
+                            disabled={
+                              !slotRealTime.some(
+                                (item) => item.slotid === time.slotid
+                              )
+                            }
+                            className={`manager-booking-modal__radio ${
+                              slotRealTime.some(
+                                (item) => item.slotid === time.slotid
+                              )
+                                ? ""
+                                : "disabled"
+                            }`}
+                          />
+                          <span>{formatTime(time.slottime)}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div
@@ -342,7 +359,7 @@ const StaffCreateBooking = () => {
                     </label>
                     <select
                       id="stylistName"
-                      className="staff-booking-modal__select"
+                      className="staff-create-booking__select"
                       defaultValue={formData.stylistId}
                       onChange={handleStylistChange}
                     >

@@ -3,142 +3,34 @@ import React, { useEffect, useState } from "react";
 import "./AdminCustomer.scss";
 import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
-import { Spin } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { updateCustomer } from "../../../actions/Update";
+import { FaAngleLeft, FaChevronRight } from "react-icons/fa";
+import { MdRestartAlt } from "react-icons/md";
+import Swal from "sweetalert2";
 import loginUser from "../../../data/loginUser";
-import uploadFile from "../../../utils/upload";
 
-const AdminVoucher = ({ buttonLabel }) => {
+const AdminVoucher = () => {
   const [customers, setCustomers] = useState([]);
   const [originalCustomers, setOriginalCustomers] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-  const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const isUpdate = useSelector(state => state.updateCustomerReducer);
-  const [formData, setFormData] = useState({
-    accountid: 0,
-    fullname: "",
-    email: "",
-    dob: "",
-    phone: "",
-    image: loginUser.avatar,
-  });
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedFileObject, setSelectedFileObject] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file);
-     
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedFile(imageUrl);
-      setSelectedFileObject(file);
-    }
-  };
-
-  const formatDateForInput = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const response = await api.get("customers");
-        const data = response.data; /*.result*/
-
-        if (data) {
-          setCustomers(data);
-          setOriginalCustomers(data);
-        }
-      } catch (error) {}
-    };
-
-    fetchCustomers();
-  }, [isUpdate]);
-
-  const fetchCustomerData = async (accountid) => {
+  const fetchCustomers = async (currentPage) => {
     try {
-      const response = await api.get(`customers/${accountid}`);
-      const data = response.data; /*.result*/
+      const response = await api.get(`account/page?page=${currentPage}&size=6`);
+      const data = response.data.result.content;
+      const total = response.data.result.totalPages;
 
       if (data) {
-        setFormData((prev) => ({
-          ...prev,
-          accountid: accountid,
-          fullname: data.fullname || "",
-          email: data.email || "",
-          dob: data.dob || "",
-          phone: data.phone || 0,
-          image: data.image || prev.image,
-        }));
+        setCustomers(data);
+        setOriginalCustomers(data);
+        setTotalPages(total);
       }
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (error) {}
   };
-
-
   useEffect(() => {
-    if (isModalOpen) {
-      if (formData.accountid) {
-        fetchCustomerData(formData.accountid);
-      }
-    }
-  }, [isModalOpen]);
-
-  const updateCustomerData = async (e) => {
-    e.preventDefault();
-    const updateValues = {
-      accountid: formData.accountid,
-      fullname: e.target[1].value,
-      email: e.target[2].value,
-      phone: e.target[3].value,
-      dob: e.target[4].value,
-      image: null,
-    };
-
-    if (selectedFileObject) {
-      const firebaseResponse = await uploadFile(selectedFileObject);
-      updateValues.image = firebaseResponse;
-    } else {
-      updateValues.image = formData.image;
-    }   
-
-    setLoading(true);
-    try {
-      const response = await api.put(
-        `customers/${formData.accountid}`,
-        updateValues
-      );
-      const data = response.data/*.result*/;
-
-      if (data) {
-
-        setFormData((prev) => ({
-          ...prev,
-          fullname: data.fullname || "",
-          email: data.email || "",
-          dob: data.dob ? formatDateForInput(data.dob) : "",
-          phone: data.phone || "",
-          avatarFile: selectedFile || prev.avatarFile,
-        }));
-         dispatch(updateCustomer());
-        toggleModal();
-      }
-    } catch (err) {
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchCustomers(currentPage);
+  }, []);
 
   const formatDateString = (dateString) => {
     if (!dateString) return "";
@@ -190,19 +82,82 @@ const AdminVoucher = ({ buttonLabel }) => {
     return "";
   };
 
-  const createVoucher = () => {
-    navigate("/admin/voucher/create");
-  };
-
-  const toggleModal = async (accountId) => {
-    if (accountId) {
-      await fetchCustomerData(accountId);
+  const handlePageChange = (page) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
     }
-    setIsModalOpen(!isModalOpen);
   };
 
-  const handleSubmit = (e) => {
-    updateCustomerData(e)
+  const deleteCustomerData = async (accountId) => {
+    try {
+      const response = await api.delete(`customer/${accountId}`);
+      if (response.data) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The customer has been deleted.",
+          icon: "success",
+        });
+        fetchCustomers(currentPage);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const confirmDeleteModal = (accountId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete this customer!",
+    }).then(async (result) => {
+      console.log(result.isConfirmed);
+      if (result.isConfirmed) {
+        try {
+          await deleteCustomerData(accountId);
+          fetchCustomers();
+        } catch (error) {}
+      }
+    });
+  };
+
+  const activeCustomerData = async (accountId) => {
+    try {
+      const response = await api.put(`customer/active/${accountId}`);
+      if (response.data) {
+        Swal.fire({
+          title: "Active!",
+          text: "The customer has been active again.",
+          icon: "success",
+        });
+        fetchCustomers(currentPage);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const confirmActiveModal = (accountId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to active this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, active this service!",
+    }).then(async (result) => {
+      console.log(result.isConfirmed);
+      if (result.isConfirmed) {
+        try {
+          await activeCustomerData(accountId);
+          fetchCustomers();
+        } catch (error) {}
+      }
+    });
   };
 
   return (
@@ -214,13 +169,6 @@ const AdminVoucher = ({ buttonLabel }) => {
             {/* <i class="fas fa-search"></i> */}
             <input placeholder="Search here..." type="text" />
           </div>
-          <div className="admin-customer__header-filter">
-            <select>
-              <option>Newest</option>
-              <option>Oldest</option>
-            </select>
-            <button onClick={createVoucher}> {buttonLabel}</button>
-          </div>
         </div>
         <div className="admin-customer__container">
           <div className="admin-customer__content">
@@ -231,16 +179,16 @@ const AdminVoucher = ({ buttonLabel }) => {
                     ID{getSortIndicator("id")}
                   </th>
                   <th onClick={() => sortBy("fullname")}>
-                  Full Name{getSortIndicator("fullname")}
+                    Full Name{getSortIndicator("fullname")}
                   </th>
                   <th onClick={() => sortBy("email")}>
-                  Email{getSortIndicator("email")}
+                    Email{getSortIndicator("email")}
                   </th>
                   <th onClick={() => sortBy("dob")}>
                     Date of Birth{getSortIndicator("dob")}
                   </th>
                   <th onClick={() => sortBy("phone")}>
-                  Phone{getSortIndicator("phone")}
+                    Phone{getSortIndicator("phone")}
                   </th>
                   <th>Action</th>
                 </tr>
@@ -248,35 +196,45 @@ const AdminVoucher = ({ buttonLabel }) => {
 
               <tbody>
                 {customers.map((customer) => (
-                  <tr key={customer.accountid}>
-                    <td className="admin-customer__id">{customer.accountid}</td>
+                  <tr key={customer.accountId}>
+                    <td className="admin-customer__id">{customer.accountId}</td>
                     <td>
-                    <div className="manager-booking__customer">
-                      <img src={customer.image || formData.image} alt={customer.fullname} className="manager-booking__customer-image" />
-                      <span className="manager-booking__customer-name">{customer.fullname}</span>
-                    </div>
+                      <div className="manager-booking__customer">
+                        <img
+                          src={customer.image || loginUser.avatar}
+                          alt={customer.fullname}
+                          className="manager-booking__customer-image"
+                        />
+                        <span className="manager-booking__customer-name">
+                          {customer.fullname}
+                        </span>
+                      </div>
                     </td>
-                    <td className="admin-customer__date">
-                      {customer.email}
-                    </td>
+                    <td className="admin-customer__date">{customer.email}</td>
                     <td className="admin-customer__discountAmount">
                       {formatDateString(customer.dob)}
                     </td>
                     <td>
-                      <span
-                        className={`admin-customer__quantity`}
-                      >
+                      <span className={`admin-customer__quantity`}>
                         {customer.phone}
                       </span>
                     </td>
                     <td className="admin-customer__actions">
-                      <button
-                        className="admin-customer__action-button"
-                        onClick={() => toggleModal(customer.accountid)}
-                      >
-                        ✎
-                      </button>
-                      <button className="manager-booking__action-button">🗑</button>
+                      {customer.delete ? (
+                        <button
+                          className="manager-booking__action-button"
+                          onClick={() => confirmActiveModal(customer.accountId)}
+                        >
+                          <MdRestartAlt />
+                        </button>
+                      ) : (
+                        <button
+                          className="manager-booking__action-button"
+                          onClick={() => confirmDeleteModal(customer.accountId)}
+                        >
+                          🗑
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -284,105 +242,33 @@ const AdminVoucher = ({ buttonLabel }) => {
             </table>
           </div>
         </div>
-      </div>
 
-      {isModalOpen && (
-        <>
-          <div className="admin-customer-backdrop" onClick={toggleModal}>
-            <div className="admin-customer-modal" onClick={(e) => e.stopPropagation()}>
-              <form onSubmit={handleSubmit}>
-                <h2 className="admin-customer-modal__header">Update admin-customer</h2>
-                <div className="admin-customer-modal__avatar-section">
-                  <div className="admin-customer-modal__avatar">
-                    <img src={selectedFile || formData.image} alt={formData.fullname} />
-                  </div>
-                  <div className="admin-customer-modal__avatar-info">
-                    <h3 className="admin-customer-modal__avatar-title">
-                      Change Avatar
-                    </h3>
-                    <p className="admin-customer-modal__avatar-description">
-                      Recommended Dimensions: 120x120 Max file size: 5MB
-                    </p>
-                    <label className="admin-customer-modal__upload-btn">
-                      Upload
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        style={{ display: "none" }}
-                      />
-                    </label>
-                  </div>
-                </div>
-                <div className="admin-customer-modal__form-section">
-                  <div className="admin-customer-modal__form-grid">
-                    <div className="admin-customer-modal__form-group admin-customer-modal__form-group--full-width">
-                      <label
-                        htmlFor="fullname"
-                        className="admin-customer-modal__label"
-                      >
-                        Full Name:
-                      </label>
-                      <input
-                        type="text"
-                        id="fullname"
-                        className="admin-customer-modal__input"
-                        placeholder="Full Name"
-                        defaultValue={formData.fullname}
-                      />
-                    </div>
-                    <div className="admin-customer-modal__form-group admin-customer-modal__form-group--full-width">
-                      <label htmlFor="email" className="admin-customer-modal__label">
-                        Email:
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        className="admin-customer-modal__input"
-                        placeholder="Email"
-                        defaultValue={formData.email}
-                      />
-                    </div>
-                    <div className="admin-customer-modal__form-group">
-                      <label htmlFor="phone" className="admin-customer-modal__label">
-                        Phone:
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        className="admin-customer-modal__input"
-                        placeholder="Phone"
-                        defaultValue={formData.phone}
-                      />
-                    </div>
-                    <div className="admin-customer-modal__form-group">
-                      <label htmlFor="dob" className="admin-customer-modal__label">
-                        Date of Birth:
-                      </label>
-                      <input
-                        type="date"
-                        id="dob"
-                        className="admin-customer-modal__input"
-                        placeholder="Date of Birth"
-                        defaultValue={formData.dob}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="admin-customer-modal__button-container">
-                  <button
-                    type="submit"
-                    className="admin-customer-modal__button"
-                    disabled={loading}
-                  >
-                    {loading ? <Spin size="small" /> : "Save"}
-                  </button>
-                </div>
-              </form>
-            </div>
+        <div className="admin-customer__pagination">
+          <div className="admin-customer__pagination-pages">
+            <span
+              onClick={() => handlePageChange(currentPage - 1)}
+              className={currentPage === 0 ? "disabled" : ""}
+            >
+              <FaAngleLeft className="pagination-icon" />
+            </span>
+            {[...Array(totalPages)].map((_, index) => (
+              <span
+                key={index}
+                onClick={() => handlePageChange(index)}
+                className={currentPage === index ? "active" : ""}
+              >
+                {index + 1}
+              </span>
+            ))}
+            <span
+              onClick={() => handlePageChange(currentPage + 1)}
+              className={currentPage === totalPages - 1 ? "disabled" : ""}
+            >
+              <FaChevronRight className="pagination-icon" />
+            </span>
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </>
   );
 };

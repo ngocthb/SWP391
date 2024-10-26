@@ -11,8 +11,10 @@ import { TbLogout } from "react-icons/tb";
 import { logo, logo_blue_noBackground } from "../../../data/image";
 
 const pageNames = {
-  "/staff/booking": "Booking",
-  "/staff/booking-service": "Booking Service",
+  "/staff/booking/pending": "Pending Booking ",
+  "/staff/booking/in-process": "In-Process Booking ",
+  "/staff/booking/complete": "Complete Booking ",
+  "/staff/new-customer": "New Customer",
 };
 
 const StaffHeader = () => {
@@ -46,7 +48,6 @@ const StaffHeader = () => {
       try {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
-        console.log(data);
         if (data) {
           setStaffInfo(data);
         }
@@ -66,7 +67,7 @@ const StaffHeader = () => {
   }, [dispatch]);
 
   const handleGoback = () => {
-    navigate("/manager/dashboard");
+    navigate("/staff/booking/pending");
   };
 
   function formatRole(role) {

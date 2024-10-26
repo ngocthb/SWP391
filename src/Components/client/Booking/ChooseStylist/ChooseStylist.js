@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { IoPersonOutline } from "react-icons/io5";
-import { FaStar } from "react-icons/fa6";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -44,7 +43,9 @@ export default function ChooseStylist() {
         if (data) {
           setStylists(data);
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error)
+      }
     };
     fetchStylists();
   }, []);
