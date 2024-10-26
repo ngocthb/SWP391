@@ -1,97 +1,160 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect, useRef } from "react";
 import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
+import { BiTaskX } from "react-icons/bi";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { DayCalendarSkeleton } from "@mui/x-date-pickers/DayCalendarSkeleton";
-
+import { GoDotFill } from "react-icons/go";
+import { FolderOutlined } from "@ant-design/icons";
+import api from "../../../config/axios";
 import "./StylistSchedule.scss";
 
-// Fake fetch function to simulate fetching data from an API
-function fakeFetch(date, { signal }) {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      const daysInMonth = date.daysInMonth();
-      // Randomly generate days to highlight (could be replaced with fetched data)
-      const daysToHighlight = [14, 19, 25];
+// function fakeFetch(date, { signal }) {
+//   return new Promise((resolve, reject) => {
+//     const timeout = setTimeout(() => {
+//       // Randomly generate days to highlight (could be replaced with fetched data)
+//       const daysToHighlight = [14, 19, 25];
+//       resolve({ daysToHighlight });
+//     }, 500);
 
-      resolve({ daysToHighlight });
-    }, 500);
+//     signal.onabort = () => {
+//       clearTimeout(timeout);
+//       reject(new DOMException("aborted", "AbortError"));
+//     };
+//   });
+// }
 
-    signal.onabort = () => {
-      clearTimeout(timeout);
-      reject(new DOMException("aborted", "AbortError"));
-    };
-  });
-}
+// function ServerDay(props) {
+//   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
-const initialValue = dayjs();
+//   const isSelected =
+//     !props.outsideCurrentMonth &&
+//     highlightedDays.indexOf(props.day.date()) >= 0;
 
-function ServerDay(props) {
-  const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
-
-  const isSelected =
-    !props.outsideCurrentMonth &&
-    highlightedDays.indexOf(props.day.date()) >= 0;
-
-  return (
-    <Badge
-      key={props.day.toString()}
-      overlap="circular"
-      badgeContent={isSelected ? "🔔" : undefined}
-    >
-      <PickersDay
-        {...other}
-        outsideCurrentMonth={outsideCurrentMonth}
-        day={day}
-      />
-    </Badge>
-  );
-}
+//   return (
+//     <Badge
+//       key={props.day.toString()}
+//       overlap="circular"
+//       badgeContent={isSelected ? "🔔" : undefined}
+//     >
+//       <PickersDay
+//         {...other}
+//         outsideCurrentMonth={outsideCurrentMonth}
+//         day={day}
+//       />
+//     </Badge>
+//   );
+// }
 
 const StylistSchedule = () => {
-  const requestAbortController = React.useRef(null);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [highlightedDays, setHighlightedDays] = React.useState([14, 19, 25]);
+  const requestAbortController = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  // const [highlightedDays, setHighlightedDays] = useState([14, 19, 25]);
+  const [selectDay, setSelectDay] = useState(dayjs().format("YYYY-MM-DD"));
+  const [services, setServices] = useState([]);
+  const [stylistId, setStylistId] = useState(null);
+  const [bookingDetails, setBookingDetails] = useState([]);
+  const [todayBooking, setTodayBooking] = useState([]);
 
-  const fetchHighlightedDays = (date) => {
-    const controller = new AbortController();
-    fakeFetch(date, {
-      signal: controller.signal,
-    })
-      .then(({ daysToHighlight }) => {
-        setHighlightedDays(daysToHighlight);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        // Ignore the error if it's caused by `controller.abort`
-        if (error.name !== "AbortError") {
-          throw error;
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const response = await api.get("service");
+        const data = response.data.result;
+        console.log(data);
+        if (data) {
+          setServices(data);
         }
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-    requestAbortController.current = controller;
-  };
-
-  React.useEffect(() => {
-    fetchHighlightedDays(initialValue);
-    // Abort request on unmount
-    return () => requestAbortController.current?.abort();
+    fetchService();
   }, []);
 
-  const handleMonthChange = (date) => {
+  useEffect(() => {
+    const fetchStylistData = async () => {
+      try {
+        const response = await api.get(`stylist/profile`);
+        const data = response.data.result;
+        console.log(data);
+        if (data) {
+          setStylistId(data.accountid);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchStylistData();
+  }, [stylistId]);
+
+  useEffect(() => {
+    if (stylistId) {
+      const fetchBookingData = async () => {
+        try {
+          const response = await api.get(
+            `bookings/stylist/${selectDay}/${stylistId}`
+          );
+          const bookingsData = response.data.result;
+          console.log(bookingsData);
+          if (bookingsData && services.length > 0) {
+            const updatedBookingDetails = bookingsData.map((booking) => {
+              const matchedServices = booking.serviceId.map((serviceId) => {
+                const matchedService = services.find(
+                  (service) => Number(service.id, 10) === serviceId
+                );
+                return matchedService
+                  ? matchedService.serviceName
+                  : "Unknown Service";
+              });
+              return {
+                ...booking,
+                serviceNames: matchedServices,
+              };
+            });
+            if (selectDay === dayjs().format("YYYY-MM-DD")) {
+              setTodayBooking(updatedBookingDetails);
+            }
+            setBookingDetails(updatedBookingDetails);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fetchBookingData();
+    }
+  }, [selectDay, stylistId]);
+
+  useEffect(() => {
+    return () => requestAbortController.current?.abort();
+  }, [selectDay]);
+
+  const handleMonthChange = () => {
     if (requestAbortController.current) {
-      // Make sure that you are aborting useless requests
       requestAbortController.current.abort();
     }
 
     setIsLoading(true);
-    setHighlightedDays([]); // Clear highlighted days while loading
-    fetchHighlightedDays(date);
   };
+
+  const handleDayClick = (date) => {
+    if (!date || !dayjs(date).isValid()) {
+      console.error("Invalid date selected");
+      return;
+    }
+
+    setSelectDay(date.format("YYYY-MM-DD"));
+  };
+
+  function convertTimeFormat(time) {
+    const [hours, minutes] = time.split(":");
+
+    return `${hours}h${minutes}`;
+  }
 
   return (
     <div className="StylistSchedule">
@@ -103,18 +166,14 @@ const StylistSchedule = () => {
           <div className="schedule">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
-                defaultValue={initialValue}
+                value={dayjs(selectDay).isValid() ? dayjs(selectDay) : dayjs()}
                 loading={isLoading}
                 onMonthChange={handleMonthChange}
+                onChange={handleDayClick}
                 renderLoading={() => <DayCalendarSkeleton />}
-                slots={{
-                  day: ServerDay,
-                }}
-                slotProps={{
-                  day: {
-                    highlightedDays, // Pass highlightedDays to ServerDay
-                  },
-                }}
+                // slots={{
+                //   day: ServerDay,
+                // }}
               />
             </LocalizationProvider>
           </div>
@@ -122,30 +181,22 @@ const StylistSchedule = () => {
 
         <div className="today-task">
           <h3>
-            Today Task <span>(3)</span>
-            <i className="fas fa-plus"></i>
+            Today Task <span>({todayBooking.length})</span>
           </h3>
           <ul>
-            <li>
-              <span>Working on Asla Project</span>
-              <span>08.00-10.00 AM</span>
-            </li>
-            <li>
-              <span>Team Meeting</span>
-              <span>11.00-12.00 AM</span>
-            </li>
-            <li>
-              <span>Doing Research</span>
-              <span>13.00-16.00 PM</span>
-            </li>
-            <li>
-              <span>Doing Research</span>
-              <span>13.00-16.00 PM</span>
-            </li>
-            <li>
-              <span>Doing Research</span>
-              <span>13.00-16.00 PM</span>
-            </li>
+            {todayBooking.length !== 0 ? (
+              todayBooking.map((tbook) => (
+                <li key={tbook.id}>
+                  <span>👦 {tbook.customerName}</span>
+                  <span>{convertTimeFormat(tbook.time)}</span>
+                </li>
+              ))
+            ) : (
+              <li className="today-task__notValid">
+                <BiTaskX className="notValid--icon" />
+                <p>Don't have booking yet</p>
+              </li>
+            )}
           </ul>
         </div>
       </div>
@@ -155,120 +206,42 @@ const StylistSchedule = () => {
           <h2>
             View <span>Details</span>
           </h2>
-          <div className="lists-details">
-            <div className="details-item">
-              <img
-                alt="Profile picture of Rachel Patel"
-                height="50"
-                src="https://storage.googleapis.com/a1aa/image/YOAO4k8ZxmK5KhmydViB5Qd7xLrMAxksWBgXsOdgFzvPD35E.jpg"
-                width="50"
-              />
-              <div className="details-content">
-                <div className="details-header">
-                  <div>
-                    <h3>Rachel Patel</h3>
-                    <span>October 9, 2023</span>
+          {bookingDetails.length !== 0 ? (
+            <div className="lists-details">
+              {(bookingDetails || []).map((booking) => (
+                <div className="details-item" key={booking.id}>
+                  <div className="details-content">
+                    <div className="details-header">
+                      <div>
+                        <h3>
+                          <span>Customer : </span> {booking.customerName}
+                        </h3>
+                        <span>⏰{convertTimeFormat(booking.time)}</span>
+                      </div>
+                      <div
+                        className={`status ${
+                          booking.status === "PENDING" ? "pending" : "complete"
+                        }`}
+                      >
+                        {booking.status}
+                      </div>
+                    </div>
+                    {(booking.serviceNames || []).map((ser, index) => (
+                      <div className="details-text" key={index}>
+                        <GoDotFill className="details-text-icon" />
+                        {ser}
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div className="details-text">
-                  Couldn't resist buying this watch after seeing it online, and
-                  I'm so glad I did. It's even more stunning in person, and the
-                  build quality is exceptional. Will definitely be purchasing
-                  from this brand again!
-                </div>
-              </div>
+              ))}
             </div>
-
-            <div className="details-item">
-              <img
-                alt="Profile picture of Christopher Lee"
-                height="50"
-                src="https://storage.googleapis.com/a1aa/image/JhDSNTa9YTb5AJJazDANE8CLTfbNDxL0xGmhtQexmkBANcnTA.jpg"
-                width="50"
-              />
-              <div className="details-content">
-                <div className="details-header">
-                  <div>
-                    <h3>Christopher Lee</h3>
-                    <span>June 25, 2023</span>
-                  </div>
-                </div>
-                <div className="details-text">
-                  Really impressed with the quality and style of this watch.
-                  It's exactly what I was looking for – versatile, durable, and
-                  looks great with any outfit. Docked half a star because the
-                  clasp is a bit tricky to open, but otherwise, it's perfect!
-                </div>
-              </div>
+          ) : (
+            <div className="lists-details__notValid">
+              <FolderOutlined className="notValid--icon" />
+              <p>Don't have booking yet</p>
             </div>
-
-            <div className="details-item">
-              <img
-                alt="Profile picture of Brian Chen"
-                height="50"
-                src="https://storage.googleapis.com/a1aa/image/eOdBZ7Wv7BwuQK2hfC1mHo11ReqjeRAtvEhYqJlV0440zwdOB.jpg"
-                width="50"
-              />
-              <div className="details-content">
-                <div className="details-header">
-                  <div>
-                    <h3>Brian Chen</h3>
-                    <span>April 15, 2022</span>
-                  </div>
-                </div>
-                <div className="details-text">
-                  While this watch has its merits, such as its sleek design and
-                  comfortable wear, I found the strap to be somewhat flimsy, and
-                  the clasp occasionally difficult to secure. Despite the minor
-                  drawbacks, it does keep accurate time.
-                </div>
-              </div>
-            </div>
-            <div className="details-item">
-              <img
-                alt="Profile picture of Brian Chen"
-                height="50"
-                src="https://storage.googleapis.com/a1aa/image/eOdBZ7Wv7BwuQK2hfC1mHo11ReqjeRAtvEhYqJlV0440zwdOB.jpg"
-                width="50"
-              />
-              <div className="details-content">
-                <div className="details-header">
-                  <div>
-                    <h3>Brian Chen</h3>
-                    <span>April 15, 2022</span>
-                  </div>
-                </div>
-                <div className="details-text">
-                  While this watch has its merits, such as its sleek design and
-                  comfortable wear, I found the strap to be somewhat flimsy, and
-                  the clasp occasionally difficult to secure. Despite the minor
-                  drawbacks, it does keep accurate time.
-                </div>
-              </div>
-            </div>
-            <div className="details-item">
-              <img
-                alt="Profile picture of Brian Chen"
-                height="50"
-                src="https://storage.googleapis.com/a1aa/image/eOdBZ7Wv7BwuQK2hfC1mHo11ReqjeRAtvEhYqJlV0440zwdOB.jpg"
-                width="50"
-              />
-              <div className="details-content">
-                <div className="details-header">
-                  <div>
-                    <h3>Brian Chen</h3>
-                    <span>April 15, 2022</span>
-                  </div>
-                </div>
-                <div className="details-text">
-                  While this watch has its merits, such as its sleek design and
-                  comfortable wear, I found the strap to be somewhat flimsy, and
-                  the clasp occasionally difficult to secure. Despite the minor
-                  drawbacks, it does keep accurate time.
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

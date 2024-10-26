@@ -144,7 +144,9 @@ export default function Header() {
                     <div className="content__infor">
                       <div>
                         <h3>{userInfo.fullname || ""}</h3>
-                        <p>{userInfo.role ?formatRole(userInfo.role) : "User"}</p>
+                        <p>
+                          {userInfo.role ? formatRole(userInfo.role) : "User"}
+                        </p>
                       </div>
                       <div>
                         <img
@@ -164,7 +166,9 @@ export default function Header() {
                         />
                         <div>
                           <h2>{userInfo.fullname || ""}</h2>
-                          <p>{userInfo.role ?formatRole(userInfo.role) : "User"}</p>
+                          <p>
+                            {userInfo.role ? formatRole(userInfo.role) : "User"}
+                          </p>
                         </div>
                       </div>
                       <Link to="/user/profile">
@@ -173,7 +177,7 @@ export default function Header() {
                         </i>
                         Profile
                       </Link>
-                       {/* <Link to="#">
+                      {/* <Link to="#">
                       <i className="fas fa-cog"></i>
                       Account Setting
                     </Link> */}

@@ -5,7 +5,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { collapse } from "../../../actions/Collapse";
 import "./StylistHeader.scss";
 import api from "../../../config/axios";
-import loginUser from "../../../data/loginUser";
+import stylistInfo from "../../../data/loginUser";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
 import { logo, logo_blue_noBackground } from "../../../data/image";
@@ -15,6 +15,7 @@ const pageNames = {
   "/stylist/salary": "Salary",
   "/stylist/dashboard": "Dashboard",
   "/stylist/feedback": "Feedback",
+  "/stylist/shift": "Shift",
 };
 
 const StylistHeader = () => {
@@ -111,7 +112,7 @@ const StylistHeader = () => {
             <div className="header-stylist__avatar">
               <img
                 alt="User avatar"
-                src={stylistInfo.image || loginUser.avatar}
+                src={stylistInfo.image || stylistInfo.avatar}
               />
             </div>
           </div>

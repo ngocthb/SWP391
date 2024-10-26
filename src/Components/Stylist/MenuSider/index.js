@@ -1,6 +1,10 @@
 import React from "react";
 import { Menu } from "antd";
-import { CalendarOutlined, DashboardOutlined } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  DashboardOutlined,
+  ScheduleOutlined,
+} from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import { LiaMoneyCheckAltSolid } from "react-icons/lia";
 import { MdOutlineFeedback } from "react-icons/md";
@@ -29,6 +33,11 @@ function MenuSider() {
       label: <Link to="/stylist/feedback">Feedback</Link>,
       icon: <MdOutlineFeedback />,
       key: "/stylist/feedback",
+    },
+    {
+      label: <Link to="/stylist/shift">Shift</Link>,
+      icon: <ScheduleOutlined />,
+      key: "/stylist/shift",
     },
   ];
 

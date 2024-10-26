@@ -54,10 +54,10 @@ const ManagerDashboard = () => {
     const intervalTime = 50;
     const steps = duration / intervalTime;
 
-    const incrementProfit = (finalValues.profit / steps);
-    const incrementGrowth = (finalValues.growth / steps);
-    const incrementOrders = (finalValues.orders / steps);
-    const incrementCustomers = (finalValues.customers / steps);
+    const incrementProfit = finalValues.profit / steps;
+    const incrementGrowth = finalValues.growth / steps;
+    const incrementOrders = finalValues.orders / steps;
+    const incrementCustomers = finalValues.customers / steps;
 
     let currentProfit = 0;
     let currentGrowth = 0;
@@ -102,7 +102,7 @@ const ManagerDashboard = () => {
       data: profit.map(item => formatDateToOrdinal(item.day)),
     },
     yAxis: {
-      type: 'value',
+      type: "value",
     },
     series: [
       {
@@ -110,19 +110,19 @@ const ManagerDashboard = () => {
         type: 'line',
         smooth: true,
         itemStyle: {
-          color: '#2196F3',
+          color: "#2196F3",
         },
       },
     ],
     tooltip: {
-      trigger: 'axis',
+      trigger: "axis",
     },
   });
 
   const getDoughnutOptions = () => ({
     legend: {
-      orient: 'vertical',
-      left: 'right',
+      orient: "vertical",
+      left: "right",
     },
     series: [
       {
@@ -133,11 +133,11 @@ const ManagerDashboard = () => {
           itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)',
+            shadowColor: "rgba(0, 0, 0, 0.5)",
           },
         },
         label: {
-          formatter: '{c}',
+          formatter: "{c}",
         },
       },
     ],

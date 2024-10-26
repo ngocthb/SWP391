@@ -44,6 +44,7 @@ import StylistLayout from "../Layouts/stylist";
 import StylistSchedule from "../Components/Stylist/StylistSchedule/StylistSchedule";
 import StylistFeedback from "../Components/Stylist/StylistFeedback/StylistFeedback";
 import StylistDashboard from "../Components/Stylist/StylistDashboard/StylistDashboard";
+import StylistShift from "../Components/Stylist/StylistShift/StylistShift";
 import StylistSalary from "../Components/Stylist/StylistSalary/StylistSalary";
 import StaffLayout from "../Layouts/staff/StaffLayout";
 import StaffPayment from "../Components/Staff/StaffPayment/StaffPayment";
@@ -307,6 +308,10 @@ export const Routes = [
       {
         path: "salary",
         element: <StylistSalary />,
+      },
+      {
+        path: "shift",
+        element: <StylistShift />,
       },
     ],
   },

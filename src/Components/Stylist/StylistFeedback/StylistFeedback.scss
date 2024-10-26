@@ -92,9 +92,16 @@
               font-size: 14px;
               color: #888;
             }
-
-            .feedback-rating {
-              color: #f5a623;
+            .feedback__rating {
+              display: flex;
+              flex-direction: row;
+              .feedback-rating {
+                font-size: 20px;
+                color: #f5a623;
+              }
+              .feedback-not-rating {
+                font-size: 20px;
+              }
             }
           }
           .feedback-text {
