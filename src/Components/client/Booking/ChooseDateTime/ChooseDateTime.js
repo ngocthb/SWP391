@@ -8,7 +8,6 @@ import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
 import "./ChooseDateTime.scss";
-import { slots } from "../../../../data/booking";
 import api from "../../../../config/axios";
 import Swal from "sweetalert2";
 
@@ -19,7 +18,7 @@ export default function ChooseDateTime() {
 
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedDate, setSelectedDate] = useState(today);
-  const [timeSlots, setTimeSlots] = useState(slots);
+  const [timeSlots, setTimeSlots] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
   const navigate = useNavigate();
 
@@ -36,6 +35,22 @@ export default function ChooseDateTime() {
         }
       }
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async (endpoint, setter) => {
+      try {
+        const response = await api.get(endpoint);
+        const data = response.data.result;
+        if (data) {
+          setter(data);
+        }
+      } catch (error) {
+        console.error(`Error fetching ${endpoint}:`, error);
+      }
+    };
+
+    fetchData("slot/read", setTimeSlots);
   }, []);
 
   useEffect(() => {
@@ -116,6 +131,11 @@ export default function ChooseDateTime() {
     
   }, [selectedDate]);
 
+  function formatTime(time) {
+    const [hours, minutes] = time.split(':');
+    return `${hours}h${minutes}`;
+}
+
   return (
     <div className="chooseDateTime">
       <nav className="chooseDateTime__tagNavigation">
@@ -186,7 +206,7 @@ export default function ChooseDateTime() {
               } ${selectedTime === slot.slotid ? "selected" : ""}`}
               onClick={() => handleTimeSlotClick(slot.slotid)}
             >
-              {slot.slottime}
+              {slot.slottime && formatTime(slot.slottime)}
             </div>
           ))}
         </div>

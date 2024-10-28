@@ -67,6 +67,7 @@ import ManagerBookingComplete from "../Components/Manager/ManagerBookingComplete
 import ManagerBookingInProcess from "../Components/Manager/ManagerBookingInProcess/ManagerBookingInProcess";
 import ManagerBookingPending from "../Components/Manager/ManagerBookingPending/ManagerBookingPending";
 import StaffCreateCustomer from "../Components/Staff/StaffCreateCustomer/StaffCreateCustomer";
+import AdminDashboard from "../Components/Admin/AdminDashboard/AdminDashboard";
 export const Routes = [
   {
     path: "/",
@@ -256,7 +257,7 @@ export const Routes = [
     children: [
       {
         path: "dashboard",
-        element: <ManagerDashboard />,
+        element: <AdminDashboard/>
       },
       {
         path: "service",

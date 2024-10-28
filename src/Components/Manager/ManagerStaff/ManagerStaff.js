@@ -65,7 +65,7 @@ export default function ManagerStaff({ buttonLabel }) {
       }
     };
 
-    fetchData("salons", setSalonLocations);
+    fetchData("salon", setSalonLocations);
   }, []);
 
   useEffect(() => {

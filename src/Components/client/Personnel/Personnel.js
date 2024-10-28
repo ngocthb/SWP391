@@ -107,8 +107,6 @@ export default function Personnel() {
 
                   <div className="personnel__single-info">
                     <h3>{item.stylistName}</h3>
-                    <h3>{item.averageFeedback}</h3>
-                    <p>{item.totalRevenue}</p>
                     <div className="feedback__rating">
                       {[1, 2, 3, 4, 5].map((s) => (
                         <div key={s}>

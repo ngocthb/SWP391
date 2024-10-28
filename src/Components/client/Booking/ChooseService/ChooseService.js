@@ -211,11 +211,11 @@ export default function ChooseService() {
             </li>
             <li
               className={`chooseService__tagNavigation--item-content ${
-                isSelectedStylist ? "" : "disable"
+                (isSelectedStylist && isSelectedServices) ? "" : "disable"
               }`}
             >
               <Link
-                to={isSelectedStylist ? "/booking/step4" : "/booking/step2"}
+                to={(isSelectedStylist && isSelectedServices) ? "/booking/step4" : "/booking/step2"}
                 aria-label="Select Time"
               >
                 <div className="filled"></div>

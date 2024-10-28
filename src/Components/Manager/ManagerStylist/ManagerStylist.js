@@ -87,7 +87,7 @@ export default function ManagerStylist({ buttonLabel }) {
       }
     };
 
-    fetchData("salons", setSalonLocations);
+    fetchData("salon", setSalonLocations);
     fetchData("levels", setLevels);
     fetchData("skills", setSkills);
   }, []);

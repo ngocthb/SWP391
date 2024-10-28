@@ -42,7 +42,7 @@ const ManagerCreateStaff = () => {
       }
     };
 
-    fetchData("salons", setSalonLocations);
+    fetchData("salon", setSalonLocations);
   }, []);
 
   useEffect(() => {
@@ -61,11 +61,11 @@ const ManagerCreateStaff = () => {
   }, []);
 
     useEffect(() => {
-      if (managerInfo.salonId !== undefined) {
+      if (managerInfo.salonId !== undefined && salonLocations.length > 0) {
         const salon = salonLocations.find(salon => salon.id === managerInfo.salonId);
         setSalonAddress(salon ? salon.address : "Salon not found");
       }
-    }, [managerInfo])
+    }, [managerInfo, salonLocations])
 
   const createStylishData = async (e) => {
     e.preventDefault();

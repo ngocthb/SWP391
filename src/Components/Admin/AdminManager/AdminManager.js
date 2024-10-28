@@ -5,8 +5,6 @@ import { BiSearchAlt } from "react-icons/bi";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhone } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
-import { FaAngleLeft } from "react-icons/fa6";
-import { FaChevronRight } from "react-icons/fa6";
 import { HiTrash } from "react-icons/hi2";
 import { FaUserEdit } from "react-icons/fa";
 import "./AdminManager.scss";
@@ -15,7 +13,6 @@ import api from "../../../config/axios";
 import loginUser from "../../../data/loginUser";
 import { useDispatch, useSelector } from "react-redux";
 import { Spin } from "antd";
-import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
 

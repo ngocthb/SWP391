@@ -46,7 +46,7 @@ const ManagerCreateStylist = () => {
       }
     };
 
-    fetchData("salons", setSalonLocations);
+    fetchData("salon", setSalonLocations);
     fetchData("levels", setLevels);
     fetchData("skills", setSkills);
   }, []);
@@ -77,12 +77,13 @@ const ManagerCreateStylist = () => {
     fetchManagerData();
   }, []);
 
-    useEffect(() => {
-      if (managerInfo.salonId !== undefined) {
-        const salon = salonLocations.find(salon => salon.id === managerInfo.salonId);
-        setSalonAddress(salon ? salon.address : "Salon not found");
-      }
-    }, [managerInfo])
+  useEffect(() => {
+    if (managerInfo.salonId !== undefined && salonLocations.length > 0) {
+      const salon = salonLocations.find(salon => salon.id === managerInfo.salonId);
+      setSalonAddress(salon ? salon.address : "Salon not found");
+    }
+  }, [managerInfo, salonLocations])
+
 
   const createStylishData = async (e) => {
     e.preventDefault();
