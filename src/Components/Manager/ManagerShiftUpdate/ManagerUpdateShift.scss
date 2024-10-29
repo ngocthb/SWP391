@@ -161,17 +161,10 @@
 .rating {
   display: flex;
   align-items: center;
-
+  gap: 7px;
   &__star {
-    &--active {
-      font-size: 20px;
-      color: #f5a623;
-    }
-
-    &--inactive {
-      font-size: 20px;
-      color: #555;
-    }
+    font-size: 20px;
+    color: #f5a623;
   }
 }
 

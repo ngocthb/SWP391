@@ -83,11 +83,7 @@ function MenuSider() {
         },
       ],
     },
-    {
-      label: <Link to="/manager/customer">Customer</Link>,
-      icon: <PlusOutlined />,
-      key: "/manager/customer",
-    },
+
     {
       label: <Link to="/manager/shift">Shift</Link>,
       icon: <ScheduleOutlined />,

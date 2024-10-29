@@ -69,9 +69,6 @@ export default function ManagerUpdateShift() {
     try {
       const response = await api.get(`manager/booking/stylist/busy`);
       const data = response.data.result;
-      console.log(salonLocations);
-      console.log(slots);
-      console.log(data);
       if (data) {
         const bookingData = data.map((booking) => {
           const serviceNames = booking.serviceId.map(
@@ -110,11 +107,10 @@ export default function ManagerUpdateShift() {
       date: booking.date,
       slotId: booking.slotId,
     };
-    console.log(value);
     try {
       const response = await api.post(`booking/stylists/update`, value);
       const data = response.data.result;
-      console.log(data);
+
       if (data) {
         setAvailableStylist(data);
       }
@@ -151,14 +147,12 @@ export default function ManagerUpdateShift() {
       stylistId: parseInt(selectedStylist, 10),
       voucherId: parseInt(booking.voucherCode, 10),
     };
-    console.log(updateValues);
+
     setLoading(true);
     try {
-      console.log(updateValues);
-      console.log(booking.id);
       const response = await api.put(`booking/${booking.id}`, updateValues);
       const data = response.data;
-      console.log(data);
+
       if (data) {
         setFormUpdate((prev) => ({
           ...prev,
@@ -339,17 +333,10 @@ export default function ManagerUpdateShift() {
                           <td className="stylist-name">{stylist.fullname}</td>
                           <td>
                             <div className="rating">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <div key={star}>
-                                  <StarFilled
-                                    className={
-                                      stylist.feedbackScore / 2 < star
-                                        ? "rating__star--inactive"
-                                        : "rating__star--active"
-                                    }
-                                  />
-                                </div>
-                              ))}
+                              {stylist.feedbackScore}
+                              <span>
+                                <StarFilled className="rating__star" />
+                              </span>
                             </div>
                           </td>
                           <td>

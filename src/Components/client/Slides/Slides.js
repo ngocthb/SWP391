@@ -5,13 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Carousel, message, Spin } from "antd";
 import api from "../../../config/axios.js";
 
-const image = slides;
-
 export default function Slides() {
   const navigate = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [customer, setCustomer] = useState(null);
 
   useEffect(() => {
     const fetchCustomerData = async () => {
@@ -22,9 +21,10 @@ export default function Slides() {
         if (data) {
           setPhoneNumber(data.phone);
           setIsLoggedIn(true);
+          setCustomer(data);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
         setIsLoggedIn(false);
       } finally {
         setIsLoading(false);
@@ -35,48 +35,51 @@ export default function Slides() {
   }, []);
 
   const handleBooking = async () => {
-    if (isLoggedIn) {
-      if (phoneNumber && phoneNumber.length === 10 && /^\d+$/.test(phoneNumber)) {
-        navigate("/booking/step1");
-      } else if (!phoneNumber) {
-        await updatePhoneNumber(phoneNumber);
-      } else {
-        message.error("Please enter a valid 10-digit phone number.");
-      }
+    if (!isLoggedIn) {
+      return message.error("Please login before booking.");
+    }
+
+    if (phoneNumber && phoneNumber.length === 10 && /^\d+$/.test(phoneNumber)) {
+      await updatePhoneNumber(phoneNumber);
+      navigate("/booking/step1");
     } else {
-      message.error("Please login before booking.");
+      message.error("Please enter a valid 10-digit phone number.");
     }
   };
 
-  const updatePhoneNumber = async (number) => {
+  const updatePhoneNumber = async (newPhoneNumber) => {
     setIsLoading(true);
-    try {
-      const updateValues = { phone: number };
-      const response = await api.put(`customer/update-phone`, updateValues);
-      const data = response.data.result;
+    console.log(newPhoneNumber);
+    if (customer) {
+      const updateValues = {
+        fullname: customer.fullname,
+        email: customer.email,
+        dob: customer.dob !== null ? customer.dob : "",
+        image: customer.image,
+        phone: newPhoneNumber,
+      };
 
-      if (data) {
-        setPhoneNumber(data.phone);
-        message.success("Phone number updated successfully!");
-        navigate("/booking/step1");
+      console.log(updateValues);
+      try {
+        await api.put(`customer/${customer.accountid}`, updateValues);
+        setPhoneNumber(newPhoneNumber);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      console.error(err);
-      message.error("Failed to update phone number. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handlePhoneNumberChange = (event) => {
-    const value = event.target.value.replace(/\D/g, '');
-    setPhoneNumber(value.slice(0, 10));
+    const value = event.target.value;
+    setPhoneNumber(value);
   };
 
   return (
     <>
-      <Carousel autoplay={true} speed={1000} effect="fade">
-        {image.map((item) => (
+      <Carousel autoplay speed={1000} effect="fade">
+        {slides.map((item) => (
           <div key={item.id}>
             <section className="slides">
               <img src={item.srcImg} alt={item.title} />
@@ -102,10 +105,11 @@ export default function Slides() {
             onChange={handlePhoneNumberChange}
             placeholder="Enter a 10-digit phone number"
             maxLength={10}
+            value={phoneNumber || ""}
           />
         </div>
-        <button 
-          className="slides__btn btn" 
+        <button
+          className="slides__btn btn"
           onClick={handleBooking}
           disabled={isLoading}
         >

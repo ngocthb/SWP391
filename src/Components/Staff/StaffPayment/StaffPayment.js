@@ -127,7 +127,7 @@ const StaffPayment = () => {
       discountAmount > 0
         ? Math.floor(subTotal - (subTotal * discountAmount) / 100)
         : subTotal;
-    
+
     navigate("/payment/VNPay", {
       state: { paymentUrl, totalAmount, bookingId },
     });
@@ -281,7 +281,7 @@ const StaffPayment = () => {
                 <div>{formatPrice(subTotal)} VND</div>
               </div>
               <div className="staff-payment__booking-summary--totals">
-                <div>Discount Ammount</div>
+                <div>Discount Amount</div>
                 <div>{discountAmount}%</div>
               </div>
               <div className="staff-payment__booking-summary--totals">

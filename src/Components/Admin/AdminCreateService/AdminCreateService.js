@@ -55,11 +55,12 @@ const AdminCreateService = () => {
       price: Number(e.target[2].value),
       duration: e.target[3].value,
       skillId: Number(e.target[4].value),
-      description: e.target[5].value,
+      description: e.target[9].value,
       image: null,
       collectionsImage: null,
     };
-
+    console.log(e);
+    console.log(createValues);
 
     if (selectedFileObject) {
       const firebaseResponse = await uploadFile(selectedFileObject);
@@ -70,26 +71,29 @@ const AdminCreateService = () => {
 
     if (collectionImageFiles.length > 0) {
       try {
-        const existingImages = collectionImageFiles.filter(file => file.url).map(file => file.url);
-        const newFiles = collectionImageFiles.filter(file => !file.url);
-    
- 
-        const uploadPromises = newFiles.map(file => uploadFile(file.originFileObj));
+        const existingImages = collectionImageFiles
+          .filter((file) => file.url)
+          .map((file) => file.url);
+        const newFiles = collectionImageFiles.filter((file) => !file.url);
+
+        const uploadPromises = newFiles.map((file) =>
+          uploadFile(file.originFileObj)
+        );
         const newFirebaseResponses = await Promise.all(uploadPromises);
-    
+
         createValues.collectionsImage = [
           ...existingImages,
-          ...newFirebaseResponses.filter(url => url)
+          ...newFirebaseResponses.filter((url) => url),
         ];
-    
+
         if (createValues.collectionsImage.length === 0) {
           createValues.collectionsImage = null;
         }
       } catch (error) {
         console.error("Error uploading collection images:", error);
         createValues.collectionsImage = collectionImageFiles
-          .filter(file => file.url)
-          .map(file => file.url);
+          .filter((file) => file.url)
+          .map((file) => file.url);
       }
     } else {
       createValues.collectionsImage = formData.collectionsImage || null;
@@ -97,6 +101,7 @@ const AdminCreateService = () => {
 
     setLoading(true);
     try {
+      console.log(createValues);
       const response = await api.post(`service`, createValues);
       const data = response.data.result;
 
@@ -257,7 +262,7 @@ const AdminCreateService = () => {
                       Description:
                     </label>
                     <Editor
-                      apiKey="dya5knpqqmhhdeokfh6wz8b93r5ect5nmnnphysh88w5gjvp"
+                      apiKey="t74owshbz6ridhxdhye1b1neth7xaxl46s6o9waysk4n48k6"
                       init={{
                         plugins: [
                           "anchor",
