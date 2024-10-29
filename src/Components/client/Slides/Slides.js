@@ -49,11 +49,6 @@ export default function Slides() {
 
   const updatePhoneNumber = async (newPhoneNumber) => {
     setIsLoading(true);
-<<<<<<< HEAD
-    console.log(newPhoneNumber)
-=======
-    console.log(newPhoneNumber);
->>>>>>> 9115944c3d217404b4253eac9b9a6c02c3dcef92
     if (customer) {
       const updateValues = {
         fullname: customer.fullname,
@@ -61,15 +56,8 @@ export default function Slides() {
         dob: customer.dob !== null ? customer.dob : "",
         image: customer.image,
         phone: newPhoneNumber,
-<<<<<<< HEAD
     };
-    
-      console.log(updateValues)
-=======
-      };
 
-      console.log(updateValues);
->>>>>>> 9115944c3d217404b4253eac9b9a6c02c3dcef92
       try {
         await api.put(`customer/${customer.accountid}`, updateValues);
         setPhoneNumber(newPhoneNumber);
