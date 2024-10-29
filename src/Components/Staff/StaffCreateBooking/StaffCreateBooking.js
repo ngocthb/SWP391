@@ -16,8 +16,6 @@ const StaffCreateBooking = () => {
   const { state } = useLocation();
   const customerPhone = state?.customerPhone || "";
 
-  console.log(customerPhone)
-
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
@@ -51,6 +49,17 @@ const StaffCreateBooking = () => {
     serviceId: [],
     stylistId: 0,
   });
+
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const calculateTotalPrice = () => {
+    return selectedServices.reduce((total, serviceId) => {
+      const service = services.find((s) => s.id === serviceId);
+      return total + (service ? service.price : 0);
+    }, 0);
+  };
 
   useEffect(() => {
     if (customerPhone) {
@@ -328,10 +337,7 @@ const StaffCreateBooking = () => {
                 staff-create-booking__form-grid--full-width"
                 >
                   <div className="staff-create-booking__form-group">
-                    <label
-                      htmlFor="skill"
-                      className="staff-create-booking__label"
-                    >
+                    <label className="staff-create-booking__label">
                       Select Service:
                     </label>
                     <div className="staff-create-booking__services-list">
@@ -345,7 +351,10 @@ const StaffCreateBooking = () => {
                             onChange={() => handleServiceToggle(service.id)}
                             className="staff-create-booking__checkbox"
                           />
-                          <span>{service.serviceName}</span>
+                          <span>
+                            {service.serviceName} -{" "}
+                            {service.price && formatPrice(service.price)} VND
+                          </span>
                         </label>
                       ))}
                     </div>
@@ -372,6 +381,13 @@ const StaffCreateBooking = () => {
                         </option>
                       ))}
                     </select>
+                  </div>
+                  <div className="staff-create-booking__form-group staff-create-booking__form-group--full-width">
+                    <div className="staff-create-booking__total-price">
+                      <h3>
+                        Total Price: {formatPrice(calculateTotalPrice())} VND
+                      </h3>
+                    </div>
                   </div>
                 </div>
               </div>

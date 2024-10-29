@@ -55,7 +55,7 @@ const AdminCreateService = () => {
       price: Number(e.target[2].value),
       duration: e.target[3].value,
       skillId: Number(e.target[4].value),
-      description: e.target[5].value,
+      description: e.target[9].value,
       image: null,
       collectionsImage: null,
     };
@@ -257,7 +257,7 @@ const AdminCreateService = () => {
                       Description:
                     </label>
                     <Editor
-                      apiKey="dya5knpqqmhhdeokfh6wz8b93r5ect5nmnnphysh88w5gjvp"
+                      apiKey="t74owshbz6ridhxdhye1b1neth7xaxl46s6o9waysk4n48k6"
                       init={{
                         plugins: [
                           "anchor",

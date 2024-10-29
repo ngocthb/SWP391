@@ -178,7 +178,7 @@
    
     &__services-list {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
 
@@ -205,6 +205,25 @@
         line-height: 16px;
         color: #4a5568;
         margin-left: 10px;
+
+        &::after {
+          content: attr(data-price);
+          font-weight: bold;
+          color: #1b5077;
+          margin-left: 10px;
+        }
+      }
+    }
+
+    &__total-price {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #1b5077;
+      padding: 10px;
+      border-top: 1px solid #e2e8f0;
+      &:hover {
+        color: #16435f;
       }
     }
   
