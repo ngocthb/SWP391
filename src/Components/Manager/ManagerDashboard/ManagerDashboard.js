@@ -7,6 +7,7 @@ import "./ManagerDashboard.scss";
 import dayjs from "dayjs";
 import { DownOutlined } from "@ant-design/icons";
 import api from "../../../config/axios";
+import { Skeleton } from "@mui/material";
 
 const { TabPane } = Tabs;
 
@@ -19,7 +20,7 @@ const ManagerDashboard = () => {
   const [manager, setManager] = useState([]);
   const [profit, setProfit] = useState([]);
   const [employeesData, setEmployeesData] = useState([]);
-   
+  const [loading, setLoading] = useState(true);
 
   const [finalValues, setFinalValues] = useState({
     profit: 0,
@@ -185,9 +186,9 @@ const ManagerDashboard = () => {
   };
 
   useEffect(() => {
-    console.log(selectDay)
     if (manager.salonId !== undefined) {
       const fetchTotalProfit = async () => {
+        setLoading(true);
         const month = selectDay.split("-")[1];
         try {
           const response = await api.get(`booking/total-money/month/${month}/salon/${manager.salonId}`);
@@ -209,11 +210,14 @@ const ManagerDashboard = () => {
             ...prev,
             profit: 0,
           }));
+        }finally{
+          setLoading(false);
         }
        
       }
 
       const fetchProfit = async () => {
+        setLoading(true);
         const month = selectDay.split("-")[1];
         try {
           const response = await api.get(`booking/total-money/day/month/${month}/salon/${manager.salonId}`);
@@ -223,10 +227,13 @@ const ManagerDashboard = () => {
           }
         } catch (error) {
           console.log(error)
+        }finally{
+          setLoading(false);
         }
       }
 
       const fetchEmployeeData = async () => {
+        setLoading(true);
         try {
          const response = await api.get(`manager/chart/${manager.salonId}`);
          const data = response.data.result;
@@ -234,7 +241,9 @@ const ManagerDashboard = () => {
           setEmployeesData(data);
          }
         } catch (error) {
-         
+         console.log(error)
+        }finally{
+          setLoading(false);
         }
        }
 
@@ -300,14 +309,14 @@ const ManagerDashboard = () => {
           <Card title="Total Profit">
             <Tabs defaultActiveKey="1">
               <TabPane tab="Month" key="1">
-                <ReactECharts option={getLineOptions()} />
+              {loading ? <Skeleton variant="rectangular" height={300} /> : <ReactECharts option={getLineOptions()} />}
               </TabPane>
             </Tabs>
           </Card>
         </Col>
         <Col span={8}>
           <Card title="Employees">
-            <ReactECharts option={getDoughnutOptions()} />
+          <ReactECharts option={getDoughnutOptions()} />
           </Card>
         </Col>
       </Row>

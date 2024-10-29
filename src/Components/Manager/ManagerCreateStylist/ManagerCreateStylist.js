@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import "./ManagerCreateStylist.scss";
 import { Spin } from "antd";
@@ -19,6 +20,8 @@ const ManagerCreateStylist = () => {
     image: loginUser.avatar,
   });
   const navigate = useNavigate();
+  const [managerInfo, setManagerInfo] = useState([]);
+  const [salonAddress, setSalonAddress] = useState("");
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -43,7 +46,7 @@ const ManagerCreateStylist = () => {
       }
     };
 
-    fetchData("salons", setSalonLocations);
+    fetchData("salon", setSalonLocations);
     fetchData("levels", setLevels);
     fetchData("skills", setSkills);
   }, []);
@@ -58,6 +61,29 @@ const ManagerCreateStylist = () => {
       return newSelected;
     });
   };
+
+  useEffect(() => {
+    const fetchManagerData = async () => {
+      try {
+        const response = await api.get(`manager/profile`);
+        const data = response.data.result;
+        if (data) {
+          setManagerInfo(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchManagerData();
+  }, []);
+
+  useEffect(() => {
+    if (managerInfo.salonId !== undefined && salonLocations.length > 0) {
+      const salon = salonLocations.find(salon => salon.id === managerInfo.salonId);
+      setSalonAddress(salon ? salon.address : "Salon not found");
+    }
+  }, [managerInfo, salonLocations])
+
 
   const createStylishData = async (e) => {
     e.preventDefault();
@@ -78,7 +104,7 @@ const ManagerCreateStylist = () => {
       password: e.target[7].value,
       skillId: selectedSkillsId,
       levelId: e.target[7 + numberOfSkillId + 1].value,
-      salonId: e.target[7 + numberOfSkillId + 2].value,
+      salonId: managerInfo?.salonId,
       image: null,
     };
 
@@ -89,7 +115,6 @@ const ManagerCreateStylist = () => {
       createValues.image = formData.image;
     }
 
-    console.log(createValues);
     setLoading(true);
     try {
       const response = await api.post(`stylist/create`, createValues);
@@ -333,22 +358,16 @@ const ManagerCreateStylist = () => {
                       htmlFor="salon"
                       className="manager-create-stylist__label"
                     >
-                      Select Salon:
+                      Salon:
                     </label>
-                    <select
+                    <input
+                      type="text"
                       id="salon"
-                      className="manager-create-stylist__select"
-                      defaultValue={0}
-                    >
-                      <option value={0} disabled>
-                        Select Salon
-                      </option>
-                      {salonLocations.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.address}
-                        </option>
-                      ))}
-                    </select>
+                      className="manager-create-stylist__input"
+                      value={salonAddress}
+                      disabled
+                      placeholder="Loading salon address..."
+                    />
                   </div>
                 </div>
               </div>

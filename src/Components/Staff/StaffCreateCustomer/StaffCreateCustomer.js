@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./StaffCreateCustomer.scss";
 import { Spin } from "antd";
 import api from "../../../config/axios";
-import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const StaffCreateCustomer = () => {

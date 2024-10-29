@@ -11,29 +11,60 @@ export default function Slides() {
   const navigate = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    const fetchCustomerData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await api.get("customer/profile");
+        const data = response.data.result;
+        if (data) {
+          setPhoneNumber(data.phone);
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchCustomerData();
   }, []);
 
-  const fetchCustomerData = async () => {
-    try {
-      const response = await api.get("customer/profile");
-      const data = response.data.result;
-      if (data) {
-        setPhoneNumber(data.phone);
+  const handleBooking = async () => {
+    if (isLoggedIn) {
+      if (phoneNumber && phoneNumber.length === 10 && /^\d+$/.test(phoneNumber)) {
+        navigate("/booking/step1");
+      } else if (!phoneNumber) {
+        await updatePhoneNumber(phoneNumber);
+      } else {
+        message.error("Please enter a valid 10-digit phone number.");
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      message.error("Please login before booking.");
     }
   };
 
-  const handleBooking = () => {
-    if (phoneNumber && phoneNumber.length === 10 && /^\d+$/.test(phoneNumber)) {
-      setIsLoading(true);
-      navigate("/booking/step1");
-    } else {
-      message.error("Please enter a valid 10-digit phone number.");
+  const updatePhoneNumber = async (number) => {
+    setIsLoading(true);
+    try {
+      const updateValues = { phone: number };
+      const response = await api.put(`customer/update-phone`, updateValues);
+      const data = response.data.result;
+
+      if (data) {
+        setPhoneNumber(data.phone);
+        message.success("Phone number updated successfully!");
+        navigate("/booking/step1");
+      }
+    } catch (err) {
+      console.error(err);
+      message.error("Failed to update phone number. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 

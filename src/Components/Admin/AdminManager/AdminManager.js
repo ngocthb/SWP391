@@ -5,8 +5,6 @@ import { BiSearchAlt } from "react-icons/bi";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhone } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
-import { FaAngleLeft } from "react-icons/fa6";
-import { FaChevronRight } from "react-icons/fa6";
 import { HiTrash } from "react-icons/hi2";
 import { FaUserEdit } from "react-icons/fa";
 import "./AdminManager.scss";
@@ -15,11 +13,11 @@ import api from "../../../config/axios";
 import loginUser from "../../../data/loginUser";
 import { useDispatch, useSelector } from "react-redux";
 import { Spin } from "antd";
-import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
 
 import { genders } from "../../../data/gender";
+import { Skeleton } from "@mui/material";
 
 export default function AdminManager({ buttonLabel }) {
   const [stylists, setStylists] = useState([]);
@@ -27,7 +25,6 @@ export default function AdminManager({ buttonLabel }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [salonLocations, setSalonLocations] = useState([]);
-  const [selectedSkills, setSelectedSkills] = useState([]);
   const [formData, setFormData] = useState({
     accountid: 0,
     fullName: "",
@@ -40,6 +37,8 @@ export default function AdminManager({ buttonLabel }) {
     image: loginUser.avatar,
   });
   const [loading, setLoading] = useState(false);
+  const [managersLoading, setManagersLoading] = useState(true);
+
   const dispatch = useDispatch();
   const isUpdate = useSelector((state) => state.updateStylistReducer);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
@@ -74,6 +73,7 @@ export default function AdminManager({ buttonLabel }) {
   }, [isUpdate]);
 
   const fetchManagersData = async () => {
+    setManagersLoading(true);
     try {
       const response = await api.get(`managers`);
       const data = response.data.result;
@@ -82,6 +82,8 @@ export default function AdminManager({ buttonLabel }) {
       }
     } catch (err) {
       console.error(err);
+    }finally{
+      setManagersLoading(false);
     }
   };
 
@@ -208,7 +210,6 @@ export default function AdminManager({ buttonLabel }) {
       if (formData.accountid) {
         fetchStylistData(formData.accountid);
       }
-      setSelectedSkills(formData.skillId);
     }
   }, [isModalOpen]);
 
@@ -216,9 +217,6 @@ export default function AdminManager({ buttonLabel }) {
     if (accountid) {
       await fetchStylistData(accountid);
     }
-
-    setSelectedSkills(formData.skillId);
-
     setIsModalOpen(!isModalOpen);
     setSelectedFile(null);
   };
@@ -250,7 +248,67 @@ export default function AdminManager({ buttonLabel }) {
             </div>
           </div>
           <div className="container">
-            {(stylists || []).map((stylist) => (
+          {managersLoading
+              ?
+                [...Array(4)].map((_, index) => (
+                  <div key={index} className="container__card">
+                    <Skeleton
+                      variant="circular"
+                      width={150}
+                      height={150}
+                      className="container__card--img"
+                      style={{ margin: "0 auto 10px" }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="70%"
+                      style={{ margin: "10px auto" }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="60%"
+                      style={{ margin: "5px auto" }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="50%"
+                      style={{ margin: "5px auto" }}
+                    />
+                    <div className="container__card-info">
+                      <Skeleton
+                        variant="text"
+                        width="80%"
+                        style={{ margin: "5px auto" }}
+                      />
+                      <Skeleton
+                        variant="text"
+                        width="70%"
+                        style={{ margin: "5px auto" }}
+                      />
+                      <Skeleton
+                        variant="text"
+                        width="75%"
+                        style={{ margin: "5px auto" }}
+                      />
+                    </div>
+                    <div className="container__card-actions">
+                      <Skeleton
+                        variant="rectangular"
+                        width={40}
+                        height={35}
+                        style={{ borderRadius: "25px" }}
+                      />
+                      <Skeleton
+                        variant="rectangular"
+                        width={40}
+                        height={35}
+                        style={{ borderRadius: "25px" }}
+                      />
+                    </div>
+                  </div>
+                ))
+              :
+            ((stylists || []).map((stylist) => (
               <div key={stylist.accountid} className="container__card">
                 <img
                   alt="admin-manager picture"
@@ -290,7 +348,7 @@ export default function AdminManager({ buttonLabel }) {
                   </button>
                 </div>
               </div>
-            ))}
+            )))}
           </div>
         </div>
       </div>

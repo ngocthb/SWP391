@@ -242,6 +242,11 @@ export default function Booking() {
 
   const formattedDate = selectedDate ? formatDate(selectedDate) : "";
 
+  function formatTime(time) {
+    const [hours, minutes] = time.split(':');
+    return `${hours}h${minutes}`;
+}
+
   return (
     <div className="booking">
       <div className="booking__container">
@@ -301,7 +306,7 @@ export default function Booking() {
               <input
                 type="text"
                 placeholder="View Selected Time"
-                defaultValue={selectedTime}
+                defaultValue={selectedTime && formatTime(selectedTime)}
                 readOnly
               />
             </div>

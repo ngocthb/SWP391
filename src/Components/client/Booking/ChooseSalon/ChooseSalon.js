@@ -10,7 +10,6 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 import "./ChooseSalon.scss";
-// import { salonLocations } from "../../../../data/booking";
 import api from "../../../../config/axios";
 
 export default function ChooseSalon() {
@@ -114,11 +113,11 @@ export default function ChooseSalon() {
           </li>
           <li
             className={`chooseSalon__tagNavigation--item-content ${
-              isSelectedServices ? "" : "disable"
+              (isSelectedServices && selectedBranch) ? "" : "disable"
             }`}
           >
             <Link
-              to={isSelectedServices ? "/booking/step3" : "/booking/step1"}
+              to={(isSelectedServices && selectedBranch) ? "/booking/step3" : "/booking/step1"}
               aria-label="Select Stylist"
             >
               <div className="filled"></div>
@@ -128,11 +127,11 @@ export default function ChooseSalon() {
           </li>
           <li
             className={`chooseSalon__tagNavigation--item-content ${
-              isSelectedStylist ? "" : "disable"
+              (isSelectedStylist && isSelectedServices && selectedBranch) ? "" : "disable"
             }`}
           >
             <Link
-              to={isSelectedStylist ? "/booking/step4" : "/booking/step1"}
+              to={(isSelectedStylist && isSelectedServices && selectedBranch) ? "/booking/step4" : "/booking/step1"}
               aria-label="Select Time"
             >
               <div className="filled"></div>

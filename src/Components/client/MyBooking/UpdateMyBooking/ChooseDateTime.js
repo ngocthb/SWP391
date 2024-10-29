@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FaArrowLeft } from "react-icons/fa6";
 
 import { LuCalendarSearch } from "react-icons/lu";
@@ -26,15 +27,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
   const [selectedDate, setSelectedDate] = useState(today);
   const [timeSlots, setTimeSlots] = useState(slots);
   const [availableSlots, setAvailableSlots] = useState([]);
-  const [formData, setFormData] = useState({
-    salonId: 0,
-    customerId: 0,
-    slotId: 0,
-    bookingDate: "",
-    serviceId: 0,
-    stylistId: 0,
-    voucherId: 0,
-  });
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -180,16 +173,6 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
       const data = response.data;
 
       if (data) {
-        setFormData((prev) => ({
-          ...prev,
-          salonId: data.salonId || 0,
-          customerId: data.customerId || 0,
-          slotId: data.slotId || 0,
-          bookingDate: data.bookingDate || "",
-          serviceId: data.serviceId || "",
-          stylistId: data.stylistId || 0,
-          voucherId: data.voucherId || 0,
-        }));
         dispatch(updateBooking());
         messageApi.success("Booking information updated successfully!");
         toggleModal();

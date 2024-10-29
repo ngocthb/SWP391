@@ -5,8 +5,6 @@ import { BiSearchAlt } from "react-icons/bi";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhone } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
-import { FaAngleLeft } from "react-icons/fa6";
-import { FaChevronRight } from "react-icons/fa6";
 import { HiTrash } from "react-icons/hi2";
 import { FaUserEdit } from "react-icons/fa";
 import "./ManagerStaff.scss";
@@ -19,6 +17,7 @@ import uploadFile from "../../../utils/upload";
 import { updateStaff } from "../../../actions/Update";
 import Swal from "sweetalert2";
 import {genders} from "../../../data/gender";
+import { Skeleton } from "@mui/material";
 
 export default function ManagerStaff({ buttonLabel }) {
   const [staffs, setStaffs] = useState([]);
@@ -39,6 +38,7 @@ export default function ManagerStaff({ buttonLabel }) {
     image: loginUser.avatar,
   });
   const [loading, setLoading] = useState(false);
+  const [staffsLoading, setStaffsLoading] = useState(true);
   const dispatch = useDispatch();
   const isUpdate = useSelector((state) => state.updateStaffReducer);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
@@ -65,7 +65,7 @@ export default function ManagerStaff({ buttonLabel }) {
       }
     };
 
-    fetchData("salons", setSalonLocations);
+    fetchData("salon", setSalonLocations);
   }, []);
 
   useEffect(() => {
@@ -92,6 +92,7 @@ export default function ManagerStaff({ buttonLabel }) {
   }, [isUpdate, manager]);
 
   const fetchStaffsData = async () => {
+    setStaffsLoading(true);
     try {
       const response = await api.get(`staff/salon/${manager.salonId}`);
       const data = response.data.result;
@@ -101,6 +102,8 @@ export default function ManagerStaff({ buttonLabel }) {
       }
     } catch (err) {
       console.error(err);
+    }finally{
+      setStaffsLoading(false);
     }
   };
 
@@ -252,7 +255,6 @@ export default function ManagerStaff({ buttonLabel }) {
           <div className="manager-staff__header">
             <div className="manager-staff__header-searchBar">
               <BiSearchAlt className="searchBar-icon" />
-              {/* <i class="fas fa-search"></i> */}
               <input placeholder="Search here..." type="text" />
             </div>
             <div className="manager-staff__header-filter">
@@ -260,7 +262,67 @@ export default function ManagerStaff({ buttonLabel }) {
             </div>
           </div>
           <div className="container">
-            {(staffs || []).map((staff) => (
+          {staffsLoading
+              ?
+                [...Array(4)].map((_, index) => (
+                  <div key={index} className="container__card">
+                    <Skeleton
+                      variant="circular"
+                      width={150}
+                      height={150}
+                      className="container__card--img"
+                      style={{ margin: "0 auto 10px" }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="70%"
+                      style={{ margin: "10px auto" }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="60%"
+                      style={{ margin: "5px auto" }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="50%"
+                      style={{ margin: "5px auto" }}
+                    />
+                    <div className="container__card-info">
+                      <Skeleton
+                        variant="text"
+                        width="80%"
+                        style={{ margin: "5px auto" }}
+                      />
+                      <Skeleton
+                        variant="text"
+                        width="70%"
+                        style={{ margin: "5px auto" }}
+                      />
+                      <Skeleton
+                        variant="text"
+                        width="75%"
+                        style={{ margin: "5px auto" }}
+                      />
+                    </div>
+                    <div className="container__card-actions">
+                      <Skeleton
+                        variant="rectangular"
+                        width={40}
+                        height={35}
+                        style={{ borderRadius: "25px" }}
+                      />
+                      <Skeleton
+                        variant="rectangular"
+                        width={40}
+                        height={35}
+                        style={{ borderRadius: "25px" }}
+                      />
+                    </div>
+                  </div>
+                ))
+              :
+            ((staffs || []).map((staff) => (
               <div key={staff.accountid} className="container__card">
                 <img
                   alt="manager-staff picture"
@@ -300,7 +362,7 @@ export default function ManagerStaff({ buttonLabel }) {
                   </button>
                 </div>
               </div>
-            ))}
+            )))}
           </div>
         </div>
       </div>

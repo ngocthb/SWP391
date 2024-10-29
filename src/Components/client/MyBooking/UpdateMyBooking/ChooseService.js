@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
@@ -13,7 +14,6 @@ import { bookingIdContext } from "../MyBooking";
 
 export function ChooseService({ onNext, onPre }) {
   const [voucher, setVoucher] = useState([]);
-  const [modalContent, setModalContent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectVoucherId, setSelectVoucherId] = useState(null);
   const [selectedServices, setSelectedServices] = useState([]);
@@ -178,7 +178,6 @@ export function ChooseService({ onNext, onPre }) {
   };
 
   const showModal = () => {
-    setModalContent("Choose voucher");
     setIsModalOpen(true);
   };
 

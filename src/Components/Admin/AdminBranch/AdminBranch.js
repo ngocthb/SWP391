@@ -6,6 +6,8 @@ import { BiSearchAlt } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
 import Swal from "sweetalert2";
+import { Skeleton } from "@mui/material";
+import { FolderOutlined } from "@ant-design/icons";
 
 const AdminBranch = ({ buttonLabel }) => {
   const [branchs, setBranchs] = useState([]);
@@ -13,23 +15,31 @@ const AdminBranch = ({ buttonLabel }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  
   const [formData, setFormData] = useState({
     id: 0,
     address: "",
     hotline: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [branchLoading, setBranchLoading] = useState(false);
+
   const fetchBranchs = async () => {
+    setBranchLoading(true);
     try {
-      const response = await api.get("salon");
+      const response = await api.get("salons");
       const data = response.data.result;
 
       if (data) {
         setBranchs(data);
         setOriginalBranchs(data);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setBranchLoading(false);
+    }
   };
 
 
@@ -204,7 +214,45 @@ const AdminBranch = ({ buttonLabel }) => {
               </thead>
 
               <tbody>
-                {branchs && branchs.map((branch) => (
+              {branchLoading
+                  ? [...Array(6)].map((_, index) => (
+                      <tr key={index}>
+                        <td>
+                          <Skeleton width={40} />
+                        </td>
+                        <td>
+                          <Skeleton width={380} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <Skeleton
+                              variant="circular"
+                              width={36}
+                              height={36}
+                            />
+                             <Skeleton
+                              variant="circular"
+                              width={36}
+                              height={36}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  : branchs.length === 0 ? (
+                    <tr>
+                      <td colSpan={7}>
+                        <div className="admin-branch__notValid">
+                          <FolderOutlined className="notValid--icon" />
+                          <p>Currently, there are no branchs</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) :
+                (branchs && branchs.map((branch) => (
                   <tr key={branch.id}>
                     <td className="admin-branch__id">{branch.id}</td>
                     <td>
@@ -228,7 +276,7 @@ const AdminBranch = ({ buttonLabel }) => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>

@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { BiSearchAlt } from "react-icons/bi";
-import { DownOutlined } from "@ant-design/icons"; // Import the icon
-import { Dropdown, Space, Calendar, theme, Spin, Select } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { Dropdown, Space, Calendar, Spin, Select } from "antd";
 import { FolderOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";

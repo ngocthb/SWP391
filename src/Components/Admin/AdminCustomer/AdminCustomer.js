@@ -7,6 +7,8 @@ import { FaAngleLeft, FaChevronRight } from "react-icons/fa";
 import { MdRestartAlt } from "react-icons/md";
 import Swal from "sweetalert2";
 import loginUser from "../../../data/loginUser";
+import { Skeleton } from "@mui/material";
+import { FolderOutlined } from "@ant-design/icons";
 
 const AdminVoucher = () => {
   const [customers, setCustomers] = useState([]);
@@ -14,8 +16,10 @@ const AdminVoucher = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [customersLoading, setCustomersLoading] = useState(false);
 
   const fetchCustomers = async (currentPage) => {
+    setCustomersLoading(true);
     try {
       const response = await api.get(`account/page?page=${currentPage}&size=6`);
       const data = response.data.result.content;
@@ -26,7 +30,11 @@ const AdminVoucher = () => {
         setOriginalCustomers(data);
         setTotalPages(total);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setCustomersLoading(false);
+    }
   };
   useEffect(() => {
     fetchCustomers(currentPage);
@@ -195,79 +203,129 @@ const AdminVoucher = () => {
               </thead>
 
               <tbody>
-                {customers.map((customer) => (
-                  <tr key={customer.accountId}>
-                    <td className="admin-customer__id">{customer.accountId}</td>
-                    <td>
-                      <div className="manager-booking__customer">
-                        <img
-                          src={customer.image || loginUser.avatar}
-                          alt={customer.fullname}
-                          className="manager-booking__customer-image"
-                        />
-                        <span className="manager-booking__customer-name">
-                          {customer.fullname}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="admin-customer__date">{customer.email}</td>
-                    <td className="admin-customer__discountAmount">
-                      {formatDateString(customer.dob)}
-                    </td>
-                    <td>
-                      <span className={`admin-customer__quantity`}>
-                        {customer.phone}
-                      </span>
-                    </td>
-                    <td className="admin-customer__actions">
-                      {customer.delete ? (
-                        <button
-                          className="manager-booking__action-button"
-                          onClick={() => confirmActiveModal(customer.accountId)}
-                        >
-                          <MdRestartAlt />
-                        </button>
-                      ) : (
-                        <button
-                          className="manager-booking__action-button"
-                          onClick={() => confirmDeleteModal(customer.accountId)}
-                        >
-                          🗑
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {customersLoading
+                  ? [...Array(6)].map((_, index) => (
+                      <tr key={index}>
+                        <td>
+                          <Skeleton width={40} />
+                        </td>
+                        <td style={{ display: "flex", alignItems: "center" }}>
+                          <Skeleton variant="circular" width={36} height={36} />
+                          <Skeleton width={120} style={{ marginLeft: "8px" }} />
+                        </td>
+                        <td>
+                          <Skeleton width={150} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={80} />
+                        </td>
+                        <td>
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <Skeleton
+                              variant="circular"
+                              width={36}
+                              height={36}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  : customers.length === 0 ? (
+                    <tr>
+                      <td colSpan={7}>
+                        <div className="admin-branch__notValid">
+                          <FolderOutlined className="notValid--icon" />
+                          <p>Currently, there are no customers</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : 
+                  (customers.map((customer) => (
+                      <tr key={customer.accountId}>
+                        <td className="admin-customer__id">
+                          {customer.accountId}
+                        </td>
+                        <td>
+                          <div className="manager-booking__customer">
+                            <img
+                              src={customer.image || loginUser.avatar}
+                              alt={customer.fullName}
+                              className="manager-booking__customer-image"
+                            />
+                            <span className="manager-booking__customer-name">
+                              {customer.fullName}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="admin-customer__date">
+                          {customer.email}
+                        </td>
+                        <td className="admin-customer__discountAmount">
+                          {formatDateString(customer.dob)}
+                        </td>
+                        <td>
+                          <span className={`admin-customer__quantity`}>
+                            {customer.phone}
+                          </span>
+                        </td>
+                        <td className="admin-customer__actions">
+                          {customer.delete ? (
+                            <button
+                              className="manager-booking__action-button"
+                              onClick={() =>
+                                confirmActiveModal(customer.accountId)
+                              }
+                            >
+                              <MdRestartAlt />
+                            </button>
+                          ) : (
+                            <button
+                              className="manager-booking__action-button"
+                              onClick={() =>
+                                confirmDeleteModal(customer.accountId)
+                              }
+                            >
+                              🗑
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    )))}
               </tbody>
             </table>
           </div>
         </div>
 
-        <div className="admin-customer__pagination">
-          <div className="admin-customer__pagination-pages">
-            <span
-              onClick={() => handlePageChange(currentPage - 1)}
-              className={currentPage === 0 ? "disabled" : ""}
-            >
-              <FaAngleLeft className="pagination-icon" />
-            </span>
-            {[...Array(totalPages)].map((_, index) => (
+        {customers && customers.length > 0 && (
+          <div className="admin-customer__pagination">
+            <div className="admin-customer__pagination-pages">
               <span
-                key={index}
-                onClick={() => handlePageChange(index)}
-                className={currentPage === index ? "active" : ""}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className={currentPage === 0 ? "disabled" : ""}
               >
-                {index + 1}
+                <FaAngleLeft className="pagination-icon" />
               </span>
-            ))}
-            <span
-              onClick={() => handlePageChange(currentPage + 1)}
-              className={currentPage === totalPages - 1 ? "disabled" : ""}
-            >
-              <FaChevronRight className="pagination-icon" />
-            </span>
+              {[...Array(totalPages)].map((_, index) => (
+                <span
+                  key={index}
+                  onClick={() => handlePageChange(index)}
+                  className={currentPage === index ? "active" : ""}
+                >
+                  {index + 1}
+                </span>
+              ))}
+              <span
+                onClick={() => handlePageChange(currentPage + 1)}
+                className={currentPage === totalPages - 1 ? "disabled" : ""}
+              >
+                <FaChevronRight className="pagination-icon" />
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

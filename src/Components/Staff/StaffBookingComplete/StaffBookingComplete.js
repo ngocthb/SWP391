@@ -5,6 +5,8 @@ import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
 import { IoCloseCircle } from "react-icons/io5";
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa6";
+import { Skeleton } from "@mui/material";
+import { FolderOutlined } from "@ant-design/icons";
 
 const StaffBookingComplete = () => {
   const [bookings, setBookings] = useState([]);
@@ -17,6 +19,7 @@ const StaffBookingComplete = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
+  const [bookingLoading, setBookingLoading] = useState(false);
 
   const [staff, setStaff] = useState([]);
 
@@ -56,10 +59,11 @@ const StaffBookingComplete = () => {
 
 
   const fetchBookings = async (page) => {
+    setBookingLoading(true);
     if (!isStaffLoaded || !staff.salonId) return;
     try {
       const response = await api.get(
-        `manager/stylists/booking/complete/${page}/6/${staff.salonId}/${formatDateForInput(selectedDate)}`
+        `manager/stylists/booking/complete/${page}/9/${staff.salonId}/${formatDateForInput(selectedDate)}`
       );
       const data = response.data.result.content;
       const total = response.data.result.totalPages;
@@ -70,6 +74,8 @@ const StaffBookingComplete = () => {
       }
     } catch (error) {
       console.log(error);
+    }finally{
+      setBookingLoading(false);
     }
   };
 
@@ -241,7 +247,40 @@ const StaffBookingComplete = () => {
               </thead>
 
               <tbody>
-                {bookings &&
+              {bookingLoading
+                  ? [...Array(9)].map((_, index) => (
+                      <tr key={index}>
+                        <td>
+                          <Skeleton width={40} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={100} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={150} />
+                        </td>
+                        <td>
+                          <Skeleton width={80} />
+                        </td>
+                      </tr>
+                    ))
+                  : bookings.length === 0 ? (
+                    <tr>
+                      <td colSpan={7}>
+                        <div className="staff-booking-complete__notValid">
+                          <FolderOutlined className="notValid--icon" />
+                          <p>Currently, there are no complete bookings</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) :
+                (bookings &&
                   bookings.map((booking) => (
                     <tr key={booking.id}>
                       <td className="staff-booking-complete__id">{booking.id}</td>
@@ -269,17 +308,13 @@ const StaffBookingComplete = () => {
                         </span>
                       </td>
                     </tr>
-                  ))}
+                  )))}
               </tbody>
             </table>
           </div>
         </div>
+        {bookings && bookings.length > 0 && (
         <div className="staff-booking-complete__pagination">
-          <p>
-            Showing {currentPage * 4 + 1} -{" "}
-            {Math.min((currentPage + 1) * 4, bookings.length)} from{" "}
-            {bookings.length} data
-          </p>
           <div className="staff-booking-complete__pagination-pages">
             <span
               onClick={() => handlePageChange(currentPage - 1)}
@@ -304,6 +339,7 @@ const StaffBookingComplete = () => {
             </span>
           </div>
         </div>
+        )}
       </div>
 
     </>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import "./ManagerCreateStaff.scss";
 import { Spin } from "antd";
@@ -15,6 +16,9 @@ const ManagerCreateStaff = () => {
     image: loginUser.avatar,
   });
   const navigate = useNavigate();
+  const [managerInfo, setManagerInfo] = useState([]);
+  const [salonAddress, setSalonAddress] = useState("");
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -38,8 +42,30 @@ const ManagerCreateStaff = () => {
       }
     };
 
-    fetchData("salons", setSalonLocations);
+    fetchData("salon", setSalonLocations);
   }, []);
+
+  useEffect(() => {
+    const fetchManagerData = async () => {
+      try {
+        const response = await api.get(`manager/profile`);
+        const data = response.data.result;
+        if (data) {
+          setManagerInfo(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchManagerData();
+  }, []);
+
+    useEffect(() => {
+      if (managerInfo.salonId !== undefined && salonLocations.length > 0) {
+        const salon = salonLocations.find(salon => salon.id === managerInfo.salonId);
+        setSalonAddress(salon ? salon.address : "Salon not found");
+      }
+    }, [managerInfo, salonLocations])
 
   const createStylishData = async (e) => {
     e.preventDefault();
@@ -261,20 +287,14 @@ const ManagerCreateStaff = () => {
                     >
                       Select Salon:
                     </label>
-                    <select
+                    <input
+                      type="text"
                       id="salon"
-                      className="manager-create-staff__select"
-                      defaultValue={0}
-                    >
-                      <option value={0} disabled>
-                        Select Salon
-                      </option>
-                      {salonLocations.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.address}
-                        </option>
-                      ))}
-                    </select>
+                      className="manager-create-staff__input"
+                      value={salonAddress}
+                      disabled
+                      placeholder="Loading salon address..."
+                    />
                   </div>
                 </div>
               </div>
