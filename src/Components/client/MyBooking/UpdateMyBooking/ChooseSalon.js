@@ -26,7 +26,7 @@ export function ChooseSalon({ onClose, onNext }) {
   useEffect(() => {
     const fetchSalonLocations = async () => {
       try {
-        const response = await api.get("salons");
+        const response = await api.get("salon");
         if (response.data) {
           // setSalonLocations(response.data);
           setSalonLocations(response.data.result);
@@ -97,7 +97,8 @@ export function ChooseSalon({ onClose, onNext }) {
             onNext();
             if (!selectedBranch) {
               e.preventDefault();
-            } else {sessionStorage.setItem("selectedBranchId", selectedBranch);
+            } else {
+              sessionStorage.setItem("selectedBranchId", selectedBranch);
             }
           }}
         >

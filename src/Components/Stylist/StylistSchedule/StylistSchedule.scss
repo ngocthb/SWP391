@@ -107,10 +107,16 @@
                 font-weight: 500;
               }
               .pending {
-                background-color: rgb(208, 16, 16);
+                background-color: var(--HoverColor);
               }
               .complete {
                 background-color: rgb(89, 230, 110);
+              }
+              .cancelled {
+                background-color: rgb(208, 16, 16);
+              }
+              .in-progress {
+                background-color: yellow;
               }
             }
 

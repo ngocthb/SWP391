@@ -90,7 +90,7 @@ export default function StylistShift() {
       const results = await Promise.all(promises);
       if (results) {
         setSelectShift([]);
-        navigate("/stylist/schedule");
+        await fetchShiftData();
       }
     } catch (err) {
       console.error(err);
@@ -98,25 +98,24 @@ export default function StylistShift() {
       setLoading(false);
     }
   };
+  const fetchShiftData = async () => {
+    try {
+      console.log(stylistId);
+      console.log(selectMonth);
+      const response = await api.get(
+        `stylist/schedule/month/${stylistId}/${selectMonth}`
+      );
+      const data = response.data.result;
 
+      if (data) {
+        setShiftData(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   useEffect(() => {
     if (stylistId) {
-      const fetchShiftData = async () => {
-        try {
-          console.log(stylistId);
-          console.log(selectMonth);
-          const response = await api.get(
-            `stylist/schedule/month/${stylistId}/${selectMonth}`
-          );
-          const data = response.data.result;
-
-          if (data) {
-            setShiftData(data);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      };
       fetchShiftData();
     }
   }, [selectMonth, stylistId]);
@@ -298,10 +297,7 @@ export default function StylistShift() {
 
     setSelectShift(result);
 
-    // Điều kiện hiển thị nút Save:
-    // 1. Nếu tuần đã có ca làm thì ẩn nút
-    // 2. Nếu không có ca nào và người dùng đã chọn ít nhất 1 ca mới => Hiện nút
-    const existingShiftInWeek = checkIfWeekHasExistingShift(); // Kiểm tra xem tuần hiện tại đã có ca nào chưa
+    const existingShiftInWeek = checkIfWeekHasExistingShift();
     setIsWeekScheduled(!existingShiftInWeek && newSelected);
   };
 

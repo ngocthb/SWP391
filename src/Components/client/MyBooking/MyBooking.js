@@ -213,6 +213,7 @@ export default function MyBooking() {
                     open={isModalOpen}
                     onCancel={handleCancel}
                     footer={null}
+                    width={currentStep === "service" ? "1080px" : "520px"}
                   >
                     {currentStep === "salon" ? (
                       <ChooseSalon

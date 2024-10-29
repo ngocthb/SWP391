@@ -23,57 +23,149 @@
       margin: 0;
     }
   }
+
+  .ant-carousel .slick-prev,
+  .ant-carousel .slick-next {
+    color: var(--PrimaryColor);
+  }
+
+  .ant-carousel .slick-prev:hover,
+  .ant-carousel .slick-next:hover {
+    color: #132b3d;
+  }
   &__main {
     width: 80%;
     justify-content: center;
     display: flex;
-    padding: 5rem;
-    gap: 2rem;
+
     background-color: #fff;
-    border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 5rem;
     &-left {
-      width: 60%;
-      img {
-        border-radius: 15px;
-        width: 600px;
-        height: 400px;
-        object-fit: cover;
+      width: 25%;
+      border-right: 1px solid gray;
+
+      .left-image {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        padding: 5px;
+
+        .left-image-img {
+          img {
+            padding: 5px;
+            width: 285px;
+            height: 200px;
+            object-fit: cover;
+            transition: filter 0.3s ease;
+          }
+          .selected {
+            filter: brightness(0.6);
+          }
+        }
       }
+      // .left-details {
+      //   display: flex;
+      //   justify-content: center;
+      //   flex-direction: column;
+      //   align-items: center;
+      //   &-header {
+      //     display: flex;
+      //     justify-content: center;
+      //     padding: 2rem;
+      //     gap: 1rem;
+      //     color: var(--PrimaryColor);
+      //     font-size: 40px;
+      //     font-weight: 600;
+      //     align-items: center;
+      //     span {
+      //       font-size: 38px;
+      //     }
+      //   }
+      //   &-content {
+      //     padding: 1rem 1.5rem 1rem 1.5rem;
+      //     font-size: 20px;
+      //     font-weight: 400;
+      //     color: gray;
+      //     text-align: center;
+      //   }
+      // }
     }
     &-right {
-      width: 35%;
-      h1 {
-        color: var(--PrimaryColor);
-        text-align: center;
-        padding: 1rem;
-      }
-      h2 {
+      width: 75%;
+      .right-details {
         padding: 5px;
-        font-size: 20px;
-        font-weight: 400;
-      }
-      h3 {
-        font-size: 18px;
-        font-weight: 300;
-      }
-      .servicesDetails-btn {
-        display: flex;
-        align-items: center;
-        justify-content: end;
-        padding: 2rem;
-        button {
-          align-items: end;
-          border-radius: 15px;
-          width: 200px;
-          color: var(--PrimaryColor);
-          background-color: #fff;
-          border: 2px solid var(--PrimaryColor);
-          font-size: 18px;
-          font-weight: 600;
-          &:hover {
-            color: #fff;
-            background-color: var(--PrimaryColor);
+        .right-image {
+          padding: 5px;
+          border-bottom: 1px solid gray;
+          img {
+            width: 865px;
+            height: 500px;
+            object-fit: cover;
+          }
+        }
+        .right-content {
+          h1 {
+            padding: 0.5rem;
+            color: var(--PrimaryColor);
+            font-size: 40px;
+            font-weight: 600;
+            align-items: center;
+          }
+          &-header {
+            padding: 0 5rem 2rem 5rem;
+            display: flex;
+            justify-content: space-between;
+            h2 {
+              display: flex;
+              align-items: center;
+              gap: 2rem;
+              padding: 1rem 1.5rem 0 1.5rem;
+              color: gray;
+              font-size: 30px;
+              span {
+                font-size: 28px;
+                font-weight: 400;
+              }
+            }
+          }
+          &-description {
+            font-size: 26px;
+            text-align: center;
+            padding: 0.5rem;
+          }
+          .details-footer {
+            display: flex;
+            align-items: center;
+            h2 {
+              color: gray;
+              width: 50%;
+              display: flex;
+              justify-content: center;
+              border-right: 1px solid gray;
+            }
+            .servicesDetails-btn {
+              width: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: end;
+              padding: 2rem;
+              button {
+                align-items: end;
+                height: 50px;
+                width: 200px;
+                color: #fff;
+                background-color: var(--PrimaryColor);
+                border: none;
+                font-size: 18px;
+                font-weight: 600;
+                &:hover {
+                  color: var(--PrimaryColor);
+                  background-color: #fff;
+                  border: 2px solid var(--PrimaryColor);
+                }
+              }
+            }
           }
         }
       }

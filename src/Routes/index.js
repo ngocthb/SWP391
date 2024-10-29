@@ -199,10 +199,6 @@ export const Routes = [
         element: <ManagerShift />,
       },
       {
-        path: "shift/create",
-        element: <ManagerCreateShift />,
-      },
-      {
         path: "shift/update",
         element: <ManagerUpdateShift />,
       },

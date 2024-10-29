@@ -67,8 +67,10 @@ export default function ManagerUpdateShift() {
     };
 
     try {
-      const response = await api.post(`manager/booking/stylist/busy`, value);
+      const response = await api.get(`manager/booking/stylist/busy`);
       const data = response.data.result;
+      console.log(salonLocations);
+      console.log(slots);
       console.log(data);
       if (data) {
         const bookingData = data.map((booking) => {
@@ -80,8 +82,10 @@ export default function ManagerUpdateShift() {
             (sa) => sa.address === booking.salonName
           );
           const salonId = salon ? salon.id : null;
+
           const slot = slots.find((slot) => slot.slottime === booking.time);
           const slotId = slot ? slot.slotid : null;
+
           const formattedTime = slot ? slot.slottime : booking.time;
 
           return {
@@ -92,8 +96,6 @@ export default function ManagerUpdateShift() {
             time: formattedTime,
           };
         });
-
-        // Replace booking data to avoid duplicates
         setBooking(bookingData);
       }
     } catch (e) {
@@ -110,8 +112,9 @@ export default function ManagerUpdateShift() {
     };
     console.log(value);
     try {
-      const response = await api.post(`/booking/stylists/update`, value);
+      const response = await api.post(`booking/stylists/update`, value);
       const data = response.data.result;
+      console.log(data);
       if (data) {
         setAvailableStylist(data);
       }
@@ -119,6 +122,13 @@ export default function ManagerUpdateShift() {
       console.error(e);
     }
   };
+
+  useEffect(() => {
+    if (booking.length > 0) {
+      setSelectedBooking(booking[0]);
+      fetchAvailableStylist(booking[0]);
+    }
+  }, [booking]);
 
   const handleAvailableStylist = async (booking) => {
     if (booking) {
@@ -133,19 +143,22 @@ export default function ManagerUpdateShift() {
 
   const updateBookingData = async (booking) => {
     const updateValues = {
-      salonId: booking.salonId,
-      customerId: booking.customerId,
-      slotId: booking.slotId,
+      salonId: parseInt(booking.salonId, 10),
+      customerId: parseInt(booking.customerId, 10),
+      slotId: parseInt(booking.slotId, 10),
       bookingDate: booking.date,
       serviceId: booking.serviceId,
-      stylistId: selectedStylist,
-      voucherId: booking.voucherCode,
+      stylistId: parseInt(selectedStylist, 10),
+      voucherId: parseInt(booking.voucherCode, 10),
     };
     console.log(updateValues);
     setLoading(true);
     try {
+      console.log(updateValues);
+      console.log(booking.id);
       const response = await api.put(`booking/${booking.id}`, updateValues);
       const data = response.data;
+      console.log(data);
       if (data) {
         setFormUpdate((prev) => ({
           ...prev,
@@ -159,12 +172,32 @@ export default function ManagerUpdateShift() {
         }));
         dispatch(updateBooking());
         messageApi.success("Booking information updated successfully!");
-        Swal.fire({
-          title: "Updated!",
-          text: "The booking has been update.",
-          icon: "success",
+
+        //   setBooking((prevBookings) =>
+        //     prevBookings.filter((boo) => boo.id !== selectedBooking.id)
+        //   );
+        //   const nextBooking = booking[1];
+        //   if (nextBooking) {
+        //     setSelectedBooking(nextBooking);
+        //     handleAvailableStylist(nextBooking);
+        //   } else {
+        //     navigate("/manager/shift");
+        //   }
+        // }
+        setBooking((prevBookings) => {
+          const updatedBookings = prevBookings.filter(
+            (boo) => boo.id !== selectedBooking.id
+          );
+
+          // If no bookings left, navigate; otherwise, select the next one
+          if (updatedBookings.length === 0) {
+            navigate("/manager/shift");
+          } else {
+            setSelectedBooking(updatedBookings[0]);
+            handleAvailableStylist(updatedBookings[0]);
+          }
+          return updatedBookings;
         });
-        navigate("/manager/shift/update");
       }
     } catch (err) {
       console.error(err);
@@ -172,7 +205,12 @@ export default function ManagerUpdateShift() {
       setLoading(false);
     }
   };
+
   const handleSubmit = async (booking) => {
+    if (!selectedStylist) {
+      messageApi.warning("Please select a stylist before saving.");
+      return;
+    }
     await updateBookingData(booking);
   };
   function convertTimeFormat(time) {
@@ -212,7 +250,7 @@ export default function ManagerUpdateShift() {
 
         <section className="task-list">
           <h3 className="task-list__title">
-            Task <span>({booking.length})</span>
+            Task <span>({booking.length || 0})</span>
           </h3>
           <div className="task-list__container">
             <div className="data-table-wrapper">
@@ -233,6 +271,11 @@ export default function ManagerUpdateShift() {
                       <tr
                         key={booking.id}
                         onClick={() => handleAvailableStylist(booking)}
+                        className={
+                          selectedBooking?.id === booking.id
+                            ? "selected-booking"
+                            : ""
+                        }
                       >
                         <td className="data-table__id">{booking.id}</td>
                         <td>
@@ -325,15 +368,17 @@ export default function ManagerUpdateShift() {
                   </table>
                 </div>
               </div>
-              <div className="action-bar">
-                <button
-                  className="action-bar__button"
-                  disabled={loading}
-                  onClick={() => handleSubmit(selectedBooking)}
-                >
-                  {loading ? <Spin size="small" /> : "Save"}
-                </button>
-              </div>
+              {selectedStylist && (
+                <div className="action-bar">
+                  <button
+                    className="action-bar__button"
+                    disabled={loading}
+                    onClick={() => handleSubmit(selectedBooking)}
+                  >
+                    {loading ? <Spin size="small" /> : "Save"}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </section>

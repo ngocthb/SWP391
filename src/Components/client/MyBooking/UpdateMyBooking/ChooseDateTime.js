@@ -138,7 +138,10 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
         // if (response.data) {
         //   setAvailableSlots(response.data);
         // }
-        const response = await api.post("booking/slots", bookingValue);
+        const response = await api.post(
+          `booking/slots/${bookingId}`,
+          bookingValue
+        );
         if (response.data && response.data.result) {
           setAvailableSlots(response.data.result);
         }

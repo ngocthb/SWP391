@@ -171,19 +171,13 @@
       padding: 10px;
       margin-bottom: 20px;
       background-color: #f0f8ff;
+      display: flex;
+      justify-content: space-between;
       p {
         margin: 5px 0;
-      }
-      .infor__rating {
-        display: flex;
-        align-items: center;
-        &-icon {
-          color: gold;
-          margin-right: 5px;
-          margin-left: 10px;
-        }
-        span {
+        .infor__rating {
           margin-right: 10px;
+          color: gold;
         }
       }
     }
