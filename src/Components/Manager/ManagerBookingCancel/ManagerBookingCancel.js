@@ -4,6 +4,8 @@ import "./ManagerBookingCancel.scss";
 import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa";
+import { Skeleton } from "@mui/material";
+import { FolderOutlined } from "@ant-design/icons";
 
 const ManagerBookingCancel = () => {
   const [bookings, setBookings] = useState([]);
@@ -11,6 +13,8 @@ const ManagerBookingCancel = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
+  const [bookingLoading, setBookingLoading] = useState(false);
 
   const today = new Date();
   const tomorrow = new Date();
@@ -47,11 +51,12 @@ const ManagerBookingCancel = () => {
     }, []);
   
     useEffect(() => {
+      setBookingLoading(true);
       if (manager.salonId !== undefined) {
       const fetchBookings = async (page) => {
         try {
           const response = await api.get(
-            `manager/stylists/booking/cancel/${page}/6/${manager.salonId}/${formatDateForInput(selectedDate)}`
+            `manager/stylists/booking/cancel/${page}/9/${manager.salonId}/${formatDateForInput(selectedDate)}`
           );
          
           const data = response.data.result.content;
@@ -64,6 +69,8 @@ const ManagerBookingCancel = () => {
           }
         } catch (error) {
           console.log(error);
+        }finally{
+          setBookingLoading(false);
         }
       };
   
@@ -187,7 +194,39 @@ const ManagerBookingCancel = () => {
                 </thead>
   
                 <tbody>
-                  {bookings.map((booking) => (
+                {bookingLoading
+                  ? [...Array(9)].map((_, index) => (
+                      <tr key={index}>
+                        <td>
+                          <Skeleton width={40} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={100} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={150} />
+                        </td>
+                        <td>
+                          <Skeleton width={80} />
+                        </td>
+                      </tr>
+                    )) : bookings.length === 0 ? (
+                      <tr>
+                        <td colSpan={7}>
+                          <div className="manager-booking-cancel__notValid">
+                            <FolderOutlined className="notValid--icon" />
+                            <p>Currently, there are no cancel bookings</p>
+                          </div>
+                        </td>
+                      </tr>
+                    ) :
+                  (bookings.map((booking) => (
                     <tr key={booking.id}><td className="manager-booking-cancel__id">{booking.id}</td>
                     <td>
                       <div className="manager-booking-cancel__customer">
@@ -213,7 +252,7 @@ const ManagerBookingCancel = () => {
                       </span>
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>

@@ -8,6 +8,7 @@ import { Calendar, Dropdown, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "@mui/material";
 
 
 const ManagerSalary = () => {
@@ -17,6 +18,7 @@ const ManagerSalary = () => {
   const [manager, setManager] = useState([]);
   const [selectDay, setSelectedDay] = useState(dayjs().format("YYYY-MM"));
   const navigate = useNavigate();
+  const [salaryLoading, setSalaryLoading] = useState(false);
   
     useEffect(() => {
       const fetchManagerData = async () => {
@@ -34,6 +36,7 @@ const ManagerSalary = () => {
     }, []);
   
     useEffect(() => {
+      setSalaryLoading(true);
       if (manager.salonId !== undefined) {
       const fetchSalaries = async (page) => {
         try {
@@ -47,6 +50,8 @@ const ManagerSalary = () => {
           }
         } catch (error) {
           console.log(error);
+        }finally{
+          setSalaryLoading(false);
         }
       };
   
@@ -184,7 +189,28 @@ const ManagerSalary = () => {
                 </thead>
   
                 <tbody>
-                  {salaries.map((salary, index) => (
+                {salaryLoading
+                  ? [...Array(9)].map((_, index) => (
+                      <tr key={index}>
+                        <td>
+                          <Skeleton width={40} />
+                        </td>
+                        <td>
+                          <Skeleton width={180} />
+                        </td>
+                        <td>
+                          <Skeleton width={140} />
+                        </td>
+                        <td>
+                          <Skeleton width={140} />
+                        </td>
+                        <td>
+                          <Skeleton width={140} />
+                        </td>
+                      </tr>
+                    ))
+                  :
+                  (salaries.map((salary, index) => (
                     <tr key={index}><td className="manager-salary__id">{salary.stylistId}</td>
                     <td>
                       <div className="manager-salary__customer">
@@ -205,7 +231,7 @@ const ManagerSalary = () => {
                       </span>
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>

@@ -19,6 +19,7 @@ import uploadFile from "../../../utils/upload";
 import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
 import { genders } from "../../../data/gender";
+import { Skeleton } from "@mui/material";
 
 export default function ManagerStylist({ buttonLabel }) {
   const [stylists, setStylists] = useState([]);
@@ -44,12 +45,13 @@ export default function ManagerStylist({ buttonLabel }) {
     image: loginUser.avatar,
   });
   const [loading, setLoading] = useState(false);
+  const [stylistsLoading, setStylistsLoading] = useState(true);
   const dispatch = useDispatch();
   const isUpdate = useSelector((state) => state.updateStylistReducer);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
- 
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
@@ -109,6 +111,7 @@ export default function ManagerStylist({ buttonLabel }) {
   }, [isUpdate, currentPage, managerInfo]);
 
   const fetchStylistsData = async (page) => {
+    setStylistsLoading(true);
     try {
       const response = await api.get(
         `stylist/page/${managerInfo.salonId}?page=${page}&size=4`
@@ -122,6 +125,8 @@ export default function ManagerStylist({ buttonLabel }) {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setStylistsLoading(false);
     }
   };
 
@@ -243,7 +248,7 @@ export default function ManagerStylist({ buttonLabel }) {
 
       dispatch(updateStylist());
       toggleModal();
-      
+
       if (data) {
         const foundSalon = salonLocations.find(
           (item) => item.address === data.salonAddress
@@ -270,9 +275,6 @@ export default function ManagerStylist({ buttonLabel }) {
           image: selectedFile || prev.image,
         }));
       }
-      
-      
-      
     } catch (err) {
     } finally {
       setLoading(false);
@@ -327,50 +329,110 @@ export default function ManagerStylist({ buttonLabel }) {
             </div>
           </div>
           <div className="container">
-            {(stylists || []).map((stylist) => (
-              <div key={stylist.accountid} className="container__card">
-                <img
-                  alt="manager-stylist picture"
-                  height="50"
-                  src={stylist.image ? stylist.image : loginUser.avatar}
-                  width="50"
-                />
-                <h3>{stylist.fullname}</h3>
-                <p>
-                  User Name: <b>{stylist.username}</b>
-                </p>
-                <p>
-                  Level: <b>{stylist.levelName}</b>
-                </p>
-                <div className="container__card-info">
-                  <p>
-                    <FaLocationDot />
-                    {stylist.getAddress}
-                  </p>
-                  <p>
-                    <FaPhone /> {stylist.phone}
-                  </p>
-                  <p>
-                    <IoMail />
-                    {stylist.email}
-                  </p>
-                </div>
-                <div className="container__card-actions">
-                  <button
-                    className="delete btn"
-                    onClick={() => confirmDeleteModal(stylist.accountid)}
-                  >
-                    <HiTrash />
-                  </button>
-                  <button
-                    className="update btn"
-                    onClick={() => toggleModal(stylist.accountid)}
-                  >
-                    <FaUserEdit />
-                  </button>
-                </div>
-              </div>
-            ))}
+            {stylistsLoading
+              ?
+                [...Array(4)].map((_, index) => (
+                  <div key={index} className="container__card">
+                    <Skeleton
+                      variant="circular"
+                      width={150}
+                      height={150}
+                      className="container__card--img"
+                      style={{ margin: "0 auto 10px" }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="70%"
+                      style={{ margin: "10px auto" }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="60%"
+                      style={{ margin: "5px auto" }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="50%"
+                      style={{ margin: "5px auto" }}
+                    />
+                    <div className="container__card-info">
+                      <Skeleton
+                        variant="text"
+                        width="80%"
+                        style={{ margin: "5px auto" }}
+                      />
+                      <Skeleton
+                        variant="text"
+                        width="70%"
+                        style={{ margin: "5px auto" }}
+                      />
+                      <Skeleton
+                        variant="text"
+                        width="75%"
+                        style={{ margin: "5px auto" }}
+                      />
+                    </div>
+                    <div className="container__card-actions">
+                      <Skeleton
+                        variant="rectangular"
+                        width={40}
+                        height={35}
+                        style={{ borderRadius: "25px" }}
+                      />
+                      <Skeleton
+                        variant="rectangular"
+                        width={40}
+                        height={35}
+                        style={{ borderRadius: "25px" }}
+                      />
+                    </div>
+                  </div>
+                ))
+              : (stylists || []).map((stylist) => (
+                  <div key={stylist.accountid} className="container__card">
+                    <img
+                      className="container__card--img"
+                      alt="manager-stylist picture"
+                      height="50"
+                      src={stylist.image ? stylist.image : loginUser.avatar}
+                      width="50"
+                    />
+                    <h3>{stylist.fullname}</h3>
+                    <p>
+                      User Name: <b>{stylist.username}</b>
+                    </p>
+                    <p>
+                      Level: <b>{stylist.levelName}</b>
+                    </p>
+                    <div className="container__card-info">
+                      <p>
+                        <FaLocationDot />
+                        {stylist.getAddress}
+                      </p>
+                      <p>
+                        <FaPhone /> {stylist.phone}
+                      </p>
+                      <p>
+                        <IoMail />
+                        {stylist.email}
+                      </p>
+                    </div>
+                    <div className="container__card-actions">
+                      <button
+                        className="delete btn"
+                        onClick={() => confirmDeleteModal(stylist.accountid)}
+                      >
+                        <HiTrash />
+                      </button>
+                      <button
+                        className="update btn"
+                        onClick={() => toggleModal(stylist.accountid)}
+                      >
+                        <FaUserEdit />
+                      </button>
+                    </div>
+                  </div>
+                ))}
           </div>
         </div>
 

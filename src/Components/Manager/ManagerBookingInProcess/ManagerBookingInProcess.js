@@ -7,13 +7,14 @@ import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBooking } from "../../../actions/Update";
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa";
+import { Skeleton } from "@mui/material";
+import { FolderOutlined } from "@ant-design/icons";
 
 const ManagerBookingInProcess = () => {
   const [bookings, setBookings] = useState([]);
   const [originalBookings, setOriginalBookings] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const isUpdate = useSelector((state) => state.updateBookingReducer);
   const [salonLocations, setSalonLocations] = useState([]);
@@ -28,6 +29,9 @@ const ManagerBookingInProcess = () => {
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
   const [selectedDate, setSelectedDate] = useState(today);
+
+  const [loading, setLoading] = useState(false);
+  const [bookingLoading, setBookingLoading] = useState(false);
 
   const [slots, setSlots] = useState([]);
   const [slotRealTime, setSlotRealTime] = useState([]);
@@ -45,7 +49,6 @@ const ManagerBookingInProcess = () => {
     time: "",
     serviceName: [],
   });
-  const [selectedTime, setSelectedTime] = useState("");
   const [manager, setManager] = useState([]);
 
   const formatDateForInput = (dateString) => {
@@ -143,6 +146,7 @@ const ManagerBookingInProcess = () => {
     }, []);
   
     useEffect(() => {
+      setBookingLoading(true)
       if (manager.salonId !== undefined) {
       const fetchBookings = async (page) => {
         try {
@@ -160,6 +164,8 @@ const ManagerBookingInProcess = () => {
           }
         } catch (error) {
           console.log(error);
+        }finally{
+          setBookingLoading(false);
         }
       };
   
@@ -402,7 +408,53 @@ const ManagerBookingInProcess = () => {
                 </thead>
   
                 <tbody>
-                  {bookings.map((booking) => (
+                {bookingLoading
+                  ? [...Array(6)].map((_, index) => (
+                      <tr key={index}>
+                        <td>
+                          <Skeleton width={40} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={100} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={150} />
+                        </td>
+                        <td>
+                          <Skeleton width={80} />
+                        </td>
+                        <td>
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <Skeleton
+                              variant="circular"
+                              width={43}
+                              height={43}
+                            />
+                            <Skeleton
+                              variant="circular"
+                              width={43}
+                              height={43}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  : bookings.length === 0 ? (
+                    <tr>
+                      <td colSpan={7}>
+                        <div className="manager-booking-in-process__notValid">
+                          <FolderOutlined className="notValid--icon" />
+                          <p>Currently, there are no in-process bookings</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (bookings.map((booking) => (
                     <tr key={booking.id}><td className="manager-booking-in-process__id">{booking.id}</td>
                     <td>
                       <div className="manager-booking-in-process__customer">
@@ -439,7 +491,7 @@ const ManagerBookingInProcess = () => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>

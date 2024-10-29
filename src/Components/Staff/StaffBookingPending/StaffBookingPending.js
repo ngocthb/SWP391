@@ -12,8 +12,10 @@ import Swal from "sweetalert2";
 import { BsBoxArrowInRight } from "react-icons/bs";
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa6";
 import {
+  FolderOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import { Skeleton } from "@mui/material";
 
 const StaffBookingPending = ({ buttonLabel }) => {
   const [bookings, setBookings] = useState([]);
@@ -21,7 +23,6 @@ const StaffBookingPending = ({ buttonLabel }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const isUpdate = useSelector((state) => state.updateBookingReducer);
   const [salonLocations, setSalonLocations] = useState([]);
@@ -35,6 +36,9 @@ const StaffBookingPending = ({ buttonLabel }) => {
   const [slots, setSlots] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
+  const [loading, setLoading] = useState(false);
+  const [bookingLoading, setBookingLoading] = useState(false);
 
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
@@ -99,7 +103,6 @@ const StaffBookingPending = ({ buttonLabel }) => {
 
   useEffect(() => {
     const fetchManagerData = async () => {
-      setLoading(true);
       try {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
@@ -109,8 +112,6 @@ const StaffBookingPending = ({ buttonLabel }) => {
         }
       } catch (err) {
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
     fetchManagerData();
@@ -134,6 +135,7 @@ const StaffBookingPending = ({ buttonLabel }) => {
   }
 
   const fetchBookings = async (page) => {
+    setBookingLoading(true);
     if (!isStaffLoaded || !staff.salonId) return;
     try {
       const response = await api.get(
@@ -148,6 +150,8 @@ const StaffBookingPending = ({ buttonLabel }) => {
       }
     } catch (error) {
       console.log(error);
+    }finally{
+      setBookingLoading(false);
     }
   };
 
@@ -333,7 +337,6 @@ const StaffBookingPending = ({ buttonLabel }) => {
   };
 
   const newBooking = (customerPhone) => {
-    console.log(customerPhone);
     navigate("/staff/booking/create", {state: {customerPhone}});
   }
 
@@ -478,7 +481,63 @@ const StaffBookingPending = ({ buttonLabel }) => {
               </thead>
 
               <tbody>
-                {searchResults &&
+              {bookingLoading
+                  ? [...Array(6)].map((_, index) => (
+                      <tr key={index}>
+                        <td>
+                          <Skeleton width={40} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={100} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={150} />
+                        </td>
+                        <td>
+                          <Skeleton width={80} />
+                        </td>
+                        <td>
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <Skeleton
+                              variant="circular"
+                              width={43}
+                              height={43}
+                            />
+                            <Skeleton
+                              variant="circular"
+                              width={43}
+                              height={43}
+                            />
+                             <Skeleton
+                              variant="circular"
+                              width={43}
+                              height={43}
+                            />
+                             <Skeleton
+                              variant="circular"
+                              width={43}
+                              height={43}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  : searchResults.length === 0 ? (
+                    <tr>
+                      <td colSpan={7}>
+                        <div className="staff-booking-pending__notValid">
+                          <FolderOutlined className="notValid--icon" />
+                          <p>Currently, there are no pending bookings</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (searchResults &&
                   searchResults.map((booking) => (
                     <tr key={booking.id}>
                       <td className="staff-booking-pending__id">{booking.id}</td>
@@ -530,7 +589,7 @@ const StaffBookingPending = ({ buttonLabel }) => {
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  )))}
               </tbody>
             </table>
           </div>

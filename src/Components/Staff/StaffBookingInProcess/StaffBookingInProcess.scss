@@ -161,6 +161,23 @@
       gap: 8px;
       display: flex;
     }
+
+    &__notValid {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .notValid--icon {
+        font-size: 100px;
+        color: #6b7280;
+      }
+      p {
+        padding: 1rem;
+        font-size: large;
+        color: #374151;
+      }
+    }
   
     &__action-button {
       background: #e5e7eb;

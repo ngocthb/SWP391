@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { MdArrowOutward } from "react-icons/md";
 import { FaAngleLeft } from "react-icons/fa6";

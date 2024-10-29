@@ -19,6 +19,7 @@ import { updateService } from "../../../actions/Update";
 import { IoCloseCircle } from "react-icons/io5";
 import { MdRestartAlt } from "react-icons/md";
 import UploadImage from "./UploadImage";
+import { Skeleton } from "@mui/material";
 
 export default function AdminService() {
   const [services, setServices] = useState([]);
@@ -30,7 +31,10 @@ export default function AdminService() {
   const createService = () => {
     navigate("/admin/service/create");
   };
+
   const [loading, setLoading] = useState(false);
+  const [servicesLoading, setServicesLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     serviceId: 0,
     serviceName: "",
@@ -67,6 +71,7 @@ export default function AdminService() {
   };
 
   const fetchServices = async (page) => {
+    setServicesLoading(true);
     try {
       const response = await api.get(`service/page?page=${page}&size=4`);
       const data = response.data.result.content;
@@ -79,6 +84,8 @@ export default function AdminService() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setServicesLoading(false);
     }
   };
 
@@ -216,26 +223,29 @@ export default function AdminService() {
 
     if (collectionImageFiles.length > 0) {
       try {
-        const existingImages = collectionImageFiles.filter(file => file.url).map(file => file.url);
-        const newFiles = collectionImageFiles.filter(file => !file.url);
-    
- 
-        const uploadPromises = newFiles.map(file => uploadFile(file.originFileObj));
+        const existingImages = collectionImageFiles
+          .filter((file) => file.url)
+          .map((file) => file.url);
+        const newFiles = collectionImageFiles.filter((file) => !file.url);
+
+        const uploadPromises = newFiles.map((file) =>
+          uploadFile(file.originFileObj)
+        );
         const newFirebaseResponses = await Promise.all(uploadPromises);
-    
+
         updateValues.collectionsImage = [
           ...existingImages,
-          ...newFirebaseResponses.filter(url => url)
+          ...newFirebaseResponses.filter((url) => url),
         ];
-    
+
         if (updateValues.collectionsImage.length === 0) {
           updateValues.collectionsImage = null;
         }
       } catch (error) {
         console.error("Error uploading collection images:", error);
         updateValues.collectionsImage = collectionImageFiles
-          .filter(file => file.url)
-          .map(file => file.url);
+          .filter((file) => file.url)
+          .map((file) => file.url);
       }
     } else {
       updateValues.collectionsImage = formData.collectionsImage || null;
@@ -288,7 +298,7 @@ export default function AdminService() {
           description: data.description,
           duration: data.duration,
           image: data.image,
-          collectionsImage: data.collectionsImage
+          collectionsImage: data.collectionsImage,
         }));
       }
     } catch (err) {
@@ -343,61 +353,82 @@ export default function AdminService() {
             </div>
           </div>
           <div className="service">
-            {searchResults &&
-              searchResults.map((service, index) => (
-                <div key={index} className="service__card">
-                  <Badge.Ribbon
-                    style={{ top: "-20px", right: "-25px" }}
-                    text={service.delete ? "Un Active" : "Active"}
-                    color={service.delete ? "gray" : "#0A7042"}
-                  >
-                    <div className="service__card-content">
-                      <img alt="Service Img" src={service.image} />
-
-                      <div className="content-info">
-                        <h3>{service.serviceName}</h3>
-                        <p>Price: {formatCurrency(service.price)}</p>
-                        <p>Duration: {formatDuration(service.duration)}</p>
-                        <p
-                          dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(
-                              service.description || ""
-                            ),
-                          }}
+            {servicesLoading
+              ? [...Array(4)].map((_, index) => (
+                  <div key={index} className="service__card">
+                      <div className="service__card-content">
+                        <Skeleton
+                          variant="rectangular"
+                          width={180}
+                          height={180}
+                          style={{borderRadius: '15px'}}
                         />
+                        <div className="content-info">
+                          <Skeleton variant="text" width={150} />
+                          <Skeleton variant="text" width={100} />
+                          <Skeleton variant="text" width={200} />
+                        </div>
                       </div>
+                    <div className="service-actions">
+                    <Skeleton className="btn" variant="rectangular" width={80} height={40} />
+                    <Skeleton className="btn" variant="rectangular" width={80} height={40} />
                     </div>
-                  </Badge.Ribbon>
-                  <div className="service-actions">
-                    {service.delete ? (
-                      <button
-                        className="active btn"
-                        onClick={() => confirmActiveModal(service.id)}
-                      >
-                        <MdRestartAlt />
-                      </button>
-                    ) : (
-                      <button
-                        className="delete btn"
-                        onClick={() => confirmDeleteModal(service.id)}
-                      >
-                        <HiTrash />
-                      </button>
-                    )}
-                    <button
-                      className="update btn"
-                      onClick={() => toggleModal(service.id)}
-                    >
-                      <FaUserEdit />
-                    </button>
                   </div>
-                </div>
-              ))}
+                ))
+              : searchResults &&
+                searchResults.map((service, index) => (
+                  <div key={index} className="service__card">
+                    <Badge.Ribbon
+                      style={{ top: "-20px", right: "-25px" }}
+                      text={service.delete ? "Un Active" : "Active"}
+                      color={service.delete ? "gray" : "#0A7042"}
+                    >
+                      <div className="service__card-content">
+                        <img alt="Service Img" src={service.image} />
+
+                        <div className="content-info">
+                          <h3>{service.serviceName}</h3>
+                          <p>Price: {formatCurrency(service.price)}</p>
+                          <p>Duration: {formatDuration(service.duration)}</p>
+                          <p
+                            dangerouslySetInnerHTML={{
+                              __html: DOMPurify.sanitize(
+                                service.description || ""
+                              ),
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </Badge.Ribbon>
+                    <div className="service-actions">
+                      {service.delete ? (
+                        <button
+                          className="active btn"
+                          onClick={() => confirmActiveModal(service.id)}
+                        >
+                          <MdRestartAlt />
+                        </button>
+                      ) : (
+                        <button
+                          className="delete btn"
+                          onClick={() => confirmDeleteModal(service.id)}
+                        >
+                          <HiTrash />
+                        </button>
+                      )}
+                      <button
+                        className="update btn"
+                        onClick={() => toggleModal(service.id)}
+                      >
+                        <FaUserEdit />
+                      </button>
+                    </div>
+                  </div>
+                ))}
           </div>
         </div>
 
-        
-        <div className="admin-service__pagination">
+        {searchResults && searchResults.length > 0 && (<div className="admin-service__pagination">
           <div className="admin-service__pagination-pages">
             <span
               onClick={() => handlePageChange(currentPage - 1)}
@@ -422,6 +453,7 @@ export default function AdminService() {
             </span>
           </div>
         </div>
+        )}
       </div>
 
       {isModalOpen && (

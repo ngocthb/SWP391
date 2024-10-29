@@ -1,12 +1,22 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Calendar, Card, Col, Dropdown, Row, Space, Statistic, Tabs } from "antd";
-import ReactECharts from 'echarts-for-react';
+import {
+  Calendar,
+  Card,
+  Col,
+  Dropdown,
+  Row,
+  Space,
+  Statistic,
+  Tabs,
+} from "antd";
+import ReactECharts from "echarts-for-react";
 import "./AdminDashboard.scss";
 import dayjs from "dayjs";
 import { DownOutlined } from "@ant-design/icons";
 import api from "../../../config/axios";
+import { Skeleton } from "@mui/material";
 
 const { TabPane } = Tabs;
 
@@ -19,7 +29,7 @@ const AdminDashboard = () => {
   const [employeesData, setEmployeesData] = useState([]);
   const [salons, setSalons] = useState([]);
   const [profits, setProfits] = useState({});
-   
+  const [loading, setLoading] = useState(false);
 
   const [finalValues, setFinalValues] = useState({
     profit: 0,
@@ -31,18 +41,18 @@ const AdminDashboard = () => {
   function formatDateToOrdinal(dateString) {
     const date = new Date(dateString);
     const day = date.getDate();
-    
-    let suffix = 'th';
+
+    let suffix = "th";
     if (day === 1 || day === 21 || day === 31) {
-        suffix = 'st';
+      suffix = "st";
     } else if (day === 2 || day === 22) {
-        suffix = 'nd';
+      suffix = "nd";
     } else if (day === 3 || day === 23) {
-        suffix = 'rd';
+      suffix = "rd";
     }
 
     return day + suffix;
-}
+  }
 
   useEffect(() => {
     if (finalValues.profit === 0) {
@@ -95,19 +105,19 @@ const AdminDashboard = () => {
     return () => clearInterval(interval);
   }, [finalValues]);
 
-
   const getLineOptions = (salonId) => ({
     xAxis: {
-      type: 'category',
-      data: profits[salonId]?.map(item => formatDateToOrdinal(item.day)) || [],
+      type: "category",
+      data:
+        profits[salonId]?.map((item) => formatDateToOrdinal(item.day)) || [],
     },
     yAxis: {
       type: "value",
     },
     series: [
       {
-        data: profits[salonId]?.map(item => item.totalMoney) || [],
-        type: 'line',
+        data: profits[salonId]?.map((item) => item.totalMoney) || [],
+        type: "line",
         smooth: true,
         itemStyle: {
           color: "#2196F3",
@@ -126,8 +136,8 @@ const AdminDashboard = () => {
     },
     series: [
       {
-        type: 'pie',
-        radius: ['50%', '70%'],
+        type: "pie",
+        radius: ["50%", "70%"],
         data: employeesData,
         emphasis: {
           itemStyle: {
@@ -142,8 +152,6 @@ const AdminDashboard = () => {
       },
     ],
   });
-
-
 
   const CalendarDropdown = () => {
     const wrapperStyle = {
@@ -168,33 +176,33 @@ const AdminDashboard = () => {
       </div>
     );
   };
-  
 
   const fetchTotalProfit = async () => {
-    const month = selectDay.split("-")[1];  
+    const month = selectDay.split("-")[1];
     try {
-      const response = await api.get(`admin/booking/total-money/month/${month}`);
+      const response = await api.get(
+        `admin/booking/total-money/month/${month}`
+      );
       const data = response.data.result;
       if (data) {
-        setFinalValues(prev => ({
+        setFinalValues((prev) => ({
           ...prev,
           profit: data,
         }));
       } else {
-        setFinalValues(prev => ({
+        setFinalValues((prev) => ({
           ...prev,
           profit: 0,
         }));
       }
     } catch (error) {
       console.log(error);
-      setFinalValues(prev => ({
+      setFinalValues((prev) => ({
         ...prev,
         profit: 0,
       }));
     }
-   
-  }
+  };
 
   const fetchBookings = async () => {
     const month = selectDay.split("-")[1];
@@ -202,92 +210,92 @@ const AdminDashboard = () => {
       const response = await api.get(`admin/booking/count/${month}`);
       const data = response.data.result;
       if (data) {
-       setBookings(data);
+        setBookings(data);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const fetchServices = async () => {
     try {
       const response = await api.get(`admin/service/count`);
       const data = response.data.result;
       if (data) {
-       setServices(data);
+        setServices(data);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const fetchCustomers = async () => {
     try {
       const response = await api.get(`admin/customer/count`);
       const data = response.data.result;
       if (data) {
-       setCustomers(data);
+        setCustomers(data);
       }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const fetchProfit = async (salonId) => {
-    const month = selectDay.split("-")[1];
-    try {
-      const response = await api.get(`booking/total-money/day/month/${month}/salon/${salonId}`);
-      const data = response.data.result;
-      setProfits(prev => ({
-        ...prev,
-        [salonId]: data,
-      }));
     } catch (error) {
       console.log(error);
     }
   };
 
+  const fetchProfit = async (salonId) => {
+    setLoading(true);
+    const month = selectDay.split("-")[1];
+    try {
+      const response = await api.get(
+        `booking/total-money/day/month/${month}/salon/${salonId}`
+      );
+      const data = response.data.result;
+      setProfits((prev) => ({
+        ...prev,
+        [salonId]: data,
+      }));
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setLoading(false);
+    }
+  };
 
   const fetchEmployeeData = async () => {
     try {
-     const response = await api.get(`admin/chart/`);
-     const data = response.data.result;
-     if (data) {
-      setEmployeesData(data);
-     }
-    } catch (error) {
-     
-    }
-   }
+      const response = await api.get(`admin/chart/`);
+      const data = response.data.result;
+      if (data) {
+        setEmployeesData(data);
+      }
+    } catch (error) {}
+  };
 
-   const fetchSalons = async () => {
+  const fetchSalons = async () => {
     try {
       const response = await api.get(`salon`);
       const data = response.data.result;
       if (data) {
         setSalons(data);
       }
-      data.forEach(salon => fetchProfit(salon.id));
+      data.forEach((salon) => fetchProfit(salon.id));
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-      fetchTotalProfit();
-      fetchProfit();
-      fetchBookings();
-      fetchServices();
-      fetchCustomers();
-      fetchEmployeeData();
-      fetchSalons();
-    }
-, [selectDay]);
+    fetchTotalProfit();
+    fetchProfit();
+    fetchBookings();
+    fetchServices();
+    fetchCustomers();
+    fetchEmployeeData();
+    fetchSalons();
+  }, [selectDay]);
 
-useEffect(() => {
-  console.log(salons)
-}, [salons])
-
+  useEffect(() => {
+    console.log(salons);
+  }, [salons]);
 
   const items = [
     {
@@ -298,24 +306,22 @@ useEffect(() => {
 
   return (
     <div className="admin-dashboard">
-       <div className="manager-salary__header-filter">
-            <Dropdown
-              menu={{
-                items,
-              }}
-              trigger={["hover"]}
-            >
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  {selectDay}
-                  <DownOutlined />
-                </Space>
-              </a>
-            </Dropdown>
-
-          </div>
+      <div className="manager-salary__header-filter">
+        <Dropdown
+          menu={{
+            items,
+          }}
+          trigger={["hover"]}
+        >
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>
+              {selectDay}
+              <DownOutlined />
+            </Space>
+          </a>
+        </Dropdown>
+      </div>
       <Row gutter={16} className="admin-dashboard__container">
-     
         <Col span={6}>
           <Card>
             <Statistic title="Profit" value={totalProfit} suffix="VND" />
@@ -340,12 +346,18 @@ useEffect(() => {
       <Row gutter={16} className="admin-dashboard__chart-container">
         <Col span={16}>
           <Card title="Total Profit">
-          <Tabs defaultActiveKey="1">
-          {salons.map((salon) => (
-                <TabPane tab={`Salon ` + salon.id} key={salon.id}>
-                  <ReactECharts option={getLineOptions(salon.id)} />
+            <Tabs defaultActiveKey="1">
+              {loading ? (
+                <TabPane key="loading" tab="Loading">
+                  <Skeleton variant="rectangular" height={300} />
                 </TabPane>
-              ))}
+              ) : (
+                salons.map((salon) => (
+                  <TabPane tab={`Salon ${salon.id}`} key={salon.id}>
+                    <ReactECharts option={getLineOptions(salon.id)} />
+                  </TabPane>
+                ))
+              )}
             </Tabs>
           </Card>
         </Col>

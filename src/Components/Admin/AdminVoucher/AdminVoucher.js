@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateVoucher } from "../../../actions/Update";
+import { Skeleton } from "@mui/material";
+import { FolderOutlined } from "@ant-design/icons";
 
 const AdminVoucher = ({ buttonLabel }) => {
   const [vouchers, setVouchers] = useState([]);
@@ -14,7 +16,6 @@ const AdminVoucher = ({ buttonLabel }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const isUpdate = useSelector(state => state.updateVoucherReducer);
   const [formData, setFormData] = useState({
@@ -26,7 +27,11 @@ const AdminVoucher = ({ buttonLabel }) => {
     quantity: 0,
   });
 
+  const [loading, setLoading] = useState(false);
+  const [voucherLoading, setVoucherLoading] = useState(false);
+
   useEffect(() => {
+    setVoucherLoading(true);
     const fetchVouchers = async () => {
       try {
         const response = await api.get("vouchers");
@@ -36,7 +41,11 @@ const AdminVoucher = ({ buttonLabel }) => {
           setVouchers(data);
           setOriginalVouchers(data);
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error)
+      }finally{
+        setVoucherLoading(false);
+      }
     };
 
     fetchVouchers();
@@ -184,10 +193,6 @@ const AdminVoucher = ({ buttonLabel }) => {
             <input placeholder="Search here..." type="text" />
           </div>
           <div className="admin-voucher__header-filter">
-            <select>
-              <option>Newest</option>
-              <option>Oldest</option>
-            </select>
             <button onClick={createVoucher}> {buttonLabel}</button>
           </div>
         </div>
@@ -219,7 +224,49 @@ const AdminVoucher = ({ buttonLabel }) => {
               </thead>
 
               <tbody>
-                {vouchers.map((voucher) => (
+              {voucherLoading
+                  ? [...Array(6)].map((_, index) => (
+                      <tr key={index}>
+                        <td>
+                          <Skeleton width={40} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={150} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={80} />
+                        </td>
+                        <td>
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <Skeleton
+                              variant="circular"
+                              width={36}
+                              height={36}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  : vouchers.length === 0 ? (
+                    <tr>
+                      <td colSpan={7}>
+                        <div className="admin-voucher__notValid">
+                          <FolderOutlined className="notValid--icon" />
+                          <p>Currently, there are no vouchers</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) :
+                (vouchers.map((voucher) => (
                   <tr key={voucher.id}>
                     <td className="admin-voucher__id">{voucher.id}</td>
                     <td className="admin-voucher__code">{voucher.code}</td>
@@ -248,7 +295,7 @@ const AdminVoucher = ({ buttonLabel }) => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>

@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { BiSearchAlt } from "react-icons/bi";
-import { DownOutlined } from "@ant-design/icons"; // Import the icon
-import { Dropdown, Space, Calendar, theme, Spin, Select } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { Dropdown, Space, Calendar, Spin, Select } from "antd";
 import { FolderOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
@@ -240,25 +241,6 @@ export default function ManagerShift() {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  const confirmDeleteModal = (shiftId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete this shift!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteShiftData(shiftId);
-          fetchStylistsData();
-        } catch (error) {}
-      }
-    });
   };
 
   const toggleModal = async (shiftId) => {

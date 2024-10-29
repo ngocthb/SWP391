@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 import { IoPersonOutline } from "react-icons/io5";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import api from "../../../../config/axios";
@@ -9,11 +10,11 @@ import { bookingIdContext } from "../MyBooking";
 
 export function ChooseStylist({ onNext, onPre }) {
   const bookingId = useContext(bookingIdContext);
-  const [selectedStylistId, setSelectedStylistId] = useState(null); // Store only the ID
+  const [selectedStylistId, setSelectedStylistId] = useState(null);
   const [stylists, setStylists] = useState([]);
 
   const handleSelected = (stylist) => {
-    setSelectedStylistId(stylist.id); // Set the selected stylist ID
+    setSelectedStylistId(stylist.id);
   };
 
   useEffect(() => {

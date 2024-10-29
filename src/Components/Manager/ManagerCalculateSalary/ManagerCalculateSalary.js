@@ -8,14 +8,17 @@ import { Dropdown, Space, Calendar, theme, Spin } from "antd";
 import api from "../../../config/axios";
 import "./ManagerCalculateSalary.scss";
 import Swal from "sweetalert2";
+import { Skeleton } from "@mui/material";
 
 export default function ManagerCalculateSalary() {
   const [salaries, setSalaries] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectDay, setSelectedDay] = useState(dayjs().format("YYYY-MM"));
   const [manager, setManager] = useState({});
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [bookingLoading, setBookingLoading] = useState(false);
 
   const CalendarDropdown = () => {
     const { token } = theme.useToken();
@@ -69,6 +72,7 @@ export default function ManagerCalculateSalary() {
   }, []);
 
   useEffect(() => {
+    setBookingLoading(true);
     if (manager.salonId) {
       const fetchSalaries = async () => {
         try {
@@ -79,6 +83,8 @@ export default function ManagerCalculateSalary() {
           }
         } catch (error) {
           console.log(error);
+        }finally{
+          setBookingLoading(false);
         }
       };
 
@@ -139,13 +145,13 @@ export default function ManagerCalculateSalary() {
         <form onSubmit={handleSubmit}>
           <div className="manager-create-salary__header">
             <div className="manager-create-salary__header-searchBar">
-              <BiSearchAlt className="searchBar-icon" />
+              {/* <BiSearchAlt className="searchBar-icon" />
               <input
                 placeholder="Search stylist name here..."
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              /> */}
             </div>
             <div className="manager-create-salary__header-filter">
               <Dropdown menu={{ items }} trigger={["hover"]}>
@@ -172,7 +178,18 @@ export default function ManagerCalculateSalary() {
               </thead>
 
               <tbody>
-                {(salaries || []).map((salary, index) => (
+              {bookingLoading ? (
+                  Array.from(new Array(5)).map((_, index) => ( 
+                    <tr key={index}>
+                      <td><Skeleton variant="text" width="40px" /></td>
+                      <td><Skeleton variant="text" width="120px" /></td>
+                      <td><Skeleton variant="text" width="80px" /></td>
+                      <td><Skeleton variant="text" width="80px" /></td>
+                      <td><Skeleton variant="text" width="80px" /></td>
+                    </tr>
+                  ))
+                ) :
+                ((salaries || []).map((salary, index) => (
                   <tr key={index}>
                     <td className="manager-create-salary__id">{salary.stylistId}</td>
                     <td>
@@ -202,7 +219,7 @@ export default function ManagerCalculateSalary() {
                       />
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
             <div className="manager-create-salary__button-container">
