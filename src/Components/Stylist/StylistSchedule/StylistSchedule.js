@@ -12,43 +12,6 @@ import { FolderOutlined } from "@ant-design/icons";
 import api from "../../../config/axios";
 import "./StylistSchedule.scss";
 
-// function fakeFetch(date, { signal }) {
-//   return new Promise((resolve, reject) => {
-//     const timeout = setTimeout(() => {
-//       // Randomly generate days to highlight (could be replaced with fetched data)
-//       const daysToHighlight = [14, 19, 25];
-//       resolve({ daysToHighlight });
-//     }, 500);
-
-//     signal.onabort = () => {
-//       clearTimeout(timeout);
-//       reject(new DOMException("aborted", "AbortError"));
-//     };
-//   });
-// }
-
-// function ServerDay(props) {
-//   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
-
-//   const isSelected =
-//     !props.outsideCurrentMonth &&
-//     highlightedDays.indexOf(props.day.date()) >= 0;
-
-//   return (
-//     <Badge
-//       key={props.day.toString()}
-//       overlap="circular"
-//       badgeContent={isSelected ? "🔔" : undefined}
-//     >
-//       <PickersDay
-//         {...other}
-//         outsideCurrentMonth={outsideCurrentMonth}
-//         day={day}
-//       />
-//     </Badge>
-//   );
-// }
-
 const StylistSchedule = () => {
   const requestAbortController = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -220,7 +183,15 @@ const StylistSchedule = () => {
                       </div>
                       <div
                         className={`status ${
-                          booking.status === "PENDING" ? "pending" : "complete"
+                          booking.status === "PENDING"
+                            ? "pending"
+                            : booking.status === "IN_PROGRESS"
+                            ? "in-progress"
+                            : booking.status === "COMPLETED"
+                            ? "completed"
+                            : booking.status === "CANCELLED"
+                            ? "cancelled"
+                            : ""
                         }`}
                       >
                         {booking.status}

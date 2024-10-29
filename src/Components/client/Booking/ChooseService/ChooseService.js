@@ -412,7 +412,7 @@ export default function ChooseService() {
           footer={null}
         >
           <div className="voucher__modal">
-            <h1>Choose service</h1>
+            <h1>Choose voucher</h1>
             <div className="voucher__modal-lists">
               {voucher.map((item) => (
                 <div

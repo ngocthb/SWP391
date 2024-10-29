@@ -23,10 +23,9 @@ export default function ManagerShift() {
   const [salonId, setSalonId] = useState(0);
   const [stylistsData, setStylistsData] = useState();
   const [stylists, setStylists] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectDay, setSelectedDay] = useState(dayjs().format("YYYY-MM-DD"));
   const [formData, setFormData] = useState({
-    id: 0,
+    id: null,
     stylistName: "",
     stylistId: 0,
     workingDate: "",
@@ -80,9 +79,6 @@ export default function ManagerShift() {
     fetchManagerData();
   }, []);
 
-  const createShift = () => {
-    navigate("/manager/shift/create");
-  };
   useEffect(() => {
     fetchStylistsData();
   }, [salonId]);
@@ -106,26 +102,13 @@ export default function ManagerShift() {
   }, [stylists, formData, selectDay, stylistsData]);
 
   const fetchShiftData = async () => {
-    const stylistValue = {
-      date: selectDay,
-      salonId: salonId,
-    };
-    console.log(selectDay);
-    console.log(salonId);
     try {
       const response = await api.get(
         `stylist/schedule/${selectDay}/${salonId}`
       );
       const data = response.data.result;
-      // const response = await api.get(
-      //   `stylist-schedule?workingDate=${selectDay}&`,
-      //   stylistValue
-      // );
-      // const data = response.data;
-      console.log(data);
       if (data) {
         // tìm stylist id
-        console.log(stylistsData);
         const enrichedData = data.map((shift) => {
           const stylist = stylistsData.find(
             (stylist) => stylist.fullname === shift.stylistName
@@ -149,8 +132,6 @@ export default function ManagerShift() {
   // lấy chi tiết 1 stylist
   const fetchStylistData = async (stylist) => {
     try {
-      // const response = await api.get(`stylist-schedule?id=${stylist.id}`);
-      // const data = response.data[0];
       const response = await api.get(`stylist/schedule/${stylist.id}`);
       const data = response.data.result;
 
@@ -176,8 +157,6 @@ export default function ManagerShift() {
       workingDate: formData.workingDate,
       shiftId: selectedShift,
     };
-    console.log(formData.id);
-    console.log(selectedShift);
     setLoading(true);
     try {
       const response = await api.put(
@@ -198,22 +177,12 @@ export default function ManagerShift() {
         dispatch(updateShift());
         setIsModalOpen(!isModalOpen);
         setChangedShifts([]);
+
         Swal.fire({
           title: "Updated!",
           text: "The booking has been update.",
           icon: "success",
           confirmButtonText: "OK",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate(`/manager/shift/update`, {
-              state: {
-                stylistScheduleId: formData.id,
-                shiftId: changedShifts,
-                stylist: selectedStylist,
-                date: selectDay,
-              },
-            });
-          }
         });
       }
     } catch (err) {
@@ -227,22 +196,6 @@ export default function ManagerShift() {
     return array.some((item) => item === num);
   };
 
-  const deleteShiftData = async (shiftId) => {
-    console.log(shiftId);
-    try {
-      const response = await api.delete(`stylist/schedule/${shiftId}`);
-      if (response.data) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "The stylist has been deleted.",
-          icon: "success",
-        });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const toggleModal = async (shiftId) => {
     if (shiftId) {
       await fetchStylistData(shiftId);
@@ -252,8 +205,37 @@ export default function ManagerShift() {
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleSubmit = (e) => {
-    updateStylistData(e);
+  const handleSubmit = async (e) => {
+    await updateStylistData(e);
+    await fetchBookingBusy();
+  };
+
+  const fetchBookingBusy = async () => {
+    const value = {
+      stylistScheduleId: formData.id,
+      shiftId: changedShifts,
+    };
+    try {
+      const response = await api.get(`manager/booking/stylist/busy`);
+      const data = response.data.result;
+      if (data.length > 0) {
+        console.log("aaaaaaaaaa");
+        console.log("schedule", value.stylistScheduleId);
+        console.log("shiftId", value.shiftId);
+        console.log("selecstylist", selectedStylist);
+        console.log("selectday", selectDay);
+        navigate(`/manager/shift/update`, {
+          state: {
+            stylistScheduleId: value.stylistScheduleId,
+            shiftId: value.shiftId,
+            stylist: selectedStylist,
+            date: selectDay,
+          },
+        });
+      }
+    } catch (e) {
+      console.warn(e);
+    }
   };
 
   const handleSkillToggle = (shift) => {
@@ -284,19 +266,15 @@ export default function ManagerShift() {
     });
   };
 
+  // const updateShift = () => {
+  //   navigate("/manager/shift/update");
+  // };
+
   return (
     <>
       <div className="managerShift">
         <div className="managerShift__header">
-          <div className="managerShift__header-searchBar">
-            <BiSearchAlt className="searchBar-icon" />
-            <input
-              placeholder="Search stylist name here..."
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+          <div className="managerShift__header-searchBar"></div>
 
           <div className="managerShift__header-filter">
             <Dropdown
@@ -312,8 +290,9 @@ export default function ManagerShift() {
                 </Space>
               </a>
             </Dropdown>
-
-            <button onClick={createShift}>+ Create Shift </button>
+            {/* <div className="managerShift__header-btn">
+              <button onClick={updateShift}> Update Shift</button>
+            </div> */}
           </div>
         </div>
 

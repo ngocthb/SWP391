@@ -25,11 +25,6 @@ function MenuSider() {
       key: "/stylist/schedule",
     },
     {
-      label: <Link to="/stylist/salary">Salary</Link>,
-      icon: <LiaMoneyCheckAltSolid />,
-      key: "/stylist/salary",
-    },
-    {
       label: <Link to="/stylist/feedback">Feedback</Link>,
       icon: <MdOutlineFeedback />,
       key: "/stylist/feedback",

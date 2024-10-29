@@ -211,7 +211,6 @@ export default function AdminService() {
 
   const updateServiceData = async (e) => {
     e.preventDefault();
-
     const updateValues = {
       serviceName: e.target[1].value,
       price: Number(e.target[2].value),
@@ -357,22 +356,32 @@ export default function AdminService() {
             {servicesLoading
               ? [...Array(4)].map((_, index) => (
                   <div key={index} className="service__card">
-                      <div className="service__card-content">
-                        <Skeleton
-                          variant="rectangular"
-                          width={180}
-                          height={180}
-                          style={{borderRadius: '15px'}}
-                        />
-                        <div className="content-info">
-                          <Skeleton variant="text" width={150} />
-                          <Skeleton variant="text" width={100} />
-                          <Skeleton variant="text" width={200} />
-                        </div>
+                    <div className="service__card-content">
+                      <Skeleton
+                        variant="rectangular"
+                        width={180}
+                        height={180}
+                        style={{ borderRadius: "15px" }}
+                      />
+                      <div className="content-info">
+                        <Skeleton variant="text" width={150} />
+                        <Skeleton variant="text" width={100} />
+                        <Skeleton variant="text" width={200} />
                       </div>
+                    </div>
                     <div className="service-actions">
-                    <Skeleton className="btn" variant="rectangular" width={80} height={40} />
-                    <Skeleton className="btn" variant="rectangular" width={80} height={40} />
+                      <Skeleton
+                        className="btn"
+                        variant="rectangular"
+                        width={80}
+                        height={40}
+                      />
+                      <Skeleton
+                        className="btn"
+                        variant="rectangular"
+                        width={80}
+                        height={40}
+                      />
                     </div>
                   </div>
                 ))
@@ -429,31 +438,32 @@ export default function AdminService() {
           </div>
         </div>
 
-        {searchResults && searchResults.length > 0 && (<div className="admin-service__pagination">
-          <div className="admin-service__pagination-pages">
-            <span
-              onClick={() => handlePageChange(currentPage - 1)}
-              className={currentPage === 0 ? "disabled" : ""}
-            >
-              <FaAngleLeft className="pagination-icon" />
-            </span>
-            {[...Array(totalPages)].map((_, index) => (
+        {searchResults && searchResults.length > 0 && (
+          <div className="admin-service__pagination">
+            <div className="admin-service__pagination-pages">
               <span
-                key={index}
-                onClick={() => handlePageChange(index)}
-                className={currentPage === index ? "active" : ""}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className={currentPage === 0 ? "disabled" : ""}
               >
-                {index + 1}
+                <FaAngleLeft className="pagination-icon" />
               </span>
-            ))}
-            <span
-              onClick={() => handlePageChange(currentPage + 1)}
-              className={currentPage === totalPages - 1 ? "disabled" : ""}
-            >
-              <FaChevronRight className="pagination-icon" />
-            </span>
+              {[...Array(totalPages)].map((_, index) => (
+                <span
+                  key={index}
+                  onClick={() => handlePageChange(index)}
+                  className={currentPage === index ? "active" : ""}
+                >
+                  {index + 1}
+                </span>
+              ))}
+              <span
+                onClick={() => handlePageChange(currentPage + 1)}
+                className={currentPage === totalPages - 1 ? "disabled" : ""}
+              >
+                <FaChevronRight className="pagination-icon" />
+              </span>
+            </div>
           </div>
-        </div>
         )}
       </div>
 

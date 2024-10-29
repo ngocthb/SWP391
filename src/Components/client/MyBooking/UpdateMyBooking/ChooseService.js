@@ -8,6 +8,7 @@ import { Modal } from "antd";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import api from "../../../../config/axios";
+import DOMPurify from "dompurify";
 import "./UpdateMyBooking.scss";
 import { bookingIdContext } from "../MyBooking";
 
@@ -22,17 +23,6 @@ export function ChooseService({ onNext, onPre }) {
   const [areServicesHidden, setAreServicesHidden] = useState(false);
   const inputRef = useRef(null);
   const bookingId = useContext(bookingIdContext);
-
-  useEffect(() => {
-    const storedServices = sessionStorage.getItem("selectedServicesId");
-    if (storedServices) {
-      const serviceIds = JSON.parse(storedServices);
-      const selected = services.filter((service) =>
-        serviceIds.includes(service.id)
-      );
-      setSelectedServices(selected);
-    }
-  }, [services]);
 
   // Fetch all services
   useEffect(() => {
@@ -73,18 +63,27 @@ export function ChooseService({ onNext, onPre }) {
     fetchServices();
   }, [searchValue, services]);
 
+  // Fetch booking history
   useEffect(() => {
-    const storedVoucher = sessionStorage.getItem("selectedServicesId");
-    if (storedVoucher) {
-      const voucherIds = parseInt(storedVoucher, 10);
-      const voucherSelect = voucher.find(
-        (v) => Number(v.voucherId) === voucherIds
-      );
-      if (voucherSelect) {
-        setSelectVoucherId(voucherSelect);
+    const fetchBooking = async () => {
+      const storedService = sessionStorage.getItem("selectedServicesId");
+      console.log(storedService);
+      if (!storedService) {
+        try {
+          const response = await api.get(`booking/${bookingId}`);
+          const data = response.data.result;
+          if (data) {
+            setSelectedServices(data.serviceId);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        setSelectedServices(JSON.parse(storedService));
       }
-    }
-  }, [services]);
+    };
+    fetchBooking();
+  }, [services, bookingId]);
 
   // Fetch vouchers
   useEffect(() => {
@@ -101,47 +100,6 @@ export function ChooseService({ onNext, onPre }) {
     };
     fetchVoucher();
   }, []);
-
-  // Fetch booking history
-  useEffect(() => {
-    const fetchBooking = async () => {
-      try {
-        const response = await api.get(
-          // `bookingHistory?bookingId=${bookingId}`
-          `booking/${bookingId}`
-        );
-        const data = response.data.result;
-        console.log(data.serviceName);
-        if (data) {
-          const dataServiceName = data.serviceName;
-          const selectedServiceNames = dataServiceName.map(
-            (service) => service
-          );
-          console.log(selectedServiceNames);
-          const foundService = services.filter((service) =>
-            selectedServiceNames.includes(service.serviceName)
-          );
-          // Store only the IDs of the found services
-          console.log(foundService);
-          if (foundService) {
-            setSelectedServices(foundService.map((service) => service.id));
-            console.log(selectedServices);
-          }
-          const foundVoucher = voucher.find(
-            (item) => item.id === data.voucherId
-          );
-          const voucherId = foundVoucher ? foundVoucher.id : null;
-
-          if (voucherId) {
-            setSelectVoucherId(voucherId);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchBooking();
-  }, [services, bookingId, voucher]);
 
   const handleChange = (e) => {
     setSearchValue(e.target.value);
@@ -224,180 +182,196 @@ export function ChooseService({ onNext, onPre }) {
   };
 
   const selectedVoucher = voucher.find((v) => {
-    const storedVoucherId = Number(sessionStorage.getItem("selectedVoucherId"));
-    const result = !storedVoucherId
+    const storedVoucherId = sessionStorage.getItem("selectedVoucherId");
+    return !storedVoucherId
       ? v.id === selectVoucherId
       : v.id === storedVoucherId;
-    return result;
   });
+
   return (
     <div className="myBooking__service">
-      <div className="myBooking__service-header">
-        <div onClick={onPre}>
-          <FaArrowLeft className="myBooking__service-icon" />
+      <div className="myBooking__service-left">
+        <div className="myBooking__service-header">
+          <div onClick={onPre}>
+            <FaArrowLeft className="myBooking__service-icon" />
+          </div>
+          <h1>Choose Service</h1>
         </div>
-        <h1>Choose Service</h1>
-      </div>
-      <div className="myBooking__service-search">
-        <IoSearchOutline className="myBooking__service-icon" />
-        <input
-          ref={inputRef}
-          placeholder="Search for services..."
-          value={searchValue}
-          onChange={handleChange}
-        />
-        <IoCloseCircle
-          className="myBooking__service-closeIcon"
-          onClick={handleClearSearch}
-          aria-label="Clear search"
-        />
-      </div>
-      <div className="myBooking__service-locations">
-        F-Salon has the following services:
-      </div>
-      <div className="myBooking__service-lists">
-        {searchResults.map((service) => (
-          <div key={service.id} className="myBooking__service__card">
-            <img alt="service banner" src={service.image} />
-            <div className="card__content">
-              <h2>{service.serviceName}</h2>
-              <div className="card__content-time">
-                <LuClock className="card-icon" />
-                <span>{formatDuration(service.duration)}</span>
-              </div>
-              <p>{service.description}</p>
-              <div className="card__content-action">
-                <div className="card__content-price">
-                  Price: {formatCurrency(service.price)}
+        <div className="myBooking__service-search">
+          <IoSearchOutline className="myBooking__service-icon" />
+          <input
+            ref={inputRef}
+            placeholder="Search for services..."
+            value={searchValue}
+            onChange={handleChange}
+          />
+          <IoCloseCircle
+            className="myBooking__service-closeIcon"
+            onClick={handleClearSearch}
+            aria-label="Clear search"
+          />
+        </div>
+        <div className="myBooking__service-locations">
+          F-Salon has the following services:
+        </div>
+        <div className="myBooking__service-lists">
+          {searchResults.map((service) => (
+            <div key={service.id} className="myBooking__service__card">
+              <img alt="service banner" src={service.image} />
+              <div className="card__content">
+                <h2>{service.serviceName}</h2>
+                <div className="card__content-time">
+                  <LuClock className="card-icon" />
+                  <span>{formatDuration(service.duration)}</span>
                 </div>
-                <button
-                  className={`card__content-add ${
-                    isServiceSelected(service.id) ? "disabled" : ""
-                  }`}
-                  onClick={() => {
-                    if (!isServiceSelected(service.id)) {
-                      setSelectedServices((prev) => [...prev, service.id]); // Store only ID
-                    }
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(service.description || ""),
                   }}
-                  disabled={isServiceSelected(service.id)}
-                >
-                  {isServiceSelected(service.id) ? "Added" : "Add service"}
-                </button>
+                />
+                <div className="card__content-action">
+                  <div className="card__content-price">
+                    Price: {formatCurrency(service.price)}
+                  </div>
+                  <button
+                    className={`card__content-add ${
+                      isServiceSelected(service.id) ? "disabled" : ""
+                    }`}
+                    onClick={() => {
+                      if (!isServiceSelected(service.id)) {
+                        setSelectedServices((prev) => [...prev, service.id]); // Store only ID
+                      }
+                    }}
+                    disabled={isServiceSelected(service.id)}
+                  >
+                    {isServiceSelected(service.id) ? "Added" : "Add service"}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <div className="myBooking__service-footer">
-        <div className="footer__hidden" onClick={toggleServicesHidden}>
-          {areServicesHidden ? (
-            <>
-              <FaAngleDoubleUp />
-              <span>Show selected services</span>
-              <FaAngleDoubleUp />
-            </>
-          ) : (
-            <>
-              <FaAngleDoubleDown />
-              <span>Hide selected services</span>
-              <FaAngleDoubleDown />
-            </>
-          )}
+          ))}
         </div>
+      </div>
+      <div className="myBooking__service-right">
+        <div className="myBooking__service-footer">
+          {/* <div className="footer__hidden" onClick={toggleServicesHidden}>
+            {areServicesHidden ? (
+              <>
+                <FaAngleDoubleUp />
+                <span>Show selected services</span>
+                <FaAngleDoubleUp />
+              </>
+            ) : (
+              <>
+                <FaAngleDoubleDown />
+                <span>Hide selected services</span>
+                <FaAngleDoubleDown />
+              </>
+            )}
+          </div> */}
+          <h1>Your service</h1>
+          <div className="footer__services">
+            {selectedServices.map((serviceId, index) => {
+              const service = services.find(
+                (service) => service.id === serviceId
+              );
+              return (
+                service && (
+                  <div
+                    key={index}
+                    className={`footer__service ${
+                      areServicesHidden ? "hidden" : ""
+                    }`}
+                  >
+                    <span className="footer__service-name">
+                      {service.serviceName}
+                    </span>
 
-        {selectedServices.map((serviceId, index) => {
-          const service = services.find((service) => service.id === serviceId);
-          return (
-            service && (
-              <div
-                key={index}
-                className={`footer__service ${
-                  areServicesHidden ? "hidden" : ""
-                }`}
-              >
-                <span className="footer__service-name">
-                  {service.serviceName}
+                    <div>
+                      <span className="footer__service-price">
+                        {formatCurrency(service.price)}
+                      </span>
+                      <IoIosCloseCircle
+                        className="footer__service-icon"
+                        onClick={() => handleRemoveService(serviceId)} // Pass the service ID
+                      />
+                    </div>
+                  </div>
+                )
+              );
+            })}
+          </div>
+          <div className="footer__payment">
+            <div className="footer__promo">
+              <span onClick={showModal} className="footer__promo-action">
+                Voucher
+              </span>
+              <span>
+                {selectedVoucher ? selectedVoucher.code : "No voucher selected"}
+              </span>
+            </div>
+
+            <div className="footer__pay">
+              <div className="footer__pay-content">
+                <span className="footer__pay-services">
+                  Selected services : {selectedServices.length}
                 </span>
-
-                <div>
-                  <span className="footer__service-price">
-                    {formatCurrency(service.price)}
-                  </span>
-                  <IoIosCloseCircle
-                    className="footer__service-icon"
-                    onClick={() => handleRemoveService(serviceId)} // Pass the service ID
-                  />
-                </div>
+                <span className="footer__pay-services">
+                  Total Duration : {calculateTotalDuration() || "0"}
+                </span>
               </div>
-            )
-          );
-        })}
-
-        <div className="footer__promo">
-          <span onClick={showModal} className="footer__promo-action">
-            Voucher
-          </span>
-          <span>
-            {selectedVoucher ? selectedVoucher.code : "No voucher selected"}
-          </span>
-        </div>
-
-        <div className="footer__pay">
-          <div className="footer__pay-content">
-            <span className="footer__pay-services">
-              Selected services : {selectedServices.length}
-            </span>
-            <span className="footer__pay-services">
-              Total Duration : {calculateTotalDuration() || "0"}
-            </span>
+              <span className="footer__pay-services">
+                Pay :{" "}
+                {formatCurrency(
+                  (selectedServices || []).reduce((total, serviceId) => {
+                    const service = services.find(
+                      (service) => service.id === serviceId
+                    );
+                    return total + (service ? service.price : 0);
+                  }, 0)
+                )}
+              </span>
+              <span className="footer__pay-services">
+                Discount :{" "}
+                {selectedVoucher ? selectedVoucher.discountAmount : 0}%
+              </span>
+              <span className="footer__pay-services">
+                Total Pay :{" "}
+                {formatCurrency(
+                  (selectedServices || []).reduce((total, serviceId) => {
+                    const service = services.find(
+                      (service) => service.id === serviceId
+                    );
+                    return total + (service ? service.price : 0);
+                  }, 0) *
+                    (1 -
+                      (selectedVoucher
+                        ? selectedVoucher.discountAmount / 100
+                        : 0)) // Apply discount
+                )}
+              </span>
+            </div>
+            <button
+              className="myBooking__service-btn btn flex"
+              onClick={(e) => {
+                onNext();
+                if (selectedServices.length === 0) {
+                  e.preventDefault();
+                } else {
+                  sessionStorage.setItem(
+                    "selectedServicesId",
+                    JSON.stringify(selectedServices) // Store only IDs
+                  );
+                }
+              }}
+            >
+              Next Step
+              <FaArrowRight className="myBooking__salon-icon" />
+            </button>
           </div>
-          <span className="footer__pay-services">
-            Pay :{" "}
-            {formatCurrency(
-              (selectedServices || []).reduce((total, serviceId) => {
-                const service = services.find(
-                  (service) => service.id === serviceId
-                );
-                return total + (service ? service.price : 0);
-              }, 0)
-            )}
-          </span>
-          <span className="footer__pay-services">
-            Discount : {selectedVoucher ? selectedVoucher.discountAmount : 0}%
-          </span>
-          <span className="footer__pay-services">
-            Total Pay :{" "}
-            {formatCurrency(
-              (selectedServices || []).reduce((total, serviceId) => {
-                const service = services.find(
-                  (service) => service.id === serviceId
-                );
-                return total + (service ? service.price : 0);
-              }, 0) *
-                (1 -
-                  (selectedVoucher ? selectedVoucher.discountAmount / 100 : 0)) // Apply discount
-            )}
-          </span>
         </div>
       </div>
 
-      <button
-        className="myBooking__service-btn btn flex"
-        onClick={(e) => {
-          onNext();
-          if (selectedServices.length === 0) {
-            e.preventDefault();
-          } else {
-            sessionStorage.setItem(
-              "selectedServicesId",
-              JSON.stringify(selectedServices) // Store only IDs
-            );
-          }
-        }}
-      >
-        Next Step
-        <FaArrowRight className="myBooking__salon-icon" />
-      </button>
       <Modal
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}

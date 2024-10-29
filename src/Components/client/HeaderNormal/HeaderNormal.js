@@ -116,7 +116,9 @@ export default function HeaderNormal() {
                   isLoggedIn ? "logged-in" : ""
                 }`}
               >
-                <Link to={""}> Service</Link>
+                <Link to={"/services"} onClick={handleHomeClick}>
+                  Service
+                </Link>
               </li>
               <li
                 className={`header-normal__lists-items ${

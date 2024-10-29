@@ -59,7 +59,8 @@ const AdminCreateService = () => {
       image: null,
       collectionsImage: null,
     };
-
+    console.log(e);
+    console.log(createValues);
 
     if (selectedFileObject) {
       const firebaseResponse = await uploadFile(selectedFileObject);
@@ -70,26 +71,29 @@ const AdminCreateService = () => {
 
     if (collectionImageFiles.length > 0) {
       try {
-        const existingImages = collectionImageFiles.filter(file => file.url).map(file => file.url);
-        const newFiles = collectionImageFiles.filter(file => !file.url);
-    
- 
-        const uploadPromises = newFiles.map(file => uploadFile(file.originFileObj));
+        const existingImages = collectionImageFiles
+          .filter((file) => file.url)
+          .map((file) => file.url);
+        const newFiles = collectionImageFiles.filter((file) => !file.url);
+
+        const uploadPromises = newFiles.map((file) =>
+          uploadFile(file.originFileObj)
+        );
         const newFirebaseResponses = await Promise.all(uploadPromises);
-    
+
         createValues.collectionsImage = [
           ...existingImages,
-          ...newFirebaseResponses.filter(url => url)
+          ...newFirebaseResponses.filter((url) => url),
         ];
-    
+
         if (createValues.collectionsImage.length === 0) {
           createValues.collectionsImage = null;
         }
       } catch (error) {
         console.error("Error uploading collection images:", error);
         createValues.collectionsImage = collectionImageFiles
-          .filter(file => file.url)
-          .map(file => file.url);
+          .filter((file) => file.url)
+          .map((file) => file.url);
       }
     } else {
       createValues.collectionsImage = formData.collectionsImage || null;
@@ -97,6 +101,7 @@ const AdminCreateService = () => {
 
     setLoading(true);
     try {
+      console.log(createValues);
       const response = await api.post(`service`, createValues);
       const data = response.data.result;
 

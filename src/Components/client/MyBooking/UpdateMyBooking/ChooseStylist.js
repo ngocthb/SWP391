@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 import { IoPersonOutline } from "react-icons/io5";
-import React, { useState, useEffect, useContext } from "react";
+import { StarFilled } from "@ant-design/icons";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import api from "../../../../config/axios";
@@ -95,67 +96,72 @@ export function ChooseStylist({ onNext, onPre }) {
       if (stylist) {
         setSelectedStylistId(stylist.id); // Just ensure it is the ID
       }
-    }}, [stylists]);
+    }
+  }, [stylists]);
 
-    // Determine selected stylist object
-    const selectedStylist = stylists.find(
-      (stylist) => stylist.id === selectedStylistId
-    );
-  
-    return (
-      <div className="myBooking__stylist">
-        <div className="myBooking__stylist-header">
-          <div onClick={onPre}>
-            <FaArrowLeft className="myBooking__stylist-icon" />
-          </div>
-          <h1>Choose Stylist</h1>
+  // Determine selected stylist object
+  const selectedStylist = stylists.find(
+    (stylist) => stylist.id === selectedStylistId
+  );
+
+  return (
+    <div className="myBooking__stylist">
+      <div className="myBooking__stylist-header">
+        <div onClick={onPre}>
+          <FaArrowLeft className="myBooking__stylist-icon" />
         </div>
-        {selectedStylist && (
-          <>
-            <div className="myBooking__stylist-name">
-              <IoPersonOutline className="stylist-icon" />
-              <h1>{selectedStylist.fullname}</h1>
-            </div>
-            <div className="myBooking__stylist-info">
-              <p>Stylist: {selectedStylist.fullname}</p>
-              {/* Additional stylist details can be displayed here if needed */}
-            </div>
-          </>
-        )}
-        <Swiper
-          className="myBooking__stylist-lists"
-          slidesPerView={3}
-          navigation={true}
-          modules={[Navigation]}
-        >
-          {stylists.map((stylist) => (
-            <SwiperSlide key={stylist.id}>
-              <div
-                onClick={() => handleSelected(stylist)}
-                className={`myBooking__stylist-single ${
-                  selectedStylistId === stylist.id ? "selected" : ""
-                }`}
-              >
-                <img alt={stylist.fullname} src={stylist.image} />
-                <p>{stylist.fullname}</p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <button
-          className="myBooking__stylist-btn btn flex"
-          onClick={(e) => {
-            if (!selectedStylistId) {
-              e.preventDefault();
-            } else {
-              sessionStorage.setItem("selectedStylistId", selectedStylistId); // Store only the ID
-              onNext();
-            }
-          }}
-        >
-          Next Step
-          <FaArrowRight className="myBooking__stylist-icon" />
-        </button>
+        <h1>Choose Stylist</h1>
       </div>
-    );
-  }
+      {selectedStylist && (
+        <>
+          <div className="myBooking__stylist-name">
+            <IoPersonOutline className="stylist-icon" />
+            <h1>{selectedStylist.fullname}</h1>
+          </div>
+          <div className="myBooking__stylist-info">
+            <p>Stylist: {selectedStylist.fullname}</p>
+            <p>
+              {selectedStylist.feedbackScore / 2}
+              {"  "}
+              <StarFilled className="infor__rating" />
+            </p>
+          </div>
+        </>
+      )}
+      <Swiper
+        className="myBooking__stylist-lists"
+        slidesPerView={3}
+        navigation={true}
+        modules={[Navigation]}
+      >
+        {stylists.map((stylist) => (
+          <SwiperSlide key={stylist.id}>
+            <div
+              onClick={() => handleSelected(stylist)}
+              className={`myBooking__stylist-single ${
+                selectedStylistId === stylist.id ? "selected" : ""
+              }`}
+            >
+              <img alt={stylist.fullname} src={stylist.image} />
+              <p>{stylist.fullname}</p>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      <button
+        className="myBooking__stylist-btn btn flex"
+        onClick={(e) => {
+          if (!selectedStylistId) {
+            e.preventDefault();
+          } else {
+            sessionStorage.setItem("selectedStylistId", selectedStylistId); // Store only the ID
+            onNext();
+          }
+        }}
+      >
+        Next Step
+        <FaArrowRight className="myBooking__stylist-icon" />
+      </button>
+    </div>
+  );
+}

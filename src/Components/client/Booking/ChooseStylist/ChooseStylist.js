@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { IoPersonOutline } from "react-icons/io5";
-
+import { StarFilled } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 
@@ -44,7 +44,7 @@ export default function ChooseStylist() {
           setStylists(data);
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     };
     fetchStylists();
@@ -134,6 +134,11 @@ export default function ChooseStylist() {
               </div>
               <div className="chooseStylist__container-info">
                 <p>Stylist: {selectedStylist.fullname}</p>
+                <p>
+                  {selectedStylist.feedbackScore / 2}
+                  {"  "}
+                  <StarFilled className="infor__rating" />
+                </p>
                 {/* <p className="infor__rating">
                   <span>
                     Cut {selectedStylist.rating.cut}

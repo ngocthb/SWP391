@@ -112,9 +112,9 @@ export default function ChooseDateTime() {
         date: formatDateForInput(selectedDate),
       };
 
-       try {
+      try {
         const response = await api.post("booking/slots", bookingValue);
-        const data = response.data.result; 
+        const data = response.data.result;
         if (data) {
           if (data.length === 0) {
             Swal.fire({
@@ -128,7 +128,6 @@ export default function ChooseDateTime() {
       } catch (error) {}
     };
     fetchTimeSlots();
-    
   }, [selectedDate]);
 
   function formatTime(time) {
@@ -174,7 +173,7 @@ export default function ChooseDateTime() {
 
       <div className="chooseDateTime__container">
         <div className="chooseDateTime__container-header">
-          <Link to="/booking/step2">
+          <Link to="/booking/step3">
             <FaArrowLeft className="chooseDateTime-icon" />
           </Link>
           <h1>Choose Date & Time</h1>
