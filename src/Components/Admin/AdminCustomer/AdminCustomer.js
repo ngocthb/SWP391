@@ -21,7 +21,7 @@ const AdminVoucher = () => {
   const fetchCustomers = async (currentPage) => {
     setCustomersLoading(true);
     try {
-      const response = await api.get(`account/page?page=${currentPage}&size=6`);
+      const response = await api.get(`account/page?page=${currentPage}&size=7`);
       const data = response.data.result.content;
       const total = response.data.result.totalPages;
 
@@ -38,7 +38,7 @@ const AdminVoucher = () => {
   };
   useEffect(() => {
     fetchCustomers(currentPage);
-  }, []);
+  }, [currentPage]);
 
   const formatDateString = (dateString) => {
     if (!dateString) return "";
@@ -226,8 +226,8 @@ const AdminVoucher = () => {
                           <div style={{ display: "flex", gap: "8px" }}>
                             <Skeleton
                               variant="circular"
-                              width={36}
-                              height={36}
+                              width={43}
+                              height={43}
                             />
                           </div>
                         </td>
@@ -236,7 +236,7 @@ const AdminVoucher = () => {
                   : customers.length === 0 ? (
                     <tr>
                       <td colSpan={7}>
-                        <div className="admin-branch__notValid">
+                        <div className="admin-customer__notValid">
                           <FolderOutlined className="notValid--icon" />
                           <p>Currently, there are no customers</p>
                         </div>
@@ -249,13 +249,13 @@ const AdminVoucher = () => {
                           {customer.accountId}
                         </td>
                         <td>
-                          <div className="manager-booking__customer">
+                          <div className="admin-customer__customer">
                             <img
                               src={customer.image || loginUser.avatar}
                               alt={customer.fullName}
-                              className="manager-booking__customer-image"
+                              className="admin-customer__customer-image"
                             />
-                            <span className="manager-booking__customer-name">
+                            <span className="admin-customer__customer-name">
                               {customer.fullName}
                             </span>
                           </div>
@@ -274,7 +274,7 @@ const AdminVoucher = () => {
                         <td className="admin-customer__actions">
                           {customer.delete ? (
                             <button
-                              className="manager-booking__action-button"
+                              className="admin-customer__action-button"
                               onClick={() =>
                                 confirmActiveModal(customer.accountId)
                               }
@@ -283,7 +283,7 @@ const AdminVoucher = () => {
                             </button>
                           ) : (
                             <button
-                              className="manager-booking__action-button"
+                              className="admin-customer__action-button"
                               onClick={() =>
                                 confirmDeleteModal(customer.accountId)
                               }

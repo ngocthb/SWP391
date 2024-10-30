@@ -165,8 +165,10 @@ export default function ChooseService() {
 
     if (hours > 0 && minutes > 0) {
       return `${hours}h${minutes}`;
-    } else if (hours > 0) {
+    } else if (hours === 1) {
       return `${hours} hour`;
+    }else if (hours > 1) {
+      return `${hours} hours`;
     } else {
       return `${minutes} minutes`;
     }

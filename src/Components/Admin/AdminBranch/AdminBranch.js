@@ -30,7 +30,7 @@ const AdminBranch = ({ buttonLabel }) => {
     try {
       const response = await api.get("salons");
       const data = response.data.result;
-
+      console.log(data)
       if (data) {
         setBranchs(data);
         setOriginalBranchs(data);
@@ -230,13 +230,13 @@ const AdminBranch = ({ buttonLabel }) => {
                           <div style={{ display: "flex", gap: "8px" }}>
                             <Skeleton
                               variant="circular"
-                              width={36}
-                              height={36}
+                              width={43}
+                              height={43}
                             />
                              <Skeleton
                               variant="circular"
-                              width={36}
-                              height={36}
+                              width={43}
+                              height={43}
                             />
                           </div>
                         </td>

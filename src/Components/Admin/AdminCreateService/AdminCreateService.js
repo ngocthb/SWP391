@@ -209,12 +209,21 @@ const AdminCreateService = () => {
                     >
                       Duration:
                     </label>
-                    <input
-                      type="text"
+                    <select
                       id="duration"
-                      className="admin-create-service__input"
-                      placeholder="Duration"
-                    />
+                      className="admin-create-service__select"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>
+                        Select Duration
+                      </option>
+                      <option value="00:30:00">30 minutes</option>
+                      <option value="01:00:00">1 hour</option>
+                      <option value="01:30:00">
+                        1h30
+                      </option>
+                      <option value="02:00:00">2 hours</option>
+                    </select>
                   </div>
                   <div className="admin-create-service__form-group">
                     <label
@@ -278,30 +287,6 @@ const AdminCreateService = () => {
                           "table",
                           "visualblocks",
                           "wordcount",
-                          "checklist",
-                          "mediaembed",
-                          "casechange",
-                          "export",
-                          "formatpainter",
-                          "pageembed",
-                          "a11ychecker",
-                          "tinymcespellchecker",
-                          "permanentpen",
-                          "powerpaste",
-                          "advtable",
-                          "advcode",
-                          "editimage",
-                          "advtemplate",
-                          "ai",
-                          "mentions",
-                          "tinycomments",
-                          "tableofcontents",
-                          "footnotes",
-                          "mergetags",
-                          "autocorrect",
-                          "typography",
-                          "inlinecss",
-                          "markdown",
                         ],
                         toolbar:
                           "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",

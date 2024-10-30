@@ -321,10 +321,6 @@ export default function ManagerStylist({ buttonLabel }) {
               <input placeholder="Search here..." type="text" />
             </div>
             <div className="manager-stylist__header-filter">
-              <select>
-                <option>Newest</option>
-                <option>Oldest</option>
-              </select>
               <button onClick={createStylist}> {buttonLabel}</button>
             </div>
           </div>

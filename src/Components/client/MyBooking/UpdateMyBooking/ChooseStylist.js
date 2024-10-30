@@ -2,7 +2,7 @@
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 import { IoPersonOutline } from "react-icons/io5";
 import { StarFilled } from "@ant-design/icons";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import api from "../../../../config/axios";
