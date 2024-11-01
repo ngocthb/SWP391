@@ -36,7 +36,6 @@ import AdminCreateVoucher from "../Components/Admin/AdminCreateVoucher/AdminCrea
 import ManagerStaff from "../Components/Manager/ManagerStaff/ManagerStaff";
 import AdminManager from "../Components/Admin/AdminManager/AdminManager";
 import AdminCustomer from "../Components/Admin/AdminCustomer/AdminCustomer";
-import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
 import AdminCreateManager from "../Components/Admin/AdminCreateManager/AdminCreateManager";
 import ManagerShift from "../Components/Manager/ManagerShift/ManagerShift";
 import StylistLayout from "../Layouts/stylist";
@@ -165,10 +164,6 @@ export const Routes = [
       {
         path: "dashboard",
         element: <ManagerDashboard />,
-      },
-      {
-        path: "booking",
-        element: <ManagerBooking />,
       },
       {
         path: "booking/pending",

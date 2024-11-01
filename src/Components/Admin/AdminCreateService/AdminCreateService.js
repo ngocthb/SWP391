@@ -7,6 +7,7 @@ import uploadFile from "../../../utils/upload";
 import { Editor } from "@tinymce/tinymce-react";
 import service from "../../../data/service";
 import UploadImage from "../AdminService/UploadImage";
+import Swal from "sweetalert2";
 
 const AdminCreateService = () => {
   const [loading, setLoading] = useState(false);
@@ -59,8 +60,6 @@ const AdminCreateService = () => {
       image: null,
       collectionsImage: null,
     };
-    console.log(e);
-    console.log(createValues);
 
     if (selectedFileObject) {
       const firebaseResponse = await uploadFile(selectedFileObject);
@@ -101,12 +100,16 @@ const AdminCreateService = () => {
 
     setLoading(true);
     try {
-      console.log(createValues);
       const response = await api.post(`service`, createValues);
       const data = response.data.result;
 
-      console.log(data);
       if (data) {
+        await Swal.fire({
+          title: "Created!",
+          text: "The Service has been created.",
+          icon: "success",
+          timer: 2500
+        });
         setFormData((prev) => ({
           ...prev,
           image: selectedFile || prev.image,
@@ -114,6 +117,7 @@ const AdminCreateService = () => {
         navigate("/admin/service");
       }
     } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -181,6 +185,7 @@ const AdminCreateService = () => {
                       id="serviceName"
                       className="admin-create-service__input"
                       placeholder="Service Name"
+                      required
                     />
                   </div>
                   <div className="admin-create-service__form-group">
@@ -195,6 +200,7 @@ const AdminCreateService = () => {
                       id="price"
                       className="admin-create-service__input"
                       placeholder="Price"
+                      required
                     />
                   </div>
                 </div>
@@ -213,6 +219,7 @@ const AdminCreateService = () => {
                       id="duration"
                       className="admin-create-service__select"
                       defaultValue=""
+                      required
                     >
                       <option value="" disabled>
                         Select Duration
@@ -236,6 +243,7 @@ const AdminCreateService = () => {
                       id="skill"
                       className="admin-create-service__select"
                       defaultValue={0}
+                      required
                     >
                       <option value={0} disabled>
                         Select Skill

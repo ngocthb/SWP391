@@ -3,6 +3,7 @@ import "./AdminCreateBranch.scss";
 import { Spin } from "antd";
 import api from "../../../config/axios";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const AdminCreateBranch = () => {
   const [loading, setLoading] = useState(false);
@@ -20,9 +21,16 @@ const AdminCreateBranch = () => {
       const response = await api.post(`salon`, createValues);
       const data = response.data.result;
       if (data) {
+        await Swal.fire({
+          title: "Created!",
+          text: "The Branch has been created.",
+          icon: "success",
+          timer: 2500
+        });
         navigate("/admin/branch");
       }
     } catch (err) {
+      console.log(err)
     } finally {
       setLoading(false);
     }

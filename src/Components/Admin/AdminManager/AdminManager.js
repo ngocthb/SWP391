@@ -11,9 +11,7 @@ import "./AdminManager.scss";
 import { useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 import loginUser from "../../../data/loginUser";
-import { useDispatch, useSelector } from "react-redux";
 import { Spin } from "antd";
-import { updateStylist } from "../../../actions/Update";
 import Swal from "sweetalert2";
 
 import { genders } from "../../../data/gender";
@@ -23,7 +21,6 @@ export default function AdminManager({ buttonLabel }) {
   const [stylists, setStylists] = useState([]);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [salonLocations, setSalonLocations] = useState([]);
   const [formData, setFormData] = useState({
     accountid: 0,
@@ -39,20 +36,6 @@ export default function AdminManager({ buttonLabel }) {
   const [loading, setLoading] = useState(false);
   const [managersLoading, setManagersLoading] = useState(true);
 
-  const dispatch = useDispatch();
-  const isUpdate = useSelector((state) => state.updateStylistReducer);
-  const [selectedFileObject, setSelectedFileObject] = useState(null);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedFile(imageUrl);
-      setSelectedFileObject(file);
-    }
-  };
-
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
       try {
@@ -65,12 +48,12 @@ export default function AdminManager({ buttonLabel }) {
       }
     };
 
-    fetchData("salons", setSalonLocations);
+    fetchData("salon", setSalonLocations);
   }, []);
 
   useEffect(() => {
     fetchManagersData();
-  }, [isUpdate]);
+  }, []);
 
   const fetchManagersData = async () => {
     setManagersLoading(true);
@@ -87,7 +70,7 @@ export default function AdminManager({ buttonLabel }) {
     }
   };
 
-  const fetchStylistData = async (accountid) => {
+  const fetchManagerData = async (accountid) => {
     try {
       const response = await api.get(`manager/${accountid}`);
       const data = response.data.result;
@@ -125,6 +108,7 @@ export default function AdminManager({ buttonLabel }) {
           text: "The Manager has been deleted.",
           icon: "success",
         });
+        fetchManagersData();
       }
     } catch (err) {
       console.error(err);
@@ -154,24 +138,13 @@ export default function AdminManager({ buttonLabel }) {
   const updateStylistData = async (e) => {
     e.preventDefault();
     const updateValues = {
-      fullName: e.target[1].value,
-      email: e.target[2].value,
-      phone: e.target[3].value,
-      dob: e.target[4].value,
-      gender: e.target[5].value,
-      salonId: Number(e.target[6].value),
-      // image: null,
-    };
-
-    // if (selectedFileObject) {
-    //   const firebaseResponse = await uploadFile(selectedFileObject);
-    //   updateValues.image = firebaseResponse;
-    // } else {
-    //   updateValues.image = formData.image;
-    // }
-
-    // console.log(updateValues);
-
+      fullName: e.target[0].value,
+      email: e.target[1].value,
+      phone: e.target[2].value,
+      dob: e.target[3].value,
+      gender: e.target[4].value,
+      salonId: Number(e.target[5].value),
+    }
     setLoading(true);
     try {
       const response = await api.put(
@@ -179,46 +152,33 @@ export default function AdminManager({ buttonLabel }) {
         updateValues
       );
       const data = response.data.result;
-
       if (data) {
-        const foundSalon = salonLocations.find(
-          (item) => item.address === data.salonAddress
-        );
-        const salonId = foundSalon ? foundSalon.id : null;
-
-        setFormData((prev) => ({
-          ...prev,
-          fullName: data.fullName || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          dob: data.dob || "",
-          gender: data.gender || "",
-          salonId: salonId,
-          image: selectedFile || prev.image,
-        }));
-        dispatch(updateStylist());
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Update Manager successfully.",
+          timer: 2500,
+        });
+        fetchManagersData();
         toggleModal();
       }
     } catch (err) {
+      console.log(err)
+      Swal.fire({
+        title: "Error!",
+        text: err.response.data.message,
+        icon: "error",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (isModalOpen) {
-      if (formData.accountid) {
-        fetchStylistData(formData.accountid);
-      }
-    }
-  }, [isModalOpen]);
-
   const toggleModal = async (accountid) => {
     if (accountid) {
-      await fetchStylistData(accountid);
+      await fetchManagerData(accountid);
     }
     setIsModalOpen(!isModalOpen);
-    setSelectedFile(null);
   };
 
   const createStylist = () => {
@@ -240,10 +200,6 @@ export default function AdminManager({ buttonLabel }) {
               <input placeholder="Search here..." type="text" />
             </div>
             <div className="admin-manager__header-filter">
-              <select>
-                <option>Newest</option>
-                <option>Oldest</option>
-              </select>
               <button onClick={createStylist}> {buttonLabel}</button>
             </div>
           </div>
@@ -362,31 +318,6 @@ export default function AdminManager({ buttonLabel }) {
             >
               <form onSubmit={handleSubmit}>
                 <h2 className="admin-manager-modal__header">Update Stylist</h2>
-                <div className="admin-manager-modal__avatar-section">
-                  <div className="admin-manager-modal__avatar">
-                    <img
-                      src={selectedFile || formData.image}
-                      alt={formData.fullName}
-                    />
-                  </div>
-                  <div className="admin-manager-modal__avatar-info">
-                    <h3 className="admin-manager-modal__avatar-title">
-                      Change Avatar
-                    </h3>
-                    <p className="admin-manager-modal__avatar-description">
-                      Recommended Dimensions: 120x120 Max file size: 5MB
-                    </p>
-                    <label className="admin-manager-modal__upload-btn">
-                      Upload
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        style={{ display: "none" }}
-                      />
-                    </label>
-                  </div>
-                </div>
                 <div className="admin-manager-modal__form-section">
                   <div className="manager-create-stylist__form-grid">
                     <div className="manager-create-stylist__form-grid manager-create-stylist__form-grid--half-width">
@@ -403,6 +334,7 @@ export default function AdminManager({ buttonLabel }) {
                           className="manager-create-stylist__input"
                           placeholder="Full Name"
                           defaultValue={formData.fullName}
+                          required
                         />
                       </div>
                       <div className="manager-create-stylist__form-group">
@@ -418,6 +350,7 @@ export default function AdminManager({ buttonLabel }) {
                           className="manager-create-stylist__input"
                           placeholder="Email"
                           defaultValue={formData.email}
+                          required
                         />
                       </div>
                     </div>
@@ -438,6 +371,7 @@ export default function AdminManager({ buttonLabel }) {
                           className="manager-create-stylist__input"
                           placeholder="Phone Number"
                           defaultValue={formData.phone}
+                          required
                         />
                       </div>
                       <div className="manager-create-stylist__form-grid manager-create-stylist__form-grid--half-width">
@@ -454,6 +388,7 @@ export default function AdminManager({ buttonLabel }) {
                             className="manager-create-stylist__input"
                             placeholder="Date of Birth"
                             defaultValue={formData.dob}
+                            required
                           />
                         </div>
                         <div className="manager-create-stylist__form-group">
@@ -469,6 +404,7 @@ export default function AdminManager({ buttonLabel }) {
                             defaultValue={
                               formData.gender ? formData.gender : ""
                             }
+                            required
                           >
                             <option value="" disabled>
                               Select Gender
@@ -497,6 +433,7 @@ export default function AdminManager({ buttonLabel }) {
                           id="salon"
                           className="manager-create-stylist__select"
                           defaultValue={formData.salonId ? formData.salonId : 0}
+                          required
                         >
                           <option value={0} disabled>
                             Select Salon
