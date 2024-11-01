@@ -1,7 +1,7 @@
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 
 import React, { useState, useEffect, useContext } from "react";
-
+import { Skeleton } from "@mui/material";
 import api from "../../../../config/axios";
 import "./UpdateMyBooking.scss";
 
@@ -11,7 +11,7 @@ export function ChooseSalon({ onClose, onNext }) {
   const [salonLocations, setSalonLocations] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState(0);
   const bookingId = useContext(bookingIdContext);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const storedBranchId = sessionStorage.getItem("selectedBranchId");
     if (storedBranchId) {
@@ -57,6 +57,8 @@ export function ChooseSalon({ onClose, onNext }) {
         }
       } catch (error) {
         console.log("Error fetching booking:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchBooking();
@@ -78,19 +80,36 @@ export function ChooseSalon({ onClose, onNext }) {
         <div className="myBooking__salon-locations">
           F-salon is available in the following:
         </div>
-        <div className="myBooking__salon-lists">
-          {(salonLocations || []).map((branch) => (
-            <div
-              onClick={() => handleBranchSelect(branch)}
-              className={`myBooking__salon-single ${
-                selectedBranch && selectedBranch === branch.id ? "selected" : ""
-              }`}
-              key={branch.id}
-            >
-              {branch.address}
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          // Skeleton loading
+          <div className="myBooking__salon-lists">
+            {[...Array(2)].map((_, index) => (
+              <Skeleton
+                key={index}
+                width="100%"
+                height={40}
+                variant="rectangular"
+              />
+            ))}
+          </div>
+        ) : (
+          // Display salon branches when not loading
+          <div className="myBooking__salon-lists">
+            {(salonLocations || []).map((branch) => (
+              <div
+                onClick={() => handleBranchSelect(branch)}
+                className={`myBooking__salon-single ${
+                  selectedBranch && selectedBranch === branch.id
+                    ? "selected"
+                    : ""
+                }`}
+                key={branch.id}
+              >
+                {branch.address}
+              </div>
+            ))}
+          </div>
+        )}
         <button
           className="myBooking__salon-btn flex btn"
           onClick={(e) => {

@@ -8,12 +8,13 @@ import { Navigation } from "swiper/modules";
 import api from "../../../../config/axios";
 import "./UpdateMyBooking.scss";
 import { bookingIdContext } from "../MyBooking";
+import Skeleton from "@mui/material/Skeleton";
 
 export function ChooseStylist({ onNext, onPre }) {
   const bookingId = useContext(bookingIdContext);
   const [selectedStylistId, setSelectedStylistId] = useState(null);
   const [stylists, setStylists] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const handleSelected = (stylist) => {
     setSelectedStylistId(stylist.id);
   };
@@ -83,6 +84,8 @@ export function ChooseStylist({ onNext, onPre }) {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
     fetchBooking();
@@ -134,19 +137,29 @@ export function ChooseStylist({ onNext, onPre }) {
         navigation={true}
         modules={[Navigation]}
       >
-        {stylists.map((stylist) => (
-          <SwiperSlide key={stylist.id}>
-            <div
-              onClick={() => handleSelected(stylist)}
-              className={`myBooking__stylist-single ${
-                selectedStylistId === stylist.id ? "selected" : ""
-              }`}
-            >
-              <img alt={stylist.fullname} src={stylist.image} />
-              <p>{stylist.fullname}</p>
-            </div>
-          </SwiperSlide>
-        ))}
+        {loading
+          ? // Show skeletons while loading
+            [...Array(5)].map((_, index) => (
+              <SwiperSlide key={index}>
+                <div className="myBooking__stylist-single">
+                  <Skeleton variant="rectangular" height={250} width={150} />
+                  <Skeleton width="80%" style={{ marginTop: 8 }} />
+                </div>
+              </SwiperSlide>
+            ))
+          : stylists.map((stylist) => (
+              <SwiperSlide key={stylist.id}>
+                <div
+                  onClick={() => handleSelected(stylist)}
+                  className={`myBooking__stylist-single ${
+                    selectedStylistId === stylist.id ? "selected" : ""
+                  }`}
+                >
+                  <img alt={stylist.fullname} src={stylist.image} />
+                  <p>{stylist.fullname}</p>
+                </div>
+              </SwiperSlide>
+            ))}
       </Swiper>
       <button
         className="myBooking__stylist-btn btn flex"

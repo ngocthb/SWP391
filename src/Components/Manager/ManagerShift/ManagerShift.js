@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { BiSearchAlt } from "react-icons/bi";
 import { DownOutlined } from "@ant-design/icons";
 import { Dropdown, Space, Calendar, Spin, Select } from "antd";
+import { Skeleton } from "@mui/material";
 import { FolderOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
@@ -24,6 +25,9 @@ export default function ManagerShift() {
   const [stylistsData, setStylistsData] = useState();
   const [stylists, setStylists] = useState([]);
   const [selectDay, setSelectedDay] = useState(dayjs().format("YYYY-MM-DD"));
+
+  const [bookingLoading, setBookingLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     id: null,
     stylistName: "",
@@ -43,7 +47,7 @@ export default function ManagerShift() {
     const onSelect = (value) => {
       const formattedDate = value.format("YYYY-MM-DD");
       setSelectedDay(formattedDate);
-      setStylists([]);
+      // setStylists([]);
     };
 
     return (
@@ -81,7 +85,7 @@ export default function ManagerShift() {
 
   useEffect(() => {
     fetchStylistsData();
-  }, [salonId]);
+  }, []);
   const fetchStylistsData = async () => {
     try {
       const response = await api.get(`stylist/read`);
@@ -99,33 +103,39 @@ export default function ManagerShift() {
 
   useEffect(() => {
     fetchShiftData();
-  }, [stylists, formData, selectDay, stylistsData]);
+  }, [formData, selectDay, stylistsData]);
 
   const fetchShiftData = async () => {
-    try {
-      const response = await api.get(
-        `stylist/schedule/${selectDay}/${salonId}`
-      );
-      const data = response.data.result;
-      if (data) {
-        // tìm stylist id
-        const enrichedData = data.map((shift) => {
-          const stylist = stylistsData.find(
-            (stylist) => stylist.fullname === shift.stylistName
-          );
+    setBookingLoading(true);
+    if (salonId) {
+      try {
+        const response = await api.get(
+          `stylist/schedule/${selectDay}/${salonId}`
+        );
+        const data = response.data.result;
+        if (data) {
+          // tìm stylist id
+          const enrichedData = data.map((shift) => {
+            const stylist = stylistsData.find(
+              (stylist) => stylist.fullname === shift.stylistName
+            );
 
-          return {
-            ...shift,
-            stylistId: stylist ? stylist.id : null,
-            image: stylist ? stylist.image : null,
-          };
-        });
-        if (JSON.stringify(stylists) !== JSON.stringify(enrichedData)) {
-          setStylists(enrichedData);
+            return {
+              ...shift,
+              stylistId: stylist ? stylist.id : null,
+              image: stylist ? stylist.image : null,
+            };
+          });
+          if (JSON.stringify(stylists) !== JSON.stringify(enrichedData)) {
+            setStylists(enrichedData);
+            console.log(stylists);
+          }
         }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setBookingLoading(false);
       }
-    } catch (err) {
-      console.log(err);
     }
   };
 
@@ -284,7 +294,7 @@ export default function ManagerShift() {
               trigger={["hover"]}
             >
               <a onClick={(e) => e.preventDefault()}>
-                <Space>
+                <Space >
                   {selectDay}
                   <DownOutlined />
                 </Space>
@@ -308,13 +318,49 @@ export default function ManagerShift() {
                 <th>Action</th>
               </tr>
             </thead>
-            {stylists.length !== 0 ? (
+            {bookingLoading ? (
+              [...Array(6)].map((_, index) => (
+                <tbody>
+                  <tr key={index}>
+                    <td>
+                      <Skeleton width={40} />
+                    </td>
+                    <td>
+                      <Skeleton width={120} />
+                    </td>
+                    <td>
+                      <Skeleton width={100} />
+                    </td>
+                    <td>
+                      <Skeleton width={120} />
+                    </td>
+                    <td>
+                      <Skeleton width={80} />
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <Skeleton variant="circular" width={43} height={43} />
+                        <Skeleton variant="circular" width={43} height={43} />
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              ))
+            ) : stylists.length === 0 ? (
+              <tbody>
+                <tr>
+                  <td colSpan={6}>
+                    <div className="manager-create-shift__notValid">
+                      <FolderOutlined className="notValid--icon" />
+                      <p>Please Choose Another Date</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            ) : (
               <tbody>
                 {(stylists || []).map((stylist, index) => (
-                  <tr
-                    // key={stylist.stylistId}
-                    key={index}
-                  >
+                  <tr key={index}>
                     <td className="managerShift__id">{stylist.id}</td>
                     <td>
                       <div className="managerShift__stylist">
@@ -356,17 +402,6 @@ export default function ManagerShift() {
                     </td>
                   </tr>
                 ))}
-              </tbody>
-            ) : (
-              <tbody>
-                <tr>
-                  <td colSpan={6}>
-                    <div className="manager-create-shift__notValid">
-                      <FolderOutlined className="notValid--icon" />
-                      <p>Please Choose Another Date</p>
-                    </div>
-                  </td>
-                </tr>
               </tbody>
             )}
           </table>
