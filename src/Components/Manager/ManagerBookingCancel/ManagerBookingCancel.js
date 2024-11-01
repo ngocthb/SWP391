@@ -6,20 +6,42 @@ import { BiSearchAlt } from "react-icons/bi";
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa";
 import { Skeleton } from "@mui/material";
 import { FolderOutlined } from "@ant-design/icons";
+import { BiDetail } from "react-icons/bi";  
 
 const ManagerBookingCancel = () => {
   const [bookings, setBookings] = useState([]);
   const [originalBookings, setOriginalBookings] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [salonLocations, setSalonLocations] = useState([]);
+  const [allStylist, setAllStylists] = useState([]);
+  const [vouchers, setVouchers] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
-  const [bookingLoading, setBookingLoading] = useState(false);
 
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
   const [selectedDate, setSelectedDate] = useState(today);
+
+  const [bookingLoading, setBookingLoading] = useState(false);
+
+  const [slots, setSlots] = useState([]);
+
+  const [services, setServices] = useState([]);
+  const [formData, setFormData] = useState({
+    bookingId: 0,
+    customerId: 0,
+    voucherId: 0,
+    slotId: 0,
+    bookingDate: "",
+    stylistId: 0,
+    serviceId: [],
+    salonId: 0,
+    time: "",
+    serviceName: [],
+  });
   const [manager, setManager] = useState([]);
 
   const formatDateForInput = (dateString) => {
@@ -30,11 +52,56 @@ const ManagerBookingCancel = () => {
     return `${year}-${month}-${day}`;
   };
 
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const calculateTotalPrice = () => {
+    return selectedServices.reduce((total, serviceId) => {
+      const service = services.find((s) => s.id === serviceId);
+      return total + (service ? service.price : 0);
+    }, 0);
+  };
+
   const handleDateChangeFilter = (e) => {
     const date = e.target.value === "today" ? today : tomorrow;
     setSelectedDate(date);
   };
 
+  const handleDateChange = (event) => {
+    setFormData((prev) => ({ ...prev, date: event.target.value }));
+  };
+
+  const handleTimeChange = (event) => {
+    setFormData((prev) => ({ ...prev, time: event.target.value }));
+  };
+
+  useEffect(() => {
+    if (formData.serviceId) {
+      setSelectedServices(formData.serviceId);
+    }
+  }, [formData.serviceId]);
+  
+    useEffect(() => {
+      const fetchData = async (endpoint, setter) => {
+        try {
+          const response = await api.get(endpoint);
+          if (response.data) {
+            setter(response.data.result);
+          }
+        } catch (error) {
+          console.error(`Error fetching ${endpoint}:`, error);
+        }
+      };
+  
+      fetchData("salons", setSalonLocations);
+      fetchData("vouchers", setVouchers);
+      fetchData("service", setServices);
+      fetchData("stylist/read", setAllStylists);
+      fetchData("slot/read", setSlots);
+    }, []);
+
+  
     useEffect(() => {
       const fetchManagerData = async () => {
         try {
@@ -51,12 +118,12 @@ const ManagerBookingCancel = () => {
     }, []);
   
     useEffect(() => {
-      setBookingLoading(true);
+      setBookingLoading(true)
       if (manager.salonId !== undefined) {
       const fetchBookings = async (page) => {
         try {
           const response = await api.get(
-            `manager/stylists/booking/cancel/${page}/9/${manager.salonId}/${formatDateForInput(selectedDate)}`
+            `manager/stylists/booking/cancel/${page}/7/${manager.salonId}/${formatDateForInput(selectedDate)}`
           );
          
           const data = response.data.result.content;
@@ -77,7 +144,58 @@ const ManagerBookingCancel = () => {
       fetchBookings(currentPage);
        }
        
-    }, [ manager, selectedDate]);
+    }, [ manager, selectedDate, currentPage]);
+  
+    const fetchBookingData = async (bookingId) => {
+      try {
+        const response = await api.get(`booking/${bookingId}`);
+        const data = response.data.result;
+        console.log(data);
+        if (data) {
+          const foundSalon = salonLocations.find(
+            (item) => item.address === data.salonName
+          );
+          const salonId = foundSalon ? foundSalon.id : null;
+  
+          const foundVoucher = vouchers.find(
+            (item) => item.code === data.voucherCode
+          );
+          const voucherId = foundVoucher ? foundVoucher.id : null;
+  
+          const foundStylist = allStylist.find(
+            (item) => item.fullname === data.stylistName
+          );
+          const stylistId = foundStylist ? foundStylist.accountid : null;
+  
+          setFormData((prev) => ({
+            ...prev,
+            bookingId: bookingId,
+            customerId: data.customerId,
+            voucherId: Number(voucherId),
+            bookingDate: data.date,
+            stylistId: stylistId,
+            serviceId: data.serviceId,
+            salonId: Number(salonId),
+            customerName: data.customerName,
+            stylistName: data.stylistName,
+            date: data.date,
+            time: data.time,salonName: data.salonName,
+            voucherCode: data.voucherCode,
+            serviceName: data.serviceName,
+          }));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    useEffect(() => {
+      if (isModalOpen) {
+        if (formData.bookingId) {
+          fetchBookingData(formData.bookingId);
+        }
+      }
+    }, [isModalOpen]);
   
     const sortBy = (key) => {
       let direction = "ascending";
@@ -118,7 +236,13 @@ const ManagerBookingCancel = () => {
       }
       return "";
     };
-
+  
+    const toggleModal = async (id) => {
+      if (id) {
+        await fetchBookingData(id);
+      }
+      setIsModalOpen(!isModalOpen);
+    };
   
     const formatDate = (dateInput) => {
       const date = new Date(dateInput);
@@ -190,12 +314,13 @@ const ManagerBookingCancel = () => {
                   <th onClick={() => sortBy("time")}>
                     Time{getSortIndicator("time")}
                   </th>
+                  <th>Action</th>
                   </tr>
                 </thead>
   
                 <tbody>
                 {bookingLoading
-                  ? [...Array(9)].map((_, index) => (
+                  ? [...Array(7)].map((_, index) => (
                       <tr key={index}>
                         <td>
                           <Skeleton width={40} />
@@ -215,18 +340,27 @@ const ManagerBookingCancel = () => {
                         <td>
                           <Skeleton width={80} />
                         </td>
-                      </tr>
-                    )) : bookings.length === 0 ? (
-                      <tr>
-                        <td colSpan={7}>
-                          <div className="manager-booking-cancel__notValid">
-                            <FolderOutlined className="notValid--icon" />
-                            <p>Currently, there are no cancel bookings</p>
+                        <td>
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <Skeleton
+                              variant="circular"
+                              width={43}
+                              height={43}
+                            />
                           </div>
                         </td>
                       </tr>
-                    ) :
-                  (bookings.map((booking) => (
+                    ))
+                  : bookings.length === 0 ? (
+                    <tr>
+                      <td colSpan={7}>
+                        <div className="manager-booking-cancel__notValid">
+                          <FolderOutlined className="notValid--icon" />
+                          <p>Currently, there are no in-process bookings</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (bookings.map((booking) => (
                     <tr key={booking.id}><td className="manager-booking-cancel__id">{booking.id}</td>
                     <td>
                       <div className="manager-booking-cancel__customer">
@@ -250,6 +384,14 @@ const ManagerBookingCancel = () => {
                       <span className={`manager-booking-cancel__quantity`}>
                         {formatTime(booking.time)}
                       </span>
+                    </td>
+                    <td className="manager-booking-cancel__actions">
+                      <button
+                        className="manager-booking-cancel__action-button"
+                        onClick={() => toggleModal(booking.id)}
+                      >
+                        <BiDetail />
+                      </button>
                     </td>
                   </tr>
                 )))}
@@ -285,6 +427,197 @@ const ManagerBookingCancel = () => {
         </div>
         )}
       </div>
+
+      {isModalOpen && (
+        <>
+          <div
+            className="manager-booking-cancel-backdrop"
+            onClick={toggleModal}
+          >
+            <div
+              className="manager-booking-cancel-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <form>
+                <h2 className="manager-booking-cancel-modal__header">
+                  Booking Detail
+                </h2>
+                <div className="manager-booking-cancel-modal__form-section">
+                  <div className="manager-booking-cancel-modal__form-grid">
+                    <div className="manager-booking-cancel-modal__form-grid manager-booking-cancel-modal__form-grid--half-width">
+                      <div className="manager-booking-cancel-modal__form-group">
+                        <label
+                          htmlFor="customerName"
+                          className="manager-booking-cancel-modal__label"
+                        >
+                          Customer Name:
+                        </label>
+                        <input
+                          type="text"
+                          id="customerName"
+                          className="manager-booking-cancel-modal__input"
+                          placeholder="Customer Name"
+                          defaultValue={formData.customerName}
+                          disabled
+                        />
+                      </div>
+                      <div className="manager-booking-cancel-modal__form-group">
+                        <label
+                          htmlFor="voucherCode"
+                          className="manager-booking-cancel-modal__label"
+                        >
+                          Voucher Code:
+                        </label>
+                        <input
+                          type="text"
+                          id="voucherCode"
+                          className="manager-booking-cancel-modal__input"
+                          placeholder="Voucher Code"
+                          defaultValue={formData.voucherCode}
+                          disabled
+                        />
+                      </div>
+                    </div>
+                    <div className="manager-booking-cancel-modal__form-grid manager-booking-cancel-modal__form-grid--full-width">
+                      <div className="manager-booking-cancel-modal__form-group">
+                        <label
+                          htmlFor="time"
+                          className="manager-booking-cancel-modal__label"
+                        >
+                          Select Time:
+                        </label>
+                        <div className="manager-booking-cancel-modal__slots-list">
+                          {(slots || []).map((time) => (
+                            <label
+                              key={time.slotid}
+                              className={`manager-booking-cancel-modal__slots-option disabled`}
+                            >
+                              <input
+                                type="radio"
+                                name="time"
+                                value={time.slottime}
+                                checked={formData.time === time.slottime}
+                                onChange={handleTimeChange}
+                                disabled
+                                className={`manager-booking-cancel-modal__radio disable`}
+                              />
+                              <span>{formatTime(time.slottime)}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      className="manager-booking-cancel-modal__form-grid
+              manager-booking-cancel-modal__form-grid--half-width"
+                    >
+                      <div className="manager-booking-cancel-modal__form-group">
+                        <label
+                          htmlFor="date"
+                          className="manager-booking-cancel-modal__label"
+                        >
+                          Date:
+                        </label>
+                        <input
+                          type="text"
+                          id="date"
+                          className="manager-booking-cancel-modal__input"
+                          placeholder="Date"
+                          value={formatDate(formData.date)}
+                          disabled
+                          onChange={handleDateChange}
+                        />
+                      </div>
+                      <div className="manager-booking-cancel-modal__form-group">
+                        <label
+                          htmlFor="stylistName"
+                          className="manager-booking-cancel-modal__label"
+                        >
+                          Stylist Name:
+                        </label>
+                         <input
+                          type="text"
+                          id="stylistName"
+                          className="manager-booking-cancel-modal__input"
+                          placeholder="Stylist Name"
+                          value={formData.stylistName}
+                          disabled
+                        />
+                      </div>
+                    </div>
+
+                    <div
+                      className="manager-booking-cancel-modal__form-grid
+                manager-booking-cancel-modal__form-grid--full-width"
+                    >
+                      <div className="manager-booking-cancel-modal__form-group">
+                        <label
+                          htmlFor="serviceName"
+                          className="manager-booking-cancel-modal__label"
+                        >
+                          Service Name:
+                        </label>
+                        <div className="manager-booking-cancel-modal__services-list">
+                          {(services || []).map((service) => (
+                            <label
+                              key={service.id}
+                              className="manager-booking-cancel-modal__option disabled"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedServices.includes(service.id)}
+                                disabled
+                                className="manager-booking-cancel-modal__checkbox disable"
+                              />
+                               <span>
+                                {service.serviceName} -{" "}
+                                {service.price && formatPrice(service.price)}{" "}
+                                VND
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="manager-booking-cancel-modal__form-grid
+                  manager-booking-cancel-modal__form-grid--full-width"
+                    >
+                     <div className="manager-booking-cancel-modal__form-group">
+                        <label
+                          htmlFor="salon"
+                          className="manager-booking-cancel-modal__label"
+                        >
+                          Select Salon:
+                        </label>
+                        <input
+                          type="text"
+                          id="salon"
+                          className="manager-booking-cancel-modal__input"
+                          placeholder="Stylist Name"
+                          value={formData.salonName}
+                          disabled
+                        />
+                      </div>
+                    </div>
+                    <div className="manager-booking-cancel-modal__form-grid
+                  manager-booking-cancel-modal__form-grid--full-width">
+                     <div className="manager-booking-cancel-modal__form-group">
+                    <div className="staff-create-booking__total-price">
+                      <h3>
+                        Total Price: {formatPrice(calculateTotalPrice())} VND
+                      </h3>
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </>
+      )}
       </>
     );
   };

@@ -4,42 +4,43 @@ const slides = [
   {
     id: 1,
     srcImg: banner1,
-    title: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
-    subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
+    title: "Elevate Your Style with Premium Haircuts",
+    subTitle: "Transform your look with top-notch styling experts.",
     description:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ullam repellendus consequatur dolore doloribus laudantium suscipit exercitationem rerum optio maxime obcaecati labore perspiciatis quos quod id iusto architecto hic, dignissimos dolores.",
+      "At F-Salon, we offer premium haircut services tailored to suit every style and personality. Our skilled stylists are ready to advise and transform your appearance, from classic cuts to the latest trends.",
   },
   {
     id: 2,
     srcImg: banner2,
-    title: "Tempora maiores facilis vitae officia itaque.",
-    subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
+    title: "Exquisite Hair Coloring for an Elegant Look",
+    subTitle: "Explore our diverse and rich color collection.",
     description:
-      "Natus quos repellat earum molestias tenetur, veritatis expedita perferendis corrupti culpa harum, pariatur illum maxime voluptatem, quia magni laborum.",
+      "F-Salon takes pride in providing high-quality hair coloring services, using products that are safe for both hair and skin. Our experienced professionals will help you find the perfect shade that enhances your beauty.",
   },
   {
     id: 3,
     srcImg: banner3,
-    title: "Repellat deleniti inventore rerum distinctio.",
-    subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
+    title: "Comprehensive Hair Care at F-Salon",
+    subTitle: "Maintain the health of your hair.",
     description:
-      "Quaerat modi voluptas excepturi error, iste ad, veritatis perferendis voluptatibus sapiente dolorem, laudantium reiciendis ab quod iusto dolor pariatur. Cupiditate!",
+      "F-Salon offers a range of intensive hair care treatments designed to keep your hair looking vibrant and healthy. From deep conditioning therapies to relaxing scalp massages, we are committed to providing you with the best pampering experience.",
   },
   {
     id: 4,
     srcImg: banner4,
-    title: "Consequuntur similique quaerat aut cum.",
-    subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
+    title: "Book Your Appointment Easily at F-Salon",
+    subTitle: "Find the perfect time for you with just a few clicks.",
     description:
-      "Fuga labore obcaecati architecto, dolores ducimus provident, earum nam veniam suscipit aspernatur, non rem? Similique reprehenderit, atque commodi porro voluptatibus.",
+      "With our online booking system, you can easily select your preferred services and time slots. Just a few simple steps, and you'll secure your appointment at F-Salon without any hassle.",
   },
   {
     id: 5,
     srcImg: banner5,
-    title: "Consequuntur similique quaerat aut cum.",
-    subTitle: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
+    title: "Exclusive Offers Just for You",
+    subTitle: "Discover exciting promotions at F-Salon.",
     description:
-      "Fuga labore obcaecati architecto, dolores ducimus provident, earum nam veniam suscipit aspernatur, non rem? Similique reprehenderit, atque commodi porro voluptatibus.",
+      "F-Salon regularly hosts special offers and promotions for our clients. Be sure to check our website so you don't miss out on opportunities to enjoy exceptional services at attractive prices. We look forward to welcoming you for a quality experience at a great value.",
   },
 ];
+
 export default slides;

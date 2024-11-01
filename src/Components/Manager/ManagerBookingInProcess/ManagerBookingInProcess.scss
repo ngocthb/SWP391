@@ -125,23 +125,6 @@ min-height: 100vh;
     }
   }
 
-  &__notValid {
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    .notValid--icon {
-      font-size: 100px;
-      color: #6b7280;
-    }
-    p {
-      padding: 1rem;
-      font-size: large;
-      color: #374151;
-    }
-  }
-
   &__id, &__amount {
     color: #6b7280;
   }
@@ -177,6 +160,23 @@ min-height: 100vh;
   &__actions {
     gap: 8px;
     display: flex;
+  }
+
+  &__notValid {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .notValid--icon {
+      font-size: 100px;
+      color: #6b7280;
+    }
+    p {
+      padding: 1rem;
+      font-size: large;
+      color: #374151;
+    }
   }
 
   &__action-button {
@@ -422,7 +422,7 @@ min-height: 100vh;
 
   &__services-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
 
@@ -464,8 +464,12 @@ min-height: 100vh;
     transition: background-color 0.2s;
     padding: 8px;
 
-    &:hover {
+    &:hover:not(.disabled) {
       background-color: #f0f4f8;
+    }
+
+    &.disabled {
+      cursor: not-allowed;
     }
 
     & span {
@@ -486,13 +490,29 @@ min-height: 100vh;
     border-radius: 4px;
     cursor: pointer;
 
-    &:checked {
+  
+    &:disabled {
+      cursor: not-allowed;
+      background-color: #e2e2e2;
+      border: 2px solid #a0a0a0;
+    }
+
+    &:checked:not(:disabled) {
       background-color: #1b5077;
       border: 2px solid #1b5077;
     }
 
+    &:hover:not(:disabled) {
+      border: 2px solid #a0a0a0;
+    }
+
     &:hover {
-      border-color: #16435f;
+     border: 2px solid #a0a0a0;
+    }
+
+    &:checked {
+      background-color: #1b5077;
+      border: 2px solid #1b5077;
     }
   }
 

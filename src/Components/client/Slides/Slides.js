@@ -12,26 +12,33 @@ export default function Slides() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [customer, setCustomer] = useState(null);
 
-  useEffect(() => {
-    const fetchCustomerData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await api.get("customer/profile");
-        const data = response.data.result;
-        if (data) {
-          setPhoneNumber(data.phone);
-          setIsLoggedIn(true);
-          setCustomer(data);
-        }
-      } catch (error) {
-        console.error(error);
-        setIsLoggedIn(false);
-      } finally {
-        setIsLoading(false);
+  const fetchCustomerData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await api.get("customer/profile");
+      const data = response.data.result;
+      if (data) {
+        setPhoneNumber(data.phone);
+        setIsLoggedIn(true);
+        setCustomer(data);
       }
-    };
+    } catch (error) {
+      console.error(error);
+      setIsLoggedIn(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchCustomerData();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+
+    if (token) {
+      setIsLoggedIn(true);
+      fetchCustomerData();
+    } else {
+      setIsLoggedIn(false);
+    }
   }, []);
 
   const handleBooking = async () => {
@@ -49,7 +56,6 @@ export default function Slides() {
 
   const updatePhoneNumber = async (newPhoneNumber) => {
     setIsLoading(true);
-    console.log(newPhoneNumber);
     if (customer) {
       const updateValues = {
         fullname: customer.fullname,
@@ -57,9 +63,8 @@ export default function Slides() {
         dob: customer.dob !== null ? customer.dob : "",
         image: customer.image,
         phone: newPhoneNumber,
-      };
+    };
 
-      console.log(updateValues);
       try {
         await api.put(`customer/${customer.accountid}`, updateValues);
         setPhoneNumber(newPhoneNumber);

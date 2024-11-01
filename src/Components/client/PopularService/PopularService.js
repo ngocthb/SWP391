@@ -41,8 +41,10 @@ export default function PopularService() {
         <div className="service__container-title">
           <h2>Popular Service</h2>
           <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis
-            esse consequatur veniam quis fugit?
+            Discover our most sought-after services designed to enhance your
+            beauty and leave you feeling fabulous. Whether you're looking for a
+            refreshing haircut, vibrant hair color, or a rejuvenating treatment,
+            we have something for everyone!
           </p>
         </div>
 

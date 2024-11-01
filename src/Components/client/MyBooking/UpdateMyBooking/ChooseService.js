@@ -2,7 +2,6 @@
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
-import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 import { LuClock } from "react-icons/lu";
 import { Modal } from "antd";
 import Skeleton from "@mui/material/Skeleton";
@@ -122,9 +121,6 @@ export function ChooseService({ onNext, onPre }) {
     return selectedServices.includes(serviceId);
   };
 
-  const toggleServicesHidden = () => {
-    setAreServicesHidden((prev) => !prev);
-  };
 
   const formatCurrency = (value) => {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
@@ -159,8 +155,10 @@ export function ChooseService({ onNext, onPre }) {
 
     if (hours > 0 && minutes > 0) {
       return `${hours}h${minutes}`;
-    } else if (hours > 0) {
+    } else if (hours === 1) {
       return `${hours} hour`;
+    }else if (hours > 1) {
+      return `${hours} hours`;
     } else {
       return `${minutes} minutes`;
     }

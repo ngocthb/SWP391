@@ -104,6 +104,11 @@ const ManagerDashboard = () => {
     },
     yAxis: {
       type: "value",
+      axisLabel: {
+        formatter: (value) => {
+          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        },
+      },
     },
     series: [
       {
@@ -117,6 +122,10 @@ const ManagerDashboard = () => {
     ],
     tooltip: {
       trigger: "axis",
+      formatter: (params) => {
+        const value = params[0].data;
+        return `${params[0].name}: ${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+      },
     },
   });
 
@@ -263,6 +272,11 @@ const ManagerDashboard = () => {
     },
   ];
 
+  const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+  
+
   return (
     <div className="manager-dashboard">
        <div className="manager-salary__header-filter">
@@ -285,7 +299,7 @@ const ManagerDashboard = () => {
      
         <Col span={6}>
           <Card>
-            <Statistic title="Profit" value={totalProfit} suffix="VND" />
+            <Statistic title="Profit" value={totalProfit && formatNumber(totalProfit)} suffix="VND" />
           </Card>
         </Col>
         <Col span={6}>
@@ -295,12 +309,12 @@ const ManagerDashboard = () => {
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="Orders" value={orders} />
+            <Statistic title="Orders" value={orders && formatNumber(orders)} />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="Customers" value={customers} />
+            <Statistic title="Customers" value={customers && formatNumber(customers)} />
           </Card>
         </Col>
       </Row>

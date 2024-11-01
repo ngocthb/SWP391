@@ -249,8 +249,8 @@ const AdminVoucher = ({ buttonLabel }) => {
                           <div style={{ display: "flex", gap: "8px" }}>
                             <Skeleton
                               variant="circular"
-                              width={36}
-                              height={36}
+                              width={43}
+                              height={43}
                             />
                           </div>
                         </td>

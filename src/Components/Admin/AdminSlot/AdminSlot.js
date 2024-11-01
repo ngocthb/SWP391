@@ -110,20 +110,20 @@ const AdminSlot = () => {
               <tbody>
                 {slotLoading ? (
                   <tr>
-                      <td>
-                        <Skeleton width={120} />
-                      </td>
-                      <td>
-                        <Skeleton width={120} />
-                      </td>
-                      <td>
-                        <Skeleton width={120} />
-                      </td>
-                      <td>
-                        <div style={{ display: "flex", gap: "8px" }}>
-                          <Skeleton variant="circular" width={36} height={36} />
-                        </div>
-                      </td>
+                    <td>
+                      <Skeleton width={120} />
+                    </td>
+                    <td>
+                      <Skeleton width={120} />
+                    </td>
+                    <td>
+                      <Skeleton width={120} />
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <Skeleton variant="circular" width={43} height={43} />
+                      </div>
+                    </td>
                   </tr>
                 ) : (
                   <tr>
@@ -177,16 +177,18 @@ const AdminSlot = () => {
                         >
                           Headway:
                         </label>
-                        <input
-                          type="text"
+                        <select
                           id="headway"
                           className="admin-slot-modal__input"
-                          defaultValue={timeBetween}
-                          min="0"
+                          value={timeBetween}
                           onChange={(e) => {
                             setTimeBetween(e.target.value);
                           }}
-                        />
+                        >
+                          <option value="" disabled>Select headway</option>
+                          <option value="01:00:00">1 hour</option>
+                          <option value="00:30:00">30 minutes</option>
+                        </select>
                       </div>
                     </div>
                   </div>

@@ -3,23 +3,18 @@ import React, { useEffect, useState } from "react";
 import "./ManagerBookingPending.scss";
 import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
-import { Spin } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { updateBooking } from "../../../actions/Update";
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa";
 import { Skeleton } from "@mui/material";
 import { FolderOutlined } from "@ant-design/icons";
+import { BiDetail } from "react-icons/bi";  
 
 const ManagerBookingPending = () => {
   const [bookings, setBookings] = useState([]);
   const [originalBookings, setOriginalBookings] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const dispatch = useDispatch();
-  const isUpdate = useSelector((state) => state.updateBookingReducer);
   const [salonLocations, setSalonLocations] = useState([]);
   const [allStylist, setAllStylists] = useState([]);
-  const [stylists, setStylists] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -31,9 +26,6 @@ const ManagerBookingPending = () => {
   const [selectedDate, setSelectedDate] = useState(today);
 
   const [slots, setSlots] = useState([]);
-  const [slotRealTime, setSlotRealTime] = useState([]);
-
-  const [loading, setLoading] = useState(false);
   const [bookingLoading, setBookingLoading] = useState(false);
 
   const [services, setServices] = useState([]);
@@ -59,6 +51,17 @@ const ManagerBookingPending = () => {
     return `${year}-${month}-${day}`;
   };
 
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const calculateTotalPrice = () => {
+    return selectedServices.reduce((total, serviceId) => {
+      const service = services.find((s) => s.id === serviceId);
+      return total + (service ? service.price : 0);
+    }, 0);
+  };
+
   const handleDateChangeFilter = (e) => {
     const date = e.target.value === "today" ? today : tomorrow;
     setSelectedDate(date);
@@ -71,12 +74,6 @@ const ManagerBookingPending = () => {
   const handleTimeChange = (event) => {
     setFormData((prev) => ({ ...prev, time: event.target.value }));
   };
-  useEffect(() => {
-    fetchStylistsData();
-  }, [formData.time]);
-  const handleStylistChange = (event) => {
-    setFormData((prev) => ({ ...prev, stylistId: event.target.value }));
-  };
 
   useEffect(() => {
     if (formData.serviceId) {
@@ -84,16 +81,6 @@ const ManagerBookingPending = () => {
     }
   }, [formData.serviceId]);
 
-  const handleServiceToggle = (serviceId) => {
-    setSelectedServices((prevSelected) => {
-      const newSelected = prevSelected.includes(serviceId)
-        ? prevSelected.filter((id) => id !== serviceId)
-        : [...prevSelected, serviceId];
-
-      setSelectedServices(newSelected);
-      return newSelected;
-    });
-  };
 
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
@@ -114,23 +101,9 @@ const ManagerBookingPending = () => {
     fetchData("slot/read", setSlots);
   }, []);
 
-  useEffect(() => {
-    const fetchData = async (endpoint, setter) => {
-      try {
-        const response = await api.get(endpoint);
-        if (response.data) {
-          setter(response.data.result);
-        }
-      } catch (error) {
-        console.error(`Error fetching ${endpoint}:`, error);
-      }
-    };
-    fetchData(`slot/${formatDateForInput(selectedDate)}`, setSlotRealTime);
-  }, [selectedDate]);
 
   useEffect(() => {
     const fetchManagerData = async () => {
-      setLoading(true);
       try {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
@@ -139,8 +112,6 @@ const ManagerBookingPending = () => {
         }
       } catch (err) {
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
     fetchManagerData();
@@ -152,7 +123,7 @@ const ManagerBookingPending = () => {
       const fetchBookings = async (page) => {
         try {
           const response = await api.get(
-            `manager/stylists/booking/pending/${page}/6/${
+            `manager/stylists/booking/pending/${page}/7/${
               manager.salonId
             }/${formatDateForInput(selectedDate)}`
           );
@@ -174,7 +145,7 @@ const ManagerBookingPending = () => {
 
       fetchBookings(currentPage);
     }
-  }, [isUpdate, manager, selectedDate]);
+  }, [ manager, selectedDate, currentPage]);
 
   const fetchBookingData = async (bookingId) => {
     try {
@@ -224,66 +195,10 @@ const ManagerBookingPending = () => {
     if (isModalOpen) {
       if (formData.bookingId) {
         fetchBookingData(formData.bookingId);
-        fetchStylistsData();
       }
     }
   }, [isModalOpen]);
-  const fetchStylistsData = async () => {
-    const foundSlot = slots.find((item) => item.slottime === formData.time);
-    const slotId = foundSlot ? foundSlot.slotid : null;
-    const value = {
-      salonId: formData.salonId,
-      serviceId: formData.serviceId,
-      date: formData.bookingDate,
-      slotId: slotId,
-    };
-    console.log(value);
-    try {
-      const response = await api.post("booking/stylists/update", value);
-      const data = response.data.result;
-      console.log(data[0].id);
-      if (data) {
-        setStylists(data);
-        setFormData((prev) => ({
-          ...prev,
-          stylistId: data[0].id,
-        }));
-      }
-    } catch (error) {}
-  };
-
-  const updateCustomerData = async (e) => {
-    e.preventDefault();
-    const foundSlot = slots.find((item) => item.slottime === formData.time);
-    const slotId = foundSlot ? foundSlot.slotid : null;
-
-    const updateValues = {
-      customerId: formData.customerId,
-      voucherId: formData.voucherId,
-      slotId: slotId,
-      bookingDate: formData.bookingDate,
-      stylistId: formData.stylistId,
-      serviceId: selectedServices.map(Number),
-      salonId: formData.salonId,
-    };
-    setLoading(true);
-    console.log(updateValues);
-    try {
-      const response = await api.put(
-        `booking/${formData.bookingId}`,
-        updateValues
-      );
-      const data = response.data.result;
-      console.log(data);
-      if (data) {
-        dispatch(updateBooking());
-        toggleModal();
-      }
-    } catch (err) {
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const sortBy = (key) => {
     let direction = "ascending";
@@ -331,10 +246,6 @@ const ManagerBookingPending = () => {
       await fetchBookingData(id);
     }
     setIsModalOpen(!isModalOpen);
-  };
-
-  const handleSubmit = (e) => {
-    updateCustomerData(e);
   };
 
   const formatDate = (dateInput) => {
@@ -413,7 +324,7 @@ const ManagerBookingPending = () => {
 
               <tbody>
                 {bookingLoading
-                  ? [...Array(6)].map((_, index) => (
+                  ? [...Array(7)].map((_, index) => (
                       <tr key={index}>
                         <td>
                           <Skeleton width={40} />
@@ -491,7 +402,7 @@ const ManagerBookingPending = () => {
                             className="manager-booking-pending__action-button"
                             onClick={() => toggleModal(booking.id)}
                           >
-                            ✎
+                            <BiDetail />
                           </button>
                           <button className="manager-booking-pending__action-button">
                             🗑
@@ -542,9 +453,9 @@ const ManagerBookingPending = () => {
               className="manager-booking-pending-modal"
               onClick={(e) => e.stopPropagation()}
             >
-              <form onSubmit={handleSubmit}>
+              <form>
                 <h2 className="manager-booking-pending-modal__header">
-                  Update Booking
+                  Booking Detail
                 </h2>
                 <div className="manager-booking-pending-modal__form-section">
                   <div className="manager-booking-pending-modal__form-grid">
@@ -594,13 +505,7 @@ const ManagerBookingPending = () => {
                           {(slots || []).map((time) => (
                             <label
                               key={time.slotid}
-                              className={`manager-booking-pending-modal__slots-option ${
-                                slotRealTime.some(
-                                  (item) => item.slotid === time.slotid
-                                )
-                                  ? ""
-                                  : "disabled"
-                              }`}
+                              className={`manager-booking-pending-modal__slots-option disabled`}
                             >
                               <input
                                 type="radio"
@@ -608,18 +513,8 @@ const ManagerBookingPending = () => {
                                 value={time.slottime}
                                 checked={formData.time === time.slottime}
                                 onChange={handleTimeChange}
-                                disabled={
-                                  !slotRealTime.some(
-                                    (item) => item.slotid === time.slotid
-                                  )
-                                }
-                                className={`manager-booking-pending-modal__radio ${
-                                  slotRealTime.some(
-                                    (item) => item.slotid === time.slotid
-                                  )
-                                    ? ""
-                                    : "disabled"
-                                }`}
+                                disabled
+                                className={`manager-booking-pending-modal__radio disable`}
                               />
                               <span>{formatTime(time.slottime)}</span>
                             </label>
@@ -656,21 +551,14 @@ const ManagerBookingPending = () => {
                         >
                           Stylist Name:
                         </label>
-                        <select
+                         <input
+                          type="text"
                           id="stylistName"
-                          className="manager-booking-pending-modal__select"
-                          defaultValue={formData.stylistId || ""}
-                          onChange={handleStylistChange}
-                        >
-                          <option value="" disabled>
-                            Select Stylist
-                          </option>
-                          {stylists.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item.fullname}
-                            </option>
-                          ))}
-                        </select>
+                          className="manager-booking-pending-modal__input"
+                          placeholder="Stylist Name"
+                          value={formData.stylistName}
+                          disabled
+                        />
                       </div>
                     </div>
 
@@ -689,15 +577,19 @@ const ManagerBookingPending = () => {
                           {(services || []).map((service) => (
                             <label
                               key={service.id}
-                              className="manager-booking-pending-modal__option"
+                              className="manager-booking-pending-modal__option disabled"
                             >
                               <input
                                 type="checkbox"
                                 checked={selectedServices.includes(service.id)}
-                                onChange={() => handleServiceToggle(service.id)}
-                                className="manager-booking-pending-modal__checkbox"
+                                disabled
+                                className="manager-booking-pending-modal__checkbox disable"
                               />
-                              <span>{service.serviceName}</span>
+                               <span>
+                                {service.serviceName} -{" "}
+                                {service.price && formatPrice(service.price)}{" "}
+                                VND
+                              </span>
                             </label>
                           ))}
                         </div>
@@ -707,42 +599,34 @@ const ManagerBookingPending = () => {
                       className="manager-booking-pending-modal__form-grid
                   manager-booking-pending-modal__form-grid--full-width"
                     >
-                      <div className="manager-booking-pending-modal__form-group manager-booking-pending-modal__form-group--full-width">
+                     <div className="manager-booking-pending-modal__form-group">
                         <label
                           htmlFor="salon"
                           className="manager-booking-pending-modal__label"
                         >
                           Select Salon:
                         </label>
-                        <select
-                          disabled
+                        <input
+                          type="text"
                           id="salon"
-                          className="manager-booking-pending-modal__select"
-                          defaultValue={
-                            formData.salonName ? formData.salonName : ""
-                          }
-                        >
-                          <option value="" disabled>
-                            Select Salon
-                          </option>
-                          {salonLocations.map((item) => (
-                            <option key={item.id} value={item.address}>
-                              {item.address}
-                            </option>
-                          ))}
-                        </select>
+                          className="manager-booking-pending-modal__input"
+                          placeholder="Stylist Name"
+                          value={formData.salonName}
+                          disabled
+                        />
                       </div>
                     </div>
+                    <div className="manager-booking-pending-modal__form-grid
+                  manager-booking-pending-modal__form-grid--full-width">
+                     <div className="manager-booking-pending-modal__form-group">
+                    <div className="staff-create-booking__total-price">
+                      <h3>
+                        Total Price: {formatPrice(calculateTotalPrice())} VND
+                      </h3>
+                    </div>
+                    </div>
                   </div>
-                </div>
-                <div className="manager-stylist-modal__button-container">
-                  <button
-                    type="submit"
-                    className="manager-stylist-modal__button"
-                    disabled={loading}
-                  >
-                    {loading ? <Spin size="small" /> : "Save"}
-                  </button>
+                  </div>
                 </div>
               </form>
             </div>

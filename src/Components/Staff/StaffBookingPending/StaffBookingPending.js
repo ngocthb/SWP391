@@ -11,10 +11,7 @@ import { IoCloseCircle } from "react-icons/io5";
 import Swal from "sweetalert2";
 import { BsBoxArrowInRight } from "react-icons/bs";
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa6";
-import {
-  FolderOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { FolderOutlined, PlusOutlined } from "@ant-design/icons";
 import { Skeleton } from "@mui/material";
 
 const StaffBookingPending = ({ buttonLabel }) => {
@@ -82,6 +79,17 @@ const StaffBookingPending = ({ buttonLabel }) => {
     return `${year}-${month}-${day}`;
   };
 
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const calculateTotalPrice = () => {
+    return selectedServices.reduce((total, serviceId) => {
+      const service = services.find((s) => s.serviceId === serviceId);
+      return total + (service ? service.price : 0);
+    }, 0);
+  };
+
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
       try {
@@ -100,7 +108,6 @@ const StaffBookingPending = ({ buttonLabel }) => {
     fetchData("slot/read", setSlots);
   }, []);
 
-
   useEffect(() => {
     const fetchManagerData = async () => {
       try {
@@ -117,29 +124,32 @@ const StaffBookingPending = ({ buttonLabel }) => {
     fetchManagerData();
   }, []);
 
-
   const fetchService = async () => {
     if (formData.stylistId === 0) {
-      return
+      return;
     }
 
     try {
-      const response = await api.get(`stylist/service/${Number(formData.stylistId)}`)
+      const response = await api.get(
+        `stylist/service/${Number(formData.stylistId)}`
+      );
       const data = response.data.result;
       if (data) {
-        setServices(data)
+        setServices(data);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const fetchBookings = async (page) => {
     setBookingLoading(true);
     if (!isStaffLoaded || !staff.salonId) return;
     try {
       const response = await api.get(
-        `manager/stylists/booking/pending/${page}/6/${staff.salonId}/${formatDateForInput(selectedDate)}`
+        `manager/stylists/booking/pending/${page}/7/${
+          staff.salonId
+        }/${formatDateForInput(selectedDate)}`
       );
       const data = response.data.result.content;
       const total = response.data.result.totalPages;
@@ -150,7 +160,7 @@ const StaffBookingPending = ({ buttonLabel }) => {
       }
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setBookingLoading(false);
     }
   };
@@ -164,7 +174,6 @@ const StaffBookingPending = ({ buttonLabel }) => {
   const [isCheckin, setIsCheckin] = useState(false);
 
   const handleCheckin = async (bookingId) => {
-   
     try {
       const response = await api.put(`${bookingId}/checkin`);
       if (response) {
@@ -172,20 +181,18 @@ const StaffBookingPending = ({ buttonLabel }) => {
         Swal.fire({
           icon: "success",
           title: "Check-in successfully",
-          timer: 2500
+          timer: 2500,
         });
       }
-
     } catch (error) {
       console.error(error);
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!',
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
       });
     }
   };
-
 
   useEffect(() => {
     fetchBookings(currentPage);
@@ -233,7 +240,6 @@ const StaffBookingPending = ({ buttonLabel }) => {
     } catch (err) {
       console.error(err);
     }
-
   };
 
   useEffect(() => {
@@ -243,9 +249,7 @@ const StaffBookingPending = ({ buttonLabel }) => {
         fetchService();
       }
     }
-
   }, [isModalOpen]);
-
 
   const updateCustomerData = async (e) => {
     e.preventDefault();
@@ -279,10 +283,9 @@ const StaffBookingPending = ({ buttonLabel }) => {
       Swal.fire({
         icon: "error",
         title: err.response.data.message,
-        timer: 2500
+        timer: 2500,
       });
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -337,8 +340,8 @@ const StaffBookingPending = ({ buttonLabel }) => {
   };
 
   const newBooking = (customerPhone) => {
-    navigate("/staff/booking/create", {state: {customerPhone}});
-  }
+    navigate("/staff/booking/create", { state: { customerPhone } });
+  };
 
   const handleSubmit = (e) => {
     updateCustomerData(e);
@@ -362,9 +365,7 @@ const StaffBookingPending = ({ buttonLabel }) => {
   };
 
   useEffect(() => {
-    console.log(formData.serviceId)
     if (formData.serviceId) {
-
       setSelectedServices(formData.serviceId);
     }
   }, [formData.serviceId]);
@@ -400,7 +401,10 @@ const StaffBookingPending = ({ buttonLabel }) => {
         phone: searchValue,
       };
       try {
-        const response = await api.post(`staff/booking/${formatDateForInput(selectedDate)}`, value);
+        const response = await api.post(
+          `staff/booking/${formatDateForInput(selectedDate)}`,
+          value
+        );
         const data = response.data.result;
         if (data) {
           setSearchResults(data);
@@ -431,10 +435,9 @@ const StaffBookingPending = ({ buttonLabel }) => {
               value={searchValue}
               onChange={handleChange}
             />
-           {searchValue &&  <IoCloseCircle
-              className="close-icon"
-              onClick={handleClick}
-            />}
+            {searchValue && (
+              <IoCloseCircle className="close-icon" onClick={handleClick} />
+            )}
           </div>
           <div className="staff-booking-pending__header-filter">
             <select
@@ -475,72 +478,59 @@ const StaffBookingPending = ({ buttonLabel }) => {
                   <th onClick={() => sortBy("time")}>
                     Time{getSortIndicator("time")}
                   </th>
-                
+
                   <th>Action</th>
                 </tr>
               </thead>
 
               <tbody>
-              {bookingLoading
-                  ? [...Array(6)].map((_, index) => (
-                      <tr key={index}>
-                        <td>
-                          <Skeleton width={40} />
-                        </td>
-                        <td>
-                          <Skeleton width={120} />
-                        </td>
-                        <td>
-                          <Skeleton width={100} />
-                        </td>
-                        <td>
-                          <Skeleton width={120} />
-                        </td>
-                        <td>
-                          <Skeleton width={150} />
-                        </td>
-                        <td>
-                          <Skeleton width={80} />
-                        </td>
-                        <td>
-                          <div style={{ display: "flex", gap: "8px" }}>
-                            <Skeleton
-                              variant="circular"
-                              width={43}
-                              height={43}
-                            />
-                            <Skeleton
-                              variant="circular"
-                              width={43}
-                              height={43}
-                            />
-                             <Skeleton
-                              variant="circular"
-                              width={43}
-                              height={43}
-                            />
-                             <Skeleton
-                              variant="circular"
-                              width={43}
-                              height={43}
-                            />
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  : searchResults.length === 0 ? (
-                    <tr>
-                      <td colSpan={7}>
-                        <div className="staff-booking-pending__notValid">
-                          <FolderOutlined className="notValid--icon" />
-                          <p>Currently, there are no pending bookings</p>
+                {bookingLoading ? (
+                  [...Array(7)].map((_, index) => (
+                    <tr key={index}>
+                      <td>
+                        <Skeleton width={40} />
+                      </td>
+                      <td>
+                        <Skeleton width={120} />
+                      </td>
+                      <td>
+                        <Skeleton width={100} />
+                      </td>
+                      <td>
+                        <Skeleton width={120} />
+                      </td>
+                      <td>
+                        <Skeleton width={150} />
+                      </td>
+                      <td>
+                        <Skeleton width={80} />
+                      </td>
+                      <td>
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          <Skeleton variant="circular" width={43} height={43} />
+                          <Skeleton variant="circular" width={43} height={43} />
+                          <Skeleton variant="circular" width={43} height={43} />
+                          <Skeleton variant="circular" width={43} height={43} />
                         </div>
                       </td>
                     </tr>
-                  ) : (searchResults &&
+                  ))
+                ) : searchResults.length === 0 ? (
+                  <tr>
+                    <td colSpan={7}>
+                      <div className="staff-booking-pending__notValid">
+                        <FolderOutlined className="notValid--icon" />
+                        <p>Currently, there are no pending bookings</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  searchResults &&
                   searchResults.map((booking) => (
                     <tr key={booking.id}>
-                      <td className="staff-booking-pending__id">{booking.id}</td>
+                      <td className="staff-booking-pending__id">
+                        {booking.id}
+                      </td>
                       <td>
                         <div className="staff-booking-pending__customer">
                           <span className="staff-booking-pending__customer-name">
@@ -564,14 +554,14 @@ const StaffBookingPending = ({ buttonLabel }) => {
                           {booking.time ? formatTime(booking.time) : ""}
                         </span>
                       </td>
-                      
+
                       <td className="staff-booking-pending__actions">
-                      <button
-                        className="staff-booking-pending__action-button"
-                         onClick={() => handleCheckin(booking.id)}
-                      >
-                        <BsBoxArrowInRight />
-                      </button>
+                        <button
+                          className="staff-booking-pending__action-button"
+                          onClick={() => handleCheckin(booking.id)}
+                        >
+                          <BsBoxArrowInRight />
+                        </button>
                         <button
                           className="staff-booking-pending__action-button"
                           onClick={() => toggleModal(booking.id)}
@@ -589,37 +579,38 @@ const StaffBookingPending = ({ buttonLabel }) => {
                         </button>
                       </td>
                     </tr>
-                  )))}
+                  ))
+                )}
               </tbody>
             </table>
           </div>
         </div>
         {bookings && bookings.length > 0 && (
-        <div className="staff-booking-pending__pagination">
-          <div className="staff-booking-pending__pagination-pages">
-            <span
-              onClick={() => handlePageChange(currentPage - 1)}
-              className={currentPage === 0 ? "disabled" : ""}
-            >
-              <FaAngleLeft className="pagination-icon" />
-            </span>
-            {[...Array(totalPages)].map((_, index) => (
+          <div className="staff-booking-pending__pagination">
+            <div className="staff-booking-pending__pagination-pages">
               <span
-                key={index}
-                onClick={() => handlePageChange(index)}
-                className={currentPage === index ? "active" : ""}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className={currentPage === 0 ? "disabled" : ""}
               >
-                {index + 1}
+                <FaAngleLeft className="pagination-icon" />
               </span>
-            ))}
-            <span
-              onClick={() => handlePageChange(currentPage + 1)}
-              className={currentPage === totalPages - 1 ? "disabled" : ""}
-            >
-              <FaChevronRight className="pagination-icon" />
-            </span>
+              {[...Array(totalPages)].map((_, index) => (
+                <span
+                  key={index}
+                  onClick={() => handlePageChange(index)}
+                  className={currentPage === index ? "active" : ""}
+                >
+                  {index + 1}
+                </span>
+              ))}
+              <span
+                onClick={() => handlePageChange(currentPage + 1)}
+                className={currentPage === totalPages - 1 ? "disabled" : ""}
+              >
+                <FaChevronRight className="pagination-icon" />
+              </span>
+            </div>
           </div>
-        </div>
         )}
       </div>
 
@@ -631,7 +622,9 @@ const StaffBookingPending = ({ buttonLabel }) => {
               onClick={(e) => e.stopPropagation()}
             >
               <form onSubmit={handleSubmit}>
-                <h2 className="staff-booking-pending-modal__header">Update Booking</h2>
+                <h2 className="staff-booking-pending-modal__header">
+                  Update Booking
+                </h2>
                 <div className="staff-booking-pending-modal__form-section">
                   <div className="staff-booking-pending-modal__form-grid">
                     <div className="staff-booking-pending-modal__form-grid staff-booking-pending-modal__form-grid--half-width">
@@ -687,7 +680,6 @@ const StaffBookingPending = ({ buttonLabel }) => {
                           placeholder="Stylist Name"
                           value={formData.stylistName}
                           disabled
-
                         />
                       </div>
                       <div className="staff-booking-pending-modal__form-group">
@@ -756,11 +748,19 @@ const StaffBookingPending = ({ buttonLabel }) => {
                             >
                               <input
                                 type="checkbox"
-                                checked={selectedServices.includes(service.serviceId)}
-                                onChange={() => handleServiceToggle(service.serviceId)}
+                                checked={selectedServices.includes(
+                                  service.serviceId
+                                )}
+                                onChange={() =>
+                                  handleServiceToggle(service.serviceId)
+                                }
                                 className="staff-booking-pending-modal__checkbox"
                               />
-                              <span>{service.serviceName}</span>
+                              <span>
+                                {service.serviceName} -{" "}
+                                {service.price && formatPrice(service.price)}{" "}
+                                VND
+                              </span>
                             </label>
                           ))}
                         </div>
@@ -775,26 +775,24 @@ const StaffBookingPending = ({ buttonLabel }) => {
                           htmlFor="salon"
                           className="staff-booking-pending-modal__label"
                         >
-                          Select Salon:
+                          Salon:
                         </label>
-                        <select
-                          disabled
+                        <input
+                          type="text"
                           id="salon"
-                          className="staff-booking-pending-modal__select"
-                          defaultValue={
-                            formData.salonName ? formData.salonName : ""
-                          }
-                        >
-                          <option value="" disabled>
-                            Select Salon
-                          </option>
-                          {(salonLocations || []).map((item) => (
-                            <option key={item.id} value={item.address}>
-                              {item.address}
-                            </option>
-                          ))}
-                        </select>
+                          className="staff-booking-pending-modal__input"
+                          placeholder="Stylist Name"
+                          value={formData.salonName}
+                          disabled
+                        />
                       </div>
+                      <div className="staff-create-booking__form-group staff-create-booking__form-group--full-width">
+                    <div className="staff-create-booking__total-price">
+                      <h3>
+                        Total Price: {formatPrice(calculateTotalPrice())} VND
+                      </h3>
+                    </div>
+                  </div>
                     </div>
                   </div>
                 </div>

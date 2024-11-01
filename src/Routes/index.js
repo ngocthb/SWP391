@@ -39,7 +39,6 @@ import AdminCustomer from "../Components/Admin/AdminCustomer/AdminCustomer";
 import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
 import AdminCreateManager from "../Components/Admin/AdminCreateManager/AdminCreateManager";
 import ManagerShift from "../Components/Manager/ManagerShift/ManagerShift";
-import ManagerCreateShift from "../Components/Manager/ManagerCreateShift/ManagerCreateShift";
 import StylistLayout from "../Layouts/stylist";
 import StylistSchedule from "../Components/Stylist/StylistSchedule/StylistSchedule";
 import StylistFeedback from "../Components/Stylist/StylistFeedback/StylistFeedback";

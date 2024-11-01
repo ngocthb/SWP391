@@ -79,6 +79,17 @@ const StaffBookingInProcess = ({ buttonLabel }) => {
     return `${year}-${month}-${day}`;
   };
 
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const calculateTotalPrice = () => {
+    return selectedServices.reduce((total, serviceId) => {
+      const service = services.find((s) => s.serviceId === serviceId);
+      return total + (service ? service.price : 0);
+    }, 0);
+  };
+
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
       try {
@@ -139,7 +150,7 @@ const StaffBookingInProcess = ({ buttonLabel }) => {
     if (!isStaffLoaded || !staff.salonId) return;
     try {
       const response = await api.get(
-        `manager/stylists/booking/inprocess/${page}/6/${
+        `manager/stylists/booking/inprocess/${page}/67/${
           staff.salonId
         }/${formatDateForInput(selectedDate)}`
       );
@@ -458,7 +469,7 @@ const StaffBookingInProcess = ({ buttonLabel }) => {
 
               <tbody>
               {bookingLoading
-                  ? [...Array(6)].map((_, index) => (
+                  ? [...Array(7)].map((_, index) => (
                       <tr key={index}>
                         <td>
                           <Skeleton width={40} />
@@ -739,7 +750,10 @@ const StaffBookingInProcess = ({ buttonLabel }) => {
                                 }
                                 className="staff-booking-in-process-modal__checkbox"
                               />
-                              <span>{service.serviceName}</span>
+                               <span>
+                            {service.serviceName} -{" "}
+                            {service.price && formatPrice(service.price)} VND
+                          </span>
                             </label>
                           ))}
                         </div>
@@ -754,26 +768,24 @@ const StaffBookingInProcess = ({ buttonLabel }) => {
                           htmlFor="salon"
                           className="staff-booking-in-process-modal__label"
                         >
-                          Select Salon:
+                          Salon:
                         </label>
-                        <select
-                          disabled
+                        <input
+                          type="text"
                           id="salon"
-                          className="staff-booking-in-process-modal__select"
-                          defaultValue={
-                            formData.salonName ? formData.salonName : ""
-                          }
-                        >
-                          <option value="" disabled>
-                            Select Salon
-                          </option>
-                          {(salonLocations || []).map((item) => (
-                            <option key={item.id} value={item.address}>
-                              {item.address}
-                            </option>
-                          ))}
-                        </select>
+                          className="staff-booking-pending-modal__input"
+                          placeholder="Stylist Name"
+                          value={formData.salonName}
+                          disabled
+                        />
                       </div>
+                      <div className="staff-create-booking__form-group staff-create-booking__form-group--full-width">
+                    <div className="staff-create-booking__total-price">
+                      <h3>
+                        Total Price: {formatPrice(calculateTotalPrice())} VND
+                      </h3>
+                    </div>
+                  </div>
                     </div>
                   </div>
                 </div>
