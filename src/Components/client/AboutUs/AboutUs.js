@@ -11,12 +11,12 @@ export default function AboutUs() {
               src="https://icon-library.com/images/shop-icon-png/shop-icon-png-6.jpg"
               alt="Icon Branch"
             />
-            <h2>50+ Branch</h2>
+            <h2>2+ Branch</h2>
             <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Accusamus facilis illum aut, dolores distinctio amet blanditiis
-              non, quae perferendis eaque consectetur inventore dolorum rem
-              maxime dolorem temporibus officia. Ab, modi!
+              With over 2 branches nationwide, we are committed to providing
+              exceptional hair and beauty services to our valued clients.
+              Discover the convenience of our numerous locations and let us help
+              you look and feel your best, wherever you are!
             </p>
           </div>
           <div className="about__single">
@@ -24,12 +24,13 @@ export default function AboutUs() {
               src="https://cdn-icons-png.flaticon.com/512/4661/4661125.png"
               alt="Icon Stylist"
             />
-            <h3>400+ Stylist</h3>
+            <h3>20+ Stylist</h3>
             <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Accusamus facilis illum aut, dolores distinctio amet blanditiis
-              non, quae perferendis eaque consectetur inventore dolorum rem
-              maxime dolorem temporibus officia. Ab, modi!
+              Our team of over 400 skilled stylists is dedicated to delivering
+              exceptional hair and beauty services tailored to your unique
+              needs. With a diverse range of expertise, our professionals are
+              here to transform your look and help you feel confident and
+              beautiful.
             </p>
           </div>
           <div className="about__single">
@@ -37,12 +38,12 @@ export default function AboutUs() {
               src="https://cdn-icons-png.flaticon.com/512/10215/10215938.png"
               alt="Icon Customer"
             />
-            <h3>2000+ Customer</h3>
+            <h3>1000+ Customer</h3>
             <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Accusamus facilis illum aut, dolores distinctio amet blanditiis
-              non, quae perferendis eaque consectetur inventore dolorum rem
-              maxime dolorem temporibus officia. Ab, modi!
+              Join over 2,000 satisfied customers who trust us with their hair
+              and beauty needs. We prioritize your satisfaction above all else.
+              Experience the difference with our skilled stylists and welcoming
+              atmosphere that make every visit a delight!
             </p>
           </div>
         </div>
@@ -50,15 +51,21 @@ export default function AboutUs() {
         <div className="about__video container">
           <div className="about__videoCard grid">
             <div className="about__cardText">
-              <h2>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</h2>
+              <h2>Your Style, Our Passion!</h2>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Eligendi totam tenetur, deleniti dolorum facilis porro, cum
-                voluptas consequuntur optio iure quia ut tempora.
+                At our salon, we are dedicated to providing exceptional hair and
+                beauty services with a team of skilled professionals, ensuring
+                every client leaves feeling beautiful and confident
               </p>
             </div>
             <div className="about__cardVideo">
-              <video src="assets/video.mp4" autoPlay loop muted type="video/mp4"></video>
+              <video
+                src="assets/video.mp4"
+                autoPlay
+                loop
+                muted
+                type="video/mp4"
+              ></video>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { message, Spin } from "antd";
 
 import React, { useState, useEffect, useContext } from "react";
 import { useDispatch } from "react-redux";
+import Skeleton from "@mui/material/Skeleton";
 
 import api from "../../../../config/axios";
 import "./UpdateMyBooking.scss";
@@ -27,7 +28,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
   const [selectedDate, setSelectedDate] = useState(today);
   const [timeSlots, setTimeSlots] = useState(slots);
   const [availableSlots, setAvailableSlots] = useState([]);
-
+  const [slotLoading, setSlotLoading] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -74,6 +75,8 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setSlotLoading(false);
     }
   };
   useEffect(() => {
@@ -131,10 +134,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
         // if (response.data) {
         //   setAvailableSlots(response.data);
         // }
-        const response = await api.post(
-          `booking/slots/${bookingId}`,
-          bookingValue
-        );
+        const response = await api.post(`booking/slots`, bookingValue);
         if (response.data && response.data.result) {
           setAvailableSlots(response.data.result);
         }
@@ -212,21 +212,28 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
           </select>
         </div>
         <div className="myBooking__dateTime-time">
-          {timeSlots.map((slot) => (
-            <div
-              key={slot.slotid}
-              className={`time-slot ${
-                availableSlots.some(
-                  (availableSlot) => availableSlot.slotid === slot.slotid
-                )
-                  ? ""
-                  : "disabled"
-              } ${selectedTime === slot.slotid ? "selected" : ""}`}
-              onClick={() => handleTimeSlotClick(slot.slotid)}
-            >
-              {slot.slottime}
-            </div>
-          ))}
+          {slotLoading
+            ? // Show skeletons while loading
+              [...Array(6)].map((_, index) => (
+                <div key={index} className="time-slot">
+                  <Skeleton variant="text" width={100} height={40} />
+                </div>
+              ))
+            : timeSlots.map((slot) => (
+                <div
+                  key={slot.slotid}
+                  className={`time-slot ${
+                    availableSlots.some(
+                      (availableSlot) => availableSlot.slotid === slot.slotid
+                    )
+                      ? ""
+                      : "disabled"
+                  } ${selectedTime === slot.slotid ? "selected" : ""}`}
+                  onClick={() => handleTimeSlotClick(slot.slotid)}
+                >
+                  {slot.slottime}
+                </div>
+              ))}
         </div>
         <button
           type="submit"

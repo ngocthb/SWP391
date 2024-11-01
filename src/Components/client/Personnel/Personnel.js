@@ -49,13 +49,15 @@ export default function Personnel() {
           <div className="personnel__header-text">
             <h2>Famous Stylist</h2>
             <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim,
-              est at. Quam provident temporibus nesciunt illo numquam eum. In
-              nostrum aliquam earum ea ipsa esse doloribus atque rerum libero
-              odio.Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-              Enim, est at. Quam provident temporibus nesciunt illo numquam eum.
-              In nostrum aliquam earum ea ipsa esse doloribus atque rerum libero
-              odio.
+              At our salon, we are proud to showcase our renowned stylists, each
+              with a unique flair and expertise in the art of hairstyling. Our
+              team is dedicated to bringing your vision to life, whether it's a
+              trendy cut, a bold color change, or a sophisticated updo. With
+              years of experience and a passion for beauty, our stylists stay
+              ahead of the latest trends and techniques, ensuring you leave our
+              salon looking and feeling your absolute best. Experience the magic
+              of our famous stylists who are committed to delivering exceptional
+              service tailored to your individual style.
             </p>
           </div>
 

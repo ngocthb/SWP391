@@ -61,11 +61,6 @@ export default function ManagerUpdateShift() {
   }, [shift, scheduleId, services, salonLocations, slots]);
 
   const fetchBookingBusy = async () => {
-    const value = {
-      stylistScheduleId: scheduleId,
-      shiftId: Array.isArray(shift) ? [...shift] : [shift],
-    };
-
     try {
       const response = await api.get(`manager/booking/stylist/busy`);
       const data = response.data.result;
@@ -108,6 +103,7 @@ export default function ManagerUpdateShift() {
       slotId: booking.slotId,
     };
     try {
+      console.log(value);
       const response = await api.post(`booking/stylists/update`, value);
       const data = response.data.result;
 
@@ -150,9 +146,11 @@ export default function ManagerUpdateShift() {
 
     setLoading(true);
     try {
+      console.log(updateValues);
       const response = await api.put(`booking/${booking.id}`, updateValues);
-      const data = response.data;
+      const data = response.data.result;
 
+      console.log(data);
       if (data) {
         setFormUpdate((prev) => ({
           ...prev,
@@ -166,18 +164,12 @@ export default function ManagerUpdateShift() {
         }));
         dispatch(updateBooking());
         messageApi.success("Booking information updated successfully!");
-
-        //   setBooking((prevBookings) =>
-        //     prevBookings.filter((boo) => boo.id !== selectedBooking.id)
-        //   );
-        //   const nextBooking = booking[1];
-        //   if (nextBooking) {
-        //     setSelectedBooking(nextBooking);
-        //     handleAvailableStylist(nextBooking);
-        //   } else {
-        //     navigate("/manager/shift");
-        //   }
-        // }
+        Swal.fire({
+          title: "Updated!",
+          text: "The booking has been update.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
         setBooking((prevBookings) => {
           const updatedBookings = prevBookings.filter(
             (boo) => boo.id !== selectedBooking.id

@@ -4,6 +4,7 @@ import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import { LuClock } from "react-icons/lu";
 import { Modal } from "antd";
+import Skeleton from "@mui/material/Skeleton";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import api from "../../../../config/axios";
@@ -22,6 +23,7 @@ export function ChooseService({ onNext, onPre }) {
   const [areServicesHidden, setAreServicesHidden] = useState(false);
   const inputRef = useRef(null);
   const bookingId = useContext(bookingIdContext);
+  const [loading, setLoading] = useState(true);
 
   // Fetch all services
   useEffect(() => {
@@ -76,6 +78,8 @@ export function ChooseService({ onNext, onPre }) {
           }
         } catch (error) {
           console.log(error);
+        } finally {
+          setLoading(false);
         }
       } else {
         setSelectedServices(JSON.parse(storedService));
@@ -212,42 +216,58 @@ export function ChooseService({ onNext, onPre }) {
         <div className="myBooking__service-locations">
           F-Salon has the following services:
         </div>
+
         <div className="myBooking__service-lists">
-          {searchResults.map((service) => (
-            <div key={service.id} className="myBooking__service__card">
-              <img alt="service banner" src={service.image} />
-              <div className="card__content">
-                <h2>{service.serviceName}</h2>
-                <div className="card__content-time">
-                  <LuClock className="card-icon" />
-                  <span>{formatDuration(service.duration)}</span>
+          {loading
+            ? // Show skeletons while loading
+              [...Array(3)].map((_, index) => (
+                <div item xs={12} md={6} key={index}>
+                  <Skeleton variant="rectangular" height={250} width={400} />
+                  <Skeleton />
+                  <Skeleton />
+                  <Skeleton />
                 </div>
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(service.description || ""),
-                  }}
-                />
-                <div className="card__content-action">
-                  <div className="card__content-price">
-                    Price: {formatCurrency(service.price)}
+              ))
+            : searchResults.map((service) => (
+                <div key={service.id} className="myBooking__service__card">
+                  <img alt="service banner" src={service.image} />
+                  <div className="card__content">
+                    <h2>{service.serviceName}</h2>
+                    <div className="card__content-time">
+                      <LuClock className="card-icon" />
+                      <span>{formatDuration(service.duration)}</span>
+                    </div>
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(service.description || ""),
+                      }}
+                    />
+                    <div className="card__content-action">
+                      <div className="card__content-price">
+                        Price: {formatCurrency(service.price)}
+                      </div>
+                      <button
+                        className={`card__content-add ${
+                          isServiceSelected(service.id) ? "disabled" : ""
+                        }`}
+                        onClick={() => {
+                          if (!isServiceSelected(service.id)) {
+                            setSelectedServices((prev) => [
+                              ...prev,
+                              service.id,
+                            ]); // Store only ID
+                          }
+                        }}
+                        disabled={isServiceSelected(service.id)}
+                      >
+                        {isServiceSelected(service.id)
+                          ? "Added"
+                          : "Add service"}
+                      </button>
+                    </div>
                   </div>
-                  <button
-                    className={`card__content-add ${
-                      isServiceSelected(service.id) ? "disabled" : ""
-                    }`}
-                    onClick={() => {
-                      if (!isServiceSelected(service.id)) {
-                        setSelectedServices((prev) => [...prev, service.id]); // Store only ID
-                      }
-                    }}
-                    disabled={isServiceSelected(service.id)}
-                  >
-                    {isServiceSelected(service.id) ? "Added" : "Add service"}
-                  </button>
                 </div>
-              </div>
-            </div>
-          ))}
+              ))}
         </div>
       </div>
       <div className="myBooking__service-right">
