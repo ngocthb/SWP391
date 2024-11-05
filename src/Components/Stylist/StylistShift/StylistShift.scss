@@ -3,7 +3,7 @@
   justify-content: center;
   gap: 2rem;
   padding: 1rem;
-  height: 77vh;
+  // height: 78vh;
 
   &__calendar {
     // flex: 0 0 auto;
@@ -37,9 +37,7 @@
     .notes-month section {
       font-size: 14px;
     }
-    :where(
-        .css-dev-only-do-not-override-ni1kz0
-      ).ant-picker-calendar.ant-picker-calendar-full
+    .ant-picker-calendar.ant-picker-calendar-full
       .ant-picker-calendar-date {
       height: 70px;
     }
