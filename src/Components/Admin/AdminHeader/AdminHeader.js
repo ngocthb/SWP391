@@ -19,6 +19,7 @@ const pageNames = {
   "/admin/voucher": "Voucher",
   "/admin/voucher/create": "New Voucher",
   "/admin/manager": "Manager",
+  "/admin/manager/create": "New Manager",
   "/admin/branch": "Branch",
   "/admin/branch/create": "New Branch",
   "/admin/slot": "Slot",

@@ -5,6 +5,7 @@ import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
 import { Spin } from "antd";
 import { Skeleton } from "@mui/material";
+import Swal from "sweetalert2";
 
 const AdminSlot = () => {
   const [slot, setSlot] = useState([]);
@@ -44,6 +45,12 @@ const AdminSlot = () => {
       const response = await api.post(`slot`, updateValues);
       const data = response.data.result;
       if (data) {
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Update Slot successfully.",
+          timer: 2500,
+        });
         fetchSlots();
         toggleModal();
       }

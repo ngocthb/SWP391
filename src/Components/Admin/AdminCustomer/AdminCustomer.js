@@ -24,7 +24,6 @@ const AdminVoucher = () => {
       const response = await api.get(`account/page?page=${currentPage}&size=7`);
       const data = response.data.result.content;
       const total = response.data.result.totalPages;
-
       if (data) {
         setCustomers(data);
         setOriginalCustomers(data);
@@ -104,6 +103,7 @@ const AdminVoucher = () => {
           title: "Deleted!",
           text: "The customer has been deleted.",
           icon: "success",
+          timer: 2500
         });
         fetchCustomers(currentPage);
       }
@@ -140,6 +140,7 @@ const AdminVoucher = () => {
           title: "Active!",
           text: "The customer has been active again.",
           icon: "success",
+          timer: 2500
         });
         fetchCustomers(currentPage);
       }
@@ -151,7 +152,7 @@ const AdminVoucher = () => {
   const confirmActiveModal = (accountId) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You want to active this!",
+      text: "You want to active this customer!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -198,6 +199,9 @@ const AdminVoucher = () => {
                   <th onClick={() => sortBy("phone")}>
                     Phone{getSortIndicator("phone")}
                   </th>
+                  <th>
+                    Status
+                  </th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -218,6 +222,9 @@ const AdminVoucher = () => {
                         </td>
                         <td>
                           <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={80} />
                         </td>
                         <td>
                           <Skeleton width={80} />
@@ -269,6 +276,11 @@ const AdminVoucher = () => {
                         <td>
                           <span className={`admin-customer__quantity`}>
                             {customer.phone}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`admin-customer__quantity`}>
+                            {customer.delete ?  "Un Active" : "Active"}
                           </span>
                         </td>
                         <td className="admin-customer__actions">

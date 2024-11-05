@@ -266,10 +266,14 @@ export default function AdminService() {
         `service/update/${formData.serviceId}`,
         updateValues
       );
-      const data = response.data.result;
-      dispatch(updateService());
-      toggleModal();
+      const data = response.data;   
       if (data) {
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Update Service successfully.",
+          timer: 2500,
+        });
         setFormData((prev) => ({
           ...prev,
           serviceName: data.id,
@@ -278,6 +282,8 @@ export default function AdminService() {
           duration: data.duration,
           image: selectedFileObject || prev.image,
         }));
+        dispatch(updateService());
+        toggleModal();
       }
     } catch (err) {
       console.log(err);
@@ -351,7 +357,7 @@ export default function AdminService() {
               )}
             </div>
             <div className="admin-service__header-filter">
-              <button onClick={createService}> + New Service</button>
+              <button onClick={createService}>New Service</button>
             </div>
           </div>
           <div className="service">

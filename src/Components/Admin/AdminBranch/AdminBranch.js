@@ -80,6 +80,12 @@ const AdminBranch = ({ buttonLabel }) => {
       );
       const data = response.data.result;
       if (data) {
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Update Branch successfully.",
+          timer: 2500,
+        });
         fetchBranchs();
         toggleModal();
       }
@@ -154,6 +160,7 @@ const AdminBranch = ({ buttonLabel }) => {
           title: "Deleted!",
           text: "The branch has been deleted.",
           icon: "success",
+          timer: 2500
         });
         fetchBranchs();
       }
@@ -209,6 +216,9 @@ const AdminBranch = ({ buttonLabel }) => {
                   <th>
                     Hotline
                   </th>
+                  <th>
+                    Status
+                  </th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -225,6 +235,9 @@ const AdminBranch = ({ buttonLabel }) => {
                         </td>
                         <td>
                           <Skeleton width={120} />
+                        </td>
+                        <td>
+                          <Skeleton width={80} />
                         </td>
                         <td>
                           <div style={{ display: "flex", gap: "8px" }}>
@@ -260,6 +273,9 @@ const AdminBranch = ({ buttonLabel }) => {
                     </td> 
                     <td>
                       <div className="admin-branch__date">{branch.hotline}</div>
+                    </td> 
+                    <td>
+                      <div className="admin-branch__date">{branch.delete ? "Un Active" : "Active"}</div>
                     </td> 
                     <td className="admin-branch__actions">
                       <button

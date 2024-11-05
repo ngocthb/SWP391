@@ -3,6 +3,7 @@ import "./AdminCreateVoucher.scss";
 import { Spin } from "antd";
 import api from "../../../config/axios";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const AdminCreateService = () => {
   const [loading, setLoading] = useState(false);
@@ -27,9 +28,16 @@ const AdminCreateService = () => {
 
 
       if (data) {
+        await Swal.fire({
+          title: "Created!",
+          text: "The Voucher has been created.",
+          icon: "success",
+          timer: 2500
+        });
         navigate("/admin/voucher");
       }
     } catch (err) {
+      console.log(err)
     } finally {
       setLoading(false);
     }

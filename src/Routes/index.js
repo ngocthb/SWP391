@@ -36,7 +36,6 @@ import AdminCreateVoucher from "../Components/Admin/AdminCreateVoucher/AdminCrea
 import ManagerStaff from "../Components/Manager/ManagerStaff/ManagerStaff";
 import AdminManager from "../Components/Admin/AdminManager/AdminManager";
 import AdminCustomer from "../Components/Admin/AdminCustomer/AdminCustomer";
-import ManagerBooking from "../Components/Manager/ManagerBooking/ManagerBooking";
 import AdminCreateManager from "../Components/Admin/AdminCreateManager/AdminCreateManager";
 import ManagerShift from "../Components/Manager/ManagerShift/ManagerShift";
 import StylistLayout from "../Layouts/stylist";
@@ -149,7 +148,7 @@ export const Routes = [
     children: [
       {
         path: "stylist",
-        element: <ManagerStylist buttonLabel={"+ New stylist"} />,
+        element: <ManagerStylist buttonLabel={"New stylist"} />,
       },
       {
         path: "stylist/create",
@@ -157,7 +156,7 @@ export const Routes = [
       },
       {
         path: "staff",
-        element: <ManagerStaff buttonLabel={"+ New staff"} />,
+        element: <ManagerStaff buttonLabel={"New staff"} />,
       },
       {
         path: "staff/create",
@@ -168,16 +167,12 @@ export const Routes = [
         element: <ManagerDashboard />,
       },
       {
-        path: "booking",
-        element: <ManagerBooking />,
-      },
-      {
         path: "booking/pending",
-        element: <ManagerBookingPending buttonLabel={"+ New booking"} />,
+        element: <ManagerBookingPending buttonLabel={"New booking"} />,
       },
       {
         path: "booking/in-process",
-        element: <ManagerBookingInProcess buttonLabel={"+ New booking"} />,
+        element: <ManagerBookingInProcess buttonLabel={"New booking"} />,
       },
       {
         path: "booking/complete",

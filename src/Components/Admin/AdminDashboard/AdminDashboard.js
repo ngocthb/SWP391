@@ -162,6 +162,10 @@ const AdminDashboard = () => {
     ],
   });
 
+  const formatDateForDisplay = (dateString) => {
+    return dayjs(dateString).format("MM/YYYY");
+  };
+
   const CalendarDropdown = () => {
     const wrapperStyle = {
       width: 320,
@@ -320,8 +324,9 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      <div className="manager-salary__header-filter">
+      <div className="admin-dashboard__header-filter">
         <Dropdown
+        className="admin-dashboard__header-filter--select"
           menu={{
             items,
           }}
@@ -329,7 +334,7 @@ const AdminDashboard = () => {
         >
           <a onClick={(e) => e.preventDefault()}>
             <Space>
-              {selectDay}
+            {formatDateForDisplay(selectDay)}
               <DownOutlined />
             </Space>
           </a>

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateVoucher } from "../../../actions/Update";
 import { Skeleton } from "@mui/material";
 import { FolderOutlined } from "@ant-design/icons";
+import Swal from "sweetalert2";
 
 const AdminVoucher = ({ buttonLabel }) => {
   const [vouchers, setVouchers] = useState([]);
@@ -88,9 +89,6 @@ const AdminVoucher = ({ buttonLabel }) => {
       discountAmount: Number(e.target[3].value),
       quantity: Number(e.target[4].value),
     };
-
-    console.log(updateValues);
-    console.log(formData.id);
     setLoading(true);
     try {
       const response = await api.put(
@@ -98,9 +96,13 @@ const AdminVoucher = ({ buttonLabel }) => {
         updateValues
       );
       const data = response.data.result;
-      console.log(response);
       if (data) {
-
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Update Voucher successfully.",
+          timer: 2500,
+        });
         setFormData((prev) => ({
           ...prev,
           code: data.code || "",

@@ -1,31 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./AdminCreateManager.scss";
 import { Spin } from "antd";
-import loginUser from "../../../data/loginUser";
 import api from "../../../config/axios";
 import { Link, useNavigate } from "react-router-dom";
 
 import { genders } from "../../../data/gender";
+import Swal from "sweetalert2";
 
 const AdminCreateManager = () => {
   const [loading, setLoading] = useState(false);
   const [salonLocations, setSalonLocations] = useState([]);
-  const [selectedFileObject, setSelectedFileObject] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [formData, setFormData] = useState({
-    image: loginUser.avatar,
-  });
   const navigate = useNavigate();
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedFile(imageUrl);
-      setSelectedFileObject(file);
-    }
-  };
 
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
@@ -42,47 +28,45 @@ const AdminCreateManager = () => {
     fetchData("salon", setSalonLocations);
   }, []);
 
-  const createStylishData = async (e) => {
+  const createManagerData = async (e) => {
     e.preventDefault();
     const createValues = {
-      fullName: e.target[1].value,
-      email: e.target[2].value,
-      phone: e.target[3].value,
-      dob: e.target[4].value,
-      gender: e.target[5].value,
-      username: e.target[6].value,
-      password: e.target[7].value,
-      salonId: Number(e.target[8].value),
-      // image: null,
+      fullName: e.target[0].value,
+      email: e.target[1].value,
+      phone: e.target[2].value,
+      dob: e.target[3].value,
+      gender: e.target[4].value,
+      username: e.target[5].value,
+      password: e.target[6].value,
+      salonId: Number(e.target[7].value),
     };
-
-    // if (selectedFileObject) {
-    //   const firebaseResponse = await uploadFile(selectedFileObject);
-    //   createValues.image = firebaseResponse;
-    // } else {
-    //   createValues.image = formData.image;
-    // }
-
     setLoading(true);
     try {
       const response = await api.post(`manager`, createValues);
       const data = response.data.result;
-
       if (data) {
-        setFormData((prev) => ({
-          ...prev,
-          image: selectedFile || prev.image,
-        }));
+        await Swal.fire({
+          title: "Created!",
+          text: "The Manager has been created.",
+          icon: "success",
+          timer: 2500,
+        });
         navigate("/admin/manager");
       }
     } catch (err) {
+      console.log(err);
+      await Swal.fire({
+        title: "Error!",
+        text: err.response.data.message,
+        icon: "error",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const handleSubmit = (e) => {
-    createStylishData(e);
+    createManagerData(e);
   };
 
   return (
@@ -103,31 +87,6 @@ const AdminCreateManager = () => {
         <div className="admin-create-manager__container">
           <form onSubmit={handleSubmit}>
             <h2 className="admin-create-manager__header">New Manager</h2>
-            <div className="admin-create-manager__avatar-section">
-              <div className="admin-create-manager__avatar">
-                <img
-                  src={selectedFile || formData.image}
-                  alt={formData.fullname}
-                />
-              </div>
-              <div className="admin-create-manager__avatar-info">
-                <h3 className="admin-create-manager__avatar-title">
-                  Change Avatar
-                </h3>
-                <p className="admin-create-manager__avatar-description">
-                  Recommended Dimensions: 120x120 Max file size: 5MB
-                </p>
-                <label className="admin-create-manager__upload-btn">
-                  Upload
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    style={{ display: "none" }}
-                  />
-                </label>
-              </div>
-            </div>
             <div className="admin-create-manager__form-section">
               <div className="admin-create-manager__form-grid">
                 <div className="admin-create-manager__form-grid admin-create-manager__form-grid--half-width">
@@ -143,6 +102,7 @@ const AdminCreateManager = () => {
                       id="fullname"
                       className="admin-create-manager__input"
                       placeholder="Full Name"
+                      required
                     />
                   </div>
                   <div className="admin-create-manager__form-group">
@@ -157,6 +117,7 @@ const AdminCreateManager = () => {
                       id="email"
                       className="admin-create-manager__input"
                       placeholder="Email"
+                      required
                     />
                   </div>
                 </div>
@@ -176,6 +137,7 @@ const AdminCreateManager = () => {
                       id="phone"
                       className="admin-create-manager__input"
                       placeholder="Phone Number"
+                      required
                     />
                   </div>
                   <div className="admin-create-manager__form-grid admin-create-manager__form-grid--half-width">
@@ -191,6 +153,7 @@ const AdminCreateManager = () => {
                         id="dob"
                         className="admin-create-manager__input"
                         placeholder="Date of Birth"
+                        required
                       />
                     </div>
                     <div className="admin-create-manager__form-group">
@@ -204,6 +167,7 @@ const AdminCreateManager = () => {
                         id="gender"
                         className="admin-create-manager__select"
                         defaultValue=""
+                        required
                       >
                         <option value="" disabled>
                           Select Gender
@@ -233,6 +197,7 @@ const AdminCreateManager = () => {
                       id="username"
                       className="admin-create-manager__input"
                       placeholder="Username"
+                      required
                     />
                   </div>
                   <div className="admin-create-manager__form-group">
@@ -247,6 +212,7 @@ const AdminCreateManager = () => {
                       id="password"
                       className="admin-create-manager__input"
                       placeholder="Password"
+                      required
                     />
                   </div>
                 </div>
@@ -265,6 +231,7 @@ const AdminCreateManager = () => {
                       id="salon"
                       className="admin-create-manager__select"
                       defaultValue={0}
+                      required
                     >
                       <option value={0} disabled>
                         Select Salon
