@@ -69,14 +69,13 @@ const Register = () => {
           <h2>F-salon</h2>
           </div>
           <div className="signup__illustration">
-            <img
-              src="https://myxteam.vn/wp-content/uploads/2020/08/10.-5-Quy-tri%CC%80nh-thu%CC%9B%CC%A3c-hie%CC%A3%CC%82n-qua%CC%89n-ly%CC%81-du%CC%9B%CC%A3-a%CC%81n-da%CC%82%CC%80u-tu%CC%9B-xa%CC%82y-du%CC%9B%CC%A3ng.png"
+          <img
+              src="https://firebasestorage.googleapis.com/v0/b/f-salon-51786.appspot.com/o/o_bg-remover-gen_2oQMxgffQbVQ8AXzDmMXCZbgwy2%20(1).png?alt=media&token=9e569b24-02d3-440c-86d7-b7861971bd55"
               alt="Illustration"
+              style={{objectFit: "cover"}}
             />
           </div>
           <div className="signup__title">
-            <h3>Title</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun.</p>
           </div>
         </div>
         <div className="signup__right-side">
