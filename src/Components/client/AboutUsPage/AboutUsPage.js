@@ -24,14 +24,31 @@ export default function AboutUsPage() {
         <section className="AboutUsPage__content">
           {/* <div class="AboutUsPage__container"> */}
           <div className="AboutUsPage__content-text">
-            <h2>TitleTitle</h2>
+            <h2>
+              Discover F-Salon: Your Premier Destination for Style and
+              Confidence
+            </h2>
             <p>
-              Et labore horum non nobis ipsum eum molestias mollitia et corporis
-              praesentium ut laudantium internos. Non quis esse quo eligendi
-              corrupti et fugiat nulla qui soluta recusandae in maxime quasi aut
-              ducimus illum aut optio quibusdam!Et labore horum non nobis ipsum
-              eum molestias mollitia et corporis praesentium ut laudantium
-              internos.
+              At F-Salon, we believe that a visit to the salon should be a
+              transformative and uplifting experience. As a full-service hair
+              studio, we are committed to delivering top-notch, personalized
+              care that goes beyond a simple haircut. Our mission is to provide
+              every guest with a place where they can unwind, explore new
+              styles, and embrace the best version of themselves. Whether you’re
+              here for a fresh cut, a complete color overhaul, or simply a trim,
+              F-Salon is dedicated to making every appointment memorable and
+              tailored to your unique style.
+            </p>
+            <p>
+              With a team of highly skilled and passionate stylists, we are
+              proud to offer a blend of creativity, precision, and warmth. Each
+              of our professionals brings years of experience to the chair,
+              combined with a dedication to staying up-to-date with the latest
+              trends, techniques, and haircare innovations. We know that hair is
+              an essential part of self-expression, and we take the time to
+              understand each client’s individual needs, preferences, and
+              lifestyle to ensure that you leave feeling refreshed, confident,
+              and truly yourself.
             </p>
 
             {/* </div> */}
@@ -66,25 +83,34 @@ export default function AboutUsPage() {
         <div className="AboutUsPage__video">
           <div className="AboutUsPage__videoCard grid">
             <div className="AboutUsPage__cardText">
-              <h2>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</h2>
+              <h2>Unmatched Quality in Every Service</h2>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Eligendi totam tenetur, deleniti dolorum facilis porro, cum
-                voluptas consequuntur optio iure quia ut tempora.
+                At F-Salon, quality is at the heart of everything we do. We are
+                committed to delivering exceptional services that exceed your
+                expectations, from the moment you walk in until you leave with a
+                look you love. Our team of professionals is dedicated to using
+                only the finest products, techniques, and tools to ensure
+                outstanding results with every visit.
               </p>
             </div>
             <div className="AboutUsPage__cardVideo">
-              <video src="assets/video2.mp4" autoPlay loop muted type="video/mp4"></video>
+              <video
+                src="assets/video2.mp4"
+                autoPlay
+                loop
+                muted
+                type="video/mp4"
+              ></video>
             </div>
           </div>
         </div>
-        <div className="AboutUsPage__container">
+        {/* <div className="AboutUsPage__container">
           <div className="AboutUsPage__container-title">
             See What Our Customer <div>Say About Us</div>
           </div>
-        </div>
+        </div> */}
       </div>
-
+      {/* 
       <AboutUsPageSwiper
         slidesPerView={1}
         spaceBetween={30}
@@ -111,8 +137,7 @@ export default function AboutUsPage() {
             ))}
           </div>
         </div>
-      </AboutUsPageSwiper>
-      {/* nhung dia chi */}
+      </AboutUsPageSwiper> */}
     </>
   );
 }

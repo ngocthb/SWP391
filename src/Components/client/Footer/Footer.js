@@ -8,13 +8,11 @@ import "./Footer.scss";
 import { logo_blue_noBackground } from "../../../data/image";
 
 export default function Footer() {
-  const location = useLocation();
-
   const handleHomeClick = (e) => {
-    if (location.pathname === "/") {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    // if (location.pathname === "/") {
+    // e.preventDefault(); // Prevent navigation
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to top smoothly
+    // }
   };
 
   return (
@@ -44,28 +42,42 @@ export default function Footer() {
             </Link>
           </li>
           <li>
-            <Link to={""}>Explore</Link>
+            <Link to={"/aboutus"} onClick={handleHomeClick}>
+              Explore
+            </Link>
           </li>
           <li>
-            <Link to={""}>Service</Link>
+            <Link to={"/services"} onClick={handleHomeClick}>
+              Service
+            </Link>
           </li>
           <li>
-            <Link to={""}>Blogs</Link>
+            <Link to={"/contact"} onClick={handleHomeClick}>
+              Contact
+            </Link>
           </li>
         </div>
         <div className="footer__Links">
           <span className="footer__Links-linkTitle">Helpful Links</span>
           <li>
-            <Link to={""}>Destination</Link>
+            <Link to={"/"} onClick={handleHomeClick}>
+              Destination
+            </Link>
           </li>
           <li>
-            <Link to={""}>Support</Link>
+            <Link to={"/contact"} onClick={handleHomeClick}>
+              Support
+            </Link>
           </li>
           <li>
-            <Link to={""}>Service & Conditions</Link>
+            <Link to={""} onClick={handleHomeClick}>
+              Service & Conditions
+            </Link>
           </li>
           <li>
-            <Link to={""}>Privacy</Link>
+            <Link to={"/"} onClick={handleHomeClick}>
+              Privacy
+            </Link>
           </li>
         </div>
         <div className="footer__Links">

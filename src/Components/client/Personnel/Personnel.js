@@ -21,7 +21,7 @@ export default function Personnel() {
 
   const currentDate = new Date();
   const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const month = String(currentDate.getMonth()).padStart(2, "0");
   const formattedDate = `${year}-${month}`;
 
   const fetchStylistsData = async () => {

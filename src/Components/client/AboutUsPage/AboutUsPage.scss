@@ -26,7 +26,7 @@
     overflow: hidden;
     min-height: 450px;
     &-text {
-      max-width: 50%;
+      max-width: 70%;
       h2 {
         font-size: 3rem;
         color: var(--blackColor);
@@ -170,6 +170,7 @@
       padding: 2rem 1rem;
 
       .AboutUsPage__cardText {
+        width: 60%;
         h2 {
           color: var(--WhiteColor);
           font-weight: 600;
@@ -288,7 +289,7 @@
       padding: 7rem 5rem 3rem 5rem;
 
       &-circle {
-        transform: translateY(-15%);
+        transform: translateY(-45%);
       }
     }
   }

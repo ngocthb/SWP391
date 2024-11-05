@@ -22,6 +22,7 @@ const pageNames = {
   "/admin/branch": "Branch",
   "/admin/branch/create": "New Branch",
   "/admin/slot": "Slot",
+  "/admin/kpi": "KPI",
 };
 
 const AdminHeader = () => {
@@ -66,7 +67,6 @@ const AdminHeader = () => {
     fetchManagerData();
   }, []);
 
-
   useEffect(() => {
     setPageName(pageNames[location.pathname] || "");
   }, [location.pathname]);
@@ -77,11 +77,11 @@ const AdminHeader = () => {
 
   const handleGoback = () => {
     navigate("/admin/dashboard");
-  }
+  };
 
   function formatRole(role) {
     return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
-}
+  }
 
   const handleLogout = () => {
     sessionStorage.clear();
@@ -95,7 +95,8 @@ const AdminHeader = () => {
           collapsed ? "header-admin__logo--collapsed" : ""
         }`}
       >
-        <img onClick={handleGoback}
+        <img
+          onClick={handleGoback}
           src={collapsed ? logo_blue_noBackground : logo}
           alt={collapsed ? "Logo Fold" : "Logo"}
         />
@@ -111,7 +112,9 @@ const AdminHeader = () => {
           <div className="header-admin__user-info" onClick={toggleDropdown}>
             <div className="header-admin__text">
               <div className="header-admin__name">{adminInfo.fullname}</div>
-              <div className="header-admin__role">{adminInfo.role ? formatRole(adminInfo.role) : ""}</div>
+              <div className="header-admin__role">
+                {adminInfo.role ? formatRole(adminInfo.role) : ""}
+              </div>
             </div>
             <div className="header-admin__avatar">
               <img

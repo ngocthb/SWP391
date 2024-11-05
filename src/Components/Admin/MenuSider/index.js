@@ -6,6 +6,7 @@ import {
   DashboardOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
+import { TbPigMoney } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 import { LiaUserTieSolid } from "react-icons/lia";
 import { FiUser } from "react-icons/fi";
@@ -31,7 +32,7 @@ function MenuSider() {
           label: <Link to="/admin/manager">Manager</Link>,
           icon: <LiaUserTieSolid />,
           key: "/admin/manager",
-        } 
+        },
       ],
     },
     {
@@ -58,6 +59,11 @@ function MenuSider() {
       label: <Link to="/admin/slot">Slot</Link>,
       icon: <IoTimeOutline />,
       key: "/admin/slot",
+    },
+    {
+      label: <Link to="/admin/kpi">KPI</Link>,
+      icon: <TbPigMoney />,
+      key: "/admin/kpi",
     },
   ];
 

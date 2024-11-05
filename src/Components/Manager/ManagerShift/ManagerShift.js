@@ -103,7 +103,11 @@ export default function ManagerShift() {
 
   useEffect(() => {
     fetchShiftData();
-  }, [formData, selectDay, stylistsData]);
+  }, [selectDay, stylistsData]);
+
+  const refreshData = () => {
+    fetchShiftData();
+  };
 
   const fetchShiftData = async () => {
     setBookingLoading(true);
@@ -217,36 +221,37 @@ export default function ManagerShift() {
 
   const handleSubmit = async (e) => {
     await updateStylistData(e);
-    await fetchBookingBusy();
+    refreshData();
+    // await fetchBookingBusy();
   };
 
-  const fetchBookingBusy = async () => {
-    const value = {
-      stylistScheduleId: formData.id,
-      shiftId: changedShifts,
-    };
-    try {
-      const response = await api.get(`manager/booking/stylist/busy`);
-      const data = response.data.result;
-      if (data.length > 0) {
-        console.log("aaaaaaaaaa");
-        console.log("schedule", value.stylistScheduleId);
-        console.log("shiftId", value.shiftId);
-        console.log("selecstylist", selectedStylist);
-        console.log("selectday", selectDay);
-        navigate(`/manager/shift/update`, {
-          state: {
-            stylistScheduleId: value.stylistScheduleId,
-            shiftId: value.shiftId,
-            stylist: selectedStylist,
-            date: selectDay,
-          },
-        });
-      }
-    } catch (e) {
-      console.warn(e);
-    }
-  };
+  // const fetchBookingBusy = async () => {
+  //   const value = {
+  //     stylistScheduleId: formData.id,
+  //     shiftId: changedShifts,
+  //   };
+  //   try {
+  //     const response = await api.get(`manager/booking/stylist/busy`);
+  //     const data = response.data.result;
+  //     if (data.length > 0) {
+  //       console.log("aaaaaaaaaa");
+  //       console.log("schedule", value.stylistScheduleId);
+  //       console.log("shiftId", value.shiftId);
+  //       console.log("selecstylist", selectedStylist);
+  //       console.log("selectday", selectDay);
+  //       navigate(`/manager/shift/update`, {
+  //         state: {
+  //           stylistScheduleId: value.stylistScheduleId,
+  //           shiftId: value.shiftId,
+  //           stylist: selectedStylist,
+  //           date: selectDay,
+  //         },
+  //       });
+  //     }
+  //   } catch (e) {
+  //     console.warn(e);
+  //   }
+  // };
 
   const handleSkillToggle = (shift) => {
     setSelectedShift((prevSelected) => {
@@ -276,9 +281,9 @@ export default function ManagerShift() {
     });
   };
 
-  // const updateShift = () => {
-  //   navigate("/manager/shift/update");
-  // };
+  const updateBooking = () => {
+    navigate("/manager/shift/update");
+  };
 
   return (
     <>
@@ -294,15 +299,15 @@ export default function ManagerShift() {
               trigger={["hover"]}
             >
               <a onClick={(e) => e.preventDefault()}>
-                <Space >
+                <Space>
                   {selectDay}
                   <DownOutlined />
                 </Space>
               </a>
             </Dropdown>
-            {/* <div className="managerShift__header-btn">
-              <button onClick={updateShift}> Update Shift</button>
-            </div> */}
+            <div className="managerShift__header-btn">
+              <button onClick={updateBooking}> Update Booking</button>
+            </div>
           </div>
         </div>
 

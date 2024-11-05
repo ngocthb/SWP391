@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { MdArrowOutward } from "react-icons/md";
 import { FaAngleLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../../config/axios";
 
 import "./Services.scss";
@@ -37,6 +37,12 @@ export default function Services() {
     if (page >= 0 && page < totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  const handleHomeClick = (e) => {
+    navigate("/");
+    e.preventDefault(); // Prevent navigation
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -116,10 +122,10 @@ export default function Services() {
           </div>
         </div>
 
-        <div className="services__footer">
+        <div className="services__footer" onClick={handleHomeClick}>
           <div className="grid-item item1">
-            <h2>Hottest news</h2>
-            <p>#auray</p>
+            <h2>Latest Work</h2>
+            <p>#fsalon</p>
           </div>
           <div className="grid-item item2">
             <h2>Summer Essentials</h2>

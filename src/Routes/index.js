@@ -67,6 +67,7 @@ import ManagerBookingInProcess from "../Components/Manager/ManagerBookingInProce
 import ManagerBookingPending from "../Components/Manager/ManagerBookingPending/ManagerBookingPending";
 import StaffCreateCustomer from "../Components/Staff/StaffCreateCustomer/StaffCreateCustomer";
 import AdminDashboard from "../Components/Admin/AdminDashboard/AdminDashboard";
+import AdminKpi from "../Components/Admin/AdminKpi/AdminKpi";
 export const Routes = [
   {
     path: "/",
@@ -252,7 +253,7 @@ export const Routes = [
     children: [
       {
         path: "dashboard",
-        element: <AdminDashboard/>
+        element: <AdminDashboard />,
       },
       {
         path: "service",
@@ -293,6 +294,10 @@ export const Routes = [
       {
         path: "slot",
         element: <AdminSlot />,
+      },
+      {
+        path: "kpi",
+        element: <AdminKpi />,
       },
     ],
   },
