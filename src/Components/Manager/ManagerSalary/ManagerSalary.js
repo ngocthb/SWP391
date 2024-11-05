@@ -101,6 +101,14 @@ const ManagerSalary = () => {
       return "";
     };
 
+    const formatDateForDisplay = (dateString) => {
+      return dayjs(dateString).format("DD/MM/YYYY");
+    };
+
+    const stopPropagation = (e) => {
+      e.stopPropagation();
+    };
+
     const CalendarDropdown = () => {
       const wrapperStyle = {
         width: 320,
@@ -109,22 +117,20 @@ const ManagerSalary = () => {
       };
   
       const onSelect = (value) => {
-        const formattedDate = value.format("YYYY-MM");
+        const formattedDate = value.format("YYYY-MM-DD");
         setSelectedDay(formattedDate);
       };
   
       return (
-        <div style={wrapperStyle}>
+        <div style={wrapperStyle} onClick={stopPropagation}>
           <Calendar
             fullscreen={false}
             onSelect={onSelect}
             value={dayjs(selectDay)}
-            mode="year"
           />
         </div>
       );
     };
-  
 
     const items = [
       {
@@ -132,10 +138,11 @@ const ManagerSalary = () => {
         label: <CalendarDropdown />,
       },
     ];
-    
     const calculateSalary = () => {
       navigate("/manager/salary/calculate");
     };
+
+    const formatPrice = (amount) => amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   
     return (
       <>
@@ -153,16 +160,17 @@ const ManagerSalary = () => {
                 items,
               }}
               trigger={["hover"]}
+              className="manager-salary__header-filter--select"
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                  {selectDay}
+                  {formatDateForDisplay(selectDay)}
                   <DownOutlined />
                 </Space>
               </a>
             </Dropdown>
 
-            <button onClick={calculateSalary}>+ Calculate Salary</button>
+            <button onClick={calculateSalary}>Calculate Salary</button>
             </div>
           </div>
           <div className="manager-salary__container">
@@ -220,14 +228,14 @@ const ManagerSalary = () => {
                       </div>
                     </td>
                     <td className="manager-salary__status">
-                        {salary.salary}
+                        {formatPrice(salary.salary)}
                       </td>
                     <td className="manager-salary__discountAmount">
-                      {salary.bonus}
+                      {formatPrice(salary.bonus)}
                     </td>
                     <td>
                       <span className={`manager-salary__quantity`}>
-                        {salary.totalSalary}
+                        {formatPrice(salary.totalSalary)}
                       </span>
                     </td>
                   </tr>

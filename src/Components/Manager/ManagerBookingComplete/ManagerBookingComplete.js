@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import "./ManagerBookingComplete.scss";
@@ -5,8 +6,10 @@ import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa";
 import { Skeleton } from "@mui/material";
-import { FolderOutlined } from "@ant-design/icons";
+import { DownOutlined, FolderOutlined } from "@ant-design/icons";
 import { BiDetail } from "react-icons/bi";  
+import { Calendar, Dropdown, Space } from "antd";
+import dayjs from "dayjs";
 
 const ManagerBookingComplete = () => {
   const [bookings, setBookings] = useState([]);
@@ -19,11 +22,7 @@ const ManagerBookingComplete = () => {
   const [selectedServices, setSelectedServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
-  const today = new Date();
-  const tomorrow = new Date();
-  tomorrow.setDate(today.getDate() + 1);
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(dayjs().format("YYYY-MM-DD"));
 
   const [bookingLoading, setBookingLoading] = useState(false);
 
@@ -44,14 +43,6 @@ const ManagerBookingComplete = () => {
   });
   const [manager, setManager] = useState([]);
 
-  const formatDateForInput = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
@@ -61,11 +52,6 @@ const ManagerBookingComplete = () => {
       const service = services.find((s) => s.id === serviceId);
       return total + (service ? service.price : 0);
     }, 0);
-  };
-
-  const handleDateChangeFilter = (e) => {
-    const date = e.target.value === "today" ? today : tomorrow;
-    setSelectedDate(date);
   };
 
   const handleDateChange = (event) => {
@@ -123,12 +109,11 @@ const ManagerBookingComplete = () => {
       const fetchBookings = async (page) => {
         try {
           const response = await api.get(
-            `manager/stylists/booking/complete/${page}/7/${manager.salonId}/${formatDateForInput(selectedDate)}`
+            `manager/stylists/booking/complete/${page}/7/${manager.salonId}/${selectedDate}`
           );
          
           const data = response.data.result.content;
           const total = response.data.result.totalPages;
-          console.log(data)
           if (data) {
             setBookings(data);
             setOriginalBookings(data);
@@ -266,6 +251,45 @@ const ManagerBookingComplete = () => {
         setCurrentPage(page);
       }
     };
+
+    const formatDateForDisplay = (dateString) => {
+      return dayjs(dateString).format("DD/MM/YYYY");
+    };
+
+    const stopPropagation = (e) => {
+      e.stopPropagation();
+    };
+
+    const CalendarDropdown = () => {
+      const wrapperStyle = {
+        width: 320,
+        padding: "10px",
+        backgroundColor: "#fff",
+      };
+  
+      const onSelect = (value) => {
+        const formattedDate = value.format("YYYY-MM-DD");
+        setSelectedDate(formattedDate);
+      };
+  
+      return (
+        <div style={wrapperStyle} onClick={stopPropagation}>
+          <Calendar
+            fullscreen={false}
+            onSelect={onSelect}
+            value={dayjs(selectedDate)}
+          />
+        </div>
+      );
+    };
+
+    const items = [
+      {
+        key: "1",
+        label: <CalendarDropdown />,
+      },
+    ];
+  
   
     return (
       <>
@@ -277,17 +301,21 @@ const ManagerBookingComplete = () => {
               <input placeholder="Search here..." type="text" />
             </div>
             <div className="manager-booking-complete__header-filter">
-              <select
-                value={
-                  selectedDate.toDateString() === today.toDateString()
-                    ? "today"
-                    : "tomorrow"
-                }
-                onChange={handleDateChangeFilter}
-              >
-                <option value="today">Today, {formatDate(today)}</option>
-                <option value="tomorrow">Tomorrow, {formatDate(tomorrow)}</option>
-              </select>
+            <Dropdown
+            className="manager-booking-complete__header-filter--select"
+              menu={{
+                items,
+              }}
+              trigger={["hover"]}
+            >
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  {formatDateForDisplay(selectedDate)}
+                  <DownOutlined />
+                </Space>
+              </a>
+            </Dropdown>
+
             </div>
           </div>
           <div className="manager-booking-complete__container">
@@ -356,7 +384,7 @@ const ManagerBookingComplete = () => {
                       <td colSpan={7}>
                         <div className="manager-booking-complete__notValid">
                           <FolderOutlined className="notValid--icon" />
-                          <p>Currently, there are no in-process bookings</p>
+                          <p>Currently, there are no complete bookings</p>
                         </div>
                       </td>
                     </tr>

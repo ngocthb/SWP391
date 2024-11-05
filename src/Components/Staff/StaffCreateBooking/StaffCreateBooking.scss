@@ -253,8 +253,13 @@
       transition: background-color 0.2s;
       padding: 8px;
   
-      &:hover {
+      
+      &:hover:not(.disabled) {
         background-color: #f0f4f8;
+      }
+  
+      &.disabled {
+        cursor: not-allowed;
       }
   
       & span {
@@ -276,13 +281,28 @@
       border-radius: 50%;
       cursor: pointer;
   
-      &:checked {
+      &:disabled {
+        cursor: not-allowed;
+        background-color: #e2e2e2;
+        border: 2px solid #a0a0a0;
+      }
+  
+      &:checked:not(:disabled) {
         background-color: #1b5077;
         border: 2px solid #1b5077;
       }
+
+      &:hover:not(:disabled) {
+        border: 2px solid #a0a0a0;
+      }
   
       &:hover {
-        border-color: #16435f;
+       border: 2px solid #a0a0a0;
+      }
+
+      &:checked {
+        background-color: #1b5077;
+        border: 2px solid #1b5077;
       }
     }
   }

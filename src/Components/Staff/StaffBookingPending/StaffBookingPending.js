@@ -173,7 +173,12 @@ const StaffBookingPending = ({ buttonLabel }) => {
 
   const [isCheckin, setIsCheckin] = useState(false);
 
-  const handleCheckin = async (bookingId) => {
+  const handleCheckin = async (bookingId) => {  Swal.fire({
+    icon: "success",
+    title: "Updated!",
+    text: "Update Service successfully.",
+    timer: 2500,
+  });
     try {
       const response = await api.put(`${bookingId}/checkin`);
       if (response) {
@@ -275,6 +280,12 @@ const StaffBookingPending = ({ buttonLabel }) => {
       const data = response.data.result;
 
       if (data) {
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Update Booking successfully.",
+          timer: 2500,
+        });
         dispatch(updateBooking());
         toggleModal();
       }

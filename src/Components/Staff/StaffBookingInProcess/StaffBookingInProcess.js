@@ -255,11 +255,16 @@ const StaffBookingInProcess = ({ buttonLabel }) => {
       const data = response.data.result;
 
       if (data) {
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Update Booking successfully.",
+          timer: 2500,
+        });
         dispatch(updateBooking());
         toggleModal();
       }
     } catch (err) {
-      console.log(err);
       Swal.fire({
         icon: "error",
         title: err.response.data.message,

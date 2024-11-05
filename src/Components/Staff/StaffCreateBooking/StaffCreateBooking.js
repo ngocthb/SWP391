@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import "./StaffCreateBooking.scss";
 import { Spin } from "antd";
@@ -48,6 +49,7 @@ const StaffCreateBooking = () => {
     time: "",
     serviceId: [],
     stylistId: 0,
+    customerName: "",
   });
 
   const formatPrice = (price) => {
@@ -64,14 +66,27 @@ const StaffCreateBooking = () => {
   useEffect(() => {
     if (customerPhone) {
       setFormData((prev) => ({ ...prev, phone: customerPhone }));
+      fetchCustomerName(customerPhone)
     }
   }, [customerPhone]);
 
   const [selectedTime, setSelectedTime] = useState("");
 
   const handleTimeChange = (event) => {
-    setSelectedTime(event.target.value);
-    setFormData((prev) => ({ ...prev, time: selectedTime }));
+    const newTime = event.target.value;
+    setSelectedTime(newTime);
+    setFormData((prev) => ({ ...prev, time: newTime }));
+  };
+
+  const handlePhoneChange = (e) => {
+    const newPhone = e.target.value;
+    setFormData((prev) => ({ ...prev, phone: newPhone }));
+
+    if (newPhone.length === 10) {
+      fetchCustomerName(newPhone);
+    } else {
+      setFormData((prev) => ({ ...prev, customerName: "" }));
+    }
   };
 
   const handleStylistChange = (event) => {
@@ -116,7 +131,6 @@ const StaffCreateBooking = () => {
       try {
         const response = await api.get(`manager/profile`);
         const data = response.data.result;
-        console.log(data);
         if (data) {
           setStaff(data);
         }
@@ -128,6 +142,24 @@ const StaffCreateBooking = () => {
     };
     fetchManagerData();
   }, []);
+
+  const fetchCustomerName = async (phone) => {
+    setLoading(true);
+    try {
+      const response = await api.post(`customer/phone`, { phone });
+      const data = response.data.result;
+      if (data) {
+        setFormData((prev) => ({ ...prev, customerName: data }));
+      }
+    } catch (err) {
+      setFormData((prev) => ({
+        ...prev,
+        customerName: err.response.data.message,
+      }));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (staff.salonId !== undefined) {
@@ -155,7 +187,6 @@ const StaffCreateBooking = () => {
       };
       fetchStylists();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staff, selectedTime, selectedServices, selectedDate]);
 
   const handleServiceToggle = (serviceId) => {
@@ -247,12 +278,7 @@ const StaffCreateBooking = () => {
                       type="text"
                       id="phone"
                       value={formData.phone}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          phone: e.target.value,
-                        }))
-                      }
+                      onChange={handlePhoneChange}
                       className="staff-create-booking__input"
                       placeholder="Phone Number"
                     />
@@ -290,21 +316,39 @@ const StaffCreateBooking = () => {
                 >
                   <div className="staff-create-booking__form-group">
                     <label
-                      htmlFor="username"
+                      htmlFor="customerName"
                       className="staff-create-booking__label"
                     >
+                      Customer Name:
+                    </label>
+                    <input
+                      type="text"
+                      id="customerName"
+                      value={formData.customerName}
+                      disabled
+                      className="staff-create-booking__input"
+                      placeholder="Customer Name"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="staff-create-booking__form-grid
+                staff-create-booking__form-grid--full-width"
+                >
+                  <div className="staff-create-booking__form-group">
+                    <label className="staff-create-booking__label">
                       Select Time:
                     </label>
-                    <div className="manager-booking-modal__slots-list">
+                    <div className="staff-create-booking__slots-list">
                       {(slots || []).map((time) => (
                         <label
                           key={time.slotid}
-                          className={`manager-booking-modal__slots-option ${
+                          className={`staff-create-booking__slots-option ${
                             slotRealTime.some(
                               (item) => item.slotid === time.slotid
                             )
                               ? ""
-                              : "disabled"
+                              : " disabled"
                           }`}
                         >
                           <input
@@ -318,7 +362,7 @@ const StaffCreateBooking = () => {
                                 (item) => item.slotid === time.slotid
                               )
                             }
-                            className={`manager-booking-modal__radio ${
+                            className={`staff-create-booking__radio ${
                               slotRealTime.some(
                                 (item) => item.slotid === time.slotid
                               )

@@ -147,7 +147,7 @@ export const Routes = [
     children: [
       {
         path: "stylist",
-        element: <ManagerStylist buttonLabel={"+ New stylist"} />,
+        element: <ManagerStylist buttonLabel={"New stylist"} />,
       },
       {
         path: "stylist/create",
@@ -155,7 +155,7 @@ export const Routes = [
       },
       {
         path: "staff",
-        element: <ManagerStaff buttonLabel={"+ New staff"} />,
+        element: <ManagerStaff buttonLabel={"New staff"} />,
       },
       {
         path: "staff/create",
@@ -167,11 +167,11 @@ export const Routes = [
       },
       {
         path: "booking/pending",
-        element: <ManagerBookingPending buttonLabel={"+ New booking"} />,
+        element: <ManagerBookingPending buttonLabel={"New booking"} />,
       },
       {
         path: "booking/in-process",
-        element: <ManagerBookingInProcess buttonLabel={"+ New booking"} />,
+        element: <ManagerBookingInProcess buttonLabel={"New booking"} />,
       },
       {
         path: "booking/complete",

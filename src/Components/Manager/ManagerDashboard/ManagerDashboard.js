@@ -169,6 +169,13 @@ const ManagerDashboard = () => {
     fetchManagerData();
   }, []);
 
+  const formatDateForDisplay = (dateString) => {
+    return dayjs(dateString).format("MM/YYYY");
+  };
+
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
 
   const CalendarDropdown = () => {
     const wrapperStyle = {
@@ -183,7 +190,7 @@ const ManagerDashboard = () => {
     };
 
     return (
-      <div style={wrapperStyle}>
+      <div style={wrapperStyle} onClick={stopPropagation}>
         <Calendar
           fullscreen={false}
           onSelect={onSelect}
@@ -193,6 +200,13 @@ const ManagerDashboard = () => {
       </div>
     );
   };
+
+   const items = [
+    {
+      key: "1",
+      label: <CalendarDropdown />,
+    },
+  ];
 
   useEffect(() => {
     if (manager.salonId !== undefined) {
@@ -264,14 +278,6 @@ const ManagerDashboard = () => {
   
   }, [selectDay, manager]);
 
-
-  const items = [
-    {
-      key: "1",
-      label: <CalendarDropdown />,
-    },
-  ];
-
   const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
@@ -279,8 +285,9 @@ const ManagerDashboard = () => {
 
   return (
     <div className="manager-dashboard">
-       <div className="manager-salary__header-filter">
+       <div className="manager-dashboard__header-filter">
             <Dropdown
+            className="manager-dashboard__header-filter--select"
               menu={{
                 items,
               }}
@@ -288,7 +295,7 @@ const ManagerDashboard = () => {
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                  {selectDay}
+                  {formatDateForDisplay(selectDay)}
                   <DownOutlined />
                 </Space>
               </a>

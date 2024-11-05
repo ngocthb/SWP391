@@ -80,6 +80,19 @@ min-height: 100vh;
           border: 1px solid var(--PrimaryColor);
         }
       }
+
+      &--select {
+        white-space: nowrap;
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 400;
+        background-color: var(--WhiteColor);
+        margin-left: 10px;
+        line-height: 1.5;
+        color: black;
+      }
     }
   }
 
