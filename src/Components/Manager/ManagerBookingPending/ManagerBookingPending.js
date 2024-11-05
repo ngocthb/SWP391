@@ -7,6 +7,7 @@ import { FaAngleLeft, FaChevronRight } from "react-icons/fa";
 import { Skeleton } from "@mui/material";
 import { FolderOutlined } from "@ant-design/icons";
 import { BiDetail } from "react-icons/bi";  
+import Swal from "sweetalert2";
 
 const ManagerBookingPending = () => {
   const [bookings, setBookings] = useState([]);
@@ -117,32 +118,32 @@ const ManagerBookingPending = () => {
     fetchManagerData();
   }, []);
 
-  useEffect(() => {
+  const fetchBookings = async (page) => {
     setBookingLoading(true);
+    try {
+      const response = await api.get(
+        `manager/stylists/booking/pending/${page}/7/${
+          manager.salonId
+        }/${formatDateForInput(selectedDate)}`
+      );
+
+      const data = response.data.result.content;
+      const total = response.data.result.totalPages;
+      console.log(data);
+      if (data) {
+        setBookings(data);
+        setOriginalBookings(data);
+        setTotalPages(total);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setBookingLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (manager.salonId !== undefined) {
-      const fetchBookings = async (page) => {
-        try {
-          const response = await api.get(
-            `manager/stylists/booking/pending/${page}/7/${
-              manager.salonId
-            }/${formatDateForInput(selectedDate)}`
-          );
-
-          const data = response.data.result.content;
-          const total = response.data.result.totalPages;
-          console.log(data);
-          if (data) {
-            setBookings(data);
-            setOriginalBookings(data);
-            setTotalPages(total);
-          }
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setBookingLoading(false);
-        }
-      };
-
       fetchBookings(currentPage);
     }
   }, [ manager, selectedDate, currentPage]);
@@ -269,6 +270,40 @@ const ManagerBookingPending = () => {
     if (page >= 0 && page < totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  const deleteBookingData = async (bookingId) => {
+    try {
+      const response = await api.delete(`booking/${bookingId}`);
+      if (response.data) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The booking has been deleted.",
+          icon: "success",
+        });
+        fetchBookings(currentPage);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const confirmDeleteModal = (bookingId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete this booking!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteBookingData(bookingId);
+        } catch (error) {}
+      }
+    });
   };
 
   return (
@@ -404,7 +439,8 @@ const ManagerBookingPending = () => {
                           >
                             <BiDetail />
                           </button>
-                          <button className="manager-booking-pending__action-button">
+                          <button className="manager-booking-pending__action-button"
+                           onClick={() => confirmDeleteModal(booking.id)}>
                             🗑
                           </button>
                         </td>

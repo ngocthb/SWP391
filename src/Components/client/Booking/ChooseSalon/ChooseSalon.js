@@ -15,7 +15,6 @@ import api from "../../../../config/axios";
 export default function ChooseSalon() {
   const [searchValue, setSearchValue] = useState("");
   const [salonLocations, setSalonLocations] = useState([]);
-  // const [searchResults, setSearchResults] = useState(salonLocations);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const inputRef = useRef();
 
@@ -42,32 +41,6 @@ export default function ChooseSalon() {
       }
     }
   }, [salonLocations]);
-
-  // useEffect(() => {
-
-  //   if (!searchValue.trim()) {
-  //     setSearchResults(salonLocations);
-  //     return;
-  //   }
-
-  //   const fetchSalons = async () => {
-  //     try {
-  //       const response = await api.get(`users/search`, {
-  //         params: {
-  //           q: searchValue,
-  //           type: "less",
-  //         },
-  //       });
-  //       if (response.data && response.data.result) {
-  //         setSearchResults(response.data.result);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching salons:", error);
-  //     }
-  //   };
-
-  //   fetchSalons();
-  // }, [searchValue]);
 
   const handleClearSearch = () => {
     setSearchValue("");
@@ -113,11 +86,11 @@ export default function ChooseSalon() {
           </li>
           <li
             className={`chooseSalon__tagNavigation--item-content ${
-              (isSelectedServices && selectedBranch) ? "" : "disable"
+              (isSelectedServices && isSelectedBranch) ? "" : "disable"
             }`}
           >
             <Link
-              to={(isSelectedServices && selectedBranch) ? "/booking/step3" : "/booking/step1"}
+              to={(isSelectedServices && isSelectedBranch) ? "/booking/step3" : "/booking/step1"}
               aria-label="Select Stylist"
             >
               <div className="filled"></div>
@@ -127,11 +100,11 @@ export default function ChooseSalon() {
           </li>
           <li
             className={`chooseSalon__tagNavigation--item-content ${
-              (isSelectedStylist && isSelectedServices && selectedBranch) ? "" : "disable"
+              (isSelectedStylist && isSelectedServices && isSelectedBranch) ? "" : "disable"
             }`}
           >
             <Link
-              to={(isSelectedStylist && isSelectedServices && selectedBranch) ? "/booking/step4" : "/booking/step1"}
+              to={(isSelectedStylist && isSelectedServices && isSelectedBranch) ? "/booking/step4" : "/booking/step1"}
               aria-label="Select Time"
             >
               <div className="filled"></div>

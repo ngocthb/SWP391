@@ -428,6 +428,40 @@ const StaffBookingPending = ({ buttonLabel }) => {
     fetchBookings();
   }, [searchValue, staff, bookings]);
 
+  const deleteBookingData = async (bookingId) => {
+    try {
+      const response = await api.delete(`booking/${bookingId}`);
+      if (response.data) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The booking has been deleted.",
+          icon: "success",
+        });
+        fetchBookings(currentPage);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const confirmDeleteModal = (bookingId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete this booking!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteBookingData(bookingId);
+        } catch (error) {}
+      }
+    });
+  };
+
   const createBooking = () => {
     navigate("/staff/booking/create");
   };
@@ -579,7 +613,8 @@ const StaffBookingPending = ({ buttonLabel }) => {
                         >
                           ✎
                         </button>
-                        <button className="staff-booking-pending__action-button">
+                        <button className="staff-booking-pending__action-button"
+                         onClick={() => confirmDeleteModal(booking.id)}>
                           🗑
                         </button>
                         <button

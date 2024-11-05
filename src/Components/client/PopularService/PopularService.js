@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RiScissorsFill } from "react-icons/ri";
 import { FiDroplet } from "react-icons/fi";
@@ -8,12 +8,22 @@ import { FaArrowRight } from "react-icons/fa6";
 import "./PopularService.scss";
 import api from "../../../config/axios";
 import DOMPurify from "dompurify";
+
 export default function PopularService() {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
+
+  const skillIconMap = {
+    "Hair cutting": RiScissorsFill,
+    "Curling hair": FiDroplet,
+    "Hair straightening": GiComb,
+    "Hair dye": PiHairDryerBold,
+  };
+
   function formatPrice(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
+
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -39,7 +49,7 @@ export default function PopularService() {
     <section className="service container section">
       <div className="service__container">
         <div className="service__container-title">
-          <h2>Popular Service</h2>
+          <h2>Newest Service</h2>
           <p>
             Discover our most sought-after services designed to enhance your
             beauty and leave you feeling fabulous. Whether you're looking for a
@@ -60,22 +70,11 @@ export default function PopularService() {
                 <div className="service__details-price flex">
                   <h4>{service.price && formatPrice(service.price)} VND</h4>
                 </div>
+
                 <div className="service__name flex">
                   <div className="service__name-single flex">
-                    <RiScissorsFill className="icon" />
-                    <small>Haircuts</small>
-                  </div>
-                  <div className="service__name-single flex">
-                    <PiHairDryerBold className="icon" />
-                    <small>Hair dryer</small>
-                  </div>
-                  <div className="service__name-single flex">
-                    <FiDroplet className="icon" />
-                    <small>Hair dye</small>
-                  </div>
-                  <div className="service__name-single  flex">
-                    <GiComb className="icon" />
-                    <small>Hair combing</small>
+                    {service.skillName && React.createElement(skillIconMap[service.skillName])}
+                    <small>{service.skillName}</small>
                   </div>
                 </div>
 

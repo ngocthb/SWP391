@@ -170,7 +170,6 @@ export default function AdminService() {
       if (result.isConfirmed) {
         try {
           await deleteServiceData(serviceId);
-          fetchServices();
         } catch (error) {}
       }
     });
