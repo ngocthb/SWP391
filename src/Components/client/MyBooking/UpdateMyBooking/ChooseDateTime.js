@@ -131,7 +131,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
       };
       try {
         const response = await api.post(
-          `booking/slots${bookingId}`,
+          `booking/slots/${bookingId}`,
           bookingValue
         );
         if (response.data && response.data.result) {
