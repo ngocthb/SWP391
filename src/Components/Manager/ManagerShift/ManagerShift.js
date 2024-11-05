@@ -105,6 +105,19 @@ export default function ManagerShift() {
     fetchShiftData();
   }, [selectDay, stylistsData]);
 
+  const fetchBookingBusy = async () => {
+    try {
+      const response = await api.get(`manager/booking/stylist/busy`);
+      const data = response.data.result;
+      console.log(data);
+      if (data.length > 0) {
+        navigate("/manager/shift/update");
+      }
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+
   const refreshData = () => {
     fetchShiftData();
   };
@@ -198,6 +211,7 @@ export default function ManagerShift() {
           icon: "success",
           confirmButtonText: "OK",
         });
+        await fetchBookingBusy();
       }
     } catch (err) {
       console.log(err);
@@ -222,36 +236,7 @@ export default function ManagerShift() {
   const handleSubmit = async (e) => {
     await updateStylistData(e);
     refreshData();
-    // await fetchBookingBusy();
   };
-
-  // const fetchBookingBusy = async () => {
-  //   const value = {
-  //     stylistScheduleId: formData.id,
-  //     shiftId: changedShifts,
-  //   };
-  //   try {
-  //     const response = await api.get(`manager/booking/stylist/busy`);
-  //     const data = response.data.result;
-  //     if (data.length > 0) {
-  //       console.log("aaaaaaaaaa");
-  //       console.log("schedule", value.stylistScheduleId);
-  //       console.log("shiftId", value.shiftId);
-  //       console.log("selecstylist", selectedStylist);
-  //       console.log("selectday", selectDay);
-  //       navigate(`/manager/shift/update`, {
-  //         state: {
-  //           stylistScheduleId: value.stylistScheduleId,
-  //           shiftId: value.shiftId,
-  //           stylist: selectedStylist,
-  //           date: selectDay,
-  //         },
-  //       });
-  //     }
-  //   } catch (e) {
-  //     console.warn(e);
-  //   }
-  // };
 
   const handleSkillToggle = (shift) => {
     setSelectedShift((prevSelected) => {

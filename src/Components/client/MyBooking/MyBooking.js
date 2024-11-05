@@ -7,6 +7,7 @@ import React, { useState, useEffect, createContext } from "react";
 import api from "../../../config/axios";
 import { Modal } from "antd";
 import Swal from "sweetalert2";
+import Skeleton from "@mui/material/Skeleton";
 
 import "./MyBooking.scss";
 import { ChooseDateTime } from "./UpdateMyBooking/ChooseDateTime";
@@ -17,22 +18,22 @@ import Feedback from "./Feedback/Feedback";
 
 export const bookingIdContext = createContext();
 export default function MyBooking() {
-  const [activeTab, setActiveTab] = useState("pending");
+  const [activeTab, setActiveTab] = useState(null);
   const [bookingHistory, setBookingHistory] = useState([]);
   const [bookingId, setBookingId] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [accountId, setAccountId] = useState(0);
   const [currentBookingId, setCurrentBookingId] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // const response = await api.get(`customer-profile`);
         const response = await api.get("customer/profile");
         const data = response.data;
         if (data) {
-          // setAccountId(data[0].accountid);
           setAccountId(data.result.accountid);
+          setActiveTab("pending");
         }
       } catch (err) {
         console.error(err);
@@ -42,21 +43,26 @@ export default function MyBooking() {
   }, [accountId]);
 
   const fetchBookingHistory = async () => {
+    setLoading(true);
     try {
-      // const response = await api.get("bookingHistory");
       const response = await api.get(`customer/${accountId}/${activeTab}`);
       if (response.data) {
-        // setBookingHistory(response.data);
         setBookingHistory(response.data.result);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchBookingHistory();
-  }, [accountId, activeTab, bookingHistory]);
+  }, [activeTab]);
+
+  const refresh = () => {
+    fetchBookingHistory();
+  };
 
   const showModal = (bookingId) => {
     if (bookingId) {
@@ -125,6 +131,19 @@ export default function MyBooking() {
     });
   };
 
+  const skeletonContainerStyle = {
+    width: "98%",
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    gap: "10px",
+  };
+
+  const skeletonStyle = {
+    flex: "0 1 32%", // Each skeleton takes 30% of the width
+    height: "180px", // Set height
+  };
+
   return (
     <>
       <div className="myBooking">
@@ -154,59 +173,69 @@ export default function MyBooking() {
             {/* update và xóa booking */}
             {activeTab === "pending" && (
               <section className="tab-panel">
-                <h2>Booking upcoming </h2>
+                <h2>Upcoming Bookings</h2>
                 <div className="panel">
-                  {(bookingHistory || []).map((booking) => (
-                    <div key={booking.bookingId} className="panel__card">
-                      <div className="panel__card-info">
-                        <div className="info__title">
-                          <h3>#{booking.bookingId}</h3>
-                          <div className="info__title-right">
-                            <h3>#{booking.date}</h3>
-                            <h4>{booking.time}</h4>
+                  {loading ? (
+                    <div style={skeletonContainerStyle}>
+                      <Skeleton variant="rect" style={skeletonStyle} />
+                      <Skeleton variant="rect" style={skeletonStyle} />
+                      <Skeleton variant="rect" style={skeletonStyle} />
+                      <Skeleton variant="rect" style={skeletonStyle} />
+                      <Skeleton variant="rect" style={skeletonStyle} />
+                      <Skeleton variant="rect" style={skeletonStyle} />
+                    </div>
+                  ) : (
+                    (bookingHistory || []).map((booking) => (
+                      <div key={booking.bookingId} className="panel__card">
+                        <div className="panel__card-info">
+                          <div className="info__title">
+                            <h3>#{booking.bookingId}</h3>
+                            <div className="info__title-right">
+                              <h3>#{booking.date}</h3>
+                              <h4>{booking.time}</h4>
+                            </div>
                           </div>
-                        </div>
-                        <div className="info__content">
-                          <p>
-                            <label>Address :</label>
-                            {booking.salonName}
-                          </p>
-                          <p>
-                            <label>Stylist :</label> {booking.stylistName}
-                          </p>
-                          <div className="info__content-lists">
-                            <label>Services :</label>
-                            {Array.isArray(booking.serviceName) &&
-                            booking.serviceName.length > 0
-                              ? booking.serviceName.map((service, index) => (
-                                  <div key={index}>
-                                    <GoDotFill className="lists-icon" />
-                                    {service.serviceName}
-                                  </div>
-                                ))
-                              : null}
+                          <div className="info__content">
+                            <p>
+                              <label>Address:</label> {booking.salonName}
+                            </p>
+                            <p>
+                              <label>Stylist:</label> {booking.stylistName}
+                            </p>
+                            <div className="info__content-lists">
+                              <label>Services:</label>
+                              {Array.isArray(booking.serviceName) &&
+                              booking.serviceName.length > 0
+                                ? booking.serviceName.map((service, index) => (
+                                    <div key={index}>
+                                      <GoDotFill className="lists-icon" />
+                                      {service.serviceName}
+                                    </div>
+                                  ))
+                                : null}
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="panel-actions">
-                          <button
-                            className="panel-btn btn"
-                            onClick={() => showModal(booking.bookingId)}
-                          >
-                            <LiaUserEditSolid className="myBooking-icon" />
-                          </button>
-                          <button
-                            className="panel-btn btn"
-                            onClick={() =>
-                              confirmDeleteModal(booking.bookingId)
-                            }
-                          >
-                            <FiTrash2 className="myBooking-icon" />
-                          </button>
+                          <div className="panel-actions">
+                            <button
+                              className="panel-btn btn"
+                              onClick={() => showModal(booking.bookingId)}
+                            >
+                              <LiaUserEditSolid className="myBooking-icon" />
+                            </button>
+                            <button
+                              className="panel-btn btn"
+                              onClick={() =>
+                                confirmDeleteModal(booking.bookingId)
+                              }
+                            >
+                              <FiTrash2 className="myBooking-icon" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
                 <bookingIdContext.Provider value={bookingId}>
                   <Modal
@@ -234,7 +263,10 @@ export default function MyBooking() {
                       <ChooseDateTime
                         accountId={accountId}
                         onPre={() => setCurrentStep("stylist")}
-                        onSave={handleCancel}
+                        onSave={() => {
+                          handleCancel();
+                          refresh();
+                        }}
                       />
                     ) : null}
                   </Modal>
