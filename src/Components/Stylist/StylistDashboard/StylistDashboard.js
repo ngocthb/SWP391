@@ -164,33 +164,31 @@ export default function StylistDashboard() {
                 stroke="white"
                 strokeWidth={2}
               >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </div>
-            <div>
-              <div className="stat-number">3,640</div>
-              <div className="stat-label">Male Employees</div>
-            </div>
-          </div>
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="2"
+                />
 
-          <div className="dashboard__header-card">
-            <div className="icon-box orange">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth={2}
-              >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
+                <text
+                  x="12"
+                  y="16"
+                  font-size="10"
+                  text-anchor="middle"
+                  fill="white"
+                  font-weight="100"
+                  font-family="Arial"
+                >
+                  $
+                </text>
               </svg>
             </div>
             <div>
-              <div className="stat-number">3,040</div>
-              <div className="stat-label">Female Employees</div>
+              <div className="stat-number">{feedback.bonusPercent || 0}</div>
+              <div className="stat-label">Bonus Percent</div>
             </div>
           </div>
         </div>
@@ -234,7 +232,7 @@ export default function StylistDashboard() {
             </div>
           </div>
 
-          <div className="dashboard__container-right">
+          {/* <div className="dashboard__container-right">
             <div className="wfh-section">
               <div className="wfh-circle">
                 <div className="wfh-icon"></div>
@@ -259,7 +257,7 @@ export default function StylistDashboard() {
                 <span className="chart-value">8</span>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
