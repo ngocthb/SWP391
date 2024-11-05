@@ -48,7 +48,6 @@ export default function StylistDashboard() {
       try {
         const response = await api.get(`stylist/profile`);
         const data = response.data.result;
-        console.log(data);
         if (data) {
           setStylistInfo(data);
         }
@@ -67,7 +66,6 @@ export default function StylistDashboard() {
             `stylist/salaries/${stylistInfo.salonId}/${selectDay}/${stylistInfo.accountid}`
           );
           const data = response.data.result;
-          console.log(data);
           setRevenue(data);
         } catch (err) {
           console.error(err);
@@ -104,7 +102,7 @@ export default function StylistDashboard() {
           );
           const data = response.data.result;
           console.log(data);
-          setTotalBooking(data.bookingQuantity);
+          setTotalBooking(data);
         } catch (err) {
           console.error(err);
         }
@@ -116,6 +114,8 @@ export default function StylistDashboard() {
   const formatCurrency = (value) => {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
   };
+
+  console.log(totalBooking);
   return (
     <>
       <div className="dashboard">
@@ -149,7 +149,9 @@ export default function StylistDashboard() {
               </svg>
             </div>
             <div>
-              <div className="stat-number">{totalBooking || 0}</div>
+              <div className="stat-number">
+                {totalBooking.bookingQuantity || 0}
+              </div>
               <div className="stat-label">Total Booking</div>
             </div>
           </div>
@@ -170,24 +172,26 @@ export default function StylistDashboard() {
                   r="10"
                   fill="none"
                   stroke="white"
-                  stroke-width="2"
+                  strokeWidth="2"
                 />
 
                 <text
                   x="12"
                   y="16"
-                  font-size="10"
-                  text-anchor="middle"
+                  fontSize="10"
+                  textAnchor="middle"
                   fill="white"
-                  font-weight="100"
-                  font-family="Arial"
+                  fontWeight="100"
+                  fontFamily="Arial"
                 >
                   $
                 </text>
               </svg>
             </div>
             <div>
-              <div className="stat-number">{feedback.bonusPercent || 0}</div>
+              <div className="stat-number">
+                {totalBooking.bonusPercent * 100 || 0} %
+              </div>
               <div className="stat-label">Bonus Percent</div>
             </div>
           </div>
