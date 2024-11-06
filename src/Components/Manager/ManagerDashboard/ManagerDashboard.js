@@ -13,8 +13,6 @@ const { TabPane } = Tabs;
 
 const ManagerDashboard = () => {
   const [totalProfit, setTotalProfit] = useState(0);
-  const [growth, setGrowth] = useState(0);
-  const [orders, setOrders] = useState(0);
   const [customers, setCustomers] = useState(0);
   const [selectDay, setSelectedDay] = useState(dayjs().format("YYYY-MM"));
   const [manager, setManager] = useState([]);
@@ -56,8 +54,6 @@ const ManagerDashboard = () => {
     const steps = duration / intervalTime;
 
     const incrementProfit = finalValues.profit / steps;
-    const incrementGrowth = finalValues.growth / steps;
-    const incrementOrders = finalValues.orders / steps;
     const incrementCustomers = finalValues.customers / steps;
 
     let currentProfit = 0;
@@ -69,14 +65,6 @@ const ManagerDashboard = () => {
       if (currentProfit < finalValues.profit) {
         currentProfit += incrementProfit;
         setTotalProfit(Math.round(currentProfit));
-      }
-      if (currentGrowth < finalValues.growth) {
-        currentGrowth += incrementGrowth;
-        setGrowth(Math.round(currentGrowth * 100) / 100);
-      }
-      if (currentOrders < finalValues.orders) {
-        currentOrders += incrementOrders;
-        setOrders(Math.round(currentOrders));
       }
       if (currentCustomers < finalValues.customers) {
         currentCustomers += incrementCustomers;
@@ -304,22 +292,12 @@ const ManagerDashboard = () => {
           </div>
       <Row gutter={16} className="manager-dashboard__container">
      
-        <Col span={6}>
+        <Col span={12}>
           <Card>
             <Statistic title="Profit" value={totalProfit && formatNumber(totalProfit)} suffix="VND" />
           </Card>
         </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Growth" value={growth} suffix="%" />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Orders" value={orders && formatNumber(orders)} />
-          </Card>
-        </Col>
-        <Col span={6}>
+        <Col span={12}>
           <Card>
             <Statistic title="Customers" value={customers && formatNumber(customers)} />
           </Card>
