@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { RiTimeLine } from "react-icons/ri";
 import api from "../../../config/axios";
 import Swal from "sweetalert2";
+import { Spin } from "antd";
 
 export default function Booking() {
   const [selectedBranch, setSelectedBranch] = useState("");
@@ -21,6 +22,7 @@ export default function Booking() {
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({});
+  const [loading ,setLoading] = useState(false);
 
   useEffect(() => {
     const isSelectedDate = sessionStorage.getItem("selectedDate");
@@ -207,6 +209,7 @@ export default function Booking() {
   }, []);
 
   const handleBookNow = async () => {
+    setLoading(true);
     const customerId = userInfo.accountid;
 
     const storedBranchId = sessionStorage.getItem("selectedBranchId");
@@ -255,6 +258,8 @@ export default function Booking() {
         title: error.response.data.message,
         timer: 2500,
       });
+    }finally{
+      setLoading(false);
     }
 
     sessionStorage.removeItem("selectedBranchId");
@@ -388,8 +393,9 @@ export default function Booking() {
             <Link
               className="booking__container-btn btn flex"
               onClick={handleBookNow}
+              disabled={loading}
             >
-              Book Now
+              {loading ? <Spin size="small" /> : "Booking now"}
             </Link>
           </div>
         </form>

@@ -16,6 +16,7 @@ import { slots } from "../../../../data/booking";
 
 import { bookingIdContext } from "../MyBooking";
 import { updateBooking } from "../../../../actions/Update";
+import Swal from "sweetalert2";
 
 export function ChooseDateTime({ accountId, onPre, onSave }) {
   const bookingId = useContext(bookingIdContext);
@@ -54,7 +55,6 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
   // Example usage:
   const inputTime = "09:00:00";
   const convertedTime = convertTime(inputTime);
-  console.log(convertedTime); // Outputs: 09:00
 
   const fetchBooking = async () => {
     try {
@@ -157,13 +157,10 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
       bookingDate: sessionStorage.getItem("selectedDate"),
       serviceId: JSON.parse(sessionStorage.getItem("selectedServicesId")),
       stylistId: parseInt(sessionStorage.getItem("selectedStylistId"), 10),
-      voucherId: parseInt(sessionStorage.getItem("selectedVoucherId"), 10),
+      voucherId: sessionStorage.getItem("selectedVoucherId") ? parseInt(sessionStorage.getItem("selectedVoucherId"), 10) : 0,
     };
-
     setLoading(true);
     try {
-      console.log(updateValues);
-      console.log(bookingId);
       const response = await api.put(
         // `bookingHistory/${bookingId}`,
         `booking/${bookingId}`,
@@ -172,8 +169,13 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
       const data = response.data;
 
       if (data) {
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Update Booking successfully.",
+          timer: 2500,
+        });
         dispatch(updateBooking());
-        messageApi.success("Booking information updated successfully!");
         toggleModal();
       }
     } catch (err) {
