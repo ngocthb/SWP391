@@ -20,7 +20,7 @@ export default function StylistFeedback() {
         0
       );
 
-      const averageRate = totalScore / 2 / data.length;
+      const averageRate = (totalScore / 2 / data.length).toFixed(1);
 
       setAvrRate(averageRate);
     } catch (err) {
@@ -47,7 +47,7 @@ export default function StylistFeedback() {
 
   const numberOfRate = (rate) => {
     const arr = feedbackData.filter((f) => rate === f.score / 2);
-    return (arr.length / feedbackData.length) * 100;
+    return ((arr.length / feedbackData.length) * 100).toFixed(1);
   };
 
   return (
