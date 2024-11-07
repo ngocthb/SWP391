@@ -13,7 +13,7 @@ const { TabPane } = Tabs;
 
 const ManagerDashboard = () => {
   const [totalProfit, setTotalProfit] = useState(0);
-  const [customers, setCustomers] = useState(0);
+  const [bookings, setBookings] = useState(0);
   const [selectDay, setSelectedDay] = useState(dayjs().format("YYYY-MM"));
   const [manager, setManager] = useState([]);
   const [profit, setProfit] = useState([]);
@@ -22,9 +22,7 @@ const ManagerDashboard = () => {
 
   const [finalValues, setFinalValues] = useState({
     profit: 0,
-    growth: 17.21,
-    orders: 3685,
-    customers: 1832,
+    bookings: 1832,
   });
 
   function formatDateToOrdinal(dateString) {
@@ -49,33 +47,34 @@ const ManagerDashboard = () => {
       return;
     }
 
+    if (finalValues.bookings === 0) {
+      setBookings(0);
+      return;
+    }
+
     const duration = 2000;
     const intervalTime = 50;
     const steps = duration / intervalTime;
 
     const incrementProfit = finalValues.profit / steps;
-    const incrementCustomers = finalValues.customers / steps;
+    const incrementBookings = finalValues.bookings / steps;
 
     let currentProfit = 0;
-    let currentGrowth = 0;
-    let currentOrders = 0;
-    let currentCustomers = 0;
+    let currentBookings = 0;
 
     const interval = setInterval(() => {
       if (currentProfit < finalValues.profit) {
         currentProfit += incrementProfit;
         setTotalProfit(Math.round(currentProfit));
       }
-      if (currentCustomers < finalValues.customers) {
-        currentCustomers += incrementCustomers;
-        setCustomers(Math.round(currentCustomers));
+      if (currentBookings < finalValues.customers) {
+        currentBookings += incrementBookings;
+        setBookings(Math.round(currentBookings));
       }
 
       if (
         currentProfit >= finalValues.profit &&
-        currentGrowth >= finalValues.growth &&
-        currentOrders >= finalValues.orders &&
-        currentCustomers >= finalValues.customers
+        currentBookings >= finalValues.bookings
       ) {
         clearInterval(interval);
       }
@@ -243,6 +242,21 @@ const ManagerDashboard = () => {
         }
       }
 
+      const fetchBookingsData = async () => {
+        setLoading(true);
+        try {
+         const response = await api.get(`booking/count/completed/${selectDay}`);
+         const data = response.data.result;
+         if (data) {
+          setBookings(data);
+         }
+        } catch (error) {
+         console.log(error)
+        }finally{
+          setLoading(false);
+        }
+       }
+
       const fetchEmployeeData = async () => {
         setLoading(true);
         try {
@@ -261,6 +275,7 @@ const ManagerDashboard = () => {
       fetchTotalProfit();
       fetchProfit();
       fetchEmployeeData();
+      fetchBookingsData();
     }
 
   
@@ -299,7 +314,7 @@ const ManagerDashboard = () => {
         </Col>
         <Col span={12}>
           <Card>
-            <Statistic title="Customers" value={customers && formatNumber(customers)} />
+            <Statistic title="Customers" value={bookings && formatNumber(bookings)} />
           </Card>
         </Col>
       </Row>
