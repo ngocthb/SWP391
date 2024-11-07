@@ -5,8 +5,6 @@ import "./Login.scss";
 import { message, Spin } from "antd";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { googleProvider } from "../../../config/firebase";
-import { useDispatch } from "react-redux";
-import { setRole } from "../../../actions/Role";
 import { eye, eye_off, google_icon, logo_blue_noBackground } from "../../../data/image";
 
 const Login = () => {
@@ -15,7 +13,6 @@ const Login = () => {
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handlePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -34,7 +31,7 @@ const Login = () => {
       });
       const { token, role } = response.data.result;
       sessionStorage.setItem("token", token);
-      dispatch(setRole(role));
+      sessionStorage.setItem("role", role);
 
       if (role === "ADMIN") {
         navigate("/admin/dashboard");
@@ -72,6 +69,7 @@ const Login = () => {
       if (data) {
         const { token, role } = data;
         sessionStorage.setItem("token", token);
+        sessionStorage.setItem("role", role);
 
         if (role === "ADMIN") {
           navigate("/admin/dashboard");

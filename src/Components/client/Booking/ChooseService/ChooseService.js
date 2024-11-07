@@ -41,6 +41,23 @@ export default function ChooseService() {
   //   }
   // }, []);
 
+  const handleVoucher = (voucher) => {
+    setSelectVoucher(voucher);
+    sessionStorage.setItem('selectedVoucherId', voucher.id);
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    const storedVoucher = sessionStorage.getItem('selectedVoucherId');
+    if (storedVoucher) {
+      const voucherId = JSON.parse(storedVoucher);
+      const selectedVoucher = voucher.find(v => v.id === voucherId);
+      if (selectedVoucher) {
+        setSelectVoucher(selectedVoucher);
+      }
+    } 
+  }, [voucher]);
+
   useEffect(() => {
     const storedServices = sessionStorage.getItem("selectedServicesId");
     if (storedServices) {
@@ -104,10 +121,6 @@ export default function ChooseService() {
 
   const handleChange = (e) => {
     setSearchValue(e.target.value);
-  };
-
-  const handleHidden = () => {
-    setAreServicesHidden((prev) => !prev);
   };
 
   const handleRemoveService = (serviceToRemove) => {
@@ -174,10 +187,7 @@ export default function ChooseService() {
     }
   };
 
-  const handleVoucher = (voucher) => {
-    setSelectVoucher(voucher);
-    setIsModalOpen(false);
-  };
+  
   return (
     <div className="chooseServices">
       <div className="chooseService">
