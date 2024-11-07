@@ -70,23 +70,23 @@ import AdminKpi from "../Components/Admin/AdminKpi/AdminKpi";
 export const Routes = [
   {
     path: "/",
-    element: <HomePageLayout />,
+    element: <HomePageLayout/>,
     children: [
       {
         path: "/",
-        element: <HomePage />,
+        element: <HomePage/>,
       },
       {
         path: "/aboutus",
-        element: <AboutUsPage />,
+        element: <AboutUsPage/>,
       },
       {
         path: "/services",
-        element: <Services />,
+        element: <Services/>,
       },
       {
         path: "/contact",
-        element: <Contact />,
+        element: <Contact/>,
       },
       {
         path: "/details",
