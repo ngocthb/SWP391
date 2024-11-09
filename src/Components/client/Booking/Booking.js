@@ -3,12 +3,15 @@ import { CiHome } from "react-icons/ci";
 import { PiScissors } from "react-icons/pi";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { SlPeople } from "react-icons/sl";
+import { MdOutlineDiscount } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import "./Booking.scss";
 import { useEffect, useState } from "react";
 import { RiTimeLine } from "react-icons/ri";
 import api from "../../../config/axios";
+import Swal from "sweetalert2";
+import { Spin } from "antd";
 
 export default function Booking() {
   const [selectedBranch, setSelectedBranch] = useState("");
@@ -16,8 +19,10 @@ export default function Booking() {
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedStylist, setSelectedStylist] = useState("");
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({});
+  const [loading ,setLoading] = useState(false);
 
   useEffect(() => {
     const isSelectedDate = sessionStorage.getItem("selectedDate");
@@ -43,6 +48,7 @@ export default function Booking() {
   const [services, setServices] = useState([]);
   const [stylists, setStylists] = useState([]);
   const [timeSlots, setTimeSlots] = useState([]);
+  const [vouchers, setVouchers] = useState([]);
 
   useEffect(() => {
     const fetchSalonLocations = async () => {
@@ -64,6 +70,18 @@ export default function Booking() {
       } catch (error) {}
     };
     fetchService();
+
+    const fetchVoucher = async () => {
+      try {
+        const response = await api.get("voucher");
+        const data = response.data.result;
+        console.log(data)
+        if (data) {
+          setVouchers(data);
+        }
+      } catch (error) {}
+    };
+    fetchVoucher();
 
     const storedBranchId = sessionStorage.getItem("selectedBranchId");
     const branchId = parseInt(storedBranchId, 10);
@@ -114,7 +132,7 @@ export default function Booking() {
 
   useEffect(() => {
     const storedBranchId = sessionStorage.getItem("selectedBranchId");
-    if (storedBranchId) {
+    if (storedBranchId && salonLocations.length > 0) {
       const branchId = parseInt(storedBranchId, 10);
       const branch = salonLocations.find((b) => b.id === branchId);
       if (branch) {
@@ -123,7 +141,7 @@ export default function Booking() {
     }
 
     const storedServices = sessionStorage.getItem("selectedServicesId");
-    if (storedServices) {
+    if (storedServices && services.length > 0) {
       const serviceIds = JSON.parse(storedServices);
       const selected = services.filter((service) =>
         serviceIds.includes(service.id)
@@ -135,7 +153,7 @@ export default function Booking() {
     const storedDate = sessionStorage.getItem("selectedDate");
     if (storedTimeId) {
       const timeId = parseInt(storedTimeId, 10);
-      if (timeId) {
+      if (timeId && timeSlots.length > 0) {
         const time = timeSlots.find((t) => t.slotid === timeId);
         if (time) {
           setSelectedTime(time.slottime);
@@ -148,13 +166,23 @@ export default function Booking() {
 
     const storedStylistId = sessionStorage.getItem("selectedStylistId");
     const stylistId = parseInt(storedStylistId, 10);
-    if (stylistId) {
+    if (stylistId && stylists.length>0) {
       const stylist = stylists.find((s) => s.id === stylistId);
       if (stylist) {
         setSelectedStylist(stylist.fullname);
       }
     }
-  }, [salonLocations, services, stylists, timeSlots]);
+
+    const storedVoucherId = sessionStorage.getItem("selectedVoucherId");
+    const voucherId = parseInt(storedVoucherId, 10);
+    if (voucherId && vouchers.length > 0) {
+      console.log(vouchers)
+      const voucher = vouchers.find((v) => v.id === voucherId);
+      if (voucher) {
+        setSelectedVoucher(voucher.code);
+      }
+    }
+  }, [salonLocations, services, stylists, timeSlots, vouchers]);
 
   const formatDateForInput = (dateString) => {
     const date = new Date(dateString);
@@ -181,6 +209,7 @@ export default function Booking() {
   }, []);
 
   const handleBookNow = async () => {
+    setLoading(true);
     const customerId = userInfo.accountid;
 
     const storedBranchId = sessionStorage.getItem("selectedBranchId");
@@ -198,6 +227,9 @@ export default function Booking() {
     const storeSlotId = sessionStorage.getItem("selectedTimeId");
     const slotId = parseInt(storeSlotId, 10);
 
+    const storeVoucherId = sessionStorage.getItem("selectedVoucherId");
+    const voucherId = parseInt(storeVoucherId, 10);
+
     const bookingValue = {
       salonId: branchId,
       serviceId: serviceIds,
@@ -205,16 +237,28 @@ export default function Booking() {
       customerId: customerId,
       slotId: slotId,
       bookingDate: formatDateForInput(date),
-      voucherId: null,
+      voucherId: voucherId,
     };
 
     try {
       const response = await api.post("booking", bookingValue);
       if (response) {
+        await Swal.fire({
+          title: "Successfully!",
+          text: "Booking successfully.",
+          icon: "success",
+          timer: 2500
+        });
         navigate("/user/mybooking");
       }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+        timer: 2500,
+      });
+    }finally{
+      setLoading(false);
     }
 
     sessionStorage.removeItem("selectedBranchId");
@@ -222,6 +266,7 @@ export default function Booking() {
     sessionStorage.removeItem("selectedTimeId");
     sessionStorage.removeItem("selectedDate");
     sessionStorage.removeItem("selectedStylistId");
+    sessionStorage.removeItem("selectedVoucherId");
   };
 
   const formatDate = (date) => {
@@ -273,7 +318,7 @@ export default function Booking() {
           </div>
 
           <div className="booking__form-item">
-            <label>Select Service</label>
+            <label>Service</label>
             <div className="form-input">
               <PiScissors className="form-icon" />
               <textarea
@@ -313,13 +358,25 @@ export default function Booking() {
           </div>
 
           <div className="booking__form-item">
-            <label>Select Stylist</label>
+            <label>Stylist</label>
             <div className="form-input">
               <SlPeople className="form-icon" />
               <input
                 type="text"
                 placeholder="View All Stylists"
                 defaultValue={selectedStylist}
+                readOnly
+              />
+            </div>
+          </div>
+          <div className="booking__form-item">
+            <label>Voucher</label>
+            <div className="form-input">
+              <MdOutlineDiscount  className="form-icon" />
+              <input
+                type="text"
+                placeholder="View Voucher"
+                defaultValue={selectedVoucher}
                 readOnly
               />
             </div>
@@ -333,11 +390,11 @@ export default function Booking() {
               Cancel
             </Link>
             <Link
-              to="/"
               className="booking__container-btn btn flex"
               onClick={handleBookNow}
+              disabled={loading}
             >
-              Book Now
+              {loading ? <Spin size="small" /> : "Booking now"}
             </Link>
           </div>
         </form>

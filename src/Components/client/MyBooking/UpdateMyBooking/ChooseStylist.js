@@ -30,20 +30,18 @@ export function ChooseStylist({ onNext, onPre }) {
         salonId: branchId,
         serviceId: serviceIds,
       };
-
       try {
         const response = await api.post(
           // `booking-stylists`,
           "booking/stylists",
           bookingValue
         );
-
         if (response.data) {
           // setStylists(response.data);
           setStylists(response.data.result);
         }
       } catch (error) {
-        console.error("Error fetching stylists:", error);
+        console.error(error);
       }
     };
     fetchStylists();
@@ -74,7 +72,6 @@ export function ChooseStylist({ onNext, onPre }) {
           const foundStylistId = stylists.find(
             (item) => item.fullname === data.stylistName
           );
-
           if (foundStylistId) {
             setSelectedStylistId(foundStylistId.id);
           }

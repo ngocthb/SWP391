@@ -45,7 +45,6 @@ export function ChooseSalon({ onClose, onNext }) {
         );
         // const data = response.data[0];
         const data = response.data.result;
-
         if (data) {
           const foundSalon = salonLocations.find(
             (item) => item.address === data.salonName
@@ -56,7 +55,7 @@ export function ChooseSalon({ onClose, onNext }) {
           }
         }
       } catch (error) {
-        console.log("Error fetching booking:", error);
+        console.log(error);
       } finally {
         setLoading(false);
       }

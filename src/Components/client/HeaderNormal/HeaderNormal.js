@@ -3,14 +3,13 @@ import { IoCloseCircleSharp } from "react-icons/io5";
 import { CiGrid41 } from "react-icons/ci";
 import "./HeaderNormal.scss";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import api from "../../../config/axios.js";
 import loginUser from "../../../data/loginUser.js";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout } from "react-icons/tb";
 import { logo_white_noBackground } from "../../../data/image.js";
 import { CiCalendar } from "react-icons/ci";
-import { setRole } from "../../../actions/Role.js";
 
 export default function HeaderNormal() {
   const [active, setActive] = useState("header-normal");
@@ -18,7 +17,6 @@ export default function HeaderNormal() {
   const isLoggedIn = !!sessionStorage.getItem("token");
   const [userInfo, setUserInfo] = useState({});
   const isUpdate = useSelector((state) => state.updateUserReducer);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -33,7 +31,6 @@ export default function HeaderNormal() {
       const data = response.data.result;
       if (data) {
         setUserInfo(data);
-        dispatch(setRole(data.role));
       }
     } catch (err) {
       console.log(err);

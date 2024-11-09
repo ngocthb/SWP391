@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import { GoDotFill } from "react-icons/go";
+import { FiUser } from "react-icons/fi";
 
 function MenuSider() {
   const location = useLocation();
@@ -47,9 +48,9 @@ function MenuSider() {
       ],
     },
     {
-      label: <Link to="/staff/new-customer">New Customer</Link>,
-      icon: <PlusOutlined />,
-      key: "/staff/new-customer",
+      label: <Link to="/staff/customer">Customer</Link>,
+      icon: <FiUser />,
+      key: "/staff/customer",
     },
   ];
 

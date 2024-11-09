@@ -6,12 +6,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import loginUser from "../../../data/loginUser.js";
 import api from "../../../config/axios.js";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { TbLogout } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 import { logo_white_noBackground } from "../../../data/image.js";
 import { CiCalendar } from "react-icons/ci";
-import { setRole } from "../../../actions/Role.js";
 
 export default function Header() {
   const [active, setActive] = useState("navBar");
@@ -19,14 +18,11 @@ export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const isUpdate = useSelector((state) => state.updateUserReducer);
-  const dispatch = useDispatch();
 
-  //Code to show(toggle) navbar
   const showNav = () => {
     setActive("navBar navBar-active");
   };
 
-  // Code to remove navbar
   const removeNav = () => {
     setActive("navBar");
   };
@@ -44,7 +40,6 @@ export default function Header() {
       const data = response.data.result;
       if (data) {
         setUserInfo(data);
-        dispatch(setRole(data.role));
       }
     } catch (err) {
       console.log(err);

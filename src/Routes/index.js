@@ -67,26 +67,27 @@ import ManagerBookingPending from "../Components/Manager/ManagerBookingPending/M
 import StaffCreateCustomer from "../Components/Staff/StaffCreateCustomer/StaffCreateCustomer";
 import AdminDashboard from "../Components/Admin/AdminDashboard/AdminDashboard";
 import AdminKpi from "../Components/Admin/AdminKpi/AdminKpi";
+import StaffCustomer from "../Components/Staff/StaffCustomer/StaffCustomer";
 export const Routes = [
   {
     path: "/",
-    element: <HomePageLayout />,
+    element: <HomePageLayout/>,
     children: [
       {
         path: "/",
-        element: <HomePage />,
+        element: <HomePage/>,
       },
       {
         path: "/aboutus",
-        element: <AboutUsPage />,
+        element: <AboutUsPage/>,
       },
       {
         path: "/services",
-        element: <Services />,
+        element: <Services/>,
       },
       {
         path: "/contact",
-        element: <Contact />,
+        element: <Contact/>,
       },
       {
         path: "/details",
@@ -141,9 +142,9 @@ export const Routes = [
   {
     path: "manager",
     element: (
-      /*<PrivateRoute requiredRole="BRANCH_MANAGER">
-    <ManagerLayout />
-  </PrivateRoute>*/ <ManagerLayout />
+      <PrivateRoute requiredRole="BRANCH_MANAGER">
+        <ManagerLayout />
+      </PrivateRoute>
     ),
     children: [
       {
@@ -241,9 +242,9 @@ export const Routes = [
   {
     path: "admin",
     element: (
-      /*<PrivateRoute requiredRole="ADMIN">
-      <AdminLayout />
-    </PrivateRoute>*/ <AdminLayout />
+      <PrivateRoute requiredRole="ADMIN">
+        <AdminLayout />
+      </PrivateRoute>
     ),
     children: [
       {
@@ -299,9 +300,9 @@ export const Routes = [
   {
     path: "stylist",
     element: (
-      /*<PrivateRoute requiredRole="ADMIN">
-      <AdminLayout />
-    </PrivateRoute>*/ <StylistLayout />
+      <PrivateRoute requiredRole="STYLIST">
+        <StylistLayout />
+      </PrivateRoute>
     ),
     children: [
       {
@@ -329,9 +330,9 @@ export const Routes = [
   {
     path: "staff",
     element: (
-      /*<PrivateRoute requiredRole="ADMIN">
-      <AdminLayout />
-    </PrivateRoute>*/ <StaffLayout />
+      <PrivateRoute requiredRole="STAFF">
+        <StaffLayout />
+      </PrivateRoute>
     ),
     children: [
       {
@@ -355,7 +356,11 @@ export const Routes = [
         element: <StaffCreateBooking />,
       },
       {
-        path: "new-customer",
+        path: "customer",
+        element: <StaffCustomer/>,
+      },
+      {
+        path: "customer/create",
         element: <StaffCreateCustomer />,
       },
     ],

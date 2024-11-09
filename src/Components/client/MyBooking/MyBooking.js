@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FiTrash2 } from "react-icons/fi";
 
 import { LiaUserEditSolid } from "react-icons/lia";
@@ -57,7 +58,9 @@ export default function MyBooking() {
   };
 
   useEffect(() => {
-    fetchBookingHistory();
+    if (activeTab !== null && accountId !== 0) {
+      fetchBookingHistory();
+    }
   }, [activeTab]);
 
   const refresh = () => {
@@ -90,6 +93,11 @@ export default function MyBooking() {
       // const response = await api.delete(`bookingHistory/${bookingId}`);
       const response = await api.delete(`booking/${bookingId}`);
       if (response.status === 200) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "The booking has been deleted.",
+          icon: "success",
+        });
         setBookingHistory((prev) =>
           prev.filter((booking) => booking.bookingId !== bookingId)
         );

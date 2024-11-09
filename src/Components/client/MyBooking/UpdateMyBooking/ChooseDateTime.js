@@ -125,13 +125,11 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
         accountId: stylistId,
         date: formatDateForInput(selectedDate),
       };
-      console.log(bookingValue);
       try {
         const response = await api.post(
           `booking/slots/${bookingId}`,
           bookingValue
         );
-        console.log(response.data.result);
         if (response.data && response.data.result) {
           setAvailableSlots(response.data.result);
         }
