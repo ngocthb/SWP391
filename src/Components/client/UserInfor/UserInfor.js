@@ -3,10 +3,11 @@ import loginUser from "../../../data/loginUser";
 import "./UserInfor.scss";
 import api from "../../../config/axios";
 import { FaEdit } from "react-icons/fa";
-import { message, Spin } from "antd";
+import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../../actions/Update";
 import uploadFile from "../../../utils/upload";
+import Swal from "sweetalert2";
 
 export default function UserInfor() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +21,6 @@ export default function UserInfor() {
     avatarFile: loginUser.avatar,
   });
   const [loading, setLoading] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
   const isUpdate = useSelector((state) => state.updateUserReducer);
   const [selectedFileObject, setSelectedFileObject] = useState(null);
@@ -114,12 +114,22 @@ export default function UserInfor() {
           phone: data.phone || "",
           avatarFile: selectedFile || prev.avatarFile,
         }));
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "User information updated successfully!",
+          timer: 2500,
+        });
         dispatch(updateUser());
-        messageApi.success("User information updated successfully!");
         toggleModal();
       }
     } catch (err) {
       console.error(err);
+       Swal.fire({
+        title: "Error!",
+        text: err.response.data.message,
+        icon: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -136,7 +146,6 @@ export default function UserInfor() {
 
   return (
     <>
-      {contextHolder}
       <div className="main">
         <div className="profile">
           <div className="profile__left">

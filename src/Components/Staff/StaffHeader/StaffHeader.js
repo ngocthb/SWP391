@@ -14,7 +14,8 @@ const pageNames = {
   "/staff/booking/pending": "Pending Booking ",
   "/staff/booking/in-process": "In-Process Booking ",
   "/staff/booking/complete": "Complete Booking ",
-  "/staff/new-customer": "New Customer",
+  "/staff/customer/create": "New Customer",
+  "/staff/customer": "Customer",
 };
 
 const StaffHeader = () => {

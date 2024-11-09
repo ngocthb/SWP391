@@ -67,6 +67,7 @@ import ManagerBookingPending from "../Components/Manager/ManagerBookingPending/M
 import StaffCreateCustomer from "../Components/Staff/StaffCreateCustomer/StaffCreateCustomer";
 import AdminDashboard from "../Components/Admin/AdminDashboard/AdminDashboard";
 import AdminKpi from "../Components/Admin/AdminKpi/AdminKpi";
+import StaffCustomer from "../Components/Staff/StaffCustomer/StaffCustomer";
 export const Routes = [
   {
     path: "/",
@@ -355,7 +356,11 @@ export const Routes = [
         element: <StaffCreateBooking />,
       },
       {
-        path: "new-customer",
+        path: "customer",
+        element: <StaffCustomer/>,
+      },
+      {
+        path: "customer/create",
         element: <StaffCreateCustomer />,
       },
     ],

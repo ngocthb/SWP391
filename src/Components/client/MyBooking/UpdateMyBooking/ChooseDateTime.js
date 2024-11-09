@@ -20,7 +20,6 @@ import Swal from "sweetalert2";
 
 export function ChooseDateTime({ accountId, onPre, onSave }) {
   const bookingId = useContext(bookingIdContext);
-  const [messageApi, contextHolder] = message.useMessage();
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
@@ -180,6 +179,11 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
       }
     } catch (err) {
       console.error(err);
+      Swal.fire({
+        title: "Error!",
+        text: err.response.data.message,
+        icon: "error",
+      });
     } finally {
       setLoading(false);
       onSave();
@@ -190,8 +194,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
   };
   return (
     <>
-      {contextHolder}
-      <form onSubmit={handleSubmit} className="myBooking__dateTime">
+      <form className="myBooking__dateTime">
         <div className="myBooking__dateTime-header">
           <div onClick={onPre}>
             <FaArrowLeft className="chooseDateTime-icon" />
@@ -237,7 +240,8 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
               ))}
         </div>
         <button
-          type="submit"
+          type="button"
+          onSubmit={handleSubmit}
           className="myBooking__dateTime-btn btn flex"
           onClick={(e) => {
             toggleModal(bookingId);

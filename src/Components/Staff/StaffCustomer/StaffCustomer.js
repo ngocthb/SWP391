@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import "./AdminCustomer.scss";
+import "./StaffCustomer.scss";
 import api from "../../../config/axios";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa";
-import { MdRestartAlt } from "react-icons/md";
-import Swal from "sweetalert2";
 import loginUser from "../../../data/loginUser";
 import { Skeleton } from "@mui/material";
 import { FolderOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
-const AdminCustomer = () => {
+const StaffCustomer = () => {
   const [customers, setCustomers] = useState([]);
   const [originalCustomers, setOriginalCustomers] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [customersLoading, setCustomersLoading] = useState(false);
+  const navigate = useNavigate();
 
   const fetchCustomers = async (currentPage) => {
     setCustomersLoading(true);
@@ -95,93 +95,26 @@ const AdminCustomer = () => {
     }
   };
 
-  const deleteCustomerData = async (accountId) => {
-    try {
-      const response = await api.delete(`customer/${accountId}`);
-      if (response.data) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "The customer has been deleted.",
-          icon: "success",
-          timer: 2500
-        });
-        fetchCustomers(currentPage);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const confirmDeleteModal = (accountId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You want to delete this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete this customer!",
-    }).then(async (result) => {
-      console.log(result.isConfirmed);
-      if (result.isConfirmed) {
-        try {
-          await deleteCustomerData(accountId);
-          fetchCustomers();
-        } catch (error) {}
-      }
-    });
-  };
-
-  const activeCustomerData = async (accountId) => {
-    try {
-      const response = await api.put(`customer/active/${accountId}`);
-      if (response.data) {
-        Swal.fire({
-          title: "Active!",
-          text: "The customer has been active again.",
-          icon: "success",
-          timer: 2500
-        });
-        fetchCustomers(currentPage);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const confirmActiveModal = (accountId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You want to active this customer!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, active this service!",
-    }).then(async (result) => {
-      console.log(result.isConfirmed);
-      if (result.isConfirmed) {
-        try {
-          await activeCustomerData(accountId);
-          fetchCustomers();
-        } catch (error) {}
-      }
-    });
+  const createCustomer = () => {
+    navigate("/staff/customer/create");
   };
 
   return (
     <>
-      <div className="admin-customer">
-        <div className="admin-customer__header">
-          <div className="admin-customer__header-searchBar">
+      <div className="staff-customer">
+        <div className="staff-customer__header">
+          <div className="staff-customer__header-searchBar">
             <BiSearchAlt className="searchBar-icon" />
             {/* <i class="fas fa-search"></i> */}
             <input placeholder="Search here..." type="text" />
           </div>
+          <div className="staff-booking-pending__header-filter">
+            <button onClick={createCustomer}>New Customer</button>
+          </div>
         </div>
-        <div className="admin-customer__container">
-          <div className="admin-customer__content">
-            <table className="admin-customer__table">
+        <div className="staff-customer__container">
+          <div className="staff-customer__content">
+            <table className="staff-customer__table">
               <thead>
                 <tr>
                   <th onClick={() => sortBy("id")}>
@@ -202,7 +135,6 @@ const AdminCustomer = () => {
                   <th>
                     Status
                   </th>
-                  <th>Action</th>
                 </tr>
               </thead>
 
@@ -229,21 +161,12 @@ const AdminCustomer = () => {
                         <td>
                           <Skeleton width={80} />
                         </td>
-                        <td>
-                          <div style={{ display: "flex", gap: "8px" }}>
-                            <Skeleton
-                              variant="circular"
-                              width={43}
-                              height={43}
-                            />
-                          </div>
-                        </td>
                       </tr>
                     ))
                   : customers.length === 0 ? (
                     <tr>
                       <td colSpan={7}>
-                        <div className="admin-customer__notValid">
+                        <div className="staff-customer__notValid">
                           <FolderOutlined className="notValid--icon" />
                           <p>Currently, there are no customers</p>
                         </div>
@@ -252,57 +175,36 @@ const AdminCustomer = () => {
                   ) : 
                   (customers.map((customer) => (
                       <tr key={customer.accountId}>
-                        <td className="admin-customer__id">
+                        <td className="staff-customer__id">
                           {customer.accountId}
                         </td>
                         <td>
-                          <div className="admin-customer__customer">
+                          <div className="staff-customer__customer">
                             <img
                               src={customer.image || loginUser.avatar}
                               alt={customer.fullName}
-                              className="admin-customer__customer-image"
+                              className="staff-customer__customer-image"
                             />
-                            <span className="admin-customer__customer-name">
+                            <span className="staff-customer__customer-name">
                               {customer.fullName}
                             </span>
                           </div>
                         </td>
-                        <td className="admin-customer__date">
+                        <td className="staff-customer__date">
                           {customer.email}
                         </td>
-                        <td className="admin-customer__discountAmount">
+                        <td className="staff-customer__discountAmount">
                           {formatDateString(customer.dob)}
                         </td>
                         <td>
-                          <span className={`admin-customer__quantity`}>
+                          <span className={`staff-customer__quantity`}>
                             {customer.phone}
                           </span>
                         </td>
                         <td>
-                          <span className={`admin-customer__quantity`}>
+                          <span className={`staff-customer__quantity`}>
                             {customer.delete ?  "Un Active" : "Active"}
                           </span>
-                        </td>
-                        <td className="admin-customer__actions">
-                          {customer.delete ? (
-                            <button
-                              className="admin-customer__action-button"
-                              onClick={() =>
-                                confirmActiveModal(customer.accountId)
-                              }
-                            >
-                              <MdRestartAlt />
-                            </button>
-                          ) : (
-                            <button
-                              className="admin-customer__action-button"
-                              onClick={() =>
-                                confirmDeleteModal(customer.accountId)
-                              }
-                            >
-                              🗑
-                            </button>
-                          )}
                         </td>
                       </tr>
                     )))}
@@ -312,8 +214,8 @@ const AdminCustomer = () => {
         </div>
 
         {customers && customers.length > 0 && (
-          <div className="admin-customer__pagination">
-            <div className="admin-customer__pagination-pages">
+          <div className="staff-customer__pagination">
+            <div className="staff-customer__pagination-pages">
               <span
                 onClick={() => handlePageChange(currentPage - 1)}
                 className={currentPage === 0 ? "disabled" : ""}
@@ -343,4 +245,4 @@ const AdminCustomer = () => {
   );
 };
 
-export default AdminCustomer;
+export default StaffCustomer;

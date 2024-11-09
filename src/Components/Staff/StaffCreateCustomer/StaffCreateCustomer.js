@@ -3,6 +3,7 @@ import "./StaffCreateCustomer.scss";
 import { Spin } from "antd";
 import api from "../../../config/axios";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const StaffCreateCustomer = () => {
   const [loading, setLoading] = useState(false);
@@ -47,6 +48,18 @@ const StaffCreateCustomer = () => {
 
   return (
     <>
+     <div className="staff-create-customer__breadcrumb">
+        <Link
+          to="/staff/customer"
+          className="staff-create-customer__breadcrumb-link"
+        >
+          Customer
+        </Link>{" "}
+        &gt;
+        <span className="staff-create-customer__breadcrumb-current">
+          New Customer
+        </span>
+      </div>
       <div className="staff-create-customer">
         <div className="staff-create-customer__container">
           <form onSubmit={handleSubmit}>
