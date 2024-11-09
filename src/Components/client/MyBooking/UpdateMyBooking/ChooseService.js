@@ -23,7 +23,7 @@ export function ChooseService({ onNext, onPre }) {
   const [areServicesHidden, setAreServicesHidden] = useState(false);
   const inputRef = useRef(null);
   const bookingId = useContext(bookingIdContext);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Fetch all services
   useEffect(() => {
@@ -35,7 +35,7 @@ export function ChooseService({ onNext, onPre }) {
           setServices(response.data.result);
         }
       } catch (error) {
-        console.error("Error fetching services:", error);
+        console.error(error);
       }
     };
     fetchServices();
@@ -57,7 +57,7 @@ export function ChooseService({ onNext, onPre }) {
           setSearchResults(response.data.result);
         }
       } catch (error) {
-        console.error("Error fetching services:", error);
+        console.error(error);
       }
     };
 
@@ -66,9 +66,9 @@ export function ChooseService({ onNext, onPre }) {
 
   // Fetch booking history
   useEffect(() => {
+    setLoading(true);
     const fetchBooking = async () => {
       const storedService = sessionStorage.getItem("selectedServicesId");
-      console.log(storedService);
       if (!storedService) {
         try {
           const response = await api.get(`booking/${bookingId}`);
@@ -98,7 +98,7 @@ export function ChooseService({ onNext, onPre }) {
           setVoucher(response.data.result);
         }
       } catch (error) {
-        console.error("Error fetching vouchers:", error);
+        console.error(error);
       }
     };
     fetchVoucher();
@@ -219,7 +219,7 @@ export function ChooseService({ onNext, onPre }) {
 
         <div className="myBooking__service-lists">
           {loading
-            ? // Show skeletons while loading
+            ? 
               [...Array(3)].map((_, index) => (
                 <div item xs={12} md={6} key={index}>
                   <Skeleton variant="rectangular" height={250} width={400} />

@@ -48,7 +48,7 @@ function MenuSider() {
       ],
     },
     {
-      label: <Link to="/staff/customer">New Customer</Link>,
+      label: <Link to="/staff/customer">Customer</Link>,
       icon: <FiUser />,
       key: "/staff/customer",
     },

@@ -3,7 +3,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 
 import { LuCalendarSearch } from "react-icons/lu";
 
-import { message, Spin } from "antd";
+import { Spin } from "antd";
 
 import React, { useState, useEffect, useContext } from "react";
 import { useDispatch } from "react-redux";
@@ -50,10 +50,6 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
     const parts = timeString.split(":");
     return `${parts[0]}h${parts[1]}`;
   }
-
-  // Example usage:
-  const inputTime = "09:00:00";
-  const convertedTime = convertTime(inputTime);
 
   const fetchBooking = async () => {
     try {
@@ -136,7 +132,14 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
         if (response.data && response.data.result) {
           setAvailableSlots(response.data.result);
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error)
+        Swal.fire({
+          title: "Error!",
+          text: error.response.data.message,
+          icon: "error",
+        });
+      }
     };
     fetchTimeSlots();
   }, [selectedDate, selectedTime]);

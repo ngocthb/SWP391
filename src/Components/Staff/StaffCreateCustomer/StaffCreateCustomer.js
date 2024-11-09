@@ -37,6 +37,11 @@ const StaffCreateCustomer = () => {
       }
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "Error!",
+        text: error.response.data.message,
+        icon: "error",
+      });
     } finally {
       setLoading(false);
     }

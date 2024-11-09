@@ -252,7 +252,6 @@ export default function Booking() {
         navigate("/user/mybooking");
       }
     } catch (error) {
-      console.log(error);
       Swal.fire({
         icon: "error",
         title: error.response.data.message,
