@@ -30,6 +30,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [slotLoading, setSlotLoading] = useState(true);
   const dispatch = useDispatch();
+  const [isSlotAvailable, setIsSlotAvailable] = useState(false);
 
   useEffect(() => {
     const storedTimeId = sessionStorage.getItem("selectedTimeId");
@@ -50,11 +51,6 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
     const parts = timeString.split(":");
     return `${parts[0]}h${parts[1]}`;
   }
-
-  // Example usage:
-  const inputTime = "09:00:00";
-  const convertedTime = convertTime(inputTime);
-  console.log(convertedTime); // Outputs: 09:00
 
   const fetchBooking = async () => {
     try {
@@ -129,24 +125,25 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
         accountId: stylistId,
         date: formatDateForInput(selectedDate),
       };
+      console.log(bookingValue);
       try {
         const response = await api.post(
           `booking/slots/${bookingId}`,
           bookingValue
         );
+        console.log(response.data.result);
         if (response.data && response.data.result) {
           setAvailableSlots(response.data.result);
         }
       } catch (error) {}
     };
     fetchTimeSlots();
-  }, [selectedDate, selectedTime]);
+  }, [selectedDate]);
 
   const toggleModal = async (bookingId) => {
     if (bookingId) {
       await fetchBooking(bookingId);
     }
-    onSave();
   };
   const updateBookingData = async (e) => {
     e.preventDefault();
@@ -162,30 +159,32 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
 
     setLoading(true);
     try {
-      console.log(updateValues);
-      console.log(bookingId);
       const response = await api.put(
         // `bookingHistory/${bookingId}`,
         `booking/${bookingId}`,
         updateValues
       );
       const data = response.data;
-
       if (data) {
+        await onSave();
         dispatch(updateBooking());
         messageApi.success("Booking information updated successfully!");
         toggleModal();
       }
     } catch (err) {
-      console.error(err);
+      if (err.response.status === 400) {
+        messageApi.error("Please choose another time slot!");
+      } else {
+        messageApi.error("Something went wrong! Please try again.");
+      }
     } finally {
       setLoading(false);
-      onSave();
     }
   };
   const handleSubmit = (e) => {
     updateBookingData(e);
   };
+
   return (
     <>
       {contextHolder}
@@ -236,7 +235,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
         </div>
         <button
           type="submit"
-          className="myBooking__dateTime-btn btn flex"
+          className="myBooking__dateTime-btn btn flex "
           onClick={(e) => {
             toggleModal(bookingId);
             if (!isSelectedTime) {

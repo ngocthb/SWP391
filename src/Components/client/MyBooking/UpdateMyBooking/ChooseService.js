@@ -25,6 +25,13 @@ export function ChooseService({ onNext, onPre }) {
   const bookingId = useContext(bookingIdContext);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const storedService = sessionStorage.getItem("selectedServicesId");
+ 
+    if (storedService) {
+      setSelectedServices(JSON.parse(storedService));
+    }
+  }, [services]);
   // Fetch all services
   useEffect(() => {
     const fetchServices = async () => {
@@ -67,26 +74,26 @@ export function ChooseService({ onNext, onPre }) {
   // Fetch booking history
   useEffect(() => {
     const fetchBooking = async () => {
-      const storedService = sessionStorage.getItem("selectedServicesId");
-      console.log(storedService);
-      if (!storedService) {
-        try {
-          const response = await api.get(`booking/${bookingId}`);
-          const data = response.data.result;
-          if (data) {
-            setSelectedServices(data.serviceId);
-          }
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading(false);
+      // const storedService = sessionStorage.getItem("selectedServicesId");
+      // console.log(storedService);
+      // if (!storedService) {
+      try {
+        const response = await api.get(`booking/${bookingId}`);
+        const data = response.data.result;
+        if (data) {
+          setSelectedServices(data.serviceId);
         }
-      } else {
-        setSelectedServices(JSON.parse(storedService));
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
+      // } else {
+      //   setSelectedServices(JSON.parse(storedService));
+      // }
     };
     fetchBooking();
-  }, [services, bookingId]);
+  }, [bookingId, services]);
 
   // Fetch vouchers
   useEffect(() => {
@@ -120,7 +127,6 @@ export function ChooseService({ onNext, onPre }) {
   const isServiceSelected = (serviceId) => {
     return selectedServices.includes(serviceId);
   };
-
 
   const formatCurrency = (value) => {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
@@ -157,7 +163,7 @@ export function ChooseService({ onNext, onPre }) {
       return `${hours}h${minutes}`;
     } else if (hours === 1) {
       return `${hours} hour`;
-    }else if (hours > 1) {
+    } else if (hours > 1) {
       return `${hours} hours`;
     } else {
       return `${minutes} minutes`;
