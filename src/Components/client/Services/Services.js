@@ -45,6 +45,11 @@ export default function Services() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const formatCurrency = (value) => {
+    if (!value) return "";
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
+  };
+
   return (
     <>
       <div className="services">
@@ -80,7 +85,9 @@ export default function Services() {
                         <span className="regular-text">Duration</span>
                       </div>
                       <div className="item">
-                        <span className="big-text">{serD.price}</span>
+                        <span className="big-text">
+                          {formatCurrency(serD.price)}
+                        </span>
                         <span className="regular-text">Price</span>
                       </div>
                     </div>
