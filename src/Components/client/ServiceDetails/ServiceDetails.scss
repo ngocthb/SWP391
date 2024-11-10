@@ -42,7 +42,7 @@
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     margin-bottom: 5rem;
     &-left {
-      width: 28%;
+      width: 25%;
       border-right: 1px solid gray;
 
       .left-image {
@@ -92,16 +92,16 @@
       // }
     }
     &-right {
-      width: 72%;
+      width: 75%;
       .right-details {
         padding: 5px;
         .right-image {
           padding: 5px;
           border-bottom: 1px solid gray;
           img {
-            width: 865px;
+            // width: 865px;
             height: 500px;
-            object-fit: cover;
+            // object-fit: cover;
           }
         }
         .right-content {
