@@ -15,7 +15,7 @@ const firebaseConfig = {
   storageBucket: "f-salon-51786.appspot.com",
   messagingSenderId: "16647386828",
   appId: "1:16647386828:web:d2b80eaaec25aaf3027469",
-  measurementId: "G-R2LN3PYGSZ"
+  measurementId: "G-R2LN3PYGSZ",
 };
 
 // Initialize Firebase
@@ -25,6 +25,6 @@ const analytics = getAnalytics(app);
 const googleProvider = new GoogleAuthProvider();
 
 const storage = getStorage(app);
-export {storage};
+export { storage };
 
-export {googleProvider};
+export { googleProvider };

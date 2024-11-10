@@ -63,7 +63,7 @@ export default function Slides() {
         dob: customer.dob !== null ? customer.dob : "",
         image: customer.image,
         phone: newPhoneNumber,
-    };
+      };
 
       try {
         await api.put(`customer/${customer.accountid}`, updateValues);
@@ -95,7 +95,7 @@ export default function Slides() {
                   <span>{item.subTitle}</span>
                 </h1>
                 <p>{item.description}</p>
-                <Link to="" className="slides__btn">
+                <Link to="/aboutus" className="slides__btn">
                   Read More
                 </Link>
               </div>

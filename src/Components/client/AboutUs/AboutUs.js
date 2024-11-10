@@ -1,4 +1,5 @@
 import "./AboutUs.scss";
+import { video1 } from "../../../data/image";
 
 export default function AboutUs() {
   return (
@@ -59,13 +60,7 @@ export default function AboutUs() {
               </p>
             </div>
             <div className="about__cardVideo">
-              <video
-                src="assets/video.mp4"
-                autoPlay
-                loop
-                muted
-                type="video/mp4"
-              ></video>
+              <video src={video1} autoPlay loop muted type="video/mp4"></video>
             </div>
           </div>
         </div>

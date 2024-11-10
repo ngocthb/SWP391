@@ -42,7 +42,7 @@
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     margin-bottom: 5rem;
     &-left {
-      width: 25%;
+      width: 28%;
       border-right: 1px solid gray;
 
       .left-image {
@@ -92,7 +92,7 @@
       // }
     }
     &-right {
-      width: 75%;
+      width: 72%;
       .right-details {
         padding: 5px;
         .right-image {
@@ -113,7 +113,7 @@
             align-items: center;
           }
           &-header {
-            padding: 0 5rem 2rem 5rem;
+            padding: 0 5rem 1rem 5rem;
             display: flex;
             justify-content: space-between;
             h2 {
@@ -137,6 +137,7 @@
           .details-footer {
             display: flex;
             align-items: center;
+            height: 80px;
             h2 {
               color: gray;
               width: 50%;
