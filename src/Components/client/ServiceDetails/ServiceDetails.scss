@@ -96,6 +96,8 @@
       .right-details {
         padding: 5px;
         .right-image {
+          display: flex;
+          justify-content: center;
           padding: 5px;
           border-bottom: 1px solid gray;
           img {
