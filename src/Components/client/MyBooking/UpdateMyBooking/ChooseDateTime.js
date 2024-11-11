@@ -12,8 +12,6 @@ import Skeleton from "@mui/material/Skeleton";
 import api from "../../../../config/axios";
 import "./UpdateMyBooking.scss";
 
-import { slots } from "../../../../data/booking";
-
 import { bookingIdContext } from "../MyBooking";
 import { updateBooking } from "../../../../actions/Update";
 
@@ -26,11 +24,27 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
   const [loading, setLoading] = useState(false);
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedDate, setSelectedDate] = useState(today);
-  const [timeSlots, setTimeSlots] = useState(slots);
+  const [timeSlots, setTimeSlots] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [slotLoading, setSlotLoading] = useState(true);
   const dispatch = useDispatch();
   const [isSlotAvailable, setIsSlotAvailable] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async (endpoint, setter) => {
+      try {
+        const response = await api.get(endpoint);
+        const data = response.data.result;
+        if (data) {
+          setter(data);
+        }
+      } catch (error) {
+        console.error(`Error fetching ${endpoint}:`, error);
+      }
+    };
+
+    fetchData("slot/read", setTimeSlots);
+  }, []);
 
   useEffect(() => {
     const storedTimeId = sessionStorage.getItem("selectedTimeId");
