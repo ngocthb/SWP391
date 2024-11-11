@@ -72,11 +72,13 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
         // `bookingHistory?bookingId=${bookingId}`
         `booking/${bookingId}`
       );
+
       const data = response.data.result;
+
       if (data) {
         setSelectedDate(new Date(data.date));
         const foundSlot = timeSlots.find(
-          (item) => item.slottime === convertTime(data.time)
+          (item) => item.slottime === data.time
         ).slotid;
 
         if (foundSlot) {
@@ -197,6 +199,13 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
     updateBookingData(e);
   };
 
+  function formatTime(time) {
+    const [hours, minutes] = time.split(":");
+    return `${hours}h${minutes}`;
+  }
+
+  console.log(selectedTime);
+
   return (
     <>
       {contextHolder}
@@ -241,7 +250,7 @@ export function ChooseDateTime({ accountId, onPre, onSave }) {
                   } ${selectedTime === slot.slotid ? "selected" : ""}`}
                   onClick={() => handleTimeSlotClick(slot.slotid)}
                 >
-                  {slot.slottime}
+                  {formatTime(slot.slottime)}
                 </div>
               ))}
         </div>

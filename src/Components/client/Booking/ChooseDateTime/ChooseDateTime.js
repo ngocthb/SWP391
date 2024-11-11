@@ -131,9 +131,9 @@ export default function ChooseDateTime() {
   }, [selectedDate]);
 
   function formatTime(time) {
-    const [hours, minutes] = time.split(':');
+    const [hours, minutes] = time.split(":");
     return `${hours}h${minutes}`;
-}
+  }
 
   return (
     <div className="chooseDateTime">
