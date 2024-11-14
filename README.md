@@ -68,3 +68,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+## Original Project
+
+This project is a fork of [https://github.com/PhatPTSE184277/SWP391.git](https://github.com/PhatPTSE184277/SWP391.git), and the original project is hosted on GitHub.
+
+The original repository **SWP391** is a [brief description of the original project], and it serves as the foundation for this project. We have made modifications and improvements based on the initial code, but the core functionality and structure are derived from the original project.
+
+If you are interested in the latest updates, features, or want to contribute to the original project, please visit the repository at [SWP391 GitHub Repository](https://github.com/PhatPTSE184277/SWP391.git).
